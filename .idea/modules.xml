@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/eureka-service/eureka.iml" filepath="$PROJECT_DIR$/eureka-service/eureka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hibernate-service/hibernate-service.iml" filepath="$PROJECT_DIR$/hibernate-service/hibernate-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/javacore-service/javacore-service.iml" filepath="$PROJECT_DIR$/javacore-service/javacore-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/jcia-spring-microservices.iml" filepath="$PROJECT_DIR$/.idea/jcia-spring-microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user-service/user.iml" filepath="$PROJECT_DIR$/user-service/user.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user-service.iml" filepath="$PROJECT_DIR$/user-service.iml" />
+    </modules>
+  </component>
+</project>

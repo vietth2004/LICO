@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/hibernate-service/src/test/
+/user-service/src/test/
