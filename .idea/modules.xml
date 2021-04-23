@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/jcia-spring-microservices.iml" filepath="$PROJECT_DIR$/.idea/jcia-spring-microservices.iml" />
       <module fileurl="file://$PROJECT_DIR$/user-service/user.iml" filepath="$PROJECT_DIR$/user-service/user.iml" />
       <module fileurl="file://$PROJECT_DIR$/user-service/user-service.iml" filepath="$PROJECT_DIR$/user-service/user-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/utility-service/utility-service.iml" filepath="$PROJECT_DIR$/utility-service/utility-service.iml" />
     </modules>
   </component>
 </project>
