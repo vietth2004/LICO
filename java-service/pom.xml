@@ -22,6 +22,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -30,7 +31,7 @@
         <dependency>
             <groupId>mrmathami.cia.java</groupId>
             <artifactId>mrmathami.cia.java.jdt</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.4</version>
         </dependency>
 
         <dependency>
@@ -38,7 +39,20 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>mrmathami</groupId>
+            <artifactId>mrmathami.utils</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.core</artifactId>
+            <version>3.25.0</version>
+        </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
