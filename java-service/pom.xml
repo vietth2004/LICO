@@ -28,6 +28,12 @@
         </dependency>
 
         <dependency>
+            <groupId>mrmathami.cia.java</groupId>
+            <artifactId>mrmathami.cia.java.jdt</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -53,5 +59,14 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>my-repo</id>
+            <name>MrMaThaMi personal Repo</name>
+            <url>https://raw.githubusercontent.com/thanhminhmr/repository/main/</url>
+        </repository>
+    </repositories>
+
 
 </project>
