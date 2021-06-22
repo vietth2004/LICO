@@ -1,0 +1,42 @@
+package com.example.userservice.version;
+
+import com.example.userservice.model.NamedEntity;
+import com.example.userservice.project.Project;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "version")
+public class Version extends NamedEntity {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectid")
+    private Project project;
+
+    @Column(name = "path")
+    private String path = new String();
+
+    public Version() {
+    }
+
+    public Version(String id, String name, String path) {
+        super(id, name);
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+}
