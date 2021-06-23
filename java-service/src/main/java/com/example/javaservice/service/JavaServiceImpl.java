@@ -1,5 +1,13 @@
 package com.example.javaservice.service;
 
+//import com.example.javaservice.javacia.java.JavaCiaException;
+//import com.example.javaservice.javacia.java.project.JavaProjectSnapshot;
+//import com.example.javaservice.javacia.java.tree.dependency.JavaDependency;
+//import com.example.javaservice.javacia.java.tree.dependency.JavaDependencyWeightTable;
+//import com.example.javaservice.javacia.java.tree.node.JavaRootNode;
+//import com.example.javaservice.javacia.jdt.ProjectBuilder;
+//import com.example.javaservice.javacia.jdt.project.builder.parameter.BuildInputSources;
+//import com.example.javaservice.javacia.jdt.project.builder.parameter.JavaBuildParameter;
 import com.example.javaservice.utility.Utils;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
@@ -17,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Service
 public class JavaServiceImpl implements JavaService{
 
     public JavaServiceImpl() {
