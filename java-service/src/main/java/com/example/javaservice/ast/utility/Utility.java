@@ -8,6 +8,7 @@ import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.annotate.Annotate;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.tree.type.ReferenceType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,5 +60,15 @@ public class Utility {
         }
 
         return javaTypeList;
+    }
+
+    public static List<JavaType> convertArguments(List<AbstractType> argumentList) {
+        List<JavaType> arguments = new ArrayList<>();
+
+        for(AbstractType abstractType : argumentList) {
+            arguments.add(new JavaType(abstractType));
+        }
+
+        return arguments;
     }
 }

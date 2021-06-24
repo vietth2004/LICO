@@ -3,8 +3,11 @@ package com.example.javaservice.ast.type;
 import com.example.javaservice.ast.annotation.JavaAnnotation;
 import com.example.javaservice.ast.node.Node;
 import com.example.javaservice.ast.utility.Utility;
+import jdk.jshell.execution.Util;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.tree.type.ReferenceType;
 import mrmathami.cia.java.jdt.tree.type.SimpleType;
+import mrmathami.cia.java.jdt.tree.type.SyntheticType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +19,9 @@ public class JavaType {
     private String describe = new String();
     private List<JavaAnnotation> annotates = new ArrayList<>();
 
-    private JavaType innerType = new JavaType();
-    private List<JavaType> arguments = null;
-    private List<JavaType> bounds = null;
+    private JavaType innerType = null;
+    private List<JavaType> arguments = new ArrayList<>();
+    private List<JavaType> bounds = new ArrayList<>();
 
     private Node node = new Node();
 
@@ -34,17 +37,21 @@ public class JavaType {
         this.annotates = Utility.convertAnnotates(abstractType.getAnnotates());
 
         if(abstractType instanceof SimpleType) {
-//            System.out.println(((SimpleType) abstractType).getInnerType().toJson());
+            if(((SimpleType) abstractType).getInnerType()!= null) {
+                innerType = new JavaType(((SimpleType) abstractType).getInnerType());
+            }
         }
 
-//        if(abstractType instanceof ReferenceType) {
-//            this.arguments = ((ReferenceType) abstractType).getArguments();
-//            this.node = ((ReferenceType) abstractType).getNode();
-//        }
+        if(abstractType instanceof ReferenceType) {
+            this.arguments = Utility.convertArguments(((ReferenceType) abstractType).getArguments());
+            if(((ReferenceType) abstractType).getNode() != null) {
+                this.node = new Node(((ReferenceType) abstractType).getNode());
+            }
+        }
 
-//        if(abstractType instanceof SyntheticType) {
-//            this.bounds = ((SyntheticType) abstractType).getBounds();
-//        }
+        if(abstractType instanceof SyntheticType) {
+            this.bounds = Utility.convertArguments(((SyntheticType) abstractType).getBounds());
+        }
     }
 
     public String getEntityClass() {
