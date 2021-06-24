@@ -1,8 +1,8 @@
-package com.example.userservice.project;
+package com.example.projectservice.project;
 
-import com.example.userservice.model.NamedEntity;
-import com.example.userservice.user.User;
-import com.example.userservice.version.Version;
+
+import com.example.projectservice.model.NamedEntity;
+import com.example.projectservice.version.Version;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,9 +15,7 @@ public class Project extends NamedEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.EAGER)
     private List<Version> versionList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid")
-    private User user;
+    private String user;
 
     public List<Version> getVersionList() {
         return versionList;
@@ -27,11 +25,11 @@ public class Project extends NamedEntity {
         this.versionList = versionList;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 }

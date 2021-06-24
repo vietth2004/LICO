@@ -1,7 +1,8 @@
-package com.example.userservice.version;
+package com.example.projectservice.version;
 
-import com.example.userservice.model.NamedEntity;
-import com.example.userservice.project.Project;
+
+import com.example.projectservice.model.NamedEntity;
+import com.example.projectservice.project.Project;
 
 import javax.persistence.*;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 public class Version extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectid")
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @Column(name = "path")

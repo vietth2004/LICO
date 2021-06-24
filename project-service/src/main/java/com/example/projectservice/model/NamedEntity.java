@@ -1,4 +1,4 @@
-package com.example.userservice.model;
+package com.example.projectservice.model;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class NamedEntity {
 
     @Id
-    private String id;
+    private String id = new String();
 
     @Column(name="name")
     private String name;
