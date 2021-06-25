@@ -13,8 +13,7 @@ public class Account {
     private String id;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "uid")
     private User user;
 
     private String username = new String();
@@ -39,6 +38,14 @@ public class Account {
 
     public String getId() {
         return id;
+    }
+
+    public String getUser() {
+        return user.getId();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setId(String id) {

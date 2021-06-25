@@ -15,7 +15,6 @@ public class User extends NamedEntity {
     private String mail = new String();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private Account account;
 
     public User() {

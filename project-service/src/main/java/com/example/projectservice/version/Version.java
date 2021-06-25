@@ -17,6 +17,9 @@ public class Version extends NamedEntity {
     @Column(name = "path")
     private String path = new String();
 
+    @Column(name = "file")
+    private String file = new String();
+
     public Version() {
     }
 
@@ -33,11 +36,19 @@ public class Version extends NamedEntity {
         this.path = path;
     }
 
-    public Project getProject() {
-        return project;
+    public String getProject() {
+        return project.getId();
     }
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }

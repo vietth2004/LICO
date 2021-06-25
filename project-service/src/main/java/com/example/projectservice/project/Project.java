@@ -15,7 +15,7 @@ public class Project extends NamedEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.EAGER)
     private List<Version> versionList = new ArrayList<>();
 
-    @Column(name = "user", unique = true)
+    @Column(name = "user")
     private String user;
 
     public List<Version> getVersionList() {
