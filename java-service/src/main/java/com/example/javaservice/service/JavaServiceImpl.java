@@ -18,6 +18,7 @@ import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
 import mrmathami.cia.java.tree.node.JavaRootNode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,6 +28,8 @@ import java.util.Set;
 
 @Service
 public class JavaServiceImpl implements JavaService{
+
+    private ProjectService projectService;
 
     public JavaServiceImpl() {
     }
@@ -49,4 +52,12 @@ public class JavaServiceImpl implements JavaService{
 
         return projectSnapshot.getRootNode();
     }
+
+    public JavaRootNode parseProjectWithfile(MultipartFile file) {
+        String path = projectService.storeFile(file);
+
+        return null;
+    }
+
+
 }

@@ -27,6 +27,7 @@ public class ProjectController {
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "id", required = false) String id,
             Pageable pageable){
+
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
             if (Objects.nonNull(user)) {
@@ -41,6 +42,7 @@ public class ProjectController {
             cq.orderBy(cb.desc(root.get("name")), cb.asc(root.get("id")));
             return p;
         }, pageable);
+
         return projectPage;
     }
 
