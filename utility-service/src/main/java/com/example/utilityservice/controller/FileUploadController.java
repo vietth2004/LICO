@@ -38,7 +38,7 @@ public class FileUploadController {
 //        return ResponseEntity.ok("Dau cat moi");
 //    }
 
-    @PostMapping("/uploadFile")
+    @PostMapping("/api/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
 
@@ -51,7 +51,7 @@ public class FileUploadController {
                 file.getContentType(), file.getSize());
     }
 
-    @PostMapping("/uploadMultipleFiles")
+    @PostMapping("/api/uploadMultipleFiles")
     public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         return Arrays.asList(files)
                 .stream()
@@ -59,7 +59,7 @@ public class FileUploadController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
+    @GetMapping("/api/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
