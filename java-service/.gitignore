@@ -34,3 +34,4 @@ build/
 /.mvn/
 /output/
 /src/main/java/com/example/javaservice/Test.java
+/project/

@@ -17,6 +17,7 @@ import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
 import mrmathami.cia.java.tree.node.JavaRootNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,7 @@ import java.util.Set;
 @Service
 public class JavaServiceImpl implements JavaService{
 
+    @Autowired
     private ProjectService projectService;
 
     public JavaServiceImpl() {
@@ -53,11 +55,10 @@ public class JavaServiceImpl implements JavaService{
         return projectSnapshot.getRootNode();
     }
 
-    public JavaRootNode parseProjectWithfile(MultipartFile file) {
-        String path = projectService.storeFile(file);
-
-        return null;
+    public JavaRootNode parseProjectWithFile(MultipartFile file) throws JavaCiaException, IOException {
+        String filePath = projectService.storeFile(file);
+        String path = "./java-service/project/" + filePath + ".project";
+        return parseProject(path);
     }
-
 
 }

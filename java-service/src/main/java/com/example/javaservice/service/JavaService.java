@@ -5,9 +5,11 @@ package com.example.javaservice.service;
 
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.tree.node.JavaRootNode;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public interface JavaService {
     public JavaRootNode parseProject(String path) throws JavaCiaException, IOException;
+    public JavaRootNode parseProjectWithFile(MultipartFile file) throws JavaCiaException, IOException;
 }

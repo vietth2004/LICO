@@ -10,6 +10,7 @@ import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -19,9 +20,16 @@ public class JavaController {
     @Autowired
     private JavaService javaService;
 
-    @PostMapping("/api/parse")
-    public Node parseProject(@RequestBody Request path) throws JavaCiaException, IOException{
+    @PostMapping("/api/pathParse")
+    public Node parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
+        JavaNode node = new JavaNode(javaRoot.getChildren().get(0));
+        return node;
+    }
+
+    @PostMapping("/api/parse")
+    public Node parseProjectByFile(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
+        RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         JavaNode node = new JavaNode(javaRoot.getChildren().get(0));
         return node;
     }
