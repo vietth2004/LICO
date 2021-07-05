@@ -29,6 +29,9 @@ public class JavaNode extends Node {
 
     private transient List<JavaType> parameters = new ArrayList<>();
 
+    public JavaNode() {
+    }
+
     @Nonnull
     public JavaNode(AbstractNode abstractNode) {
         super(abstractNode);
