@@ -19,12 +19,22 @@ public class Utility {
 
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
-        List<JavaNode> children = new ArrayList<>();
+        List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            children.add(new JavaNode(node));
+            javaNodeList.add(new JavaNode(node));
         }
 
-        return children;
+        return javaNodeList;
+    }
+
+    @Nonnull
+    public static List<Integer> convertChildren(List<AbstractNode> abstractNodeList) {
+        List<Integer> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            javaNodeList.add(node.getId());
+        }
+
+        return javaNodeList;
     }
 
     @Nonnull
