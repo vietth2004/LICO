@@ -1,6 +1,5 @@
 package com.example.springservice.dependency;
 
-import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.ast.node.Node;
 
 public class Dependency {
