@@ -28,6 +28,16 @@ public class Utility {
     }
 
     @Nonnull
+    public static List<Node> convertNode(List<AbstractNode> abstractNodeList) {
+        List<Node> children = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            children.add(new Node(node));
+        }
+
+        return children;
+    }
+
+    @Nonnull
     public static List<Node> convertMap(Set<AbstractNode> nodeList) {
         List<Node> javaNodeList = new ArrayList<>();
         for(AbstractNode node : nodeList) {

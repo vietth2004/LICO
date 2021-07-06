@@ -2,10 +2,10 @@ package com.example.springservice.dependency;
 
 import com.example.springservice.ast.node.JavaNode;
 
-public class DependencyService {
+import java.util.List;
 
-    public Dependency getDependency(JavaNode node) {
+public interface DependencyService {
 
-        return null;
-    }
+    public List<Dependency> getAllDependency(List<JavaNode> javaNodeList);
+
 }

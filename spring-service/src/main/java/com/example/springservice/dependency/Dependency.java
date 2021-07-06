@@ -7,6 +7,11 @@ public class Dependency {
 
     public Node calleeNode = new Node();
 
+    public Dependency(Node callerNode, Node calleeNode) {
+        this.callerNode = callerNode;
+        this.calleeNode = calleeNode;
+    }
+
     public Node getCallerNode() {
         return callerNode;
     }

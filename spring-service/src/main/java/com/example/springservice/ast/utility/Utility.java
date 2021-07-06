@@ -71,4 +71,27 @@ public class Utility {
 
         return arguments;
     }
+
+    public static List<JavaNode> convertSpringNodes(List<JavaNode> javaNodeList) {
+        List<JavaNode> springNodes = new ArrayList<>();
+
+        for(JavaNode javaNode : javaNodeList) {
+            if(isSpringNode(javaNode.getAnnotates()))
+            {
+                springNodes.add(javaNode);
+            }
+        }
+
+        return springNodes;
+    }
+
+    private static Boolean isSpringNode (List<JavaAnnotation> javaAnnotationList) {
+
+        for(JavaAnnotation javaAnnotation : javaAnnotationList) {
+            if(Resource.SPRING_ANNOTATION_QUALIFIED_NAME.contains(javaAnnotation.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
