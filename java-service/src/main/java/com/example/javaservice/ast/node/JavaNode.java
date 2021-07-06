@@ -7,6 +7,7 @@ import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.annotate.Annotate;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.node.MethodNode;
+import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
@@ -50,6 +51,13 @@ public class JavaNode extends Node {
         if(abstractNode instanceof AbstractModifiedAnnotatedNode) {
             this.modifiers = Utility.convertModifiers(((AbstractModifiedAnnotatedNode) abstractNode).getModifiers());
         }
+    }
+
+    public JavaNode(RootNode rootNode) {
+        super(rootNode);
+        this.children = Utility.convertAbstractNode(rootNode.getChildren());
+        this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom().keySet());
+        this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo().keySet());
     }
 
     @Nonnull

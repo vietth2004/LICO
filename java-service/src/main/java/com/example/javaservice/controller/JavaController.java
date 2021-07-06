@@ -30,7 +30,7 @@ public class JavaController {
     @PostMapping("/api/parse")
     public Node parseProjectByFile(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
-        JavaNode node = new JavaNode(javaRoot.getChildren().get(0));
+        JavaNode node = new JavaNode(javaRoot);
         return node;
     }
 }
