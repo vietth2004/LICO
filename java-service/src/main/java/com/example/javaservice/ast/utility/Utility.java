@@ -1,6 +1,8 @@
 package com.example.javaservice.ast.utility;
 
 import com.example.javaservice.ast.annotation.JavaAnnotation;
+import com.example.javaservice.ast.dependency.DependencyCountTable;
+import com.example.javaservice.ast.dependency.Pair;
 import com.example.javaservice.ast.node.JavaNode;
 import com.example.javaservice.ast.node.Node;
 import com.example.javaservice.ast.type.JavaType;
@@ -8,11 +10,9 @@ import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.annotate.Annotate;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.jdt.tree.type.ReferenceType;
+import mrmathami.cia.java.tree.dependency.JavaDependency;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Utility {
 
@@ -48,10 +48,11 @@ public class Utility {
     }
 
     @Nonnull
-    public static List<Node> convertMap(Set<AbstractNode> nodeList) {
-        List<Node> javaNodeList = new ArrayList<>();
-        for(AbstractNode node : nodeList) {
-            javaNodeList.add(new Node(node));
+    public static List convertMap(Map<AbstractNode, mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable> nodeList) {
+        List<Pair> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : nodeList.keySet()) {
+            DependencyCountTable dependencyCountTable = new DependencyCountTable(nodeList.get(node));
+            javaNodeList.add(new Pair(new Node(node), dependencyCountTable));
         }
         return javaNodeList;
     }
@@ -90,5 +91,25 @@ public class Utility {
         }
 
         return arguments;
+    }
+
+    public static void findDependency(mrmathami.cia.java.tree.node.JavaNode javaRootNode) {
+
+        printDependency(javaRootNode.getDependencyTo());
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : javaRootNode.getChildren())
+        {
+            findDependency(javaNode);
+        }
+    }
+
+    private static void printDependency(Map Dependencies) {
+        Set<AbstractNode> nodes = Dependencies.keySet();
+
+
+        for(AbstractNode node : nodes) {
+            mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable dependencyCountTable = (mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable) Dependencies.get(node);
+            System.out.println(dependencyCountTable.getCount(JavaDependency.USE));
+        }
     }
 }

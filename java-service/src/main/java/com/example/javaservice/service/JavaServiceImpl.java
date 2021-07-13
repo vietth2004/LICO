@@ -8,6 +8,7 @@ package com.example.javaservice.service;
 //import com.example.javaservice.javacia.jdt.ProjectBuilder;
 //import com.example.javaservice.javacia.jdt.project.builder.parameter.BuildInputSources;
 //import com.example.javaservice.javacia.jdt.project.builder.parameter.JavaBuildParameter;
+import com.example.javaservice.ast.utility.Utility;
 import com.example.javaservice.utility.Utils;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
@@ -51,6 +52,8 @@ public class JavaServiceImpl implements JavaService{
 
         final JavaProjectSnapshot projectSnapshot = ProjectBuilder.createProjectSnapshot("before",
                 DEPENDENCY_WEIGHT_TABLE, inputSources, Set.of(new JavaBuildParameter(List.of(), true)));
+
+        Utility.findDependency(projectSnapshot.getRootNode().getChildren().get(0));
 
         return projectSnapshot.getRootNode();
     }
