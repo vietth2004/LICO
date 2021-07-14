@@ -1,7 +1,6 @@
 package com.example.springservice.ast.node;
 
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.node.RootNode;
 
 public class Node {
     private String entityClass = new String();
@@ -27,15 +26,6 @@ public class Node {
         this.qualifiedName = abstractNode.getQualifiedName();
         this.uniqueName = abstractNode.getUniqueName();
         this.simpleName = abstractNode.getSimpleName();
-    }
-
-    public Node(RootNode rootNode) {
-        this.entityClass = rootNode.getEntityClass();
-        this.idClass = rootNode.getIdClass();
-        this.id = rootNode.getId();
-        this.qualifiedName = rootNode.getQualifiedName();
-        this.uniqueName = rootNode.getUniqueName();
-        this.simpleName = rootNode.getSimpleName();
     }
 
     public String getEntityClass() {

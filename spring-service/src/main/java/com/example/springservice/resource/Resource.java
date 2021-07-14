@@ -1,7 +1,8 @@
-package com.example.springservice.ast.utility;
+package com.example.springservice.resource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Resource {
@@ -38,11 +39,14 @@ public class Resource {
                     "org.springframework.data.mongodb.repository.MongoRepository"
             ));
 
-    public static final String SPRING_MVC_SERVICE_QUALIFIED_NAME = "org.springframework.stereotype.Service";
+    public static final List<String> SPRING_MVC_SERVICE_QUALIFIED_NAME = new ArrayList<>(
+            Arrays.asList(
+                    "org.springframework.stereotype.Service"
+            ));
 
-    public static final String SPRING_CONTROLLER_QUALIFIED_NAME = "org.springframework.stereotype.Controller";
+    public static final List<String> SPRING_CONTROLLER_QUALIFIED_NAME = Collections.singletonList("org.springframework.stereotype.Controller");
 
-    public static final String SPRING_MVC_REPOSITORY_QUALIFIED_NAME = "org.springframework.stereotype.Repository";
+    public static final List<String> SPRING_MVC_REPOSITORY_QUALIFIED_NAME = Collections.singletonList("org.springframework.stereotype.Repository");
 
     public static final List<String> SPRING_MVC_CONTROLLER_QUALIFIED_NAME = new ArrayList<>(
             Arrays.asList(

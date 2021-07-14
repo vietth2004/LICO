@@ -1,43 +1,44 @@
 package com.example.springservice.ast.node;
 
 import com.example.springservice.ast.annotation.JavaAnnotation;
+import com.example.springservice.ast.dependency.Pair;
 import com.example.springservice.ast.type.JavaType;
 import com.example.springservice.ast.utility.Utility;
 import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.node.MethodNode;
+import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class JavaNode extends Node {
 
     private List<String> modifiers = new ArrayList<>();
 
     @Nonnull
-    private transient List<Node> dependencyFrom = new ArrayList<>();
+    private transient List<Pair> dependencyFrom;
 
     @Nonnull
-    private transient List<Node> dependencyTo = new ArrayList<>();
+    private transient List<Pair> dependencyTo;
 
-//    @Nonnull
-//    private transient List<JavaNode> children = new ArrayList<>();
+
+    @Nonnull
+    private transient List<Integer> children = new ArrayList<>();
 
     private transient List<JavaAnnotation> annotates = new ArrayList<>();
 
     private transient List<JavaType> parameters = new ArrayList<>();
 
-    public JavaNode() {
-    }
-
     @Nonnull
     public JavaNode(AbstractNode abstractNode) {
         super(abstractNode);
-//        this.children = Utility.convertAbstractNode(abstractNode.getChildren());
-        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom().keySet());
-        this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo().keySet());
+        this.children = Utility.convertChildren(abstractNode.getChildren());
+        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+        this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
 
         if(abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
@@ -52,28 +53,37 @@ public class JavaNode extends Node {
         }
     }
 
-    @Nonnull
-    public List<Node> getDependencyFrom() {
+    public JavaNode(RootNode rootNode) {
+        super(rootNode);
+//        this.children = Utility.convertAbstractNode(rootNode.getChildren());
+        this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
+        this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
+    }
+
+    public List<Pair> getDependencyFrom() {
         return dependencyFrom;
     }
 
-    public void setDependencyFrom(List<Node> dependencyFrom) {
+    public void setDependencyFrom(List<Pair> dependencyFrom) {
         this.dependencyFrom = dependencyFrom;
     }
 
-    @Nonnull
-    public List<Node> getDependencyTo() {
+    public List<Pair> getDependencyTo() {
         return dependencyTo;
     }
 
-//    public void setChildren(List<JavaNode> children) {
-//        this.children = children;
-//    }
-//
-//    @Nonnull
-//    public List<JavaNode> getChildren() {
-//        return children;
-//    }
+    public void setDependencyTo(List<Pair> dependencyTo) {
+        this.dependencyTo = dependencyTo;
+    }
+
+    public void setChildren(List<Integer> children) {
+        this.children = children;
+    }
+
+    @Nonnull
+    public List<Integer> getChildren() {
+        return children;
+    }
 
     public List<JavaAnnotation> getAnnotates() {
         return annotates;

@@ -1,7 +1,7 @@
 package com.example.springservice.ast.utility;
-
 import com.example.springservice.ast.annotation.JavaAnnotation;
-
+import com.example.springservice.ast.dependency.DependencyCountTable;
+import com.example.springservice.ast.dependency.Pair;
 import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.ast.node.Node;
 import com.example.springservice.ast.type.JavaType;
@@ -9,9 +9,11 @@ import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.annotate.Annotate;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
+import mrmathami.cia.java.tree.dependency.JavaDependency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Utility {
@@ -19,19 +21,40 @@ public class Utility {
 
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
-        List<JavaNode> children = new ArrayList<>();
+        List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            children.add(new JavaNode(node));
+            javaNodeList.add(new JavaNode(node));
+        }
+
+        return javaNodeList;
+    }
+
+    @Nonnull
+    public static List<Integer> convertChildren(List<AbstractNode> abstractNodeList) {
+        List<Integer> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            javaNodeList.add(node.getId());
+        }
+
+        return javaNodeList;
+    }
+
+    @Nonnull
+    public static List<Node> convertNode(List<AbstractNode> abstractNodeList) {
+        List<Node> children = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            children.add(new Node(node));
         }
 
         return children;
     }
 
     @Nonnull
-    public static List<Node> convertMap(Set<AbstractNode> nodeList) {
-        List<Node> javaNodeList = new ArrayList<>();
-        for(AbstractNode node : nodeList) {
-            javaNodeList.add(new Node(node));
+    public static List convertMap(Map<AbstractNode, mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable> nodeList) {
+        List<Pair> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : nodeList.keySet()) {
+            DependencyCountTable dependencyCountTable = new DependencyCountTable(nodeList.get(node));
+            javaNodeList.add(new Pair(new Node(node), dependencyCountTable));
         }
         return javaNodeList;
     }
@@ -72,26 +95,23 @@ public class Utility {
         return arguments;
     }
 
-    public static List<JavaNode> convertSpringNodes(List<JavaNode> javaNodeList) {
-        List<JavaNode> springNodes = new ArrayList<>();
+    public static void findDependency(mrmathami.cia.java.tree.node.JavaNode javaRootNode) {
 
-        for(JavaNode javaNode : javaNodeList) {
-            if(isSpringNode(javaNode.getAnnotates()))
-            {
-                springNodes.add(javaNode);
-            }
+        printDependency(javaRootNode.getDependencyTo());
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : javaRootNode.getChildren())
+        {
+            findDependency(javaNode);
         }
-
-        return springNodes;
     }
 
-    private static Boolean isSpringNode (List<JavaAnnotation> javaAnnotationList) {
+    private static void printDependency(Map Dependencies) {
+        Set<AbstractNode> nodes = Dependencies.keySet();
 
-        for(JavaAnnotation javaAnnotation : javaAnnotationList) {
-            if(Resource.SPRING_ANNOTATION_QUALIFIED_NAME.contains(javaAnnotation.getName())) {
-                return true;
-            }
+
+        for(AbstractNode node : nodes) {
+            mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable dependencyCountTable = (mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable) Dependencies.get(node);
+            System.out.println(dependencyCountTable.getCount(JavaDependency.USE));
         }
-        return false;
     }
 }
