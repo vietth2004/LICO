@@ -1,7 +1,9 @@
 package com.example.springservice.dependency;
 
 import com.example.springservice.ast.annotation.JavaAnnotation;
+import com.example.springservice.ast.dependency.Pair;
 import com.example.springservice.ast.node.JavaNode;
+import com.example.springservice.ast.type.JavaType;
 import com.example.springservice.resource.Resource;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +16,19 @@ public class DependencyServiceImpl implements DependencyService{
     public List<Dependency> getAllDependency(List<JavaNode> javaNodeList) {
         List<JavaNode> springJavaNodeList = convertSpringNodes(javaNodeList);
         List<Dependency> dependencies = new ArrayList<>();
-        dependencies.addAll(getControllerServiceDependency(springJavaNodeList));
+        dependencies.addAll(getSpringDependency(springJavaNodeList));
 
 
         return dependencies;
     }
 
-    private List<Dependency> getControllerServiceDependency(List<JavaNode> springJavaNodeList) {
+    private List<Dependency> getSpringDependency(List<JavaNode> springJavaNodeList) {
         List<Dependency> dependencies = new ArrayList<>();
         List<JavaNode> springControllerJavaNodeList = new ArrayList<>();
         List<JavaNode> springServiceJavaNodeList = new ArrayList<>();
+        List<JavaNode> springRepositoryJavaNodeList = new ArrayList<>();
 
+        //Gather each Spring Java class
         for(JavaNode javaNode : springJavaNodeList) {
             if(containSpringAnnotations(javaNode, Resource.SPRING_CONTROLLER_ANNOTATION_QUALIFIED_NAME)) {
                 springControllerJavaNodeList.add(javaNode);
@@ -32,13 +36,36 @@ public class DependencyServiceImpl implements DependencyService{
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_SERVICE_QUALIFIED_NAME)) {
                 springServiceJavaNodeList.add(javaNode);
             }
+            if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_REPOSITORY_QUALIFIED_NAME)) {
+                springRepositoryJavaNodeList.add(javaNode);
+            }
         }
 
+        //Add all dependencies
         dependencies.addAll(findControllerServiceDependency(springControllerJavaNodeList, springServiceJavaNodeList));
+        dependencies.addAll(findServiceRepositoryDependency(springServiceJavaNodeList, springRepositoryJavaNodeList));
+        dependencies.addAll(findControllerRepositoryDependency(springControllerJavaNodeList, springRepositoryJavaNodeList));
+
         return dependencies;
     }
 
     private List<Dependency> findControllerServiceDependency(List<JavaNode> springControllerJavaNodeList,  List<JavaNode> springServiceJavaNodeList) {
+        List<Dependency> dependencies = new ArrayList<>();
+
+
+
+        return dependencies;
+    }
+
+    private List<Dependency> findServiceRepositoryDependency(List<JavaNode> springServiceJavaNodeList,  List<JavaNode> springRepositoryJavaNodeList) {
+        List<Dependency> dependencies = new ArrayList<>();
+
+
+
+        return dependencies;
+    }
+
+    private List<Dependency> findControllerRepositoryDependency(List<JavaNode> springControllerJavaNodeList,  List<JavaNode> springRepositoryJavaNodeList) {
         List<Dependency> dependencies = new ArrayList<>();
 
 
@@ -53,6 +80,9 @@ public class DependencyServiceImpl implements DependencyService{
             if(containSpringAnnotations(javaNode, Resource.SPRING_ANNOTATION_QUALIFIED_NAME)) {
                 springJavaNodeList.add(javaNode);
             }
+            if(isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_QUALIFIED_NAME)) {
+                springJavaNodeList.add(javaNode);
+            }
         }
         return springJavaNodeList;
     }
@@ -61,6 +91,20 @@ public class DependencyServiceImpl implements DependencyService{
         for(JavaAnnotation javaAnnotation : javaNode.getAnnotates()) {
             if(conditionState.contains(javaAnnotation.getName())) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean isSpringInterface(JavaNode javaNode, List<String> interfaceList) {
+
+        if(javaNode.getEntityClass().equals("JavaInterfaceNode")) {
+            for(JavaType extendInterface : javaNode.getExtendInterfaces()) {
+                for(String interfaceName : interfaceList) {
+                    if(extendInterface.getDescribe().contains(interfaceName)){
+                        return true;
+                    }
+                }
             }
         }
         return false;

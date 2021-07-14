@@ -6,6 +6,7 @@ import com.example.springservice.ast.type.JavaType;
 import com.example.springservice.ast.utility.Utility;
 import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
 import mrmathami.cia.java.jdt.tree.node.MethodNode;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
@@ -33,6 +34,8 @@ public class JavaNode extends Node {
 
     private transient List<JavaType> parameters = new ArrayList<>();
 
+    private transient List<JavaType> extendInterfaces = new ArrayList<>();
+
     @Nonnull
     public JavaNode(AbstractNode abstractNode) {
         super(abstractNode);
@@ -50,6 +53,10 @@ public class JavaNode extends Node {
 
         if(abstractNode instanceof AbstractModifiedAnnotatedNode) {
             this.modifiers = Utility.convertModifiers(((AbstractModifiedAnnotatedNode) abstractNode).getModifiers());
+        }
+
+        if(abstractNode instanceof InterfaceNode) {
+            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
         }
     }
 
@@ -99,5 +106,13 @@ public class JavaNode extends Node {
 
     public void setParameters(List<JavaType> parameters) {
         this.parameters = parameters;
+    }
+
+    public List<JavaType> getExtendInterfaces() {
+        return extendInterfaces;
+    }
+
+    public void setExtendInterfaces(List<JavaType> extendInterfaces) {
+        this.extendInterfaces = extendInterfaces;
     }
 }
