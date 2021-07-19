@@ -20,10 +20,10 @@ public class JavaType {
     private List<JavaAnnotation> annotates = new ArrayList<>();
 
     private JavaType innerType = null;
-    private List<JavaType> arguments = new ArrayList<>();
-    private List<JavaType> bounds = new ArrayList<>();
+    private List<JavaType> arguments;
+    private List<JavaType> bounds;
 
-    private Node node = new Node();
+    private Node node;
 
     public JavaType() {
     }

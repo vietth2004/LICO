@@ -22,27 +22,22 @@ public class JavaNode extends Node {
 
     private List<String> modifiers = new ArrayList<>();
 
-    @Nonnull
     private transient List<Pair> dependencyFrom;
 
-    @Nonnull
     private transient List<Pair> dependencyTo;
 
-
-    @Nonnull
     private transient List children = new ArrayList<>();
 
-    private transient List<JavaAnnotation> annotates = new ArrayList<>();
+    private transient List<JavaAnnotation> annotates;
 
-    private transient List<JavaType> parameters = new ArrayList<>();
+    private transient List<JavaType> parameters;
 
-    private transient List<JavaType> extendInterfaces = new ArrayList<>();
+    private transient List<JavaType> extendInterfaces;
 
     public JavaNode(Integer id) {
         super(id);
     }
 
-    @Nonnull
     public JavaNode(AbstractNode abstractNode, Boolean nodes) {
         super(abstractNode);
 
@@ -99,7 +94,6 @@ public class JavaNode extends Node {
         this.children = children;
     }
 
-    @Nonnull
     public List getChildren() {
         return children;
     }
