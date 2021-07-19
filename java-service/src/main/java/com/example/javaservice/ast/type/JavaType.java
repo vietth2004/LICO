@@ -17,11 +17,11 @@ public class JavaType {
     private String idClass = new String();
     private Integer id;
     private String describe = new String();
-    private List<JavaAnnotation> annotates = new ArrayList<>();
+    private List annotates;
 
-    private JavaType innerType = null;
-    private List<JavaType> arguments;
-    private List<JavaType> bounds;
+    private JavaType innerType;
+    private List arguments;
+    private List bounds;
 
     private Node node;
 
