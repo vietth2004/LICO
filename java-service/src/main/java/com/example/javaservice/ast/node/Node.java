@@ -36,6 +36,15 @@ public class Node {
         this.simpleName = abstractNode.getSimpleName();
     }
 
+    public Node(String entityClass, String idClass, Integer id, String qualifiedName, String uniqueName, String simpleName) {
+        this.entityClass = entityClass;
+        this.idClass = idClass;
+        this.id = id;
+        this.qualifiedName = qualifiedName;
+        this.uniqueName = uniqueName;
+        this.simpleName = simpleName;
+    }
+
     public String getEntityClass() {
         return entityClass;
     }

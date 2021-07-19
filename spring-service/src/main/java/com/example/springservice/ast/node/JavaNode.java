@@ -67,6 +67,9 @@ public class JavaNode extends Node {
         this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
     }
 
+    public JavaNode() {
+    }
+
     public List<Pair> getDependencyFrom() {
         return dependencyFrom;
     }

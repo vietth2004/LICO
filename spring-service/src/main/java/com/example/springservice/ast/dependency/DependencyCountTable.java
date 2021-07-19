@@ -24,6 +24,14 @@ public class DependencyCountTable implements Serializable {
         this.OVERRIDE = dependencyCountTable.getCount(JavaDependency.OVERRIDE);
     }
 
+    public DependencyCountTable(Integer USE, Integer MEMBER, Integer INHERITANCE, Integer INVOCATION, Integer OVERRIDE) {
+        this.USE = USE;
+        this.MEMBER = MEMBER;
+        this.INHERITANCE = INHERITANCE;
+        this.INVOCATION = INVOCATION;
+        this.OVERRIDE = OVERRIDE;
+    }
+
     public Integer getUSE() {
         return USE;
     }

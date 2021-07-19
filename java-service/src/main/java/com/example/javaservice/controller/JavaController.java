@@ -5,6 +5,7 @@ import com.example.javaservice.ast.node.JavaNode;
 import com.example.javaservice.ast.node.Node;
 import com.example.javaservice.ast.utility.Utility;
 import com.example.javaservice.model.Request;
+import com.example.javaservice.model.Response;
 import com.example.javaservice.service.JavaService;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
@@ -22,14 +23,14 @@ public class JavaController {
     private JavaService javaService;
 
     @PostMapping("/api/pathParse/toRoot")
-    public Node parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
+    public Node parseProjectByPathToRootNode(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot);
         return node;
     }
 
     @PostMapping("/api/fileParse/toRoot")
-    public Node parseProjectByFile(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
+    public Node parseProjectByFileToRootNode(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         JavaNode node = new JavaNode(javaRoot);
         return node;
@@ -49,4 +50,19 @@ public class JavaController {
         return nodeList;
     }
 
+    @PostMapping("/api/pathParse")
+    public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
+        RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
+        JavaNode node = new JavaNode(javaRoot);
+        List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
+        return new Response(node, nodeList);
+    }
+
+    @PostMapping("/api/fileParse")
+    public Response parseProjectByFile(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
+        RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
+        JavaNode node = new JavaNode(javaRoot);
+        List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
+        return new Response(node, nodeList);
+    }
 }
