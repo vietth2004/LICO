@@ -32,6 +32,9 @@ public class JavaNode extends Node {
     @Nonnull
     private transient List<JavaNode> children = new ArrayList<>();
 
+    @Nonnull
+    private transient List<Integer> child = new ArrayList<>();
+
     private transient List<JavaAnnotation> annotates = new ArrayList<>();
 
     private transient List<JavaType> parameters = new ArrayList<>();
@@ -45,10 +48,11 @@ public class JavaNode extends Node {
     @Nonnull
     public JavaNode(AbstractNode abstractNode, Boolean nodes) {
         super(abstractNode);
+
         if(nodes == true) {
             this.children = Utility.convertAbstractNode(abstractNode.getChildren());
         } else {
-            this.children = Utility.convertChildren(abstractNode.getChildren());
+            this.child = Utility.convertChildren(abstractNode.getChildren());
         }
 
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
@@ -125,5 +129,13 @@ public class JavaNode extends Node {
 
     public void setExtendInterfaces(List<JavaType> extendInterfaces) {
         this.extendInterfaces = extendInterfaces;
+    }
+
+    public List<Integer> getChild() {
+        return child;
+    }
+
+    public void setChild(List<Integer> child) {
+        this.child = child;
     }
 }

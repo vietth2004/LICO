@@ -37,10 +37,10 @@ public class Utility {
     }
 
     @Nonnull
-    public static List<JavaNode> convertChildren(List<AbstractNode> abstractNodeList) {
-        List<JavaNode> javaNodeList = new ArrayList<>();
+    public static List<Integer> convertChildren(List<AbstractNode> abstractNodeList) {
+        List<Integer> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node.getId()));
+            javaNodeList.add(node.getId());
         }
 
         return javaNodeList;
