@@ -17,6 +17,10 @@ public class Node {
     public Node() {
     }
 
+    public Node(Integer id) {
+        this.id = id;
+    }
+
     public Node(String entityClass, String idClass, Integer id) {
         this.entityClass = entityClass;
         this.idClass = idClass;
