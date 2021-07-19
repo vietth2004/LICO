@@ -24,7 +24,7 @@ public class JavaController {
     @PostMapping("/api/pathParse/toRoot")
     public Node parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
-        JavaNode node = new JavaNode(javaRoot.getChildren().get(0));
+        JavaNode node = new JavaNode(javaRoot);
         return node;
     }
 
@@ -38,14 +38,14 @@ public class JavaController {
     @PostMapping("/api/fileParse/toNodes")
     public List<JavaNode> parseProjectByFileToNodes(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException {
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
-        List<JavaNode> nodeList = Utility.convertAbstractNode(javaRoot.getAllNodes());
+        List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return nodeList;
     }
 
     @PostMapping("/api/pathParse/toNodes")
     public List<JavaNode> parseProjectByPathToNodes(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
-        List<JavaNode> nodeList = Utility.convertAbstractNode(javaRoot.getAllNodes());
+        List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return nodeList;
     }
 

@@ -43,9 +43,14 @@ public class JavaNode extends Node {
     }
 
     @Nonnull
-    public JavaNode(AbstractNode abstractNode) {
+    public JavaNode(AbstractNode abstractNode, Boolean nodes) {
         super(abstractNode);
-        this.children = Utility.convertAbstractNode(abstractNode.getChildren());
+        if(nodes == true) {
+            this.children = Utility.convertAbstractNode(abstractNode.getChildren());
+        } else {
+            this.children = Utility.convertChildren(abstractNode.getChildren());
+        }
+
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
 

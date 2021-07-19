@@ -16,12 +16,21 @@ import java.util.*;
 
 public class Utility {
 
-
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node));
+            javaNodeList.add(new JavaNode(node, true));
+        }
+
+        return javaNodeList;
+    }
+
+    @Nonnull
+    public static List<JavaNode> convertToAllNodes(List<AbstractNode> abstractNodeList) {
+        List<JavaNode> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            javaNodeList.add(new JavaNode(node, false));
         }
 
         return javaNodeList;
