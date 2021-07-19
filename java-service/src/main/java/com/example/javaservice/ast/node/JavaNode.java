@@ -28,11 +28,11 @@ public class JavaNode extends Node {
 
     private transient List children = new ArrayList<>();
 
-    private transient List<JavaAnnotation> annotates;
+    private transient List<JavaAnnotation> annotates = null;
 
-    private transient List<JavaType> parameters;
+    private transient List<JavaType> parameters = null;
 
-    private transient List<JavaType> extendInterfaces;
+    private transient List<JavaType> extendInterfaces = null;
 
     public JavaNode(Integer id) {
         super(id);
