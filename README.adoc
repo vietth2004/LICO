@@ -6,6 +6,7 @@ JCIA is Java Change Impact Analysis software help you to easily determine all de
 
 # Service
 
+### All Service Ports
 - port 8761: Discovery-Service
 
 #### Administration
