@@ -16,6 +16,15 @@ import java.util.*;
 
 public class Utility {
 
+    public static void printList (List list) {
+
+        for(Object obj : list) {
+            if(obj instanceof JavaNode) {
+                System.out.println(((JavaNode) obj).getQualifiedName());
+            }
+        }
+    }
+
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();

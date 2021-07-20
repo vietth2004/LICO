@@ -6,36 +6,37 @@ import com.example.springservice.ast.dependency.JavaDependency;
 import com.example.springservice.ast.node.Node;
 
 public class Dependency {
-    private Node callerNode = new Node();
 
-    private Node calleeNode = new Node();
+    private Integer callerNode;
+
+    private Integer calleeNode;
 
     private DependencyCountTable javaDependency;
 
-    public Dependency(Node callerNode, Node calleeNode) {
+    public Dependency(Integer callerNode, Integer calleeNode) {
         this.callerNode = callerNode;
         this.calleeNode = calleeNode;
     }
 
-    public Dependency(Node callerNode, Node calleeNode, DependencyCountTable javaDependency) {
+    public Dependency(Integer callerNode, Integer calleeNode, DependencyCountTable javaDependency) {
         this.callerNode = callerNode;
         this.calleeNode = calleeNode;
         this.javaDependency = javaDependency;
     }
 
-    public Node getCallerNode() {
+    public Integer getCallerNode() {
         return callerNode;
     }
 
-    public void setCallerNode(Node callerNode) {
+    public void setCallerNode(Integer callerNode) {
         this.callerNode = callerNode;
     }
 
-    public Node getCalleeNode() {
+    public Integer getCalleeNode() {
         return calleeNode;
     }
 
-    public void setCalleeNode(Node calleeNode) {
+    public void setCalleeNode(Integer calleeNode) {
         this.calleeNode = calleeNode;
     }
 

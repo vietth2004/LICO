@@ -130,4 +130,43 @@ public class Resource {
                     "org.springframework.web.bind.annotation.CrossOrigin"
             )
     );
+
+    public static final List<String> SPRING_ANNOTATION_SIMPLE_NAME = new ArrayList<>(
+            Arrays.asList(
+                    ".MongoRepository",
+                    ".RestController",
+                    ".Repository",
+                    ".Controller",
+                    ".Service",
+                    ".Repository",
+                    ".Component",
+                    ".Configuration",
+                    ".Bean",
+                    ".SpringBootApplication",
+                    ".ApplicationContext"));
+
+    public static final List<String> SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME = new ArrayList<>(
+            Arrays.asList(
+                    "Repository",
+                    "JpaRepository",
+                    "CrudRepository",
+                    "PagingAndSortingRepository",
+                    ".repository.MongoRepository"
+            ));
+
+    public static final List<String> SPRING_MVC_CONTROLLER_SIMPLE_NAME = new ArrayList<>(
+            Arrays.asList(
+                    ".RestController",
+                    ".Controller"
+            ));
+
+    public static final List<String> SPRING_MVC_SERVICE_SIMPLE_NAME = new ArrayList<>(
+            Arrays.asList(
+                    ".Service"
+            ));
+
+    public static final List<String> SPRING_MVC_REPOSITORY_SIMPLE_NAME = new ArrayList<>(
+            Arrays.asList(
+                    ".Repository"
+            ));
 }

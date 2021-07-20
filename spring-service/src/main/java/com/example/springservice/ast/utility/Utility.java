@@ -18,6 +18,27 @@ import java.util.Set;
 
 public class Utility {
 
+    public static void printList (List list, String request) {
+        System.out.println(request);
+
+        for(Object obj : list) {
+            if(obj instanceof Node) {
+                System.out.println(((Node) obj).getQualifiedName());
+            }
+            if(obj instanceof Pair) {
+                System.out.println(((Pair) obj).getNode().getQualifiedName());
+            }
+        }
+
+        System.out.println();
+    }
+
+    public static void printDep (JavaNode caller, JavaNode callee) {
+        System.out.println();
+        System.out.println("Caller: " + caller.getQualifiedName());
+        System.out.println("Callee: " + callee.getQualifiedName());
+        System.out.println();
+    }
 
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
