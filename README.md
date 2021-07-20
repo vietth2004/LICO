@@ -1,0 +1,22 @@
+= Spring Boot image:https://ci.spring.io/api/v1/teams/spring-boot/pipelines/spring-boot-2.6.x/jobs/build/badge["Build Status", link="https://ci.spring.io/teams/spring-boot/pipelines/spring-boot-2.6.x?groups=Build"] image:https://badges.gitter.im/Join Chat.svg["Chat",link="https://gitter.im/spring-projects/spring-boot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"] image:https://img.shields.io/badge/Revved%20up%20by-Gradle%20Enterprise-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Gradle Enterprise", link="https://ge.spring.io/scans?&search.rootProjectNames=Spring%20Boot%20Build&search.rootProjectNames=spring-boot-build"]
+:docs: https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference
+:github: https://github.com/spring-projects/spring-boot
+
+# Service
+
+- port 8761: Discovery-Service
+
+#### Administration
+- port 8001: Utility-Service
+- port 8002: User-Service
+- port 8003: Project-Service
+
+#### Parse Service
+- port 7001: Parser-Service
+- port 7002: Java-Service
+- port 7003: Spring-Service
+
+
+#### Algo Service
+- port 6001: Cia-Service
+- port 6002: VerControl-Service
