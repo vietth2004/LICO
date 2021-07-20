@@ -2,3 +2,4 @@
 /.mvn/wrapper/
 /discovery-server.iml
 /src/test/
+/target/
