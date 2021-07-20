@@ -21,3 +21,4 @@ storage
 /cia-service/output.json
 /user-service/output.json
 /utility-service/output.json
+/version-compare-service/src/test/
