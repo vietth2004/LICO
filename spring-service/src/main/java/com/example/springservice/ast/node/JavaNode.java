@@ -15,7 +15,6 @@ import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class JavaNode extends Node {
 
     private List<String> modifiers = new ArrayList<>();
@@ -25,7 +24,6 @@ public class JavaNode extends Node {
 
     @Nonnull
     private transient List<Pair> dependencyTo;
-
 
     @Nonnull
     private transient List<Integer> children = new ArrayList<>();

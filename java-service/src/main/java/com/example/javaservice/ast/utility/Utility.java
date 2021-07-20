@@ -67,8 +67,13 @@ public class Utility {
     }
 
     @Nonnull
-    public static List<String> convertModifiers(int modifierId) {
+    public static List<String> convertModifiers(Set modifierSet) {
         List<String> modifierList = new ArrayList<>();
+
+        for(Object obj : modifierSet) {
+            System.out.println(obj.toString());
+            modifierList.add(obj.toString());
+        }
 
         return modifierList;
     }

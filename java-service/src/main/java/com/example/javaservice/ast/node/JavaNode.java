@@ -10,6 +10,7 @@ import mrmathami.cia.java.jdt.tree.node.MethodNode;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
+import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class JavaNode extends Node implements Serializable {
 
-    private List<String> modifiers = new ArrayList<>();
+    private List modifiers = null;
 
     private transient List<Pair> dependencyFrom;
 
@@ -61,6 +62,7 @@ public class JavaNode extends Node implements Serializable {
             this.children = Utility.convertChildren(abstractNode.getChildren());
         }
 
+
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
 
@@ -72,8 +74,8 @@ public class JavaNode extends Node implements Serializable {
             this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
         }
 
-        if (abstractNode instanceof AbstractModifiedAnnotatedNode) {
-            this.modifiers = Utility.convertModifiers(((AbstractModifiedAnnotatedNode) abstractNode).getModifiers());
+        if (abstractNode instanceof JavaModifiedNode) {
+            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
         }
 
         if (abstractNode instanceof InterfaceNode) {
@@ -136,4 +138,11 @@ public class JavaNode extends Node implements Serializable {
         this.extendInterfaces = extendInterfaces;
     }
 
+    public List getModifiers() {
+        return modifiers;
+    }
+
+    public void setModifiers(List modifiers) {
+        this.modifiers = modifiers;
+    }
 }
