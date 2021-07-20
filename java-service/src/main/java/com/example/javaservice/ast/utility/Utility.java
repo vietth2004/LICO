@@ -71,7 +71,6 @@ public class Utility {
         List<String> modifierList = new ArrayList<>();
 
         for(Object obj : modifierSet) {
-            System.out.println(obj.toString());
             modifierList.add(obj.toString());
         }
 
