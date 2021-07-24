@@ -1,6 +1,7 @@
 package com.example.javaservice.ast.utility;
 
 import com.example.javaservice.ast.annotation.JavaAnnotation;
+import com.example.javaservice.ast.dependency.Dependency;
 import com.example.javaservice.ast.dependency.DependencyCountTable;
 import com.example.javaservice.ast.dependency.Pair;
 import com.example.javaservice.ast.node.JavaNode;
@@ -23,6 +24,22 @@ public class Utility {
                 System.out.println(((JavaNode) obj).getQualifiedName());
             }
         }
+    }
+
+    public static List getDependency(JavaNode rootNode) {
+        List<Dependency> dependencies = new ArrayList<>();
+
+        for(Pair node : rootNode.getDependencyTo()) {
+            dependencies.add(new Dependency(rootNode.getId(), node.getNode().getId(), node.getDependency()));
+        }
+
+        for (Object javaNode : rootNode.getChildren()) {
+            if(javaNode instanceof JavaNode) {
+                dependencies.addAll(getDependency((JavaNode) javaNode));
+            }
+        }
+
+        return dependencies;
     }
 
     @Nonnull

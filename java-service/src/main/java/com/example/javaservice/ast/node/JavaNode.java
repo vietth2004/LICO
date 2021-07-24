@@ -45,12 +45,12 @@ public class JavaNode extends Node implements Serializable {
 
         if (nodes == true) {
             this.children = Utility.convertAbstractNode(abstractNode.getChildren());
+            this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+            this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
         } else {
             this.children = Utility.convertChildren(abstractNode.getChildren());
         }
 
-        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
-        this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
 
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
