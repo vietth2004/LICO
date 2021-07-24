@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -56,6 +57,22 @@ public class JavaController {
         JavaNode node = new JavaNode(javaRoot);
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return new Response(node, nodeList);
+    }
+
+    @PostMapping("/api/pathParse/dependencies")
+    public List parseProjectByPathToDependencies(@RequestBody Request path) throws JavaCiaException, IOException{
+        RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
+        JavaNode node = new JavaNode(javaRoot);
+        List dependencies = Utility.getDependency(node);
+        return dependencies;
+    }
+
+    @PostMapping("/api/fileParse/dependencies")
+    public List parseProjectByFileToToDependencies(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
+        RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
+        JavaNode node = new JavaNode(javaRoot);
+        List dependencies = Utility.getDependency(node);
+        return dependencies;
     }
 
     @PostMapping("/api/fileParse")

@@ -6,7 +6,7 @@ public class Dependency {
 
     private Integer calleeNode;
 
-    private DependencyCountTable javaDependency;
+    private DependencyCountTable type;
 
     public Dependency(Integer callerNode, Integer calleeNode) {
         this.callerNode = callerNode;
@@ -16,7 +16,7 @@ public class Dependency {
     public Dependency(Integer callerNode, Integer calleeNode, DependencyCountTable javaDependency) {
         this.callerNode = callerNode;
         this.calleeNode = calleeNode;
-        this.javaDependency = javaDependency;
+        this.type = javaDependency;
     }
 
     public Integer getCallerNode() {
@@ -35,11 +35,11 @@ public class Dependency {
         this.calleeNode = calleeNode;
     }
 
-    public DependencyCountTable getJavaDependency() {
-        return javaDependency;
+    public DependencyCountTable getType() {
+        return type;
     }
 
-    public void setJavaDependency(DependencyCountTable javaDependency) {
-        this.javaDependency = javaDependency;
+    public void setType(DependencyCountTable type) {
+        this.type = type;
     }
 }
