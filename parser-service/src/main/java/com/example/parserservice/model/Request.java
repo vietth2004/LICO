@@ -1,11 +1,12 @@
 package com.example.parserservice.model;
 
+import com.example.parserservice.ast.dependency.Dependency;
+import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.node.JavaNode;
 
 import java.util.List;
 
-
-public class Response {
+public class Request {
 
     private JavaNode rootNode;
 
@@ -13,15 +14,10 @@ public class Response {
 
     private List allNodes;
 
-    public Response() {
+    public Request() {
     }
 
-    public Response(JavaNode rootNode, List allDependencies) {
-        this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
-    }
-
-    public Response(JavaNode rootNode, List allDependencies, List allNodes) {
+    public Request(JavaNode rootNode, List allDependencies, List allNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.allNodes = allNodes;

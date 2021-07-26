@@ -7,6 +7,9 @@ public class Pair{
     private Node node;
     private DependencyCountTable dependency;
 
+    public Pair() {
+    }
+
     public Pair(Node first, DependencyCountTable second) {
         this.node = first;
         this.dependency = second;

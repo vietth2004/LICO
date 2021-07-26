@@ -1,6 +1,7 @@
 package com.example.parserservice.controller;
 
 import com.example.parserservice.ast.node.JavaNode;
+import com.example.parserservice.model.Path;
 import com.example.parserservice.model.Resource;
 import com.example.parserservice.model.Response;
 import com.example.parserservice.service.ParserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +30,13 @@ public class ParserController {
     }
 
 
-    @PostMapping("api/parse")
-    public Response parseProjectToRootNode (@RequestParam(name="parser") List<String> parserList, @RequestBody MultipartFile file) {
+    @PostMapping("api/parse/file")
+    public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList, @RequestBody MultipartFile file) throws IOException {
         return parserService.build(parserList, file);
+    }
+
+    @PostMapping("api/parse/path")
+    public Response parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList, @RequestBody Path path) throws IOException {
+        return parserService.build(parserList, path);
     }
 }
