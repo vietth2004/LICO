@@ -8,6 +8,9 @@ public class Dependency {
 
     private DependencyCountTable type;
 
+    public Dependency() {
+    }
+
     public Dependency(Integer callerNode, Integer calleeNode) {
         this.callerNode = callerNode;
         this.calleeNode = calleeNode;

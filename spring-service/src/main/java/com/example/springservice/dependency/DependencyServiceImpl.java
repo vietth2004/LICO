@@ -32,29 +32,20 @@ public class DependencyServiceImpl implements DependencyService{
         List<JavaNode> springRepositoryJavaNodeList = new ArrayList<>();
 
         // Gather each Spring Java class
-
         for(JavaNode javaNode : springJavaNodeList) {
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_CONTROLLER_SIMPLE_NAME)) {
                 springControllerJavaNodeList.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
-//                System.out.println("Found Spring Controller: " + javaNode.getQualifiedName());
             }
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_SERVICE_SIMPLE_NAME)) {
                 springServiceJavaNodeList.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
-//                System.out.println("Found Spring Service: " + javaNode.getQualifiedName());
             }
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_REPOSITORY_SIMPLE_NAME)
                     || isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
                 springRepositoryJavaNodeList.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
-//                System.out.println("Found Spring Repository: " + javaNode.getQualifiedName());
             }
         }
 
         //Add all dependencies
-
-//        Utility.printList(springControllerJavaNodeList, "Spring Controller");
-//        Utility.printList(springServiceJavaNodeList, "Service Controller");
-//        Utility.printList(springRepositoryJavaNodeList, "Repo Controller");
-
         dependencies.addAll(getControllerServiceDependency(springControllerJavaNodeList, springServiceJavaNodeList));
         dependencies.addAll(getServiceRepositoryDependency(springServiceJavaNodeList, springRepositoryJavaNodeList));
         dependencies.addAll(getControllerRepositoryDependency(springControllerJavaNodeList, springRepositoryJavaNodeList));
@@ -63,84 +54,15 @@ public class DependencyServiceImpl implements DependencyService{
     }
 
     private List<Dependency> getControllerServiceDependency(List<JavaNode> springControllerJavaNodeList, List<JavaNode> springServiceJavaNodeList) {
-        List<Dependency> dependencies = new ArrayList<>();
-
-        for (JavaNode callerNode : springControllerJavaNodeList) {
-            System.out.println("For Node ID: " + callerNode.getId());
-            System.out.println("DepSize: " + callerNode.getDependencyTo().size());
-            Utility.printList(callerNode.getDependencyTo(), "DepTo: ");
-            for (Pair dependenceNode : callerNode.getDependencyTo()) {
-                Node node = dependenceNode.getNode();
-                System.out.println("Callee: " + node.getId());
-                for (JavaNode calleeNode : springServiceJavaNodeList) {
-                    System.out.println("Spring: " + calleeNode.getId());
-                    if (node.getId().equals(calleeNode.getId())) {
-                        Utility.printDep(callerNode, calleeNode);
-                        dependencies.add(new Dependency(
-                                callerNode.getId(),
-                                calleeNode.getId(),
-                                new DependencyCountTable(0,0,0,0,0)));
-                    }
-                }
-                System.out.println();
-            }
-        }
-
-        return dependencies;
+        return getDependencies(springControllerJavaNodeList, springServiceJavaNodeList);
     }
 
     private List<Dependency> getServiceRepositoryDependency(List<JavaNode> springServiceJavaNodeList, List<JavaNode> springRepositoryJavaNodeList) {
-        List<Dependency> dependencies = new ArrayList<>();
-
-        for (JavaNode callerNode : springServiceJavaNodeList) {
-            System.out.println("For Node ID: " + callerNode.getId());
-            System.out.println("DepSize: " + callerNode.getDependencyTo().size());
-            Utility.printList(callerNode.getDependencyTo(), "DepTo: ");
-            for (Pair dependenceNode : callerNode.getDependencyTo()) {
-                Node node = dependenceNode.getNode();
-                System.out.println("Callee: " + node.getId());
-                for (JavaNode calleeNode : springRepositoryJavaNodeList) {
-                    System.out.println("Spring: " + calleeNode.getId());
-                    if (node.getId().equals(calleeNode.getId())) {
-                        Utility.printDep(callerNode, calleeNode);
-                        dependencies.add(new Dependency(
-                                callerNode.getId(),
-                                calleeNode.getId(),
-                                new DependencyCountTable(0, 0, 0, 0, 0)));
-                    }
-                }
-                System.out.println();
-            }
-        }
-
-        return dependencies;
+        return getDependencies(springServiceJavaNodeList, springRepositoryJavaNodeList);
     }
 
     private List<Dependency> getControllerRepositoryDependency(List<JavaNode> springControllerJavaNodeList, List<JavaNode> springRepositoryJavaNodeList) {
-        List<Dependency> dependencies = new ArrayList<>();
-
-        for (JavaNode callerNode : springControllerJavaNodeList) {
-            System.out.println("For Node ID: " + callerNode.getId());
-            System.out.println("DepSize: " + callerNode.getDependencyTo().size());
-            Utility.printList(callerNode.getDependencyTo(), "DepTo: ");
-            for (Pair dependenceNode : callerNode.getDependencyTo()) {
-                Node node = dependenceNode.getNode();
-                System.out.println("Callee: " + node.getId());
-                for (JavaNode calleeNode : springRepositoryJavaNodeList) {
-                    System.out.println("Spring: " + calleeNode.getId());
-                    if (node.getId().equals(calleeNode.getId())) {
-                        Utility.printDep(callerNode, calleeNode);
-                        dependencies.add(new Dependency(
-                                callerNode.getId(),
-                                calleeNode.getId(),
-                                new DependencyCountTable(0,0,0,0,0)));
-                    }
-                }
-                System.out.println();
-            }
-        }
-
-        return dependencies;
+        return getDependencies(springControllerJavaNodeList, springRepositoryJavaNodeList);
     }
 
     private List<JavaNode> convertSpringNodes(List<JavaNode> javaNodeList) {
@@ -195,5 +117,25 @@ public class DependencyServiceImpl implements DependencyService{
         }
 
         return springNodes;
+    }
+
+
+    private List<Dependency> getDependencies(List<JavaNode> springCallerJavaNodeList, List<JavaNode> springCalleeJavaNodeList) {
+        List<Dependency> dependencies = new ArrayList<>();
+
+        for (JavaNode callerNode : springCallerJavaNodeList) {
+            for (Pair dependenceNode : callerNode.getDependencyTo()) {
+                Node node = dependenceNode.getNode();
+                for (JavaNode calleeNode : springCalleeJavaNodeList) {
+                    if (node.getId().equals(calleeNode.getId())) {
+                        dependencies.add(new Dependency(
+                                callerNode.getId(),
+                                calleeNode.getId(),
+                                new DependencyCountTable(0,0,0,0,0, 1)));
+                    }
+                }
+            }
+        }
+        return dependencies;
     }
 }

@@ -11,6 +11,7 @@ public class DependencyCountTable implements Serializable {
     private Integer INHERITANCE = 0;
     private Integer INVOCATION = 0;
     private Integer OVERRIDE = 0;
+    private Integer SPRING = 0;
 
 
     public DependencyCountTable() {
@@ -22,6 +23,7 @@ public class DependencyCountTable implements Serializable {
         this.INHERITANCE = dependencyCountTable.getCount(JavaDependency.INHERITANCE);
         this.INVOCATION = dependencyCountTable.getCount(JavaDependency.INVOCATION);
         this.OVERRIDE = dependencyCountTable.getCount(JavaDependency.OVERRIDE);
+        this.SPRING = 0;
     }
 
     public DependencyCountTable(Integer USE, Integer MEMBER, Integer INHERITANCE, Integer INVOCATION, Integer OVERRIDE) {
@@ -30,6 +32,16 @@ public class DependencyCountTable implements Serializable {
         this.INHERITANCE = INHERITANCE;
         this.INVOCATION = INVOCATION;
         this.OVERRIDE = OVERRIDE;
+        this.SPRING = 0;
+    }
+
+    public DependencyCountTable(Integer USE, Integer MEMBER, Integer INHERITANCE, Integer INVOCATION, Integer OVERRIDE, Integer SPRING) {
+        this.USE = USE;
+        this.MEMBER = MEMBER;
+        this.INHERITANCE = INHERITANCE;
+        this.INVOCATION = INVOCATION;
+        this.OVERRIDE = OVERRIDE;
+        this.SPRING = SPRING;
     }
 
     public Integer getUSE() {
@@ -70,5 +82,13 @@ public class DependencyCountTable implements Serializable {
 
     public void setOVERRIDE(Integer OVERRIDE) {
         this.OVERRIDE = OVERRIDE;
+    }
+
+    public Integer getSPRING() {
+        return SPRING;
+    }
+
+    public void setSPRING(Integer SPRING) {
+        this.SPRING = SPRING;
     }
 }

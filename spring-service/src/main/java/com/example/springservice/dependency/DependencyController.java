@@ -1,6 +1,7 @@
 package com.example.springservice.dependency;
 
 import com.example.springservice.ast.node.JavaNode;
+import com.example.springservice.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,13 @@ public class DependencyController {
         this.dependencyService = dependencyService;
     }
 
-    @PostMapping("/api/dependency/spring")
+    @PostMapping("/api/dependency/spring/response")
     public List<Dependency> getAllSpringDependencies(@RequestBody List<JavaNode> javaNodeList) {
         return dependencyService.getAllDependency(javaNodeList);
+    }
+
+    @PostMapping("/api/dependency/spring")
+    public Response returnResponse(@RequestBody List<JavaNode> javaNodeList) {
+        return new Response(dependencyService.getAllDependency(javaNodeList));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.parserservice.service;
 
+import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.model.Path;
 import com.example.parserservice.model.Request;
@@ -43,7 +44,8 @@ public class ParserServiceImpl implements ParserService{
 
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
-                dependencies.addAll(parse(parser, javaNodes));
+//                dependencies.addAll(parse(parser, javaNodes));
+                dependencies = wrapDependency(dependencies, parse(parser, javaNodes), "SPRING");
             }
         }
 
@@ -93,5 +95,30 @@ public class ParserServiceImpl implements ParserService{
 //        return new Request();
     }
 
+    private List<Dependency> wrapDependency (List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
 
+        for(Dependency dependency : frameworkDependencies) {
+            for(Dependency base : dependencies) {
+                if(isDependency(base, dependency)) {
+                    wrapDependency(base, dependency, type);
+                }
+            }
+        }
+
+        return dependencies;
+    }
+
+    private Boolean isDependency(Dependency base, Dependency dependency) {
+        if(base.getCalleeNode().equals(dependency.getCalleeNode())
+        && base.getCallerNode().equals(dependency.getCallerNode())) {
+            return true;
+        }
+        return false;
+    }
+
+    private void wrapDependency(Dependency base, Dependency dependency, String type) {
+        if(type.equals("SPRING")){
+            base.getType().setSPRING(dependency.getType().getSPRING());
+        }
+    }
 }

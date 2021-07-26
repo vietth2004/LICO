@@ -10,14 +10,14 @@ public class Request {
 
     private JavaNode rootNode;
 
-    private List allDependencies;
+    private List<Dependency> allDependencies;
 
     private List allNodes;
 
     public Request() {
     }
 
-    public Request(JavaNode rootNode, List allDependencies, List allNodes) {
+    public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.allNodes = allNodes;
@@ -35,7 +35,7 @@ public class Request {
         return allDependencies;
     }
 
-    public void setAllDependencies(List allDependencies) {
+    public void setAllDependencies(List<Dependency> allDependencies) {
         this.allDependencies = allDependencies;
     }
 

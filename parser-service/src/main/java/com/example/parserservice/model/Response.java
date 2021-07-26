@@ -1,5 +1,6 @@
 package com.example.parserservice.model;
 
+import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
 
 import java.util.List;
@@ -9,19 +10,19 @@ public class Response {
 
     private JavaNode rootNode;
 
-    private List allDependencies;
+    private List<Dependency> allDependencies;
 
     private List allNodes;
 
     public Response() {
     }
 
-    public Response(JavaNode rootNode, List allDependencies) {
+    public Response(JavaNode rootNode, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
     }
 
-    public Response(JavaNode rootNode, List allDependencies, List allNodes) {
+    public Response(JavaNode rootNode, List<Dependency> allDependencies, List allNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.allNodes = allNodes;
@@ -39,7 +40,7 @@ public class Response {
         return allDependencies;
     }
 
-    public void setAllDependencies(List allDependencies) {
+    public void setAllDependencies(List<Dependency> allDependencies) {
         this.allDependencies = allDependencies;
     }
 
