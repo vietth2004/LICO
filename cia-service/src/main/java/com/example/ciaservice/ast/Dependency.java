@@ -1,5 +1,7 @@
 package com.example.ciaservice.ast;
 
+import com.example.ciaservice.ast.DependencyCountTable;
+
 public class Dependency {
 
     private Integer callerNode;

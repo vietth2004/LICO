@@ -2,10 +2,7 @@ package com.example.parserservice.service;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
-import com.example.parserservice.model.Path;
-import com.example.parserservice.model.Request;
-import com.example.parserservice.model.Resource;
-import com.example.parserservice.model.Response;
+import com.example.parserservice.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +28,12 @@ public class ParserServiceImpl implements ParserService{
     public List parse(String parser, List javaNodes) {
         List dependencies = new ArrayList();
         if(parser.equals("spring-parser")) {
-            Request springs = restTemplate.postForObject("http://localhost:7003/api/dependency/spring", javaNodes, Request.class);
+
+            Request springs = restTemplate.postForObject(
+                    "http://localhost:7003/api/dependency/spring",
+                    javaNodes,
+                    Request.class);
+
             dependencies.addAll(springs.getAllDependencies());
         }
         return dependencies;
@@ -42,17 +44,31 @@ public class ParserServiceImpl implements ParserService{
         List javaNodes = request.getAllNodes();
         List dependencies = request.getAllDependencies();
 
+
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
-//                dependencies.addAll(parse(parser, javaNodes));
                 dependencies = wrapDependency(dependencies, parse(parser, javaNodes), "SPRING");
             }
         }
 
-        return new Response(javaNode, dependencies, javaNodes);
+        List nodes = getNodesWeight(dependencies, javaNodes.size());
+
+        return new Response(javaNode, dependencies, javaNodes, nodes);
     }
 
+    private List getNodesWeight(List dependencies, Integer size) {
+
+        CiaResponse ciaResponse = restTemplate.postForObject(
+                "http://localhost:6001/api/cia/calculate",
+                new CiaRequest(dependencies, size),
+                CiaResponse.class);
+
+        return ciaResponse.getNodes();
+    }
+
+    //**
     //Build Project with Multipart File
+    //**
     @Override
     public Response build(List<String> parserList, MultipartFile file) throws IOException {
         Request request = buildProject(file);
@@ -76,8 +92,9 @@ public class ParserServiceImpl implements ParserService{
         return requestEntity;
     }
 
-
+    //**
     //Build Project with File Path
+    //**
     @Override
     public Response build(List<String> parserList, Path path) throws IOException {
         Request request = buildProject(path);
@@ -92,7 +109,6 @@ public class ParserServiceImpl implements ParserService{
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, path, Request.class);
         System.out.println(request);
         return request.getBody();
-//        return new Request();
     }
 
     private List<Dependency> wrapDependency (List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {

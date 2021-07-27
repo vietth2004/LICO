@@ -1,20 +1,19 @@
-package com.example.ciaservice.model;
+package com.example.parserservice.model;
 
-import com.example.ciaservice.ast.Dependency;
+import com.example.parserservice.ast.dependency.Dependency;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Request {
-
+public class CiaRequest {
     private List<Dependency> allDependencies = new ArrayList<>();
 
     private Integer totalNodes;
 
-    public Request() {
+    public CiaRequest() {
     }
 
-    public Request(List<Dependency> allDependencies, Integer totalNodes) {
+    public CiaRequest(List<Dependency> allDependencies, Integer totalNodes) {
         this.allDependencies = allDependencies;
         this.totalNodes = totalNodes;
     }

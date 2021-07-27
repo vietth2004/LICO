@@ -19,6 +19,6 @@ public class CiaController {
 
     @PostMapping("api/cia/calculate")
     public Response calculateNodeWeight(@RequestBody Request request) {
-        return ciaService.calculate(request.getDependencies());
+        return ciaService.calculate(request.getAllDependencies(), request.getTotalNodes());
     }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CiaService {
 
-    public Response calculate (List<Dependency> dependencies);
+    public Response calculate (List<Dependency> dependencies, Integer totalNodes);
 }
