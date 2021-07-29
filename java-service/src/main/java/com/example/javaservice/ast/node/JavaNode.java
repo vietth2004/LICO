@@ -33,6 +33,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List extendInterfaces = null;
 
+    private transient Integer parent;
+
     public JavaNode() {
     }
 
@@ -40,7 +42,7 @@ public class JavaNode extends Node implements Serializable {
         super(id);
     }
 
-    public JavaNode(AbstractNode abstractNode, Boolean nodes) {
+    public JavaNode(AbstractNode abstractNode, Boolean nodes, Integer parent) {
         super(abstractNode);
 
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
@@ -50,6 +52,7 @@ public class JavaNode extends Node implements Serializable {
             this.children = Utility.convertAbstractNode(abstractNode.getChildren());
         } else {
             this.children = Utility.convertChildren(abstractNode.getChildren());
+            this.parent = parent;
         }
 
         if (abstractNode instanceof MethodNode) {
@@ -130,5 +133,13 @@ public class JavaNode extends Node implements Serializable {
 
     public void setModifiers(List modifiers) {
         this.modifiers = modifiers;
+    }
+
+    public Integer getParent() {
+        return parent;
+    }
+
+    public void setParent(Integer parent) {
+        this.parent = parent;
     }
 }

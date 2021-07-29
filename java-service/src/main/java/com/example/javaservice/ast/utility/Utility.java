@@ -46,7 +46,7 @@ public class Utility {
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node, true));
+            javaNodeList.add(new JavaNode(node, true, 0));
         }
 
         return javaNodeList;
@@ -56,7 +56,12 @@ public class Utility {
     public static List<JavaNode> convertToAllNodes(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node, false));
+            try{
+                Integer parent = node.getParent().getId();
+                javaNodeList.add(new JavaNode(node, false, parent));
+            } catch (Exception e) {
+                javaNodeList.add(new JavaNode(node, false, 0));
+            }
         }
 
         return javaNodeList;
