@@ -1,4 +1,4 @@
-package com.example.parserservice.model;
+package com.example.parserservice.model.cia;
 
 import com.example.parserservice.ast.node.NodeWeight;
 

@@ -1,4 +1,4 @@
-package com.example.parserservice.model;
+package com.example.parserservice.model.parser;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.dependency.Pair;
