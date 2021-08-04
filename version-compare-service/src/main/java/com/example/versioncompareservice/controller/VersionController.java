@@ -27,6 +27,7 @@ public class VersionController {
     @PostMapping("api/version-compare/byFile")
     public Response versionCompareByFile(@RequestBody MultipartFile[] files) {
         List<String> fileNames = new ArrayList<>();
+
         for(MultipartFile file : files) {
             fileNames.add(fileStorageService.storeFile(file));
         }
