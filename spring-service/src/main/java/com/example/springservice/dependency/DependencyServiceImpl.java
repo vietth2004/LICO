@@ -71,11 +71,9 @@ public class DependencyServiceImpl implements DependencyService{
         for (JavaNode javaNode : javaNodeList) {
             if(containSpringAnnotations(javaNode, Resource.SPRING_ANNOTATION_SIMPLE_NAME)) {
                 springJavaNodeList.add(javaNode);
-//                System.out.println("Found Spring: " + javaNode.getQualifiedName());
             }
             if(isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
                 springJavaNodeList.add(javaNode);
-//                System.out.println("Found Spring: " + javaNode.getQualifiedName());
             }
         }
         return springJavaNodeList;
@@ -83,7 +81,6 @@ public class DependencyServiceImpl implements DependencyService{
 
     private Boolean containSpringAnnotations(JavaNode javaNode, List<String> conditionState) {
         for(JavaAnnotation javaAnnotation : javaNode.getAnnotates()) {
-//            System.out.println("Annotations: " + javaAnnotation.getName());
             for(String condition : conditionState) {
                 if(javaAnnotation.getName().contains(condition)) {
                     return true;

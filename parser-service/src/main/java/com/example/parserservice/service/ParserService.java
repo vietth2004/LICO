@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface ParserService {
 
-    List parse (String parser, List javaNodes);
-
     Request buildProject(MultipartFile file) throws IOException;
 
     Response build(List<String> parser, MultipartFile file) throws IOException;

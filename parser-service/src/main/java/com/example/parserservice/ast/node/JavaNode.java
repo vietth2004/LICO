@@ -100,7 +100,7 @@ public class JavaNode extends Node implements Serializable {
         return children;
     }
 
-    public void setChildren(List children) {
+    public void setChildren(List<JavaNode> children) {
         this.children = children;
     }
 

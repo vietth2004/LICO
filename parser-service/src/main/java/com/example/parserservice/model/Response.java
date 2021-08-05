@@ -22,6 +22,11 @@ public class Response {
     public Response() {
     }
 
+    public Response(JavaNode rootNode, Integer totalNodes) {
+        this.rootNode = rootNode;
+        this.totalNodes = totalNodes;
+    }
+
     public Response(JavaNode rootNode, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
@@ -50,21 +55,21 @@ public class Response {
         this.rootNode = rootNode;
     }
 
-    public List getAllDependencies() {
-        return allDependencies;
-    }
+//    public List getAllDependencies() {
+//        return allDependencies;
+//    }
+//
+//    public void setAllDependencies(List<Dependency> allDependencies) {
+//        this.allDependencies = allDependencies;
+//    }
 
-    public void setAllDependencies(List<Dependency> allDependencies) {
-        this.allDependencies = allDependencies;
-    }
-
-    public List getAllNodes() {
-        return allNodes;
-    }
-
-    public void setAllNodes(List allNodes) {
-        this.allNodes = allNodes;
-    }
+//    public List getAllNodes() {
+//        return allNodes;
+//    }
+//
+//    public void setAllNodes(List allNodes) {
+//        this.allNodes = allNodes;
+//    }
 
     public Integer getTotalNodes() {
         return totalNodes;
