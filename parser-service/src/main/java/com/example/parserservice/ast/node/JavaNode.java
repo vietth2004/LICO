@@ -33,24 +33,13 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List extendInterfaces = null;
 
+    private transient Integer parent;
+
     public JavaNode() {
     }
 
     public JavaNode(Integer id) {
         super(id);
-    }
-
-    public JavaNode(String entityClass, String idClass, Integer id, String qualifiedName, String uniqueName,
-                    String simpleName, List<String> modifiers, List<Pair> dependencyFrom, List<Pair> dependencyTo,
-                    List children, List annotates, List parameters, List extendInterfaces) {
-        super(entityClass, idClass, id, qualifiedName, uniqueName, simpleName);
-        this.modifiers = modifiers;
-        this.dependencyFrom = dependencyFrom;
-        this.dependencyTo = dependencyTo;
-        this.children = children;
-        this.annotates = annotates;
-        this.parameters = parameters;
-        this.extendInterfaces = extendInterfaces;
     }
 
     public JavaNode(AbstractNode abstractNode, Boolean nodes) {
@@ -61,7 +50,6 @@ public class JavaNode extends Node implements Serializable {
         } else {
             this.children = Utility.convertChildren(abstractNode.getChildren());
         }
-
 
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
@@ -81,6 +69,8 @@ public class JavaNode extends Node implements Serializable {
         if (abstractNode instanceof InterfaceNode) {
             this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
         }
+
+        this.parent = abstractNode.getParent().getId();
     }
 
     public JavaNode(RootNode rootNode) {

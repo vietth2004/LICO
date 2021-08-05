@@ -11,7 +11,6 @@ import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.annotate.Annotate;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.tree.dependency.JavaDependency;
 
 import java.util.*;
 
