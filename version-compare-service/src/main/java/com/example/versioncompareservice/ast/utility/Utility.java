@@ -27,6 +27,40 @@ public class Utility {
         }
     }
 
+    public static List<JavaNode> convertJavaNodeList (List nodeList) {
+        List<JavaNode> nodes = new ArrayList<>();
+
+        for(Object javaNode : nodeList) {
+            if(javaNode instanceof mrmathami.cia.java.tree.node.JavaNode) {
+                nodes.add(new JavaNode((AbstractNode) javaNode, true));
+            }
+        }
+
+        return nodes;
+    }
+
+    public static List<JavaNode> convertJavaNodeSet (Set<mrmathami.cia.java.tree.node.JavaNode> nodeList) {
+        List<JavaNode> nodes = new ArrayList<>();
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : nodeList) {
+            nodes.add(new JavaNode(javaNode));
+        }
+
+        return nodes;
+    }
+
+    public static List<JavaNode> convertJavaNodePairSet (
+            Set<mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode>> nodeList) {
+
+        List<JavaNode> nodes = new ArrayList<>();
+
+        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode : nodeList) {
+            nodes.add(new JavaNode(javaNode.getB()));
+        }
+
+        return nodes;
+    }
+
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();

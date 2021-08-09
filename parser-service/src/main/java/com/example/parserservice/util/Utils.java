@@ -88,51 +88,36 @@ public class Utils {
     }
 
     private static void wrapRootNode(JavaNode javaNode, List<Dependency> dependencies) {
-        javaNode.setDependencyTo(getDependency(javaNode, javaNode.getDependencyTo(), dependencies));
-        javaNode.setDependencyFrom(getDependency(javaNode, javaNode.getDependencyFrom(), dependencies));
+        javaNode.setDependencyTo(getDependencyTo(javaNode, javaNode.getDependencyTo(), dependencies));
+        javaNode.setDependencyFrom(getDependencyFrom(javaNode, javaNode.getDependencyFrom(), dependencies));
 
         for (Object childNode : javaNode.getChildren()) {
             if(childNode instanceof JavaNode){
                 wrapRootNode((JavaNode) childNode, dependencies);
             }
         }
-
-//        for (Pair pair : javaNode.getDependencyTo()) {
-//            for(Dependency dependency : dependencies) {
-//                if(javaNode.getId().equals(dependency.getCallerNode())
-//                && pair.getNode().equals(dependency.getCalleeNode())) {
-//                    pair.setDependency(dependency.getType());
-//                }
-//            }
-//        }
-
-//        for (Dependency dependency : dependencies) {
-//            if(javaNode.getId().equals(dependency.getCallerNode())) {
-//                List<Pair> dependenciesTemp = new ArrayList<>();
-//                for(Pair pair : javaNode.getDependencyTo()) {
-//                    if(pair.getNode().equals(dependency.getCalleeNode())) {
-//                        pair.setDependency(dependency.getType());
-//                    }
-//                }
-//                javaNode.setDependencyTo(dependenciesTemp);
-//            }
-//
-//            if(javaNode.getId().equals(dependency.getCalleeNode())) {
-//                for(Pair pair : javaNode.getDependencyFrom()) {
-//                    if(pair.getNode().equals(dependency.getCallerNode())) {
-//                        pair.setDependency(dependency.getType());
-//                    }
-//                }
-//            }
-//        }
     }
 
-    public static List<Pair> getDependency(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
+    public static List<Pair> getDependencyTo(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
         List<Pair> dependenciesTempList = new ArrayList<>();
         for (Pair pair : nodeDependency) {
             for(Dependency dependency : dependencies) {
                 if(javaNode.getId().equals(dependency.getCallerNode())
                         && pair.getNode().getId().equals(dependency.getCalleeNode())) {
+                    pair.setDependency(dependency.getType());
+                }
+            }
+            dependenciesTempList.add(pair);
+        }
+        return dependenciesTempList;
+    }
+
+    public static List<Pair> getDependencyFrom(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
+        List<Pair> dependenciesTempList = new ArrayList<>();
+        for (Pair pair : nodeDependency) {
+            for(Dependency dependency : dependencies) {
+                if(javaNode.getId().equals(dependency.getCalleeNode())
+                        && pair.getNode().getId().equals(dependency.getCallerNode())) {
                     pair.setDependency(dependency.getType());
                 }
             }

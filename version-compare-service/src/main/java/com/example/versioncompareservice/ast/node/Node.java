@@ -1,6 +1,7 @@
 package com.example.versioncompareservice.ast.node;
 
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.tree.node.JavaNode;
 
 public class Node {
     private String entityClass = new String();
@@ -30,6 +31,15 @@ public class Node {
         this.qualifiedName = abstractNode.getQualifiedName();
         this.uniqueName = abstractNode.getUniqueName();
         this.simpleName = abstractNode.getSimpleName();
+    }
+
+    public Node(JavaNode javaNode) {
+        this.entityClass = javaNode.getEntityClass();
+        this.idClass = javaNode.getIdClass();
+        this.id = javaNode.getId();
+        this.qualifiedName = javaNode.getQualifiedName();
+        this.uniqueName = javaNode.getUniqueName();
+        this.simpleName = javaNode.getSimpleName();
     }
 
     public Node(String entityClass, String idClass, Integer id, String qualifiedName, String uniqueName, String simpleName) {

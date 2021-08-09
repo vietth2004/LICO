@@ -44,7 +44,7 @@ public class FileStorageService {
         String fileNameWithExtension = StringUtils.cleanPath(file.getOriginalFilename());
         String fileNameWithoutExtension = file.getName();
         String filePath = "./storage/" + fileNameWithExtension;
-        String folderPath = "./storage/" + fileNameWithoutExtension + "-project";
+        String folderPath = "./storage/compare" + fileNameWithoutExtension + "-project";
 
         try {
             // Check if the file's name contains invalid characters

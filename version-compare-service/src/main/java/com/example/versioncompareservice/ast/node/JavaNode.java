@@ -5,6 +5,7 @@ import com.example.versioncompareservice.ast.annotation.JavaAnnotation;
 import com.example.versioncompareservice.ast.dependency.Pair;
 import com.example.versioncompareservice.ast.type.JavaType;
 import com.example.versioncompareservice.ast.utility.Utility;
+import mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
 import mrmathami.cia.java.jdt.tree.node.MethodNode;
@@ -15,6 +16,7 @@ import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class JavaNode extends Node implements Serializable {
@@ -88,6 +90,13 @@ public class JavaNode extends Node implements Serializable {
         this.children = Utility.convertAbstractNode(rootNode.getChildren());
         this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
+    }
+
+    public JavaNode(mrmathami.cia.java.tree.node.JavaNode javaNode) {
+        super(javaNode);
+//        this.children = Utility.convertJavaNodeList(javaNode.getChildren());
+        this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
+        this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
     }
 
     public List<Pair> getDependencyFrom() {
