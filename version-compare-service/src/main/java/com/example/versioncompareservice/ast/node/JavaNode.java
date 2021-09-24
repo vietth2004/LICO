@@ -1,6 +1,5 @@
 package com.example.versioncompareservice.ast.node;
 
-
 import com.example.versioncompareservice.ast.annotation.JavaAnnotation;
 import com.example.versioncompareservice.ast.dependency.Pair;
 import com.example.versioncompareservice.ast.type.JavaType;
@@ -17,7 +16,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 
 public class JavaNode extends Node implements Serializable {
 
@@ -38,51 +36,12 @@ public class JavaNode extends Node implements Serializable {
     public JavaNode() {
     }
 
-    public JavaNode(Integer id) {
-        super(id);
-    }
-
-    public JavaNode(String entityClass, String idClass, Integer id, String qualifiedName, String uniqueName,
-                    String simpleName, List<String> modifiers, List<Pair> dependencyFrom, List<Pair> dependencyTo,
-                    List children, List annotates, List parameters, List extendInterfaces) {
-        super(entityClass, idClass, id, qualifiedName, uniqueName, simpleName);
-        this.modifiers = modifiers;
-        this.dependencyFrom = dependencyFrom;
-        this.dependencyTo = dependencyTo;
-        this.children = children;
-        this.annotates = annotates;
-        this.parameters = parameters;
-        this.extendInterfaces = extendInterfaces;
-    }
-
     public JavaNode(AbstractNode abstractNode, Boolean nodes) {
         super(abstractNode);
-
-        if (nodes == true) {
-            this.children = Utility.convertAbstractNode(abstractNode.getChildren());
-        } else {
-            this.children = Utility.convertChildren(abstractNode.getChildren());
-        }
-
-
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-
-        if (abstractNode instanceof MethodNode) {
-            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
-        }
-
-        if (abstractNode instanceof AbstractAnnotatedNode) {
-            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
-        }
-
-        if (abstractNode instanceof JavaModifiedNode) {
-            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
-        }
-
-        if (abstractNode instanceof InterfaceNode) {
-            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
-        }
+        this.children = this.returnChildren(abstractNode, nodes);
+        this.setupProperties(abstractNode);
     }
 
     public JavaNode(RootNode rootNode) {
@@ -94,7 +53,6 @@ public class JavaNode extends Node implements Serializable {
 
     public JavaNode(mrmathami.cia.java.tree.node.JavaNode javaNode) {
         super(javaNode);
-//        this.children = Utility.convertJavaNodeList(javaNode.getChildren());
         this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
     }
@@ -153,5 +111,31 @@ public class JavaNode extends Node implements Serializable {
 
     public void setModifiers(List modifiers) {
         this.modifiers = modifiers;
+    }
+
+    private void setupProperties (AbstractNode abstractNode) {
+        if (abstractNode instanceof MethodNode) {
+            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
+        }
+
+        if (abstractNode instanceof AbstractAnnotatedNode) {
+            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
+        }
+
+        if (abstractNode instanceof JavaModifiedNode) {
+            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
+        }
+
+        if (abstractNode instanceof InterfaceNode) {
+            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
+        }
+    }
+
+    private List returnChildren(AbstractNode abstractNode, Boolean nodes) {
+        if (nodes == true) {
+            return Utility.convertAbstractNode(abstractNode.getChildren());
+        } else {
+            return Utility.convertChildren(abstractNode.getChildren());
+        }
     }
 }

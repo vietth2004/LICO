@@ -19,8 +19,6 @@ import java.util.List;
 
 public class JavaNode extends Node implements Serializable {
 
-    private List modifiers = null;
-
     private transient List<Pair> dependencyFrom;
 
     private transient List<Pair> dependencyTo;
@@ -32,6 +30,8 @@ public class JavaNode extends Node implements Serializable {
     private transient List parameters = null;
 
     private transient List extendInterfaces = null;
+
+    private List modifiers = null;
 
     private transient Integer parent;
 
@@ -48,28 +48,8 @@ public class JavaNode extends Node implements Serializable {
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
         this.parent = parent;
-
-        if (nodes == true) {
-            this.children = Utility.convertAbstractNode(abstractNode.getChildren());
-        } else {
-            this.children = Utility.convertChildren(abstractNode.getChildren());
-        }
-
-        if (abstractNode instanceof MethodNode) {
-            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
-        }
-
-        if (abstractNode instanceof AbstractAnnotatedNode) {
-            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
-        }
-
-        if (abstractNode instanceof JavaModifiedNode) {
-            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
-        }
-
-        if (abstractNode instanceof InterfaceNode) {
-            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
-        }
+        this.children = this.returnChildren(abstractNode, nodes);
+        this.setupProperties(abstractNode);
     }
 
     public JavaNode(RootNode rootNode) {
@@ -141,5 +121,31 @@ public class JavaNode extends Node implements Serializable {
 
     public void setParent(Integer parent) {
         this.parent = parent;
+    }
+
+    private void setupProperties (AbstractNode abstractNode) {
+        if (abstractNode instanceof MethodNode) {
+            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
+        }
+
+        if (abstractNode instanceof AbstractAnnotatedNode) {
+            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
+        }
+
+        if (abstractNode instanceof JavaModifiedNode) {
+            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
+        }
+
+        if (abstractNode instanceof InterfaceNode) {
+            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
+        }
+    }
+
+    private List returnChildren(AbstractNode abstractNode, Boolean nodes) {
+        if (nodes == true) {
+            return Utility.convertAbstractNode(abstractNode.getChildren());
+        } else {
+            return Utility.convertChildren(abstractNode.getChildren());
+        }
     }
 }

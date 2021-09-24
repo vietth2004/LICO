@@ -17,10 +17,6 @@ import java.util.List;
 
 public class JavaNode extends Node {
 
-    private List<String> modifiers = new ArrayList<>();
-
-    @Nonnull
-    private transient List<Pair> dependencyFrom;
 
     @Nonnull
     private transient List<Pair> dependencyTo;
@@ -30,50 +26,22 @@ public class JavaNode extends Node {
 
     private transient List<JavaAnnotation> annotates = new ArrayList<>();
 
-    private transient List<JavaType> parameters = new ArrayList<>();
-
     private transient List<JavaType> extendInterfaces = new ArrayList<>();
 
     @Nonnull
     public JavaNode(AbstractNode abstractNode) {
         super(abstractNode);
         this.children = Utility.convertChildren(abstractNode.getChildren());
-        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-
-        if(abstractNode instanceof MethodNode) {
-            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
-        }
-
-        if(abstractNode instanceof AbstractAnnotatedNode) {
-            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
-        }
-
-        if(abstractNode instanceof AbstractModifiedAnnotatedNode) {
-            this.modifiers = Utility.convertModifiers(((AbstractModifiedAnnotatedNode) abstractNode).getModifiers());
-        }
-
-        if(abstractNode instanceof InterfaceNode) {
-            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
-        }
+        this.setupProperties(abstractNode);
     }
 
     public JavaNode(RootNode rootNode) {
         super(rootNode);
-//        this.children = Utility.convertAbstractNode(rootNode.getChildren());
-        this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
     }
 
     public JavaNode() {
-    }
-
-    public List<Pair> getDependencyFrom() {
-        return dependencyFrom;
-    }
-
-    public void setDependencyFrom(List<Pair> dependencyFrom) {
-        this.dependencyFrom = dependencyFrom;
     }
 
     public List<Pair> getDependencyTo() {
@@ -101,19 +69,21 @@ public class JavaNode extends Node {
         this.annotates = annotates;
     }
 
-    public List<JavaType> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(List<JavaType> parameters) {
-        this.parameters = parameters;
-    }
-
     public List<JavaType> getExtendInterfaces() {
         return extendInterfaces;
     }
 
     public void setExtendInterfaces(List<JavaType> extendInterfaces) {
         this.extendInterfaces = extendInterfaces;
+    }
+
+    private void setupProperties(AbstractNode abstractNode) {
+        if(abstractNode instanceof AbstractAnnotatedNode) {
+            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
+        }
+
+        if(abstractNode instanceof InterfaceNode) {
+            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
+        }
     }
 }

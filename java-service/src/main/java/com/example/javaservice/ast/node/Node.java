@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
+
     private String entityClass = new String();
     private String idClass = new String();
     private Integer id;
@@ -93,32 +94,4 @@ public class Node {
         this.simpleName = simpleName;
     }
 
-//    public String getBinaryName() {
-//        return binaryName;
-//    }
-//
-//    public void setBinaryName(String binaryName) {
-//        this.binaryName = binaryName;
-//    }
-
-//    public List<String> getModifiers() {
-//        return modifiers;
-//    }
-//
-//    public void setModifiers(List<String> modifiers) {
-//        this.modifiers = modifiers;
-//    }
-
-//    public Integer getModifiers() {
-//        return modifiers;
-//    }
-//
-//    public void setModifiers(Integer modifiers) {
-//        this.modifiers = modifiers;
-//    }
-
-    public Integer convertModifier(Integer modifiers) {
-//        return JavaModifier.MODIFIERS.get(modifiers);
-        return modifiers;
-    }
 }

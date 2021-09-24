@@ -6,13 +6,11 @@ import com.example.springservice.ast.dependency.Pair;
 import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.ast.node.Node;
 import com.example.springservice.ast.type.JavaType;
-import com.example.springservice.ast.utility.Utility;
 import com.example.springservice.resource.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DependencyServiceImpl implements DependencyService{
