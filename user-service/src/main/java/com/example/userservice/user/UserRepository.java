@@ -2,7 +2,13 @@ package com.example.userservice.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
+
+    @Query("SELECT DISTINCT user from User user WHERE user.id= :id")
+    @Transactional
+    User findByID(String id);
 
 }

@@ -1,13 +1,14 @@
-package com.example.userservice.response;
+package com.example.userservice.security.model;
+
 
 public class AuthenticationResponse {
 
     private final String jwt;
     private String username;
-    private Integer id;
+    private String id;
     private Boolean success;
 
-    public AuthenticationResponse(String jwt, String username, Integer id) {
+    public AuthenticationResponse(String jwt, String username, String id) {
         this.jwt = jwt;
         this.username = username;
         this.id = id;
@@ -29,11 +30,11 @@ public class AuthenticationResponse {
         return jwt;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

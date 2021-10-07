@@ -9,4 +9,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer>, JpaS
     @Query("SELECT DISTINCT account from Account account WHERE account.username= :username")
     @Transactional
     Account findUserByUsername(String username);
+
+    @Query("SELECT DISTINCT account from Account account WHERE account.id= :id")
+    @Transactional
+    Account findByID(Integer id);
 }

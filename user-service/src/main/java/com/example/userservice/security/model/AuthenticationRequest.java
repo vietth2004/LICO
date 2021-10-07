@@ -1,4 +1,4 @@
-package com.example.userservice.response;
+package com.example.userservice.security.model;
 
 public class AuthenticationRequest {
 
