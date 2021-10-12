@@ -28,16 +28,8 @@ public class VersionController {
     }
 
     @PostMapping("api/version-compare/byFile")
-    public Response versionCompareByFile(@RequestBody MultipartFile[] files) {
-        List<String> fileNames = new ArrayList<>();
-
-        for(MultipartFile file : files) {
-            String fileName = fileStorageService.storeFile(file);
-            System.out.println(fileName);
-            fileNames.add(fileName);
-        }
-
-        return versionService.getCompare(fileNames);
+    public Response versionCompareByFile(@RequestBody MultipartFile[] files) throws JavaCiaException, IOException {
+        return versionService.getCompare(files);
     }
 
 

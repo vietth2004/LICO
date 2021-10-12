@@ -1,26 +1,26 @@
 package com.example.versioncompareservice.model;
 
 public class Version {
-    private String older = new String();
+    private String oldVersion;
 
-    private String newer = new String();
+    private String newVersion;
 
     public Version() {
     }
 
-    public String getOlder() {
-        return older;
+    public String getOldVersion() {
+        return oldVersion;
     }
 
-    public void setOlder(String older) {
-        this.older = older;
+    public void setOldVersion(String oldVersion) {
+        this.oldVersion = oldVersion;
     }
 
-    public String getNewer() {
-        return newer;
+    public String getNewVersion() {
+        return newVersion;
     }
 
-    public void setNewer(String newer) {
-        this.newer = newer;
+    public void setNewVersion(String newVersion) {
+        this.newVersion = newVersion;
     }
 }

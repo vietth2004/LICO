@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface VersionService {
 
-    Response getCompare (MultipartFile[] files);
+    Response getCompare (MultipartFile[] files) throws JavaCiaException, IOException;
 
     Response getCompare (List<String> files);
 

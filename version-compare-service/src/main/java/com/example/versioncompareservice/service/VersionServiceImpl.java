@@ -18,13 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Service
 public class VersionServiceImpl implements VersionService{
+
+    final FileStorageService fileStorageService;
+
+
 
     public static final JavaDependencyWeightTable DEPENDENCY_WEIGHT_TABLE = JavaDependencyWeightTable.of(Map.of(
             JavaDependency.USE, 1.0,
@@ -41,9 +44,25 @@ public class VersionServiceImpl implements VersionService{
             JavaDependency.OVERRIDE, 0.3
     ));
 
+    public VersionServiceImpl(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
+
     @Override
-    public Response getCompare(MultipartFile[] files) {
-        return new Response();
+    public Response getCompare(MultipartFile[] files) throws JavaCiaException, IOException {
+        Version version = new Version();
+
+        for (MultipartFile file : files) {
+            if(file.getOriginalFilename().contains("new")) {
+                String fileName = fileStorageService.storeFile(file);
+                version.setNewVersion("./project/anonymous/compare/" + fileName + "-project");
+            } else {
+                String fileName = fileStorageService.storeFile(file);
+                version.setOldVersion("./project/anonymous/compare/" + fileName + "-project");
+            }
+        }
+
+        return getCompare(version);
     }
 
     @Override
@@ -54,12 +73,12 @@ public class VersionServiceImpl implements VersionService{
     @Override
     public Response getCompare(Version files) throws JavaCiaException, IOException {
 
-        final Path inputPathA = Path.of(files.getOlder());
+        final Path inputPathA = Path.of(files.getOldVersion());
         final BuildInputSources inputSourcesA = new BuildInputSources(inputPathA);
         Utils.getFileList(inputSourcesA.createModule("core", inputPathA), inputPathA);
 
 
-        final Path inputPathB = Path.of(files.getNewer());
+        final Path inputPathB = Path.of(files.getNewVersion());
         final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
         Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
 
