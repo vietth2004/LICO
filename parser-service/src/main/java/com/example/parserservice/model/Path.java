@@ -2,9 +2,13 @@ package com.example.parserservice.model;
 
 public class Path {
 
-    private String path = new String();
+    private String path;
 
     public Path() {
+    }
+
+    public Path(String path) {
+        this.path = path;
     }
 
     public String getPath() {

@@ -32,7 +32,9 @@ public class VersionController {
         List<String> fileNames = new ArrayList<>();
 
         for(MultipartFile file : files) {
-            fileNames.add(fileStorageService.storeFile(file));
+            String fileName = fileStorageService.storeFile(file);
+            System.out.println(fileName);
+            fileNames.add(fileName);
         }
 
         return versionService.getCompare(fileNames);
