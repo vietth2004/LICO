@@ -28,7 +28,7 @@ public class VersionController {
     }
 
     @PostMapping("api/version-compare/byFile")
-    public Response versionCompareByFile(@RequestBody MultipartFile[] files) throws JavaCiaException, IOException {
+    public Response versionCompareByFile(@RequestBody List<MultipartFile> files) throws JavaCiaException, IOException {
         return versionService.getCompare(files);
     }
 

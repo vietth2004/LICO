@@ -12,7 +12,7 @@ public interface VersionService {
 
     Response getCompare (MultipartFile[] files) throws JavaCiaException, IOException;
 
-    Response getCompare (List<String> files);
+    Response getCompare (List<MultipartFile> files) throws JavaCiaException, IOException;
 
     Response getCompare (Version files) throws JavaCiaException, IOException;
 }

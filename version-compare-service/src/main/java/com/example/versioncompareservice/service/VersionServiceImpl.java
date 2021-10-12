@@ -49,7 +49,12 @@ public class VersionServiceImpl implements VersionService{
     }
 
     @Override
-    public Response getCompare(MultipartFile[] files) throws JavaCiaException, IOException {
+    public Response getCompare(MultipartFile[] files) {
+        return new Response();
+    }
+
+    @Override
+    public Response getCompare(List<MultipartFile> files) throws JavaCiaException, IOException {
         Version version = new Version();
 
         for (MultipartFile file : files) {
@@ -62,12 +67,12 @@ public class VersionServiceImpl implements VersionService{
             }
         }
 
-        return getCompare(version);
-    }
+//        String oldVersion = fileStorageService.storeFile(files.get(0));
+//        String newVersion = fileStorageService.storeFile(files.get(1));
+//        version.setOldVersion("./project/anonymous/compare/" + oldVersion + "-project");
+//        version.setNewVersion("./project/anonymous/compare/" + newVersion + "-project");
 
-    @Override
-    public Response getCompare(List<String> files) {
-        return new Response();
+        return getCompare(version);
     }
 
     @Override
