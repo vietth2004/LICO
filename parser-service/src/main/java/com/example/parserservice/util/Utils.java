@@ -84,7 +84,7 @@ public class Utils {
 
         List nodes = getNodesWeight(dependencies, javaNodes.size());
 
-        return new Response(javaNode, javaNodes.size());
+        return new Response(javaNode, javaNodes.size(), javaNodes);
     }
 
     private static void wrapRootNode(JavaNode javaNode, List<Dependency> dependencies) {
