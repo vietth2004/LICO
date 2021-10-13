@@ -33,6 +33,13 @@ public class Response {
         this.allNodes = allNodes;
     }
 
+    public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies) {
+        this.rootNode = rootNode;
+        this.allDependencies = allDependencies;
+        this.allNodes = allNodes;
+        this.totalNodes = totalNodes;
+    }
+
     public Response(JavaNode rootNode, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
@@ -61,13 +68,13 @@ public class Response {
         this.rootNode = rootNode;
     }
 
-//    public List getAllDependencies() {
-//        return allDependencies;
-//    }
-//
-//    public void setAllDependencies(List<Dependency> allDependencies) {
-//        this.allDependencies = allDependencies;
-//    }
+    public List getAllDependencies() {
+        return allDependencies;
+    }
+
+    public void setAllDependencies(List<Dependency> allDependencies) {
+        this.allDependencies = allDependencies;
+    }
 
     public List getAllNodes() {
         return allNodes;
