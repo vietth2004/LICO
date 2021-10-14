@@ -33,6 +33,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List extendInterfaces = null;
 
+    private String status = "unchanged";
+
     public JavaNode() {
     }
 
@@ -111,6 +113,14 @@ public class JavaNode extends Node implements Serializable {
 
     public void setModifiers(List modifiers) {
         this.modifiers = modifiers;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     private void setupProperties (AbstractNode abstractNode) {

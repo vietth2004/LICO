@@ -57,20 +57,20 @@ public class VersionServiceImpl implements VersionService{
     public Response getCompare(List<MultipartFile> files) throws JavaCiaException, IOException {
         Version version = new Version();
 
-        for (MultipartFile file : files) {
-            if(file.getOriginalFilename().contains("new")) {
-                String fileName = fileStorageService.storeFile(file);
-                version.setNewVersion("./project/anonymous/compare/" + fileName + "-project");
-            } else {
-                String fileName = fileStorageService.storeFile(file);
-                version.setOldVersion("./project/anonymous/compare/" + fileName + "-project");
-            }
-        }
+//        for (MultipartFile file : files) {
+//            if(file.getOriginalFilename().contains("new")) {
+//                String fileName = fileStorageService.storeFile(file);
+//                version.setNewVersion("./project/anonymous/compare/" + fileName + "-project");
+//            } else {
+//                String fileName = fileStorageService.storeFile(file);
+//                version.setOldVersion("./project/anonymous/compare/" + fileName + "-project");
+//            }
+//        }
 
-//        String oldVersion = fileStorageService.storeFile(files.get(0));
-//        String newVersion = fileStorageService.storeFile(files.get(1));
-//        version.setOldVersion("./project/anonymous/compare/" + oldVersion + "-project");
-//        version.setNewVersion("./project/anonymous/compare/" + newVersion + "-project");
+        String oldVersion = fileStorageService.storeFile(files.get(0));
+        String newVersion = fileStorageService.storeFile(files.get(1));
+        version.setOldVersion("./project/anonymous/compare/" + oldVersion + "-project");
+        version.setNewVersion("./project/anonymous/compare/" + newVersion + "-project");
 
         return getCompare(version);
     }
@@ -99,6 +99,8 @@ public class VersionServiceImpl implements VersionService{
         List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes());
         List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes());
         List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
+
+        JavaNode rootNode = new JavaNode(snapshotComparison.getCurrentSnapshot().getRootNode());
 
         return new Response(changedNodes, deletedNodes, addedNodes);
     }
