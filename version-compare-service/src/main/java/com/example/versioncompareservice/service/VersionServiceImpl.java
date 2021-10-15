@@ -9,6 +9,7 @@ import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
 import mrmathami.cia.java.jdt.project.builder.parameter.BuildInputSources;
 import mrmathami.cia.java.jdt.project.builder.parameter.JavaBuildParameter;
+import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
@@ -99,10 +100,44 @@ public class VersionServiceImpl implements VersionService{
         List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes());
         List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes());
         List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
+        List<JavaNode> unchangedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getUnchangedNodes());
 
-        JavaNode rootNode = new JavaNode(snapshotComparison.getCurrentSnapshot().getRootNode());
+        JavaNode rootNode = new JavaNode((AbstractNode) snapshotComparison.getCurrentSnapshot().getRootNode(), true);
 
-        return new Response(changedNodes, deletedNodes, addedNodes);
+        rootNode = Utils.convertNode(rootNode, changedNodes, addedNodes, deletedNodes, unchangedNodes);
+
+        return new Response(changedNodes, deletedNodes, addedNodes, rootNode);
+    }
+
+    @Override
+    public JavaNode GetCompareRootNode(Version files) throws JavaCiaException, IOException {
+
+//        final Path inputPathA = Path.of(files.getOldVersion());
+//        final BuildInputSources inputSourcesA = new BuildInputSources(inputPathA);
+//        Utils.getFileList(inputSourcesA.createModule("core", inputPathA), inputPathA);
+//
+//
+//        final Path inputPathB = Path.of(files.getNewVersion());
+//        final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
+//        Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
+//
+//        final JavaProjectSnapshot projectSnapshotA = ProjectBuilder.createProjectSnapshot("JSON-java-before",
+//                DEPENDENCY_WEIGHT_TABLE, inputSourcesA, Set.of(new JavaBuildParameter(List.of(), true)));
+//
+//        final JavaProjectSnapshot projectSnapshotB = ProjectBuilder.createProjectSnapshot("JSON-java-after",
+//                DEPENDENCY_WEIGHT_TABLE, inputSourcesB, Set.of(new JavaBuildParameter(List.of(), true)));
+//
+//        JavaProjectSnapshotComparison snapshotComparison = ProjectBuilder.createProjectSnapshotComparison(
+//                "compare", projectSnapshotB, projectSnapshotA, DEPENDENCY_IMPACT_TABLE);
+//
+//        List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes());
+//        List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes());
+//        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
+//
+//        JavaNode rootNode = new JavaNode(snapshotComparison.getCurrentSnapshot().getRootNode());
+
+//        return rootNode;
+        return new JavaNode();
     }
 
 }

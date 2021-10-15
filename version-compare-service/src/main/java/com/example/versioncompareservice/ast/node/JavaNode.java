@@ -10,6 +10,7 @@ import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
 import mrmathami.cia.java.jdt.tree.node.MethodNode;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
+import mrmathami.cia.java.tree.node.JavaRootNode;
 import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 
 import java.io.Serializable;

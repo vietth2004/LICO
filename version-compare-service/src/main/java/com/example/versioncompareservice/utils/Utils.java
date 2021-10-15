@@ -42,5 +42,33 @@ public class Utils {
         return addedNodes;
     }
 
+    public static JavaNode convertNode(JavaNode rootNode,
+                                       List<JavaNode> changedNodes,
+                                       List<JavaNode> addedNodes,
+                                       List<JavaNode> deletedNodes,
+                                       List<JavaNode> unchangedNodes) {
+
+        for(JavaNode javaNode : changedNodes) {
+            changeStatus(rootNode, javaNode, "changed");
+        }
+
+        for(JavaNode javaNode : addedNodes) {
+            changeStatus(rootNode, javaNode, "added");
+        }
+
+        return rootNode;
+    }
+
+    private static void changeStatus(JavaNode javaNode, JavaNode statusNode, String status) {
+        if(javaNode.getId().equals(statusNode.getId())) {
+            javaNode.setStatus(status);
+        } else {
+            for(Object childNode: javaNode.getChildren()) {
+                if(childNode instanceof JavaNode) {
+                    changeStatus((JavaNode) childNode, statusNode, status);
+                }
+            }
+        }
+    }
 
 }

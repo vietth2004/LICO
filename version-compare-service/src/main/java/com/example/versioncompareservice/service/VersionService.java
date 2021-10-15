@@ -1,5 +1,6 @@
 package com.example.versioncompareservice.service;
 
+import com.example.versioncompareservice.ast.node.JavaNode;
 import com.example.versioncompareservice.model.Response;
 import com.example.versioncompareservice.model.Version;
 import mrmathami.cia.java.JavaCiaException;
@@ -15,4 +16,6 @@ public interface VersionService {
     Response getCompare (List<MultipartFile> files) throws JavaCiaException, IOException;
 
     Response getCompare (Version files) throws JavaCiaException, IOException;
+
+    JavaNode GetCompareRootNode (Version files) throws JavaCiaException, IOException;
 }
