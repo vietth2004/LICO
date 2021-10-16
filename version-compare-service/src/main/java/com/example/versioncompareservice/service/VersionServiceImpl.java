@@ -116,7 +116,6 @@ public class VersionServiceImpl implements VersionService{
 //        final BuildInputSources inputSourcesA = new BuildInputSources(inputPathA);
 //        Utils.getFileList(inputSourcesA.createModule("core", inputPathA), inputPathA);
 //
-//
 //        final Path inputPathB = Path.of(files.getNewVersion());
 //        final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
 //        Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
@@ -135,7 +134,6 @@ public class VersionServiceImpl implements VersionService{
 //        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
 //
 //        JavaNode rootNode = new JavaNode(snapshotComparison.getCurrentSnapshot().getRootNode());
-
 //        return rootNode;
         return new JavaNode();
     }

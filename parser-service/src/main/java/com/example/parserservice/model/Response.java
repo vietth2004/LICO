@@ -68,17 +68,17 @@ public class Response {
         this.rootNode = rootNode;
     }
 
-    public List getAllDependencies() {
-        return allDependencies;
-    }
+//    public List getAllDependencies() {
+//        return allDependencies;
+//    }
 
     public void setAllDependencies(List<Dependency> allDependencies) {
         this.allDependencies = allDependencies;
     }
 
-    public List getAllNodes() {
-        return allNodes;
-    }
+//    public List getAllNodes() {
+//        return allNodes;
+//    }
 
     public void setAllNodes(List allNodes) {
         this.allNodes = allNodes;
