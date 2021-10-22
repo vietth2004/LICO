@@ -34,6 +34,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient Integer parent;
 
+    private transient String path = null;
+
     public JavaNode() {
     }
 
@@ -111,6 +113,14 @@ public class JavaNode extends Node implements Serializable {
 
     public void setModifiers(List modifiers) {
         this.modifiers = modifiers;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     private void setupProperties (AbstractNode abstractNode) {

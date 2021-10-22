@@ -35,6 +35,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient Integer parent;
 
+    private transient String path = null;
+
     public JavaNode() {
     }
 
@@ -49,6 +51,17 @@ public class JavaNode extends Node implements Serializable {
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
         this.parent = parent;
         this.children = this.returnChildren(abstractNode, nodes);
+        this.setupProperties(abstractNode);
+    }
+
+    public JavaNode(AbstractNode abstractNode, Boolean nodes, Integer parent, String path) {
+        super(abstractNode);
+
+        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+        this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+        this.parent = parent;
+        this.children = this.returnChildren(abstractNode, nodes);
+        this.path = path;
         this.setupProperties(abstractNode);
     }
 
@@ -121,6 +134,14 @@ public class JavaNode extends Node implements Serializable {
 
     public void setParent(Integer parent) {
         this.parent = parent;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     private void setupProperties (AbstractNode abstractNode) {

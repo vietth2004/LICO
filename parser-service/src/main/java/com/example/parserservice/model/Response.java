@@ -19,6 +19,8 @@ public class Response {
 
     private Integer totalNodes;
 
+    private String address = null;
+
     public Response() {
     }
 
@@ -38,6 +40,14 @@ public class Response {
         this.allDependencies = allDependencies;
         this.allNodes = allNodes;
         this.totalNodes = totalNodes;
+    }
+
+    public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies, String address) {
+        this.rootNode = rootNode;
+        this.allDependencies = allDependencies;
+        this.allNodes = allNodes;
+        this.totalNodes = totalNodes;
+        this.address = address;
     }
 
     public Response(JavaNode rootNode, List<Dependency> allDependencies) {
@@ -98,5 +108,13 @@ public class Response {
 
     public void setNodesWeight(List nodesWeight) {
         this.nodesWeight = nodesWeight;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -34,7 +34,7 @@ public class ParserServiceImpl implements ParserService{
         String fileName = projectService.storeFile(file);
         Path filePath = new Path("./project/anonymous/" + fileName + ".project");
         Request request = buildProject(filePath);
-        return Utils.getResponse(parserList, request);
+        return Utils.getResponse(parserList, request, filePath.getPath());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ParserServiceImpl implements ParserService{
     @Override
     public Response build(List<String> parserList, Path path) {
         Request request = buildProject(path);
-        return Utils.getResponse(parserList, request);
+        return Utils.getResponse(parserList, request, path.getPath());
     }
 
     @Override

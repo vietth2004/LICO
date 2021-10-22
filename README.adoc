@@ -23,3 +23,6 @@ JCIA is Java Change Impact Analysis software help you to easily determine all de
 #### Algo Service
 - port 6001: Cia-Service
 - port 6002: VerControl-Service
+
+#### Support Service
+- port 5001: File-Service

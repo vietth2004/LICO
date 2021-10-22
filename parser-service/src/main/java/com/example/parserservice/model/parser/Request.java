@@ -22,7 +22,6 @@ public class Request {
         this.allDependencies = allDependencies;
         this.allNodes = allNodes;
     }
-
     public JavaNode getRootNode() {
         return rootNode;
     }
@@ -46,4 +45,5 @@ public class Request {
     public void setAllNodes(List allNodes) {
         this.allNodes = allNodes;
     }
+
 }

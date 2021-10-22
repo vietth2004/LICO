@@ -46,7 +46,11 @@ public class Utility {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
             Integer parent = node.getParent().getId();
-            javaNodeList.add(new JavaNode(node, true, parent));
+            String path = new String();
+            if(!node.getEntityClass().equals("JavaPackageNode")) {
+                path = node.getSourceFile().getRelativePath().toString();
+            }
+            javaNodeList.add(new JavaNode(node, true, parent, path));
         }
 
         return javaNodeList;

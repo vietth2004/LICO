@@ -68,7 +68,7 @@ public class Utils {
         return dependencies;
     }
 
-    public static Response getResponse(List<String> parserList, Request request) {
+    public static Response getResponse(List<String> parserList, Request request, String path) {
         JavaNode javaNode = request.getRootNode();
         List javaNodes = request.getAllNodes();
 
@@ -84,7 +84,7 @@ public class Utils {
 
         List nodes = getNodesWeight(dependencies, javaNodes.size());
 
-        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies);
+        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path);
     }
 
     private static void wrapRootNode(JavaNode javaNode, List<Dependency> dependencies) {
