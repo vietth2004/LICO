@@ -22,7 +22,6 @@ public class FileController {
 
     @PostMapping("api/file")
     public FileResponse getFileContent(@RequestBody FileRequest fileRequest) throws IOException {
-        String content = fileService.readFile(fileRequest.getAddress());
-        return new FileResponse(content);
+        return fileService.readFile(fileRequest.getAddress());
     }
 }

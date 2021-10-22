@@ -1,6 +1,7 @@
 package com.example.fileservice.service;
 
 
+import com.example.fileservice.model.FileResponse;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -10,27 +11,33 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 @Service
 public class FileServiceImpl implements FileService{
 
-    public String readFile(String address) throws IOException {
+    public FileResponse readFile(String address) {
         String content = new String();
-        try {
+        List<String> fileContent = new ArrayList<>();
 
+        try {
             File myObj = new File(address);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
+                fileContent.add(data);
                 content += data + "\\n ";
             }
+
             myReader.close();
-            return content;
+            return new FileResponse(content, fileContent);
+
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
-            return "Error";
+            return new FileResponse("Error");
         }
     }
 }
