@@ -30,9 +30,9 @@ public class ParserServiceImpl implements ParserService{
     //Build Project with Multipart File
     //**
     @Override
-    public Response build(List<String> parserList, MultipartFile file) {
-        String fileName = projectService.storeFile(file);
-        Path filePath = new Path("./project/anonymous/" + fileName + ".project");
+    public Response build(List<String> parserList, MultipartFile file, String user) {
+        String fileName = projectService.storeFile(file, user);
+        Path filePath = new Path("./project/" + user + "/" + fileName + ".project");
         Request request = buildProject(filePath);
         return Utils.getResponse(parserList, request, filePath.getPath());
     }

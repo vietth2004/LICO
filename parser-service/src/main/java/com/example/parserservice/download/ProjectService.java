@@ -34,11 +34,11 @@ public class ProjectService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    public String storeFile(MultipartFile file, String user) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         String filePath = "./project/" + fileName;
-        String folderPath = "./project/" + "anonymous/" + fileName + ".project";
+        String folderPath = "./project/" + user + "/" + fileName + ".project";
 //        String folderPath = "D:\\" + fileName;  "anonymous/" +
 
         try {

@@ -25,12 +25,15 @@ public class ParserController {
 
 
     @PostMapping("api/parse/file")
-    public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList, @RequestBody MultipartFile file) throws IOException {
-        return parserService.build(parserList, file);
+    public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
+                                                  @RequestBody MultipartFile file,
+                                                  @RequestParam(name="user", required = false, defaultValue = "anonymous") String user) throws IOException {
+        return parserService.build(parserList, file, user);
     }
 
     @PostMapping("api/parse/path")
-    public Response parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList, @RequestBody Path path) throws IOException {
+    public Response parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList,
+                                                  @RequestBody Path path) throws IOException {
         return parserService.build(parserList, path);
     }
 }
