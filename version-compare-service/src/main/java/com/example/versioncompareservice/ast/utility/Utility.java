@@ -55,7 +55,7 @@ public class Utility {
         List<JavaNode> nodes = new ArrayList<>();
 
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode : nodeList) {
-            nodes.add(new JavaNode(javaNode.getB()));
+            nodes.add(new JavaNode(javaNode.getA()));
         }
 
         return nodes;

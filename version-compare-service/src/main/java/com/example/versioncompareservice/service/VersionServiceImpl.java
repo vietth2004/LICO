@@ -88,6 +88,10 @@ public class VersionServiceImpl implements VersionService{
         final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
         Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
 
+        System.out.println(inputSourcesA.getPath().toString());
+        System.out.println(inputSourcesB.getPath().toString());
+        System.out.println();
+
         final JavaProjectSnapshot projectSnapshotA = ProjectBuilder.createProjectSnapshot("JSON-java-before",
                 DEPENDENCY_WEIGHT_TABLE, inputSourcesA, Set.of(new JavaBuildParameter(List.of(), true)));
 
@@ -102,7 +106,7 @@ public class VersionServiceImpl implements VersionService{
         List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
         List<JavaNode> unchangedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getUnchangedNodes());
 
-        JavaNode rootNode = new JavaNode((AbstractNode) snapshotComparison.getCurrentSnapshot().getRootNode(), true);
+        JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
 
         rootNode = Utils.convertNode(rootNode, changedNodes, addedNodes, deletedNodes, unchangedNodes);
 
