@@ -11,6 +11,11 @@
 .mvn/
 /project/
 
+# Netbeans, Eclipse. VSCode
+.classpath
+/.settings/
+.project
+
 storage
 /output.json
 /java-service/output.json
