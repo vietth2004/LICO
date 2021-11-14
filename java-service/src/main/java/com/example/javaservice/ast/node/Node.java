@@ -1,10 +1,6 @@
 package com.example.javaservice.ast.node;
 
-import com.example.javaservice.ast.annotation.JavaAnnotation;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Node {
 
