@@ -61,10 +61,10 @@ public class Utils {
 
     private static void changeStatus(JavaNode javaNode, JavaNode statusNode, String status) {
         if(javaNode.getUniqueName().equals(statusNode.getUniqueName())) {
-//            System.out.println(status);
-//            System.out.println(javaNode.getUniqueName() + " " + javaNode.getId());
-//            System.out.println(statusNode.getUniqueName() + " " + statusNode.getId());
-//            System.out.println();
+            System.out.println(status);
+            System.out.println(javaNode.getUniqueName() + " " + javaNode.getId());
+            System.out.println(statusNode.getUniqueName() + " " + statusNode.getId());
+            System.out.println();
             javaNode.setStatus(status);
         } else {
             for(Object childNode: javaNode.getChildren()) {

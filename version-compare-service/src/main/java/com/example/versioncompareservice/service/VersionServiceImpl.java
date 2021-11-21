@@ -14,11 +14,13 @@ import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
+import mrmathami.cia.java.tree.node.JavaMethodNode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -101,10 +103,17 @@ public class VersionServiceImpl implements VersionService{
         JavaProjectSnapshotComparison snapshotComparison = ProjectBuilder.createProjectSnapshotComparison(
                 "compare", projectSnapshotB, projectSnapshotA, DEPENDENCY_IMPACT_TABLE);
 
-        List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes());
-        List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes());
-        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
-        List<JavaNode> unchangedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getUnchangedNodes());
+//        List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes(), "changed");
+//        List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes(), "added");
+//        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted");
+//        List<JavaNode> unchangedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getUnchangedNodes(), "unchanged");
+
+        List<JavaNode> changedNodes = new ArrayList<>();
+        List<JavaNode> addedNodes = new ArrayList<>();
+        List<JavaNode> deletedNodes = new ArrayList<>();
+        List<JavaNode> unchangedNodes = new ArrayList<>();
+
+        applyCompare(changedNodes, addedNodes, deletedNodes, unchangedNodes, snapshotComparison);
 
         JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
 
@@ -139,7 +148,39 @@ public class VersionServiceImpl implements VersionService{
 //
 //        JavaNode rootNode = new JavaNode(snapshotComparison.getCurrentSnapshot().getRootNode());
 //        return rootNode;
+
         return new JavaNode();
+    }
+
+    public void applyCompare(List<JavaNode> changedNodes,
+                             List<JavaNode> addedNodes,
+                             List<JavaNode> deletedNodes,
+                             List<JavaNode> unchangedNodes,
+                             JavaProjectSnapshotComparison snapshotComparison) {
+        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
+                : snapshotComparison.getUnchangedNodes()) {
+            if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
+                if(((JavaMethodNode) javaNode.getA()).getReturnType() != ((JavaMethodNode) javaNode.getB()).getReturnType()) {
+                    changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
+                }
+            } else {
+                unchangedNodes.add(new JavaNode(javaNode.getA(), "unchanged"));
+            }
+        }
+
+        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
+                : snapshotComparison.getChangedNodes()) {
+            changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
+        }
+
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
+            addedNodes.add(new JavaNode(javaNode, "added"));
+        }
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
+            deletedNodes.add(new JavaNode(javaNode, "deleted"));
+        }
     }
 
 }

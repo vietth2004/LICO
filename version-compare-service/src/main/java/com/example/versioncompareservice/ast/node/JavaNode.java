@@ -47,6 +47,8 @@ public class JavaNode extends Node implements Serializable {
         this.setupProperties(abstractNode);
     }
 
+
+
     public JavaNode(RootNode rootNode) {
         super(rootNode);
         this.children = Utility.convertAbstractNode(rootNode.getChildren());
@@ -58,6 +60,11 @@ public class JavaNode extends Node implements Serializable {
         super(javaNode);
         this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
+    }
+
+    public JavaNode(mrmathami.cia.java.tree.node.JavaNode javaNode, String status) {
+        super(javaNode);
+        this.status = status;
     }
 
     public List<Pair> getDependencyFrom() {

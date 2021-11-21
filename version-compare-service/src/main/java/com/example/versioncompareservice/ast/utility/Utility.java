@@ -49,13 +49,24 @@ public class Utility {
         return nodes;
     }
 
+    public static List<JavaNode> convertJavaNodeSet (Set<mrmathami.cia.java.tree.node.JavaNode> nodeList, String status) {
+        List<JavaNode> nodes = new ArrayList<>();
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : nodeList) {
+            nodes.add(new JavaNode(javaNode, status));
+        }
+
+        return nodes;
+    }
+
     public static List<JavaNode> convertJavaNodePairSet (
-            Set<mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode>> nodeList) {
+            Set<mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode>> nodeList,
+            String status) {
 
         List<JavaNode> nodes = new ArrayList<>();
 
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode : nodeList) {
-            nodes.add(new JavaNode(javaNode.getA()));
+            nodes.add(new JavaNode(javaNode.getA(), status));
         }
 
         return nodes;
