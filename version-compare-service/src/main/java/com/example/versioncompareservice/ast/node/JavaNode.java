@@ -39,15 +39,13 @@ public class JavaNode extends Node implements Serializable {
     public JavaNode() {
     }
 
-    public JavaNode(AbstractNode abstractNode, Boolean nodes) {
+    public JavaNode(AbstractNode abstractNode, Boolean status) {
         super(abstractNode);
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-        this.children = this.returnChildren(abstractNode, nodes);
+        this.children = this.returnChildren(abstractNode, status);
         this.setupProperties(abstractNode);
     }
-
-
 
     public JavaNode(RootNode rootNode) {
         super(rootNode);
@@ -64,8 +62,16 @@ public class JavaNode extends Node implements Serializable {
 
     public JavaNode(mrmathami.cia.java.tree.node.JavaNode javaNode, String status) {
         super(javaNode);
+        this.setupProperties((AbstractNode) javaNode);
         this.status = status;
+
+        if(status.equals("deleted")) {
+            this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
+            this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
+            this.children = this.returnChildren((AbstractNode) javaNode, true);
+        }
     }
+
 
     public List<Pair> getDependencyFrom() {
         return dependencyFrom;
@@ -129,6 +135,10 @@ public class JavaNode extends Node implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void addChildren(JavaNode javaNode) {
+        this.children.add(javaNode);
     }
 
     private void setupProperties (AbstractNode abstractNode) {

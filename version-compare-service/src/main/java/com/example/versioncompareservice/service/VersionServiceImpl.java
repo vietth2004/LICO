@@ -5,6 +5,7 @@ import com.example.versioncompareservice.ast.utility.Utility;
 import com.example.versioncompareservice.model.Response;
 import com.example.versioncompareservice.model.Version;
 import com.example.versioncompareservice.utils.Utils;
+import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
 import mrmathami.cia.java.jdt.project.builder.parameter.BuildInputSources;
@@ -110,14 +111,15 @@ public class VersionServiceImpl implements VersionService{
 
         List<JavaNode> changedNodes = new ArrayList<>();
         List<JavaNode> addedNodes = new ArrayList<>();
-        List<JavaNode> deletedNodes = new ArrayList<>();
+        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted");
+        List<Pair<Integer, JavaNode>> removedNodes = new ArrayList<>();
         List<JavaNode> unchangedNodes = new ArrayList<>();
-
-        applyCompare(changedNodes, addedNodes, deletedNodes, unchangedNodes, snapshotComparison);
 
         JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
 
-        rootNode = Utils.convertNode(rootNode, changedNodes, addedNodes, deletedNodes, unchangedNodes);
+        applyCompare(rootNode, changedNodes, addedNodes, removedNodes, unchangedNodes, snapshotComparison);
+
+//        rootNode = Utils.convertNode(rootNode, changedNodes, addedNodes);
 
         return new Response(changedNodes, deletedNodes, addedNodes, rootNode);
     }
@@ -152,11 +154,16 @@ public class VersionServiceImpl implements VersionService{
         return new JavaNode();
     }
 
-    public void applyCompare(List<JavaNode> changedNodes,
+    public void applyCompare(JavaNode rootNode,
+                             List<JavaNode> changedNodes,
                              List<JavaNode> addedNodes,
-                             List<JavaNode> deletedNodes,
+                             List<Pair<Integer, JavaNode>> deletedNodes,
                              List<JavaNode> unchangedNodes,
                              JavaProjectSnapshotComparison snapshotComparison) {
+        int projectSize = snapshotComparison.getPreviousSnapshot().getRootNode().getAllNodes().size();
+        List<Pair<Integer, Integer>> changedNodesBind = new ArrayList<>();
+
+        //add unchanged nodes
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getUnchangedNodes()) {
             if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
@@ -168,19 +175,71 @@ public class VersionServiceImpl implements VersionService{
             }
         }
 
+        //add changed nodes
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getChangedNodes()) {
             changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
+            changedNodesBind.add(new Pair<>(javaNode.getA().getId(), javaNode.getB().getId()));
         }
 
-
+        //add added nodes
         for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
             addedNodes.add(new JavaNode(javaNode, "added"));
         }
 
+        //add removed nodes
         for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
-            deletedNodes.add(new JavaNode(javaNode, "deleted"));
+            System.out.println(javaNode.getUniqueName());
+            System.out.println("Parent: " + javaNode.getParent().getUniqueName() + ": " + javaNode.getParent().getId());
+            System.out.println();
+            deletedNodes.add(new Pair<>(javaNode.getParent().getId(), new JavaNode(javaNode, "deleted")));
+        }
+
+        //bind changed nodes and added nodes to nodes tree
+        Utils.convertNode(rootNode, changedNodes, addedNodes);
+
+        //bind deleted nodes to nodes tree
+        bindRemovedNode(rootNode, deletedNodes, changedNodesBind, projectSize);
+    }
+
+    private void bindRemovedNode(JavaNode rootNode,
+                         List<Pair<Integer, JavaNode>> deletedNodes,
+                         List<Pair<Integer, Integer>> changedNodesBind,
+                         int size) {
+        for (Pair<Integer, JavaNode> node : deletedNodes) {
+            int parentId = node.first();
+            int newParentId;
+            for(Pair<Integer, Integer> bind : changedNodesBind) {
+                if(parentId == bind.second()) {
+                    newParentId = bind.first();
+                    addNode(rootNode, node.second(), newParentId, size);
+                }
+            }
         }
     }
 
+    private void addNode(JavaNode rootNode, JavaNode addedNode, int parentId, int bindId) {
+        if(rootNode.getId() == parentId) {
+            bindId(addedNode, bindId);
+            rootNode.addChildren(addedNode);
+        } else {
+            for (Object javaNode : rootNode.getChildren()) {
+                if (javaNode instanceof JavaNode) {
+                    addNode((JavaNode) javaNode, addedNode, parentId, bindId);
+                }
+            }
+
+        }
+    }
+
+    private void bindId(JavaNode addedNode, int bindId) {
+        addedNode.setId(bindId);
+        ++bindId;
+
+        for(Object childNode : addedNode.getChildren()) {
+            if(childNode instanceof JavaNode) {
+                bindId((JavaNode) childNode, bindId);
+            }
+        }
+    }
 }

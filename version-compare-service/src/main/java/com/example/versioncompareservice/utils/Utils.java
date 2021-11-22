@@ -44,9 +44,7 @@ public class Utils {
 
     public static JavaNode convertNode(JavaNode rootNode,
                                        List<JavaNode> changedNodes,
-                                       List<JavaNode> addedNodes,
-                                       List<JavaNode> deletedNodes,
-                                       List<JavaNode> unchangedNodes) {
+                                       List<JavaNode> addedNodes) {
 
         for(JavaNode javaNode : changedNodes) {
             changeStatus(rootNode, javaNode, "changed");
