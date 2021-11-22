@@ -222,7 +222,6 @@ public class VersionServiceImpl implements VersionService{
     private void addNode(JavaNode rootNode, JavaNode addedNode, int parentId, int bindId) {
         if(rootNode.getId() == parentId) {
             bindId(addedNode, bindId);
-//            ++bindId;
             rootNode.addChildren(addedNode);
         } else {
             for (Object javaNode : rootNode.getChildren()) {
@@ -235,9 +234,6 @@ public class VersionServiceImpl implements VersionService{
     }
 
     private void bindId(JavaNode addedNode, int bindId) {
-//        System.out.println(addedNode.getUniqueName());
-//        System.out.println(bindId);
-
         addedNode.setId(bindId + addedNode.getId());
 
         for(Object childNode : addedNode.getChildren()) {

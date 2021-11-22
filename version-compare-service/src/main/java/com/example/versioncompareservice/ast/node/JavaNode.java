@@ -22,9 +22,9 @@ public class JavaNode extends Node implements Serializable {
 
     private List modifiers = null;
 
-    private transient List<Pair> dependencyFrom;
+    private transient List<Pair> dependencyFrom = new ArrayList<>();
 
-    private transient List<Pair> dependencyTo;
+    private transient List<Pair> dependencyTo = new ArrayList<>();
 
     private transient List children = new ArrayList<>();
 
