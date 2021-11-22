@@ -111,7 +111,7 @@ public class VersionServiceImpl implements VersionService{
 
         List<JavaNode> changedNodes = new ArrayList<>();
         List<JavaNode> addedNodes = new ArrayList<>();
-        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted");
+        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "removed");
         List<Pair<Integer, JavaNode>> removedNodes = new ArrayList<>();
         List<JavaNode> unchangedNodes = new ArrayList<>();
 
@@ -222,7 +222,7 @@ public class VersionServiceImpl implements VersionService{
     private void addNode(JavaNode rootNode, JavaNode addedNode, int parentId, int bindId) {
         if(rootNode.getId() == parentId) {
             bindId(addedNode, bindId);
-            ++bindId;
+//            ++bindId;
             rootNode.addChildren(addedNode);
         } else {
             for (Object javaNode : rootNode.getChildren()) {
@@ -235,9 +235,10 @@ public class VersionServiceImpl implements VersionService{
     }
 
     private void bindId(JavaNode addedNode, int bindId) {
-        addedNode.setId(bindId);
-        ++bindId;
-        System.out.println(bindId);
+//        System.out.println(addedNode.getUniqueName());
+//        System.out.println(bindId);
+
+        addedNode.setId(bindId + addedNode.getId());
 
         for(Object childNode : addedNode.getChildren()) {
             if(childNode instanceof JavaNode) {

@@ -43,13 +43,24 @@ public class JavaNode extends Node implements Serializable {
         super(abstractNode);
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-        this.children = this.returnChildren(abstractNode, status);
+        this.children = this.returnChildren(abstractNode, status, true);
         this.setupProperties(abstractNode);
+    }
+
+    public JavaNode(AbstractNode abstractNode, Boolean status, Boolean getDependency) {
+        super(abstractNode);
+//        if(getDependency){
+//            this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+//            this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+//        }
+        this.children = this.returnChildren(abstractNode, status, getDependency);
+        this.setupProperties(abstractNode);
+        this.setDependency(abstractNode, getDependency);
     }
 
     public JavaNode(RootNode rootNode) {
         super(rootNode);
-        this.children = Utility.convertAbstractNode(rootNode.getChildren());
+        this.children = Utility.convertAbstractNode(rootNode.getChildren(), true);
         this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
     }
@@ -66,9 +77,9 @@ public class JavaNode extends Node implements Serializable {
         this.status = status;
 
         if(status.equals("deleted")) {
-            this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
-            this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
-            this.children = this.returnChildren((AbstractNode) javaNode, true);
+//            this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
+//            this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
+            this.children = this.returnChildren((AbstractNode) javaNode, true, false);
         }
     }
 
@@ -159,9 +170,16 @@ public class JavaNode extends Node implements Serializable {
         }
     }
 
-    private List returnChildren(AbstractNode abstractNode, Boolean nodes) {
+    private void setDependency(AbstractNode abstractNode, Boolean getDependency) {
+        if(getDependency){
+            this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+            this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+        }
+    }
+
+    private List returnChildren(AbstractNode abstractNode, Boolean nodes, Boolean getDependency) {
         if (nodes == true) {
-            return Utility.convertAbstractNode(abstractNode.getChildren());
+            return Utility.convertAbstractNode(abstractNode.getChildren(), getDependency);
         } else {
             return Utility.convertChildren(abstractNode.getChildren());
         }

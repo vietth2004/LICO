@@ -73,10 +73,10 @@ public class Utility {
     }
 
     @Nonnull
-    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
+    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList, boolean getDependency) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node, true));
+            javaNodeList.add(new JavaNode(node, true, getDependency));
         }
 
         return javaNodeList;
