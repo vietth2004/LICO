@@ -235,6 +235,7 @@ public class VersionServiceImpl implements VersionService{
 
     private void bindId(JavaNode addedNode, int bindId) {
         addedNode.setId(bindId + addedNode.getId());
+        addedNode.setStatus("deleted");
 
         for(Object childNode : addedNode.getChildren()) {
             if(childNode instanceof JavaNode) {
