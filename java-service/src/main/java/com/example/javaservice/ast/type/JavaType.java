@@ -1,16 +1,15 @@
 package com.example.javaservice.ast.type;
 
+import java.util.List;
+
 import com.example.javaservice.ast.annotation.JavaAnnotation;
 import com.example.javaservice.ast.node.Node;
 import com.example.javaservice.ast.utility.Utility;
-import jdk.jshell.execution.Util;
+
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
 import mrmathami.cia.java.jdt.tree.type.ReferenceType;
 import mrmathami.cia.java.jdt.tree.type.SimpleType;
 import mrmathami.cia.java.jdt.tree.type.SyntheticType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class JavaType {
     private String entityClass = new String();

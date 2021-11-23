@@ -1,13 +1,9 @@
 package com.example.javaservice.ast.dependency;
 
 
-import mrmathami.cia.java.tree.dependency.JavaDependency;
-import mrmathami.cia.java.tree.dependency.JavaDependencyCountTable;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import mrmathami.cia.java.tree.dependency.JavaDependency;
 
 public class DependencyCountTable implements Serializable {
     private Integer USE = 0;
