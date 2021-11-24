@@ -2,7 +2,7 @@
 :docs: https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference
 :github: https://github.com/jcia-sqa/JCIA-Microservices
 
-JCIA is Java Change Impact Analysis software help you to easily determine all dependency in your Java Project. JCIA also helps to compare project version, calculate dependency impact, visualize your Project into clear diagrams.    
+JCIA is Java Change Impact Analysis software help you to easily determine all dependency in your Java Project. JCIA also helps to compare project version, calculate dependency impact, visualize your Project into clear diagrams.
 
 ## Service
 
@@ -26,3 +26,4 @@ JCIA is Java Change Impact Analysis software help you to easily determine all de
 
 #### Support Service
 - port 5001: File-Service
+

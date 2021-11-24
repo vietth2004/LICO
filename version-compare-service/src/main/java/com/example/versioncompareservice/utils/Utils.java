@@ -44,9 +44,7 @@ public class Utils {
 
     public static JavaNode convertNode(JavaNode rootNode,
                                        List<JavaNode> changedNodes,
-                                       List<JavaNode> addedNodes,
-                                       List<JavaNode> deletedNodes,
-                                       List<JavaNode> unchangedNodes) {
+                                       List<JavaNode> addedNodes) {
 
         for(JavaNode javaNode : changedNodes) {
             changeStatus(rootNode, javaNode, "changed");
@@ -61,10 +59,10 @@ public class Utils {
 
     private static void changeStatus(JavaNode javaNode, JavaNode statusNode, String status) {
         if(javaNode.getUniqueName().equals(statusNode.getUniqueName())) {
-//            System.out.println(status);
-//            System.out.println(javaNode.getUniqueName() + " " + javaNode.getId());
-//            System.out.println(statusNode.getUniqueName() + " " + statusNode.getId());
-//            System.out.println();
+            System.out.println(status);
+            System.out.println(javaNode.getUniqueName() + " " + javaNode.getId());
+            System.out.println(statusNode.getUniqueName() + " " + statusNode.getId());
+            System.out.println();
             javaNode.setStatus(status);
         } else {
             for(Object childNode: javaNode.getChildren()) {

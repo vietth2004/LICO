@@ -22,9 +22,9 @@ public class JavaNode extends Node implements Serializable {
 
     private List modifiers = null;
 
-    private transient List<Pair> dependencyFrom;
+    private transient List<Pair> dependencyFrom = new ArrayList<>();
 
-    private transient List<Pair> dependencyTo;
+    private transient List<Pair> dependencyTo = new ArrayList<>();
 
     private transient List children = new ArrayList<>();
 
@@ -39,17 +39,28 @@ public class JavaNode extends Node implements Serializable {
     public JavaNode() {
     }
 
-    public JavaNode(AbstractNode abstractNode, Boolean nodes) {
+    public JavaNode(AbstractNode abstractNode, Boolean status) {
         super(abstractNode);
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-        this.children = this.returnChildren(abstractNode, nodes);
+        this.children = this.returnChildren(abstractNode, status, true);
         this.setupProperties(abstractNode);
+    }
+
+    public JavaNode(AbstractNode abstractNode, Boolean status, Boolean getDependency) {
+        super(abstractNode);
+//        if(getDependency){
+//            this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+//            this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+//        }
+        this.children = this.returnChildren(abstractNode, status, getDependency);
+        this.setupProperties(abstractNode);
+        this.setDependency(abstractNode, getDependency);
     }
 
     public JavaNode(RootNode rootNode) {
         super(rootNode);
-        this.children = Utility.convertAbstractNode(rootNode.getChildren());
+        this.children = Utility.convertAbstractNode(rootNode.getChildren(), true);
         this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
     }
@@ -59,6 +70,19 @@ public class JavaNode extends Node implements Serializable {
         this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
     }
+
+    public JavaNode(mrmathami.cia.java.tree.node.JavaNode javaNode, String status) {
+        super(javaNode);
+        this.setupProperties((AbstractNode) javaNode);
+        this.status = status;
+
+        if(status.equals("deleted")) {
+//            this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
+//            this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
+            this.children = this.returnChildren((AbstractNode) javaNode, true, false);
+        }
+    }
+
 
     public List<Pair> getDependencyFrom() {
         return dependencyFrom;
@@ -124,6 +148,10 @@ public class JavaNode extends Node implements Serializable {
         this.status = status;
     }
 
+    public void addChildren(JavaNode javaNode) {
+        this.children.add(javaNode);
+    }
+
     private void setupProperties (AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
@@ -142,9 +170,16 @@ public class JavaNode extends Node implements Serializable {
         }
     }
 
-    private List returnChildren(AbstractNode abstractNode, Boolean nodes) {
+    private void setDependency(AbstractNode abstractNode, Boolean getDependency) {
+        if(getDependency){
+            this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+            this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+        }
+    }
+
+    private List returnChildren(AbstractNode abstractNode, Boolean nodes, Boolean getDependency) {
         if (nodes == true) {
-            return Utility.convertAbstractNode(abstractNode.getChildren());
+            return Utility.convertAbstractNode(abstractNode.getChildren(), getDependency);
         } else {
             return Utility.convertChildren(abstractNode.getChildren());
         }

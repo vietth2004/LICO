@@ -49,23 +49,34 @@ public class Utility {
         return nodes;
     }
 
+    public static List<JavaNode> convertJavaNodeSet (Set<mrmathami.cia.java.tree.node.JavaNode> nodeList, String status) {
+        List<JavaNode> nodes = new ArrayList<>();
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : nodeList) {
+            nodes.add(new JavaNode(javaNode, status));
+        }
+
+        return nodes;
+    }
+
     public static List<JavaNode> convertJavaNodePairSet (
-            Set<mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode>> nodeList) {
+            Set<mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode>> nodeList,
+            String status) {
 
         List<JavaNode> nodes = new ArrayList<>();
 
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode : nodeList) {
-            nodes.add(new JavaNode(javaNode.getA()));
+            nodes.add(new JavaNode(javaNode.getA(), status));
         }
 
         return nodes;
     }
 
     @Nonnull
-    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
+    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList, boolean getDependency) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node, true));
+            javaNodeList.add(new JavaNode(node, true, getDependency));
         }
 
         return javaNodeList;
