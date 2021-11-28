@@ -1,4 +1,4 @@
-package com.example.ciaservice;
+package com.example.githubservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class CiaServiceApplication {
+public class GithubServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CiaServiceApplication.class, args);
+        SpringApplication.run(GithubServiceApplication.class, args);
     }
 
 }

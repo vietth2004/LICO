@@ -11,6 +11,9 @@
 .mvn/
 /project/
 
+# Intellij
+*.iml
+
 # Netbeans, Eclipse. VSCode
 .classpath
 /.settings/
