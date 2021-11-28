@@ -14,15 +14,15 @@ public class XmlTagNode extends Node {
     protected int numOfAttr;
     protected int lineNumber;
     protected int columnNumber;
-    protected List<String> listAtrr;
+    protected List<String> listAttr;
 
 
-    public List<String> getListAtrr() {
-        return listAtrr;
+    public List<String> getListAttr() {
+        return listAttr;
     }
 
-    public void setListAtrr(List<String> listAtrr) {
-        this.listAtrr = listAtrr;
+    public void setListAttr(List<String> listAttr) {
+        this.listAttr = listAttr;
     }
 
     public void setLineNumber(int lineNumber) {
@@ -49,12 +49,12 @@ public class XmlTagNode extends Node {
     protected Map<String, String> attributes;
 
     public XmlTagNode() {
-        listAtrr = new ArrayList<>();
+        listAttr = new ArrayList<>();
     }
 
     public void addToListAttr(String attr)
     {
-        this.listAtrr.add(attr);
+        this.listAttr.add(attr);
     }
     public XmlTagNode(String name) {
         this();

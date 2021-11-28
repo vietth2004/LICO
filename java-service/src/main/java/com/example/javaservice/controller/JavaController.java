@@ -74,7 +74,8 @@ public class JavaController {
     @PostMapping("/api/fileParse")
     public Response parseProjectByFile(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
-        JavaNode node = new JavaNode(javaRoot);
+        String path = "./project/" + "anonymous/" + file.getName() + ".project";
+        JavaNode node = new JavaNode(javaRoot, path);
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return new Response(node, nodeList);
     }
@@ -82,7 +83,7 @@ public class JavaController {
     @PostMapping("/api/pathParse")
     public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
-        JavaNode node = new JavaNode(javaRoot);
+        JavaNode node = new JavaNode(javaRoot, path.getPath());
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return new Response(node, nodeList);
     }

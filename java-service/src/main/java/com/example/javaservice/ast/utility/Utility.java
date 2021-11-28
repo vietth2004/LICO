@@ -7,11 +7,13 @@ import com.example.javaservice.ast.dependency.Pair;
 import com.example.javaservice.ast.node.JavaNode;
 import com.example.javaservice.ast.node.Node;
 import com.example.javaservice.ast.type.JavaType;
+import com.example.javaservice.service.ParseService;
 import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.jdt.tree.annotate.Annotate;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.type.AbstractType;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Utility {
@@ -42,13 +44,29 @@ public class Utility {
     }
 
     @Nonnull
-    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
+    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList)  {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
             Integer parent = node.getParent().getId();
             String path = new String();
             if(!node.getEntityClass().equals("JavaPackageNode")) {
                 path = node.getSourceFile().getRelativePath().toString();
+            }
+            javaNodeList.add(new JavaNode(node, true, parent, path));
+        }
+
+        return javaNodeList;
+    }
+
+    @Nonnull
+    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList, String rootPath)  {
+        List<JavaNode> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+
+            Integer parent = node.getParent().getId();
+            String path = rootPath;
+            if(node.getEntityClass().equals("JavaClassNode") || node.getEntityClass().equals("JavaInterfaceNode")) {
+                path = rootPath + "/" + node.getSourceFile().getRelativePath().toString();
             }
             javaNodeList.add(new JavaNode(node, true, parent, path));
         }
@@ -118,6 +136,22 @@ public class Utility {
         for(Annotate annotate : annotates) {
             javaAnnotationList.add(new JavaAnnotation(annotate));
         }
+        return javaAnnotationList;
+    }
+
+    public static List<JavaAnnotation> convertAnnotates(AbstractNode abstractNode, String rootPath) throws IOException {
+        List<JavaAnnotation> javaAnnotationList = new ArrayList<>();
+
+
+        if(rootPath.equals(null))
+        {
+            return javaAnnotationList;
+        }
+
+        javaAnnotationList.addAll(ParseService.getAnnotation(
+                rootPath,
+                abstractNode));
+
         return javaAnnotationList;
     }
 
