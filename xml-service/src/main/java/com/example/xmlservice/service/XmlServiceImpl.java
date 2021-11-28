@@ -65,6 +65,7 @@ public class XmlServiceImpl implements XmlService {
 
     public List<Dependency> analyzeDependencyBetweenBeans(JavaNode node){
         List<Dependency> dependencies = new ArrayList<>();
+
         return dependencies;
     }
 
@@ -77,5 +78,7 @@ public class XmlServiceImpl implements XmlService {
         List<Dependency> dependencies = new ArrayList<>();
         return dependencies;
     }
+
+
 
 }

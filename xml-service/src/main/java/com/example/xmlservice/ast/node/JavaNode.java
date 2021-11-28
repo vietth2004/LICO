@@ -30,6 +30,16 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List extendInterfaces = null;
 
+    private transient List annotatesWithValue = null;
+
+    public List getAnnotatesWithValue() {
+        return annotatesWithValue;
+    }
+
+    public void setAnnotatesWithValue(List annotatesWithValue) {
+        this.annotatesWithValue = annotatesWithValue;
+    }
+
     private List modifiers = null;
 
     private transient Integer parent;

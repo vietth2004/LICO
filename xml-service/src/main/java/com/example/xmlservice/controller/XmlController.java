@@ -1,6 +1,7 @@
 package com.example.xmlservice.controller;
 
 import com.example.xmlservice.ast.dependency.Dependency;
+import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.config.MQConfig;
 import com.example.xmlservice.dto.JavaNodeRequest;
 import com.example.xmlservice.dom.Node;
@@ -55,16 +56,12 @@ public class XmlController {
     }
 
     @PostMapping("/api/dependency")
-    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody JavaNodeRequest request) {
-        JAVA_TOTAL_NODES = request.getTotalNodes();
+    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody JavaNode request) {
+        List<JavaNode> allNodes = NodeUtils.flatRootNode(request);
+        JAVA_TOTAL_NODES = allNodes.size();
         List<Dependency> dependencies = new ArrayList<>();
-        try {
-            NodeUtils.reCalculateXmlNodesId(JAVA_TOTAL_NODES, xmlNodes);
-            dependencies.addAll(xmlService.analyzeDependency(request.getRootNode(), xmlNodes));
-            logger.log(ClientLevel.CLIENT, "Need to run /api/pathParse first");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        NodeUtils.reCalculateXmlNodesId(JAVA_TOTAL_NODES, xmlNodes);
+        dependencies.addAll(xmlService.analyzeDependency(request, xmlNodes));
         return new ResponseEntity<List<Dependency>>(dependencies, HttpStatus.OK);
     }
 
