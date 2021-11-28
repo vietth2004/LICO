@@ -27,6 +27,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List annotates = null;
 
+    private transient List annotatesWithValue = null;
+
     private transient List parameters = null;
 
     private transient List extendInterfaces = null;
@@ -60,14 +62,21 @@ public class JavaNode extends Node implements Serializable {
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
         this.parent = parent;
-        this.children = this.returnChildren(abstractNode, nodes);
+        this.children = this.returnChildren(abstractNode, nodes, path);
         this.path = path;
-        this.setupProperties(abstractNode);
+        this.setupProperties(abstractNode, path);
     }
 
     public JavaNode(RootNode rootNode) {
         super(rootNode);
         this.children = Utility.convertAbstractNode(rootNode.getChildren());
+        this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
+        this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
+    }
+
+    public JavaNode(RootNode rootNode, String path) {
+        super(rootNode);
+        this.children = Utility.convertAbstractNode(rootNode.getChildren(), path);
         this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
     }
@@ -144,6 +153,14 @@ public class JavaNode extends Node implements Serializable {
         this.path = path;
     }
 
+    public List getAnnotatesWithValue() {
+        return annotatesWithValue;
+    }
+
+    public void setAnnotatesWithValue(List annotatesWithValue) {
+        this.annotatesWithValue = annotatesWithValue;
+    }
+
     private void setupProperties (AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
@@ -151,6 +168,38 @@ public class JavaNode extends Node implements Serializable {
 
         if (abstractNode instanceof AbstractAnnotatedNode) {
             this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
+            try{
+//                System.out.println("No Need: " + this.path);
+                this.annotatesWithValue = Utility.convertAnnotates(abstractNode, this.path);
+            } catch (Exception e) {
+//                System.out.println("Fail");
+                this.annotatesWithValue = new ArrayList();
+            }
+
+        }
+
+        if (abstractNode instanceof JavaModifiedNode) {
+            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
+        }
+
+        if (abstractNode instanceof InterfaceNode) {
+            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
+        }
+    }
+
+    private void setupProperties (AbstractNode abstractNode, String path) {
+        if (abstractNode instanceof MethodNode) {
+            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
+        }
+
+        if (abstractNode instanceof AbstractAnnotatedNode) {
+            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
+            try{
+                this.annotatesWithValue = Utility.convertAnnotates(abstractNode, path);
+            } catch (Exception e) {
+                this.annotatesWithValue = new ArrayList();
+            }
+
         }
 
         if (abstractNode instanceof JavaModifiedNode) {
@@ -165,6 +214,14 @@ public class JavaNode extends Node implements Serializable {
     private List returnChildren(AbstractNode abstractNode, Boolean nodes) {
         if (nodes == true) {
             return Utility.convertAbstractNode(abstractNode.getChildren());
+        } else {
+            return Utility.convertChildren(abstractNode.getChildren());
+        }
+    }
+
+    private List returnChildren(AbstractNode abstractNode, Boolean nodes, String path) {
+        if (nodes == true) {
+            return Utility.convertAbstractNode(abstractNode.getChildren(), path);
         } else {
             return Utility.convertChildren(abstractNode.getChildren());
         }

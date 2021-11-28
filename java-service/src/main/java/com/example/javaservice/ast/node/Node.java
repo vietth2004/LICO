@@ -31,6 +31,7 @@ public class Node {
         this.qualifiedName = abstractNode.getQualifiedName();
         this.uniqueName = abstractNode.getUniqueName();
         this.simpleName = abstractNode.getSimpleName();
+//        System.out.println(abstractNode.getSourceFile().getRelativePath().toString());
     }
 
     public Node(String entityClass, String idClass, Integer id, String qualifiedName, String uniqueName, String simpleName) {
