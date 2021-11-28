@@ -38,4 +38,22 @@ public class GithubService {
         logger.log(ClientLevel.CLIENT, "Cloned!");
     }
 
+    public void cloneRepoByBranchName(String url, String repoName, String branchName) throws GitAPIException, IOException {
+
+        String pathToSaved = "./project/anonymous/" + repoName + "-" + branchName;
+
+        DirectoryUtils.deleteDir(new File(pathToSaved));
+        Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
+
+        logger.log(ClientLevel.CLIENT, "Cloning " + repoName + " in branch " + branchName + "...");
+        Git git = Git.cloneRepository()
+                .setURI(url)
+                .setBranch(branchName)
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(UserConfig.USERNAME, UserConfig.PERSONAL_ACCESS_TOKEN))
+                .setDirectory(new File(pathToSaved))
+                .call();
+        git.getRepository().close();
+        logger.log(ClientLevel.CLIENT, "Cloned!");
+    }
+
 }
