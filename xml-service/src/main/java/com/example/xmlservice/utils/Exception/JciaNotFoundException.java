@@ -1,0 +1,8 @@
+package com.example.xmlservice.utils.Exception;
+
+public class JciaNotFoundException extends JciaException {
+
+    public JciaNotFoundException(String message) {
+        super(message);
+    }
+}
