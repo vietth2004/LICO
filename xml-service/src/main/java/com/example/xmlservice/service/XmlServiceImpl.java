@@ -73,19 +73,7 @@ public class XmlServiceImpl implements XmlService {
 
     public List<Dependency> analyzeDependencyBetweenBeans(List<JavaNode> nodes){
         List<Dependency> dependencies = new ArrayList<>();
-        List<JavaNode> jsfBeans = findAllBean(nodes);
-        List<JsfBeanNode> jsfBeanMap = new ArrayList<>();
-        jsfBeans.forEach(
-                node -> {
-                    JsfBeanNode bean = new JsfBeanNode();
-                    bean.setValue(node);
-                    if(findBeanName(node) != null)
-                        bean.setBeanName(findBeanName(node));
-                    else
-                        bean.setBeanName(Character.toLowerCase(node.getSimpleName().charAt(0)) + node.getSimpleName().substring(1));
-                    jsfBeanMap.add(bean);
-                }
-        );
+        List<JsfBeanNode> jsfBeanMap = getAllJsfBeanNode(nodes);
 
         List<JavaNode> jsfBeansInjection = findAllBeanInjection(nodes);
         List<JsfBeanInjectionNode> jsfBeanInjectionMap = new ArrayList<>();
@@ -117,10 +105,12 @@ public class XmlServiceImpl implements XmlService {
         return dependencies;
     }
 
-
-
-    public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> node, List<Node> xmlNodes){
+    public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> javaNode, List<Node> xmlNodes){
         List<Dependency> dependencies = new ArrayList<>();
+        List<JsfBeanNode> beanNodes = getAllJsfBeanNode(javaNode);
+
+        List<Node> xhtmlNodes = xhtmlNodeFilter(xmlNodes);
+
         return dependencies;
     }
 

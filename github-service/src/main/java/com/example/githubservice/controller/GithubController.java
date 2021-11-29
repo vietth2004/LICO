@@ -144,6 +144,19 @@ public class GithubController {
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
 
+    //Clone repo by commit sha
+    @GetMapping("/api/clone/{repoName}/{branchName}/{commitSha}")
+    public ResponseEntity<?> cloneRepoByBranchName
+            (@RequestParam String url, @PathVariable String repoName,
+            @PathVariable String branchName, @PathVariable String commitSha)
+            throws GitAPIException, IOException {
+        if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
+            githubService.cloneRepoByCommit(url, repoName, branchName, commitSha);
+            return ResponseEntity.ok("Clone done");
+        }
+        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+    }
+
     //Get all commit in repo
     @GetMapping("/api/user/repo/{repoName}/commits")
     public ResponseEntity<?> getAllCommitsOfARepo(@PathVariable String repoName) {

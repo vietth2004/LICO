@@ -6,8 +6,11 @@ import com.example.githubservice.utils.Directory.DirectoryUtils;
 import com.example.githubservice.utils.Log.ClientLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +57,30 @@ public class GithubService {
                 .call();
         git.getRepository().close();
         logger.log(ClientLevel.CLIENT, "Cloned!");
+    }
+
+    public void cloneRepoByCommit(String url, String repoName, String branchName, String commitSha) throws GitAPIException, IOException {
+        String pathToSaved = "./project/anonymous/" + repoName + "-" + branchName + "-" + commitSha;
+
+        DirectoryUtils.deleteDir(new File(pathToSaved));
+        Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
+
+        logger.log(ClientLevel.CLIENT, "Cloning " + repoName + " in branch " + branchName + " with commit: " + commitSha);
+
+        CloneCommand cloneCommand = Git.cloneRepository()
+                .setURI(url)
+                .setBranch(branchName)
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(UserConfig.USERNAME, UserConfig.PERSONAL_ACCESS_TOKEN))
+                .setDirectory(new File(pathToSaved));
+
+        Git clonedRepo = cloneCommand.call();
+
+        CheckoutCommand checkoutCommand = clonedRepo.checkout()
+                .setName(commitSha);
+
+        Ref ref = checkoutCommand.call();
+        logger.log(ClientLevel.CLIENT, "Cloned!");
+
     }
 
 }
