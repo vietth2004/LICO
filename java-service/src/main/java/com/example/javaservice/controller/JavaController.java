@@ -1,6 +1,7 @@
 package com.example.javaservice.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 //import com.example.javaservice.javacia.java.JavaCiaException;
@@ -85,6 +86,16 @@ public class JavaController {
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot, path.getPath());
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
+        nodeList.forEach(
+                elem -> {
+                    JavaNode tmp = Utility.search(node, elem.getId());
+                    if(tmp.getAnnotatesWithValue() == null) {
+                        elem.setAnnotatesWithValue(new ArrayList());
+                    } else {
+                        elem.setAnnotatesWithValue(tmp.getAnnotatesWithValue());
+                    }
+                }
+        );
         return new Response(node, nodeList);
     }
     
