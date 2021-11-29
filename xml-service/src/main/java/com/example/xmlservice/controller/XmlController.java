@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -46,12 +47,13 @@ public class XmlController {
     }
 
     @PostMapping("/api/pathParse")
-    public Response parseProjectByPath(@RequestBody Request folderPath) throws IOException {
+    public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException {
         long before = System.nanoTime();
         List<Node> nodes = xmlService.parseProjectWithPath(folderPath.getPath());
         long after =  System.nanoTime();
         logger.log(ClientLevel.CLIENT, "Parsing done in " + (after - before)/1000000 + " ms!");
         xmlNodes.addAll(nodes);
+        NodeUtils.reCalculateXmlNodesId(javaNode, xmlNodes);
         rabbitTemplate.convertAndSend(MQConfig.EXCHANGE, MQConfig.ROUTING_KEY, folderPath);
         return new Response(nodes);
     }

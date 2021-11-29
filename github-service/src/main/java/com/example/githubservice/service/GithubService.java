@@ -79,6 +79,8 @@ public class GithubService {
                 .setName(commitSha);
 
         Ref ref = checkoutCommand.call();
+
+        clonedRepo.getRepository().close();
         logger.log(ClientLevel.CLIENT, "Cloned!");
 
     }
