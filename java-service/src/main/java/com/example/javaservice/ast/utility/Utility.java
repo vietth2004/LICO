@@ -90,6 +90,23 @@ public class Utility {
     }
 
     @Nonnull
+    public static JavaNode search(JavaNode root, int searchId) {
+        if (root.getId() == searchId) {
+            return root;
+        } else {
+            for (Object child : root.getChildren()) {
+                if(child instanceof JavaNode) {
+                        JavaNode node = search((JavaNode) child, searchId);
+                        if (node != null) {
+                            return node;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Nonnull
     public static List<Integer> convertChildren(List<AbstractNode> abstractNodeList) {
         List<Integer> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {

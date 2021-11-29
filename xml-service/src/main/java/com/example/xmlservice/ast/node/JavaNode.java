@@ -1,6 +1,7 @@
 package com.example.xmlservice.ast.node;
 
 import com.example.xmlservice.ast.annotation.JavaAnnotation;
+import com.example.xmlservice.ast.annotation.MemberValuePair;
 import com.example.xmlservice.ast.dependency.Pair;
 import com.example.xmlservice.ast.type.JavaType;
 import com.example.xmlservice.ast.utility.Utility;
@@ -22,13 +23,23 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List<Pair> dependencyTo;
 
-    private transient List children = new ArrayList<>();
+    private transient List<JavaNode> children = new ArrayList<>();
 
     private transient List annotates = null;
 
     private transient List parameters = null;
 
     private transient List extendInterfaces = null;
+
+    private transient List<JavaAnnotation> annotatesWithValue = null;
+
+    public List getAnnotatesWithValue() {
+        return annotatesWithValue;
+    }
+
+    public void setAnnotatesWithValue(List<JavaAnnotation> annotatesWithValue) {
+        this.annotatesWithValue = annotatesWithValue;
+    }
 
     private List modifiers = null;
 

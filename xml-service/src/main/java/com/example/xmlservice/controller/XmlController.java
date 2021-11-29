@@ -1,6 +1,7 @@
 package com.example.xmlservice.controller;
 
 import com.example.xmlservice.ast.dependency.Dependency;
+import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.config.MQConfig;
 import com.example.xmlservice.dto.JavaNodeRequest;
 import com.example.xmlservice.dom.Node;
@@ -9,6 +10,7 @@ import com.example.xmlservice.dto.Response;
 import com.example.xmlservice.service.XmlService;
 import com.example.xmlservice.utils.Log.ClientLevel;
 import com.example.xmlservice.utils.NodeUtils;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -55,16 +57,11 @@ public class XmlController {
     }
 
     @PostMapping("/api/dependency")
-    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody JavaNodeRequest request) {
-        JAVA_TOTAL_NODES = request.getTotalNodes();
+    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) {
+        JAVA_TOTAL_NODES = request.size();
         List<Dependency> dependencies = new ArrayList<>();
-        try {
-            NodeUtils.reCalculateXmlNodesId(JAVA_TOTAL_NODES, xmlNodes);
-            dependencies.addAll(xmlService.analyzeDependency(request.getRootNode(), xmlNodes));
-            logger.log(ClientLevel.CLIENT, "Need to run /api/pathParse first");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        NodeUtils.reCalculateXmlNodesId(JAVA_TOTAL_NODES, xmlNodes);
+        dependencies.addAll(xmlService.analyzeDependency(request, xmlNodes));
         return new ResponseEntity<List<Dependency>>(dependencies, HttpStatus.OK);
     }
 
