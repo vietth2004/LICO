@@ -95,10 +95,10 @@ public class GithubController {
     }
 
     //Get repository info
-    @GetMapping("/api/user/repo/{repoName}")
-    public ResponseEntity<?> getRepositoryInfo(@PathVariable String repoName) {
+    @GetMapping("/api/user/repo")
+    public ResponseEntity<?> getRepositoryInfo(@RequestParam String repo) {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repoName;
+            String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo;
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
             headers.set("Accept", "application/vnd.github.v3+json");
@@ -110,10 +110,10 @@ public class GithubController {
     }
 
     //Get all branches
-    @GetMapping("/api/user/repo/{repoName}/branches")
-    public ResponseEntity<?> getAllBranchesOfARepo(@PathVariable String repoName) {
+    @GetMapping("/api/user/repo/branches")
+    public ResponseEntity<?> getAllBranchesOfARepo(@RequestParam String repo) {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repoName + "/branches";
+            String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo + "/branches";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
             headers.set("Accept", "application/vnd.github.v3+json");
@@ -125,43 +125,70 @@ public class GithubController {
     }
 
     //Clone repo
-    @GetMapping("/api/clone/{repoName}")
-    public ResponseEntity<?> cloneRepo(@RequestParam String url, @PathVariable String repoName) throws GitAPIException, IOException {
+    @GetMapping("/api/clone/")
+    public ResponseEntity<?> cloneRepo(@RequestParam String url, @RequestParam String repo) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepo(url, repoName);
+            githubService.cloneRepo(url, repo);
             return ResponseEntity.ok("Clone done");
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
 
     //Clone repo by branch name
-    @GetMapping("/api/clone/{repoName}/{branchName}")
-    public ResponseEntity<?> cloneRepoByBranchName(@RequestParam String url, @PathVariable String repoName, @PathVariable String branchName) throws GitAPIException, IOException {
+    @GetMapping("/api/clone/branch/")
+    public ResponseEntity<?> cloneRepoByBranchName
+                (@RequestParam String url,
+                 @RequestParam String repo,
+                 @RequestParam String branch)
+            throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepoByBranchName(url, repoName, branchName);
+            githubService.cloneRepoByBranchName(url, repo, branch);
             return ResponseEntity.ok("Clone done");
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
 
     //Clone repo by commit sha
-    @GetMapping("/api/clone/{repoName}/{branchName}/{commitSha}")
-    public ResponseEntity<?> cloneRepoByBranchName
-            (@RequestParam String url, @PathVariable String repoName,
-            @PathVariable String branchName, @PathVariable String commitSha)
+    @GetMapping("/api/clone/commit/")
+    public ResponseEntity<?> cloneRepoByCommitSha
+                (@RequestParam String url, @RequestParam String repo, @RequestParam String commit)
             throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepoByCommit(url, repoName, branchName, commitSha);
+            githubService.cloneRepoByCommit(url, repo, commit);
+            return ResponseEntity.ok("Clone done");
+        }
+        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+    }
+
+    //clone 2 repo by commits
+    @GetMapping("/api/clone/byCommits")
+    public ResponseEntity<?> clone2RepoByCommitSha
+                (@RequestParam String url, @RequestParam String repo,
+                 @RequestParam String commit1, @RequestParam String commit2) throws GitAPIException, IOException {
+        if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
+            githubService.clone2RepoByCommits(url, repo, commit1, commit2);
+            return ResponseEntity.ok("Clone done");
+        }
+        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+    }
+
+    //clone 2 repo by branch
+    @GetMapping("/api/clone/byBranches")
+    public ResponseEntity<?> clone2RepoByBranchName
+                (@RequestParam String url, @RequestParam String repo,
+                 @RequestParam String branch1, @RequestParam String branch2) throws GitAPIException, IOException {
+        if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
+            githubService.clone2RepoByBranch(url, repo, branch1, branch2);
             return ResponseEntity.ok("Clone done");
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
 
     //Get all commit in repo
-    @GetMapping("/api/user/repo/{repoName}/commits")
-    public ResponseEntity<?> getAllCommitsOfARepo(@PathVariable String repoName) {
+    @GetMapping("/api/user/repo/commits")
+    public ResponseEntity<?> getAllCommitsOfARepo(@RequestParam String repo) {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repoName + "/commits";
+            String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo + "/commits";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
             headers.set("Accept", "application/vnd.github.v3+json");

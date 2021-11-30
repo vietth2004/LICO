@@ -59,17 +59,16 @@ public class GithubService {
         logger.log(ClientLevel.CLIENT, "Cloned!");
     }
 
-    public void cloneRepoByCommit(String url, String repoName, String branchName, String commitSha) throws GitAPIException, IOException {
-        String pathToSaved = "./project/anonymous/" + repoName + "-" + branchName + "-" + commitSha;
+    public void cloneRepoByCommit(String url, String repoName, String commitSha) throws GitAPIException, IOException {
+        String pathToSaved = "./project/anonymous/" + repoName + "-" + commitSha;
 
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
 
-        logger.log(ClientLevel.CLIENT, "Cloning " + repoName + " in branch " + branchName + " with commit: " + commitSha);
+        logger.log(ClientLevel.CLIENT, "Cloning " + repoName + " in branch " + " with commit: " + commitSha);
 
         CloneCommand cloneCommand = Git.cloneRepository()
                 .setURI(url)
-                .setBranch(branchName)
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(UserConfig.USERNAME, UserConfig.PERSONAL_ACCESS_TOKEN))
                 .setDirectory(new File(pathToSaved));
 
@@ -83,6 +82,19 @@ public class GithubService {
         clonedRepo.getRepository().close();
         logger.log(ClientLevel.CLIENT, "Cloned!");
 
+    }
+
+    public void clone2RepoByBranch
+            (String url, String repo, String branch1, String branch2) throws GitAPIException, IOException {
+        cloneRepoByBranchName(url, repo, branch1);
+        cloneRepoByBranchName(url, repo, branch2);
+    }
+
+    public void clone2RepoByCommits
+            (String url, String repo,
+             String commitSha1, String commitSha2) throws GitAPIException, IOException {
+        cloneRepoByCommit(url, repo, commitSha1);
+        cloneRepoByCommit(url, repo, commitSha2);
     }
 
 }
