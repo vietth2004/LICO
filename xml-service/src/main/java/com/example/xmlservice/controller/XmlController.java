@@ -50,10 +50,9 @@ public class XmlController {
 
     @PostMapping("/api/dependency")
     public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) {
-//        JAVA_TOTAL_NODES = request.size();
         List<Dependency> dependencies = new ArrayList<>();
-//        NodeUtils.reCalculateXmlNodesId(JAVA_TOTAL_NODES, xmlNodes);
         dependencies.addAll(xmlService.analyzeDependency(request, xmlNodes));
+        logger.log(ClientLevel.CLIENT, "Number of dependencies: " + dependencies.size());
         return new ResponseEntity<List<Dependency>>(dependencies, HttpStatus.OK);
     }
 

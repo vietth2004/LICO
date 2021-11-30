@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class NodeUtils {
@@ -156,24 +158,48 @@ public class NodeUtils {
 
     public static Set<XmlBeanInjectionNode> filterTagNode(Node node) {
         Set<XmlBeanInjectionNode> nodes = new HashSet<>();
+        Pattern pattern = Pattern.compile("\\#\\{(.*?)}");
         if(node instanceof XmlTagNode) {
-            if(((XmlTagNode) node).getAttributes().containsKey("value")) {
-                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
-                    String value = ((XmlTagNode) node).getAttributes().get("value");
-                    if(value != null) {
-                        if(value.contains("#{") && value.contains("}")) {
-                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
-                            beanInjectionNode.setValue(node);
-                            nodes.add(beanInjectionNode);
-                        }
-                    }
+//            if(((XmlTagNode) node).getAttributes().containsKey("value")) {
+//                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
+//                    String value = ((XmlTagNode) node).getAttributes().get("value");
+//                    if(value != null) {
+//                        if(value.contains("#{") && value.contains("}")) {
+//                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+//                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
+//                            beanInjectionNode.setValue(node);
+//                            nodes.add(beanInjectionNode);
+//                        }
+//                    }
+//                }
+//            } else if(((XmlTagNode) node).getAttributes().containsKey("action")) {
+//                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
+//                    String value = ((XmlTagNode) node).getAttributes().get("action");
+//                    if(value != null) {
+//                        if(value.contains("#{") && value.contains("}")) {
+//                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+//                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
+//                            beanInjectionNode.setValue(node);
+//                            nodes.add(beanInjectionNode);
+//                        }
+//                    }
+//                }
+//            } else
+//                for(Node child : node.getChildren()) {
+//                    nodes.addAll(filterTagNode(child));
+//                }
+            for(String value : ((XmlTagNode) node).getAttributes().values())  {
+                Matcher matcher = pattern.matcher(value);
+                if(matcher.matches()){
+                    XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
+                    beanInjectionNode.setValue(node);
+                    nodes.add(beanInjectionNode);
                 }
             }
-            else
-                for(Node child : node.getChildren()) {
-                    nodes.addAll(filterTagNode(child));
-                }
+            for(Node child : node.getChildren()) {
+                nodes.addAll(filterTagNode(child));
+            }
         }
         return nodes;
     }
