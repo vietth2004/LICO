@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 @Service
 public class GithubService {
@@ -51,7 +52,8 @@ public class GithubService {
         logger.log(ClientLevel.CLIENT, "Cloning " + repoName + " in branch " + branchName + "...");
         Git git = Git.cloneRepository()
                 .setURI(url)
-                .setBranch(branchName)
+                .setBranchesToClone(Arrays.asList("refs/heads/" + branchName))
+                .setNoCheckout(true)
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(UserConfig.USERNAME, UserConfig.PERSONAL_ACCESS_TOKEN))
                 .setDirectory(new File(pathToSaved))
                 .call();
