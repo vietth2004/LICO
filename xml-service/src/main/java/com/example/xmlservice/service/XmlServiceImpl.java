@@ -5,6 +5,7 @@ import com.example.xmlservice.ast.annotation.MemberValuePair;
 import com.example.xmlservice.ast.dependency.DependencyCountTable;
 import com.example.xmlservice.dom.Bean.JsfBeanInjectionNode;
 import com.example.xmlservice.dom.Bean.JsfBeanNode;
+import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.parser.XmlFileParser;
 import com.example.xmlservice.utils.Exception.JciaNotFoundException;
@@ -110,6 +111,39 @@ public class XmlServiceImpl implements XmlService {
         List<JsfBeanNode> beanNodes = getAllJsfBeanNode(javaNode);
 
         List<Node> xhtmlNodes = xhtmlNodeFilter(xmlNodes);
+        List<Node> allChildren = getChildrenLevel1XmlFileNode(xhtmlNodes);
+        List<XmlBeanInjectionNode> injectionNodes = new ArrayList<>();
+        for(Node child : allChildren) {
+            injectionNodes.addAll(filterTagNode(child));
+        }
+
+        for(XmlBeanInjectionNode injectionNode : injectionNodes) {
+            for(JsfBeanNode beanNode : beanNodes) {
+                if(injectionNode.getBeanInjection().contains(".")) {
+                    String beanInjectionName = injectionNode.getBeanInjection().split("\\.")[0];
+                    String beanName = beanNode.getBeanName();
+                    if(beanName.equals(beanInjectionName)) {
+                        logger.log(ClientLevel.CLIENT, "Ca lang ra day ma xem nay: " + beanNode + " ... " + injectionNode);
+                        dependencies.add(new Dependency(
+                                injectionNode.getValue().getId(),
+                                beanNode.getValue().getId(),
+                                new DependencyCountTable(0,0,0,0,0, 1)
+                        ));
+                    }
+                } else {
+                    String beanInjectionName = injectionNode.getBeanInjection();
+                    String beanName = beanNode.getBeanName();
+                    if(beanName.equals(beanInjectionName)) {
+                        logger.log(ClientLevel.CLIENT, "Ca lang oi ra day ma xem nay: " + beanNode + " ... " + injectionNode);
+                        dependencies.add(new Dependency(
+                                injectionNode.getValue().getId(),
+                                beanNode.getValue().getId(),
+                                new DependencyCountTable(0,0,0,0,0, 1)
+                        ));
+                    }
+                }
+            }
+        }
 
         return dependencies;
     }

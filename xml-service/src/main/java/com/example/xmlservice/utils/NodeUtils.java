@@ -4,16 +4,18 @@ import com.example.xmlservice.ast.annotation.JavaAnnotation;
 import com.example.xmlservice.ast.annotation.MemberValuePair;
 import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.dom.Bean.JsfBeanNode;
+import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.dom.Xml.XmlFileNode;
 import com.example.xmlservice.dom.Xml.XmlTagNode;
 import com.example.xmlservice.utils.Helper.FileHelper;
-import com.example.xmlservice.utils.Log.ClientLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class NodeUtils {
@@ -142,6 +144,38 @@ public class NodeUtils {
                 .collect(Collectors.toList());
     }
 
+    public static List<Node> getChildrenLevel1XmlFileNode(List<Node> xmlFileNodes) {
+        List<Node> nodes = new ArrayList<>();
+        for(Node node : xmlFileNodes) {
+            if(node instanceof XmlFileNode) {
+                nodes.addAll(node.getChildren());
+            }
+        }
+        return nodes;
+    }
 
+    public static Set<XmlBeanInjectionNode> filterTagNode(Node node) {
+        Set<XmlBeanInjectionNode> nodes = new HashSet<>();
+        if(node instanceof XmlTagNode) {
+            if(((XmlTagNode) node).getAttributes().containsKey("value")) {
+                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
+                    String value = ((XmlTagNode) node).getAttributes().get("value");
+                    if(value != null) {
+                        if(value.contains("#{") && value.contains("}")) {
+                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
+                            beanInjectionNode.setValue(node);
+                            nodes.add(beanInjectionNode);
+                        }
+                    }
+                }
+            }
+            else
+                for(Node child : node.getChildren()) {
+                    nodes.addAll(filterTagNode(child));
+                }
+        }
+        return nodes;
+    }
 
 }
