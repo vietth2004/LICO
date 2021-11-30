@@ -93,7 +93,7 @@ public class XmlServiceImpl implements XmlService {
         for(JsfBeanNode beanNode : jsfBeanMap) {
             for(JsfBeanInjectionNode injectionNode : jsfBeanInjectionMap) {
                 if(injectionNode.getBeanInjection().equals(beanNode.getBeanName())) {
-                    logger.log(ClientLevel.CLIENT, "Ca lang ra day ma xem nay: " + beanNode + " ... " + injectionNode);
+                    logger.log(ClientLevel.CLIENT, "Bean inject bean: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getQualifiedName());
                     dependencies.add(new Dependency(
                             injectionNode.getValue().getId(),
                             beanNode.getValue().getId(),
@@ -123,7 +123,7 @@ public class XmlServiceImpl implements XmlService {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\.")[0];
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
-                        logger.log(ClientLevel.CLIENT, "Ca lang ra day ma xem nay: " + beanNode + " ... " + injectionNode);
+                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
@@ -134,7 +134,7 @@ public class XmlServiceImpl implements XmlService {
                     String beanInjectionName = injectionNode.getBeanInjection();
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
-                        logger.log(ClientLevel.CLIENT, "Ca lang oi ra day ma xem nay: " + beanNode + " ... " + injectionNode);
+                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
