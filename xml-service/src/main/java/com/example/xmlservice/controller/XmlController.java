@@ -38,6 +38,7 @@ public class XmlController {
         List<Node> nodes = xmlService.parseProjectWithPath(folderPath.getPath());
         long after =  System.nanoTime();
         logger.log(ClientLevel.CLIENT, "Parsing done in " + (after - before)/1000000 + " ms!");
+        xmlNodes = new ArrayList<>();
         xmlNodes.addAll(nodes);
         NodeUtils.reCalculateXmlNodesId(javaNode, xmlNodes);
         return new Response(nodes);
