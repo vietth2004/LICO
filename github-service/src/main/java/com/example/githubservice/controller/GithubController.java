@@ -2,6 +2,8 @@ package com.example.githubservice.controller;
 
 import com.example.githubservice.config.ApplicationConfig;
 import com.example.githubservice.config.UserConfig;
+import com.example.githubservice.dto.Clone2RepoResponse;
+import com.example.githubservice.dto.CloneRepoResponse;
 import com.example.githubservice.dto.Response;
 import com.example.githubservice.helper.ResponseHelper;
 import com.example.githubservice.service.GithubService;
@@ -42,6 +44,7 @@ public class GithubController {
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
+    // Capture redirect request then get access token
     @RequestMapping("/api/authenticated")
     public ResponseEntity<?> redirect(@RequestParam String code) {
         HttpHeaders headers = new HttpHeaders();
@@ -128,8 +131,8 @@ public class GithubController {
     @GetMapping("/api/clone/")
     public ResponseEntity<?> cloneRepo(@RequestParam String url, @RequestParam String repo) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepo(url, repo);
-            return ResponseEntity.ok("Clone done");
+            String path = githubService.cloneRepo(url, repo);
+            return new ResponseEntity<>(new CloneRepoResponse(path), HttpStatus.OK);
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
@@ -142,8 +145,8 @@ public class GithubController {
                  @RequestParam String branch)
             throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepoByBranchName(url, repo, branch);
-            return ResponseEntity.ok("Clone done");
+            String path = githubService.cloneRepoByBranchName(url, repo, branch);
+            return new ResponseEntity<>(new CloneRepoResponse(path), HttpStatus.OK);
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
@@ -154,8 +157,8 @@ public class GithubController {
                 (@RequestParam String url, @RequestParam String repo, @RequestParam String commit)
             throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepoByCommit(url, repo, commit);
-            return ResponseEntity.ok("Clone done");
+            String path = githubService.cloneRepoByCommit(url, repo, commit);
+            return new ResponseEntity<>(new CloneRepoResponse(path), HttpStatus.OK);
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
@@ -166,8 +169,8 @@ public class GithubController {
                 (@RequestParam String url, @RequestParam String repo,
                  @RequestParam String commit1, @RequestParam String commit2) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.clone2RepoByCommits(url, repo, commit1, commit2);
-            return ResponseEntity.ok("Clone done");
+            Clone2RepoResponse response = githubService.clone2RepoByCommits(url, repo, commit1, commit2);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
@@ -178,8 +181,8 @@ public class GithubController {
                 (@RequestParam String url, @RequestParam String repo,
                  @RequestParam String branch1, @RequestParam String branch2) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.clone2RepoByBranch(url, repo, branch1, branch2);
-            return ResponseEntity.ok("Clone done");
+            Clone2RepoResponse response = githubService.clone2RepoByBranch(url, repo, branch1, branch2);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
     }
