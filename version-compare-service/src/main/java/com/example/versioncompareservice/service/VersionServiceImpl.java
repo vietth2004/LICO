@@ -167,7 +167,7 @@ public class VersionServiceImpl implements VersionService{
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getUnchangedNodes()) {
             if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
-                if(((JavaMethodNode) javaNode.getA()).getReturnType() != ((JavaMethodNode) javaNode.getB()).getReturnType()) {
+                if(((JavaMethodNode) javaNode.getA()).getReturnType().equals(((JavaMethodNode) javaNode.getB()).getReturnType())) {
                     changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
                 }
             } else {
