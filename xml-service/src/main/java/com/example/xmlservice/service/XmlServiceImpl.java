@@ -1,5 +1,11 @@
 package com.example.xmlservice.service;
 
+import com.example.xmlservice.ast.annotation.JavaAnnotation;
+import com.example.xmlservice.ast.annotation.MemberValuePair;
+import com.example.xmlservice.ast.dependency.DependencyCountTable;
+import com.example.xmlservice.dom.Bean.JsfBeanInjectionNode;
+import com.example.xmlservice.dom.Bean.JsfBeanNode;
+import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.parser.XmlFileParser;
 import com.example.xmlservice.utils.Exception.JciaNotFoundException;
@@ -8,6 +14,7 @@ import com.example.xmlservice.utils.Helper.StringHelper;
 import com.example.xmlservice.utils.Log.ClientLevel;
 import com.example.xmlservice.ast.dependency.Dependency;
 import com.example.xmlservice.ast.node.JavaNode;
+import com.example.xmlservice.utils.NodeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -18,6 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.xmlservice.utils.NodeUtils.*;
 
 @Service
 public class XmlServiceImpl implements XmlService {
@@ -55,7 +64,7 @@ public class XmlServiceImpl implements XmlService {
     }
 
     @Override
-    public List<Dependency> analyzeDependency(JavaNode javaNode, List<Node> xmlNodes) {
+    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) {
         List<Dependency> dependencies = new ArrayList<>();
         dependencies.addAll(analyzeDependencyBetweenBeans(javaNode));
         dependencies.addAll(analyzeDependencyFromBeanToView(javaNode, xmlNodes));
@@ -63,19 +72,87 @@ public class XmlServiceImpl implements XmlService {
         return dependencies;
     }
 
-    public List<Dependency> analyzeDependencyBetweenBeans(JavaNode node){
+    public List<Dependency> analyzeDependencyBetweenBeans(List<JavaNode> nodes){
+        List<Dependency> dependencies = new ArrayList<>();
+        List<JsfBeanNode> jsfBeanMap = getAllJsfBeanNode(nodes);
+
+        List<JavaNode> jsfBeansInjection = findAllBeanInjection(nodes);
+        List<JsfBeanInjectionNode> jsfBeanInjectionMap = new ArrayList<>();
+        jsfBeansInjection.forEach(
+                node -> {
+                    JsfBeanInjectionNode beanInjection = new JsfBeanInjectionNode();
+                    beanInjection.setValue(node);
+                    if(findBeanInjectionName(node) != null)
+                        beanInjection.setBeanInjection(findBeanInjectionName(node));
+                    else
+                        beanInjection.setBeanInjection(Character.toLowerCase(node.getSimpleName().charAt(0)) + node.getSimpleName().substring(1));
+                    jsfBeanInjectionMap.add(beanInjection);
+                }
+        );
+
+        for(JsfBeanNode beanNode : jsfBeanMap) {
+            for(JsfBeanInjectionNode injectionNode : jsfBeanInjectionMap) {
+                if(injectionNode.getBeanInjection().equals(beanNode.getBeanName())) {
+                    logger.log(ClientLevel.CLIENT, "Bean inject bean: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getQualifiedName());
+                    dependencies.add(new Dependency(
+                            injectionNode.getValue().getId(),
+                            beanNode.getValue().getId(),
+                            new DependencyCountTable(0,0,0,0,0, 1)
+                    ));
+                }
+            }
+        }
+
+        return dependencies;
+    }
+
+    public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> javaNode, List<Node> xmlNodes){
+        List<Dependency> dependencies = new ArrayList<>();
+        List<JsfBeanNode> beanNodes = getAllJsfBeanNode(javaNode);
+
+        List<Node> xhtmlNodes = xhtmlNodeFilter(xmlNodes);
+        List<Node> allChildren = getChildrenLevel1XmlFileNode(xhtmlNodes);
+        List<XmlBeanInjectionNode> injectionNodes = new ArrayList<>();
+        for(Node child : allChildren) {
+            injectionNodes.addAll(filterTagNode(child));
+        }
+
+        for(XmlBeanInjectionNode injectionNode : injectionNodes) {
+            for(JsfBeanNode beanNode : beanNodes) {
+                if(injectionNode.getBeanInjection().contains(".")) {
+                    String beanInjectionName = injectionNode.getBeanInjection().split("\\.")[0];
+                    String beanName = beanNode.getBeanName();
+                    if(beanName.equals(beanInjectionName)) {
+                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
+                        dependencies.add(new Dependency(
+                                injectionNode.getValue().getId(),
+                                beanNode.getValue().getId(),
+                                new DependencyCountTable(0,0,0,0,0, 1)
+                        ));
+                    }
+                } else {
+                    String beanInjectionName = injectionNode.getBeanInjection();
+                    String beanName = beanNode.getBeanName();
+                    if(beanName.equals(beanInjectionName)) {
+                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
+                        dependencies.add(new Dependency(
+                                injectionNode.getValue().getId(),
+                                beanNode.getValue().getId(),
+                                new DependencyCountTable(0,0,0,0,0, 1)
+                        ));
+                    }
+                }
+            }
+        }
+
+        return dependencies;
+    }
+
+    public List<Dependency> analyzeDependencyFromControllerToView(List<JavaNode> node, List<Node> xmlNodes){
         List<Dependency> dependencies = new ArrayList<>();
         return dependencies;
     }
 
-    public List<Dependency> analyzeDependencyFromBeanToView(JavaNode node, List<Node> xmlNodes){
-        List<Dependency> dependencies = new ArrayList<>();
-        return dependencies;
-    }
 
-    public List<Dependency> analyzeDependencyFromControllerToView(JavaNode node, List<Node> xmlNodes){
-        List<Dependency> dependencies = new ArrayList<>();
-        return dependencies;
-    }
 
 }

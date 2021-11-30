@@ -11,5 +11,5 @@ import java.util.List;
 public interface XmlService {
     List<Node> parseProjectWithPath(String path) throws IOException;
     List<Node> parseProjectWithFile(MultipartFile file) throws IOException;
-    List<Dependency> analyzeDependency(JavaNode javaNode, List<Node> xmlNodes);
+    List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes);
 }
