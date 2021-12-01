@@ -23,9 +23,9 @@ import java.net.URI;
 import java.util.Collections;
 
 @RestController
-public class GithubController {
+public class UserController {
 
-    private Logger logger  = LogManager.getLogger(GithubController.class);
+    private Logger logger  = LogManager.getLogger(UserController.class);
     private static final String ERR_MSG = "Need to authenticated with github first!";
 
     @Autowired
@@ -40,7 +40,7 @@ public class GithubController {
         HttpHeaders headers = new HttpHeaders();
         String url = UriComponentsBuilder.fromHttpUrl("https://github.com/login/oauth/authorize")
                 .queryParam("client_id", ApplicationConfig.CLIENT_ID)
-                .queryParam("scope", "repo, gist")
+                .queryParam("scope", "repo, admin:org, read:org")
                 .toUriString();
         headers.setLocation(URI.create(url));
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
@@ -67,6 +67,21 @@ public class GithubController {
         logger.log(ClientLevel.CLIENT, "Authenticated!");
 
         return new ResponseEntity<Object>(PAT, HttpStatus.OK);
+    }
+
+    //Get all organizations of user
+    @GetMapping("/api/user/orgs")
+    public ResponseEntity<?> getAllOrgs() {
+        if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
+            String url = "https://api.github.com/user/orgs";
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
+            HttpEntity entity = new HttpEntity(headers);
+            RestTemplate restTemplate = new RestTemplate();
+            return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        }
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     // Get user info
@@ -191,15 +206,20 @@ public class GithubController {
 
     //Get all commit in repo
     @GetMapping("/api/user/repo/commits")
-    public ResponseEntity<?> getAllCommitsOfARepo(@RequestParam String repo) {
+    public ResponseEntity<?> getAllCommitsOfARepo(@RequestParam String repo, @RequestParam int page) {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
             String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo + "/commits";
+            String url_req = UriComponentsBuilder.fromHttpUrl(url)
+                    .queryParam("per_page", 100)
+                    .queryParam("page", page)
+                    .toUriString();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
             headers.set("Accept", GithubAPI.ACCEPT_HEADER);
+            headers.setLocation(URI.create(url_req));
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
-            return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+            return restTemplate.exchange(url_req, HttpMethod.GET, entity, Object.class);
         }
         return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
