@@ -27,15 +27,10 @@ public class XmlController {
 
     private Logger logger = LogManager.getLogger(XmlController.class);
 
-    public static int JAVA_TOTAL_NODES;
     public List<Node> xmlNodes = new ArrayList<>();
 
     @Autowired
     private XmlService xmlService;
-
-    public XmlController() {
-        JAVA_TOTAL_NODES = 0;
-    }
 
     @PostMapping("/api/pathParse")
     public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException {
@@ -43,6 +38,7 @@ public class XmlController {
         List<Node> nodes = xmlService.parseProjectWithPath(folderPath.getPath());
         long after =  System.nanoTime();
         logger.log(ClientLevel.CLIENT, "Parsing done in " + (after - before)/1000000 + " ms!");
+        xmlNodes = new ArrayList<>();
         xmlNodes.addAll(nodes);
         NodeUtils.reCalculateXmlNodesId(javaNode, xmlNodes);
         return new Response(nodes);

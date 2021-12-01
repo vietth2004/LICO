@@ -1,7 +1,10 @@
 package com.example.githubservice.controller;
 
 import com.example.githubservice.config.ApplicationConfig;
+import com.example.githubservice.config.GithubAPI;
 import com.example.githubservice.config.UserConfig;
+import com.example.githubservice.dto.Clone2RepoResponse;
+import com.example.githubservice.dto.CloneRepoResponse;
 import com.example.githubservice.dto.Response;
 import com.example.githubservice.helper.ResponseHelper;
 import com.example.githubservice.service.GithubService;
@@ -20,9 +23,10 @@ import java.net.URI;
 import java.util.Collections;
 
 @RestController
-public class GithubController {
+public class UserController {
 
-    private Logger logger  = LogManager.getLogger(GithubController.class);
+    private Logger logger  = LogManager.getLogger(UserController.class);
+    private static final String ERR_MSG = "Need to authenticated with github first!";
 
     @Autowired
     ResponseHelper responseHelper;
@@ -36,12 +40,13 @@ public class GithubController {
         HttpHeaders headers = new HttpHeaders();
         String url = UriComponentsBuilder.fromHttpUrl("https://github.com/login/oauth/authorize")
                 .queryParam("client_id", ApplicationConfig.CLIENT_ID)
-                .queryParam("scope", "repo, gist")
+                .queryParam("scope", "repo, admin:org, read:org")
                 .toUriString();
         headers.setLocation(URI.create(url));
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
+    // Capture redirect request then get access token
     @RequestMapping("/api/authenticated")
     public ResponseEntity<?> redirect(@RequestParam String code) {
         HttpHeaders headers = new HttpHeaders();
@@ -64,6 +69,21 @@ public class GithubController {
         return new ResponseEntity<Object>(PAT, HttpStatus.OK);
     }
 
+    //Get all organizations of user
+    @GetMapping("/api/user/orgs")
+    public ResponseEntity<?> getAllOrgs() {
+        if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
+            String url = "https://api.github.com/user/orgs";
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
+            HttpEntity entity = new HttpEntity(headers);
+            RestTemplate restTemplate = new RestTemplate();
+            return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+        }
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
+    }
+
     // Get user info
     @GetMapping("/api/user-info")
     public ResponseEntity<?> getUserInfo() {
@@ -71,12 +91,12 @@ public class GithubController {
             String url = "https://api.github.com/user";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
-            headers.set("Accept", "application/vnd.github.v3+json");
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Get all repository
@@ -86,12 +106,12 @@ public class GithubController {
             String url = "https://api.github.com/user/repos";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
-            headers.set("Accept", "application/vnd.github.v3+json");
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Get repository info
@@ -101,12 +121,12 @@ public class GithubController {
             String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo;
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
-            headers.set("Accept", "application/vnd.github.v3+json");
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Get all branches
@@ -116,22 +136,22 @@ public class GithubController {
             String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo + "/branches";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
-            headers.set("Accept", "application/vnd.github.v3+json");
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Clone repo
     @GetMapping("/api/clone/")
     public ResponseEntity<?> cloneRepo(@RequestParam String url, @RequestParam String repo) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepo(url, repo);
-            return ResponseEntity.ok("Clone done");
+            String path = githubService.cloneRepo(url, repo);
+            return new ResponseEntity<>(new CloneRepoResponse(path), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Clone repo by branch name
@@ -142,10 +162,10 @@ public class GithubController {
                  @RequestParam String branch)
             throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepoByBranchName(url, repo, branch);
-            return ResponseEntity.ok("Clone done");
+            String path = githubService.cloneRepoByBranchName(url, repo, branch);
+            return new ResponseEntity<>(new CloneRepoResponse(path), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Clone repo by commit sha
@@ -154,10 +174,10 @@ public class GithubController {
                 (@RequestParam String url, @RequestParam String repo, @RequestParam String commit)
             throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.cloneRepoByCommit(url, repo, commit);
-            return ResponseEntity.ok("Clone done");
+            String path = githubService.cloneRepoByCommit(url, repo, commit);
+            return new ResponseEntity<>(new CloneRepoResponse(path), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //clone 2 repo by commits
@@ -166,10 +186,10 @@ public class GithubController {
                 (@RequestParam String url, @RequestParam String repo,
                  @RequestParam String commit1, @RequestParam String commit2) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.clone2RepoByCommits(url, repo, commit1, commit2);
-            return ResponseEntity.ok("Clone done");
+            Clone2RepoResponse response = githubService.clone2RepoByCommits(url, repo, commit1, commit2);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //clone 2 repo by branch
@@ -178,25 +198,30 @@ public class GithubController {
                 (@RequestParam String url, @RequestParam String repo,
                  @RequestParam String branch1, @RequestParam String branch2) throws GitAPIException, IOException {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
-            githubService.clone2RepoByBranch(url, repo, branch1, branch2);
-            return ResponseEntity.ok("Clone done");
+            Clone2RepoResponse response = githubService.clone2RepoByBranch(url, repo, branch1, branch2);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
     //Get all commit in repo
     @GetMapping("/api/user/repo/commits")
-    public ResponseEntity<?> getAllCommitsOfARepo(@RequestParam String repo) {
+    public ResponseEntity<?> getAllCommitsOfARepo(@RequestParam String repo, @RequestParam int page) {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
             String url = "https://api.github.com/repos/" + UserConfig.USERNAME + "/" + repo + "/commits";
+            String url_req = UriComponentsBuilder.fromHttpUrl(url)
+                    .queryParam("per_page", 100)
+                    .queryParam("page", page)
+                    .toUriString();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "token " + UserConfig.PERSONAL_ACCESS_TOKEN);
-            headers.set("Accept", "application/vnd.github.v3+json");
+            headers.set("Accept", GithubAPI.ACCEPT_HEADER);
+            headers.setLocation(URI.create(url_req));
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
-            return restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
+            return restTemplate.exchange(url_req, HttpMethod.GET, entity, Object.class);
         }
-        return new ResponseEntity<>("Need to authenticated with github first!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
 }
