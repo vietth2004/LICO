@@ -123,7 +123,6 @@ public class XmlServiceImpl implements XmlService {
                 .filter(node -> node.getName().equals("faces-config.xml"))
                 .collect(Collectors.toList());
 
-//        List<JsfBeanNode> beanConfigs = new ArrayList<>();
         for(Node node : getChildrenLevel1XmlFileNode(faceConfig)) {
             beanNodes.addAll(filterBeanFromFacesConfig(node, javaNode));
         }
