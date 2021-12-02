@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.xmlservice.utils.NodeUtils.*;
 
@@ -117,6 +118,16 @@ public class XmlServiceImpl implements XmlService {
             injectionNodes.addAll(filterTagNode(child));
         }
 
+        List<Node> faceConfig = xmlNodes
+                .stream()
+                .filter(node -> node.getName().equals("faces-config.xml"))
+                .collect(Collectors.toList());
+
+//        List<JsfBeanNode> beanConfigs = new ArrayList<>();
+        for(Node node : getChildrenLevel1XmlFileNode(faceConfig)) {
+            beanNodes.addAll(filterBeanFromFacesConfig(node, javaNode));
+        }
+
         for(XmlBeanInjectionNode injectionNode : injectionNodes) {
             for(JsfBeanNode beanNode : beanNodes) {
                 if(injectionNode.getBeanInjection().contains(".")) {
@@ -142,6 +153,18 @@ public class XmlServiceImpl implements XmlService {
                         ));
                     }
                 }
+                if(injectionNode.getBeanInjection().contains("[")) {
+                    String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
+                    String beanName = beanNode.getBeanName();
+                    if(beanName.equals(beanInjectionName)) {
+                        logger.log(ClientLevel.CLIENT, "Bean config in faces inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
+                        dependencies.add(new Dependency(
+                                injectionNode.getValue().getId(),
+                                beanNode.getValue().getId(),
+                                new DependencyCountTable(0,0,0,0,0, 1)
+                        ));
+                    }
+                }
             }
         }
 
@@ -152,7 +175,5 @@ public class XmlServiceImpl implements XmlService {
         List<Dependency> dependencies = new ArrayList<>();
         return dependencies;
     }
-
-
 
 }

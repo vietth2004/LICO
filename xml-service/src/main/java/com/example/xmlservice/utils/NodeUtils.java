@@ -160,39 +160,20 @@ public class NodeUtils {
         Set<XmlBeanInjectionNode> nodes = new HashSet<>();
         Pattern pattern = Pattern.compile("\\#\\{(.*?)}");
         if(node instanceof XmlTagNode) {
-//            if(((XmlTagNode) node).getAttributes().containsKey("value")) {
-//                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
-//                    String value = ((XmlTagNode) node).getAttributes().get("value");
-//                    if(value != null) {
-//                        if(value.contains("#{") && value.contains("}")) {
-//                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-//                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
-//                            beanInjectionNode.setValue(node);
-//                            nodes.add(beanInjectionNode);
-//                        }
-//                    }
-//                }
-//            } else if(((XmlTagNode) node).getAttributes().containsKey("action")) {
-//                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
-//                    String value = ((XmlTagNode) node).getAttributes().get("action");
-//                    if(value != null) {
-//                        if(value.contains("#{") && value.contains("}")) {
-//                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-//                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
-//                            beanInjectionNode.setValue(node);
-//                            nodes.add(beanInjectionNode);
-//                        }
-//                    }
-//                }
-//            } else
-//                for(Node child : node.getChildren()) {
-//                    nodes.addAll(filterTagNode(child));
-//                }
             for(String value : ((XmlTagNode) node).getAttributes().values())  {
                 Matcher matcher = pattern.matcher(value);
                 if(matcher.matches()){
                     XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
+                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.\\[\\]]", ""));
+                    beanInjectionNode.setValue(node);
+                    nodes.add(beanInjectionNode);
+                }
+            }
+            if(((XmlTagNode) node).getContent() != null){
+                Matcher matcherContent = pattern.matcher(((XmlTagNode) node).getContent());
+                if (matcherContent.matches()) {
+                    XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+                    beanInjectionNode.setBeanInjection(((XmlTagNode) node).getContent().replaceAll("[^a-zA-Z0-9.\\[\\]]", ""));
                     beanInjectionNode.setValue(node);
                     nodes.add(beanInjectionNode);
                 }
@@ -202,6 +183,54 @@ public class NodeUtils {
             }
         }
         return nodes;
+    }
+
+    public static Set<JsfBeanNode> filterBeanFromFacesConfig(Node tagNode, List<JavaNode> nodes) {
+        Set<JsfBeanNode> jsfBeanNodes = new HashSet<>();
+
+        if(tagNode instanceof XmlTagNode) {
+            if(((XmlTagNode) tagNode).getTagName().equals("resource-bundle")) {
+                JsfBeanNode beanNode = new JsfBeanNode();
+                beanNode.setValue(prepareBeanNodeValue(tagNode, nodes));
+                beanNode.setBeanName(prepareBeanNodeName(tagNode));
+                jsfBeanNodes.add(beanNode);
+            }
+            for(Node child : tagNode.getChildren()) {
+                jsfBeanNodes.addAll(filterBeanFromFacesConfig(child, nodes));
+            }
+        }
+        return jsfBeanNodes;
+    }
+
+    public static JavaNode findJavaNodeByName(List<JavaNode> nodes, String name) {
+        return nodes.stream().filter(
+                node -> node.getUniqueName().equals(name)
+        ).collect(Collectors.toList()).get(0);
+    }
+
+    public static JavaNode prepareBeanNodeValue(Node node, List<JavaNode> nodes) {
+        JavaNode beanNode = new JavaNode();
+        for(Node child : node.getChildren()) {
+            if (child instanceof XmlTagNode) {
+                String tagName = ((XmlTagNode) child).getTagName();
+                if(tagName.equals("base-name")) {
+                    JavaNode value = findJavaNodeByName(nodes, ((XmlTagNode) child).getContent());
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String prepareBeanNodeName(Node node) {
+        for(Node child : node.getChildren()) {
+            if(child instanceof XmlTagNode) {
+                if(((XmlTagNode) child).getTagName().equals("var")) {
+                    return ((XmlTagNode) child).getContent();
+                }
+            }
+        }
+        return null;
     }
 
 }
