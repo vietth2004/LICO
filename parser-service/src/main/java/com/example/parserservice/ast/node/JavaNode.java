@@ -32,6 +32,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List extendInterfaces = null;
 
+    private transient List annotatesWithValue = null;
+
     private transient Integer parent;
 
     private transient String path = null;
@@ -121,6 +123,14 @@ public class JavaNode extends Node implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public List getAnnotatesWithValue() {
+        return annotatesWithValue;
+    }
+
+    public void setAnnotatesWithValue(List annotatesWithValue) {
+        this.annotatesWithValue = annotatesWithValue;
     }
 
     private void setupProperties (AbstractNode abstractNode) {
