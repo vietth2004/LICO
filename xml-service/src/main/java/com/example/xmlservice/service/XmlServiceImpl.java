@@ -1,8 +1,8 @@
 package com.example.xmlservice.service;
 
-import com.example.xmlservice.ast.annotation.JavaAnnotation;
-import com.example.xmlservice.ast.annotation.MemberValuePair;
+import com.example.xmlservice.ast.dependency.Dependency;
 import com.example.xmlservice.ast.dependency.DependencyCountTable;
+import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.dom.Bean.JsfBeanInjectionNode;
 import com.example.xmlservice.dom.Bean.JsfBeanNode;
 import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
@@ -12,9 +12,6 @@ import com.example.xmlservice.utils.Exception.JciaNotFoundException;
 import com.example.xmlservice.utils.Helper.FileHelper;
 import com.example.xmlservice.utils.Helper.StringHelper;
 import com.example.xmlservice.utils.Log.ClientLevel;
-import com.example.xmlservice.ast.dependency.Dependency;
-import com.example.xmlservice.ast.node.JavaNode;
-import com.example.xmlservice.utils.NodeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ import static com.example.xmlservice.utils.NodeUtils.*;
 @Service
 public class XmlServiceImpl implements XmlService {
 
-    private Logger logger = LogManager.getLogger(XmlServiceImpl.class);
+    private final Logger logger = LogManager.getLogger(XmlServiceImpl.class);
 
     public XmlServiceImpl(){}
 
@@ -55,10 +52,16 @@ public class XmlServiceImpl implements XmlService {
                 }
             }
         });
-        logger.log(ClientLevel.CLIENT, nodes.stream().toArray().length);
+        logger.log(ClientLevel.CLIENT, nodes.toArray().length);
         return nodes;
     }
 
+    /**
+     * No need to do this thing
+     * @param file (.zip file format)
+     * @return arrays of xml nodes
+     * @throws IOException
+     */
     @Override
     public List<Node> parseProjectWithFile(MultipartFile file) throws IOException {
         return null;
@@ -73,6 +76,11 @@ public class XmlServiceImpl implements XmlService {
         return dependencies;
     }
 
+    /**
+     * get all dependencies from java bean to injected java bean node
+     * @param nodes
+     * @return
+     */
     public List<Dependency> analyzeDependencyBetweenBeans(List<JavaNode> nodes){
         List<Dependency> dependencies = new ArrayList<>();
         List<JsfBeanNode> jsfBeanMap = getAllJsfBeanNode(nodes);
@@ -107,10 +115,20 @@ public class XmlServiceImpl implements XmlService {
         return dependencies;
     }
 
+    /**
+     * get all dependencies from java bean to xhtml fileNode
+     * injected bean has pattern like #{...}
+     * @param javaNode
+     * @param xmlNodes
+     * @return
+     */
     public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> javaNode, List<Node> xmlNodes){
         List<Dependency> dependencies = new ArrayList<>();
         List<JsfBeanNode> beanNodes = getAllJsfBeanNode(javaNode);
 
+        /**
+         * Get all javaBean nodes
+         */
         List<Node> xhtmlNodes = xhtmlNodeFilter(xmlNodes);
         List<Node> allChildren = getChildrenLevel1XmlFileNode(xhtmlNodes);
         List<XmlBeanInjectionNode> injectionNodes = new ArrayList<>();
@@ -118,6 +136,9 @@ public class XmlServiceImpl implements XmlService {
             injectionNodes.addAll(filterTagNode(child));
         }
 
+        /**
+         * Get all custom bean from faces-config.xml file
+         */
         List<Node> faceConfig = xmlNodes
                 .stream()
                 .filter(node -> node.getName().equals("faces-config.xml"))
@@ -127,8 +148,15 @@ public class XmlServiceImpl implements XmlService {
             beanNodes.addAll(filterBeanFromFacesConfig(node, javaNode));
         }
 
+        /**
+         * traversal function to analyze dependencies
+         */
         for(XmlBeanInjectionNode injectionNode : injectionNodes) {
             for(JsfBeanNode beanNode : beanNodes) {
+
+                /**
+                 * analyze dependencies if bean has pattern #{abc.def()}
+                 */
                 if(injectionNode.getBeanInjection().contains(".")) {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\.")[0];
                     String beanName = beanNode.getBeanName();
@@ -141,6 +169,9 @@ public class XmlServiceImpl implements XmlService {
                         ));
                     }
                 } else {
+                    /**
+                     * analyze dependencies if bean has pattern like #{abc}
+                     */
                     String beanInjectionName = injectionNode.getBeanInjection();
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
@@ -152,6 +183,10 @@ public class XmlServiceImpl implements XmlService {
                         ));
                     }
                 }
+
+                /**
+                 * analyze dependencies if custom bean config
+                 */
                 if(injectionNode.getBeanInjection().contains("[")) {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
                     String beanName = beanNode.getBeanName();
@@ -170,6 +205,13 @@ public class XmlServiceImpl implements XmlService {
         return dependencies;
     }
 
+    /**
+     * get all dependencies from javaNode
+     * MVC pattern
+     * @param node
+     * @param xmlNodes
+     * @return
+     */
     public List<Dependency> analyzeDependencyFromControllerToView(List<JavaNode> node, List<Node> xmlNodes){
         List<Dependency> dependencies = new ArrayList<>();
         return dependencies;
