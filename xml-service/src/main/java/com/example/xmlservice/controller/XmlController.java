@@ -37,7 +37,7 @@ public class XmlController {
         long before = System.nanoTime();
         List<Node> nodes = xmlService.parseProjectWithPath(folderPath.getPath());
         long after =  System.nanoTime();
-        logger.log(ClientLevel.CLIENT, "Parsing done in " + (after - before)/1000000 + " ms!");
+        logger.log(ClientLevel.CLIENT, "Parsing xml nodes done in " + (after - before)/1000000 + " ms!");
         xmlNodes = new ArrayList<>();
         xmlNodes.addAll(nodes);
         NodeUtils.reCalculateXmlNodesId(javaNode, xmlNodes);
@@ -47,8 +47,11 @@ public class XmlController {
     @PostMapping("/api/dependency")
     public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) {
         List<Dependency> dependencies = new ArrayList<>();
+        long before = System.nanoTime();
         dependencies.addAll(xmlService.analyzeDependency(request, xmlNodes));
+        long after = System.nanoTime();
         logger.log(ClientLevel.CLIENT, "Number of dependencies: " + dependencies.size());
+        logger.log(ClientLevel.CLIENT, "Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
         return new ResponseEntity<List<Dependency>>(dependencies, HttpStatus.OK);
     }
 

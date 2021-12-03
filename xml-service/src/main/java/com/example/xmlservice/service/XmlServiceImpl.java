@@ -117,7 +117,7 @@ public class XmlServiceImpl implements XmlService {
 
     /**
      * get all dependencies from java bean to xhtml fileNode
-     * injected bean has pattern like #{...}
+     * injected bean has pattern #{...}
      * @param javaNode
      * @param xmlNodes
      * @return
@@ -149,7 +149,7 @@ public class XmlServiceImpl implements XmlService {
         }
 
         /**
-         * traversal function to analyze dependencies
+         * traversal function to analyze dependecies
          */
         for(XmlBeanInjectionNode injectionNode : injectionNodes) {
             for(JsfBeanNode beanNode : beanNodes) {
@@ -170,7 +170,7 @@ public class XmlServiceImpl implements XmlService {
                     }
                 } else {
                     /**
-                     * analyze dependencies if bean has pattern like #{abc}
+                     * analyze dependencies if bean has pattern #{abc}
                      */
                     String beanInjectionName = injectionNode.getBeanInjection();
                     String beanName = beanNode.getBeanName();

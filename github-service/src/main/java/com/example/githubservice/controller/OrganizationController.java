@@ -88,7 +88,7 @@ public class OrganizationController {
         return new ResponseEntity<>(ERR_MSG, HttpStatus.UNAUTHORIZED);
     }
 
-    //Get all commit in repo
+    //Get all commits in repo
     @GetMapping("/api/org/repo/commits")
     public ResponseEntity<?> getAllCommitsOfARepoInOrg(@RequestParam String org, @RequestParam String repo, @RequestParam int page) {
         if(UserConfig.PERSONAL_ACCESS_TOKEN != null) {
