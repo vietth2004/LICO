@@ -24,6 +24,11 @@ public class NodeUtils {
 
     private static final Logger logger = LogManager.getLogger(NodeUtils.class);
 
+    /**
+     * Recalculate id in all xml nodes by total javaNods
+     * @param javaTotalNodesId
+     * @param nodes
+     */
     public static void reCalculateXmlNodesId(int javaTotalNodesId, List<Node> nodes){
         nodes.forEach(node -> {
             int id = node.getId();
@@ -34,6 +39,11 @@ public class NodeUtils {
         });
     }
 
+    /**
+     * flat nested java rootNode to array of java node
+     * @param rootNode
+     * @return
+     */
     public static List<JavaNode> flatRootNode(JavaNode rootNode) {
         List<JavaNode> nodes = new ArrayList<>();
         nodes.add(rootNode);
@@ -48,6 +58,11 @@ public class NodeUtils {
         return nodes;
     }
 
+    /**
+     * find all bean by 2 annotation @Named and @ManagedBean
+     * @param javaNodes
+     * @return
+     */
     public static List<JavaNode> findAllBean(List<JavaNode> javaNodes) {
         List<JavaNode> jsfBeans = new ArrayList<>();
         javaNodes.forEach(
@@ -61,6 +76,12 @@ public class NodeUtils {
         return jsfBeans;
     }
 
+    /**
+     * find all Injected javaNode
+     * (defined by 2 annotation @ManagedProperty and @Inject)
+     * @param javaNodes
+     * @return
+     */
     public static List<JavaNode> findAllBeanInjection(List<JavaNode> javaNodes) {
         List<JavaNode> jsfBeanInjection = new ArrayList<>();
         javaNodes.forEach(
@@ -74,6 +95,11 @@ public class NodeUtils {
         return jsfBeanInjection;
     }
 
+    /**
+     * find bean name in annotation using regex pattern of name: #{...}
+     * @param node
+     * @return
+     */
     public static String findBeanName(JavaNode node) {
         if(node.getAnnotatesWithValue().size() > 0) {
             for(Object obj : node.getAnnotatesWithValue()) {
@@ -93,6 +119,12 @@ public class NodeUtils {
         return null;
     }
 
+    /**
+     * find name of bean injected to javaNode
+     * (defined by 2 annotations: @ManagedProperty and @Inject)
+     * @param node
+     * @return
+     */
     public static String findBeanInjectionName(JavaNode node) {
         for(Object obj : node.getAnnotatesWithValue()){
             if(obj instanceof JavaAnnotation) {
@@ -108,6 +140,12 @@ public class NodeUtils {
         return null;
     }
 
+    /**
+     * Check if node is bean
+     * @param node
+     * @param criteria (@Named, @ManagedBean, @Inject, @ManagedProperty)
+     * @return
+     */
     public static boolean checkNodeIsBean(JavaNode node, String criteria) {
         if (node.getAnnotatesWithValue().size() > 0) {
             for(Object obj : node.getAnnotatesWithValue()) {
@@ -120,6 +158,13 @@ public class NodeUtils {
         return false;
     }
 
+    /**
+     * Get all jsf bean nodes
+     * If annotation has no attribute
+     * Then bean's name is set to camel case of class
+     * @param javaNode
+     * @return
+     */
     public static List<JsfBeanNode> getAllJsfBeanNode(List<JavaNode> javaNode) {
         List<JavaNode> jsfBeans = findAllBean(javaNode);
         List<JsfBeanNode> jsfBeanMap = new ArrayList<>();
@@ -137,6 +182,11 @@ public class NodeUtils {
         return jsfBeanMap;
     }
 
+    /**
+     * filter all .xhtml file
+     * @param nodes
+     * @return
+     */
     public static List<Node> xhtmlNodeFilter(List<Node> nodes) {
         return nodes
                 .stream()
@@ -146,6 +196,11 @@ public class NodeUtils {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * filter all children XmlTagNode of XmlFileNode
+     * @param xmlFileNodes
+     * @return
+     */
     public static List<Node> getChildrenLevel1XmlFileNode(List<Node> xmlFileNodes) {
         List<Node> nodes = new ArrayList<>();
         for(Node node : xmlFileNodes) {
@@ -156,43 +211,37 @@ public class NodeUtils {
         return nodes;
     }
 
+    /**
+     * filter all value match pattern #{...} by using  regex
+     * @param node
+     * @return
+     */
     public static Set<XmlBeanInjectionNode> filterTagNode(Node node) {
         Set<XmlBeanInjectionNode> nodes = new HashSet<>();
         Pattern pattern = Pattern.compile("\\#\\{(.*?)}");
         if(node instanceof XmlTagNode) {
-//            if(((XmlTagNode) node).getAttributes().containsKey("value")) {
-//                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
-//                    String value = ((XmlTagNode) node).getAttributes().get("value");
-//                    if(value != null) {
-//                        if(value.contains("#{") && value.contains("}")) {
-//                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-//                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
-//                            beanInjectionNode.setValue(node);
-//                            nodes.add(beanInjectionNode);
-//                        }
-//                    }
-//                }
-//            } else if(((XmlTagNode) node).getAttributes().containsKey("action")) {
-//                for(int i=0; i<((XmlTagNode) node).getAttributes().size(); i++) {
-//                    String value = ((XmlTagNode) node).getAttributes().get("action");
-//                    if(value != null) {
-//                        if(value.contains("#{") && value.contains("}")) {
-//                            XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-//                            beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
-//                            beanInjectionNode.setValue(node);
-//                            nodes.add(beanInjectionNode);
-//                        }
-//                    }
-//                }
-//            } else
-//                for(Node child : node.getChildren()) {
-//                    nodes.addAll(filterTagNode(child));
-//                }
+
+            /**
+             * analyze injected bean in node's attributes
+             */
             for(String value : ((XmlTagNode) node).getAttributes().values())  {
                 Matcher matcher = pattern.matcher(value);
                 if(matcher.matches()){
                     XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.]", ""));
+                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.\\[\\]]", ""));
+                    beanInjectionNode.setValue(node);
+                    nodes.add(beanInjectionNode);
+                }
+            }
+
+            /**
+             * analyze injected bean in node's content
+             */
+            if(((XmlTagNode) node).getContent() != null){
+                Matcher matcherContent = pattern.matcher(((XmlTagNode) node).getContent());
+                if (matcherContent.matches()) {
+                    XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+                    beanInjectionNode.setBeanInjection(((XmlTagNode) node).getContent().replaceAll("[^a-zA-Z0-9.\\[\\]]", ""));
                     beanInjectionNode.setValue(node);
                     nodes.add(beanInjectionNode);
                 }
@@ -202,6 +251,79 @@ public class NodeUtils {
             }
         }
         return nodes;
+    }
+
+    /**
+     * get all custom beans config from faces-config.xml file
+     * @param tagNode
+     * @param nodes
+     * @return
+     */
+    public static Set<JsfBeanNode> filterBeanFromFacesConfig(Node tagNode, List<JavaNode> nodes) {
+        Set<JsfBeanNode> jsfBeanNodes = new HashSet<>();
+
+        if(tagNode instanceof XmlTagNode) {
+            if(((XmlTagNode) tagNode).getTagName().equals("resource-bundle")) {
+                JsfBeanNode beanNode = new JsfBeanNode();
+                beanNode.setValue(prepareBeanNodeValue(tagNode, nodes));
+                beanNode.setBeanName(prepareBeanNodeName(tagNode));
+                jsfBeanNodes.add(beanNode);
+            }
+            for(Node child : tagNode.getChildren()) {
+                jsfBeanNodes.addAll(filterBeanFromFacesConfig(child, nodes));
+            }
+        }
+        return jsfBeanNodes;
+    }
+
+    /**
+     * Get java node by name
+     * @param nodes
+     * @param name
+     * @return
+     */
+    public static JavaNode findJavaNodeByName(List<JavaNode> nodes, String name) {
+        return nodes.stream().filter(
+                node -> node.getUniqueName().equals(name)
+        ).collect(Collectors.toList()).get(0);
+    }
+
+    /**
+     * get value for beanNode
+     * value from base-name tagNode, child of resource-bundle tagNode
+     * @param node
+     * @param nodes
+     * @return
+     */
+    public static JavaNode prepareBeanNodeValue(Node node, List<JavaNode> nodes) {
+        JavaNode beanNode = new JavaNode();
+        for(Node child : node.getChildren()) {
+            if (child instanceof XmlTagNode) {
+                String tagName = ((XmlTagNode) child).getTagName();
+                if(tagName.equals("base-name")) {
+                    JavaNode value = findJavaNodeByName(nodes, ((XmlTagNode) child).getContent());
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get name for beanNode
+     * value from var tagNode, child of resource-bundle tagNode
+     * @param node
+     * @return
+     */
+    public static String prepareBeanNodeName(Node node) {
+        for(Node child : node.getChildren()) {
+            if(child instanceof XmlTagNode) {
+                if(((XmlTagNode) child).getTagName().equals("var")) {
+                    return ((XmlTagNode) child).getContent();
+                }
+            }
+        }
+        return null;
     }
 
 }
