@@ -7,6 +7,8 @@ import com.example.xmlservice.dom.Bean.JsfBeanInjectionNode;
 import com.example.xmlservice.dom.Bean.JsfBeanNode;
 import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
+import com.example.xmlservice.dom.Properties.PropertiesFileNode;
+import com.example.xmlservice.parser.PropertiesFileParser;
 import com.example.xmlservice.parser.XmlFileParser;
 import com.example.xmlservice.utils.Exception.JciaNotFoundException;
 import com.example.xmlservice.utils.Helper.FileHelper;
@@ -36,7 +38,9 @@ public class XmlServiceImpl implements XmlService {
     @Override
     public List<Node> parseProjectWithPath(String folderPath) throws IOException {
         XmlFileParser xmlFileParser = new XmlFileParser();
-        List<Node> nodes = new ArrayList<>();
+        PropertiesFileParser propertiesFileParser = new PropertiesFileParser();
+        List<Node> xmlNodes = new ArrayList<>();
+        List<Node> propertiesFileNodes = new ArrayList<>();
 
         Path path = Paths.get(folderPath);
         List<Path> paths = FileHelper.listFiles(path);
@@ -45,15 +49,24 @@ public class XmlServiceImpl implements XmlService {
                 try {
                     Node parsedNode = xmlFileParser.parse(x.toString());
                     if(parsedNode != null){
-                        nodes.add(parsedNode);
+                        xmlNodes.add(parsedNode);
+                    }
+                } catch (JciaNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else if(FileHelper.getFileExtension(x.toString()).equals("properties")) {
+                try {
+                    Node parsedPropertiesNode = propertiesFileParser.parse(x.toString());
+                    if(parsedPropertiesNode != null) {
+                        propertiesFileNodes.add(parsedPropertiesNode);
                     }
                 } catch (JciaNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         });
-        logger.log(ClientLevel.CLIENT, nodes.toArray().length);
-        return nodes;
+        logger.log(ClientLevel.CLIENT, xmlNodes.toArray().length);
+        return xmlNodes;
     }
 
     /**
@@ -191,6 +204,8 @@ public class XmlServiceImpl implements XmlService {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
+                        if(beanNode.getValue().getId() == null)
+                            logger.log(ClientLevel.CLIENT, "Null node with name: " + beanNode.getBeanName());
                         logger.log(ClientLevel.CLIENT, "Bean config in faces inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),

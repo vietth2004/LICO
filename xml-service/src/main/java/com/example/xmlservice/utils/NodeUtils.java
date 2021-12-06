@@ -283,9 +283,12 @@ public class NodeUtils {
      * @return
      */
     public static JavaNode findJavaNodeByName(List<JavaNode> nodes, String name) {
-        return nodes.stream().filter(
+        List<JavaNode> result = nodes.stream().filter(
                 node -> node.getUniqueName().equals(name)
-        ).collect(Collectors.toList()).get(0);
+        ).collect(Collectors.toList());
+        if(!result.isEmpty()) return result.get(0);
+        //TODO: Need to fix this one, some bean has not defined with uniquename, so I cant get bean for it
+        return new JavaNode();
     }
 
     /**

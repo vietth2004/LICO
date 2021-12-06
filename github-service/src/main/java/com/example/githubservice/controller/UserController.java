@@ -40,7 +40,7 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         String url = UriComponentsBuilder.fromHttpUrl("https://github.com/login/oauth/authorize")
                 .queryParam("client_id", ApplicationConfig.CLIENT_ID)
-                .queryParam("scope", "repo, admin:org, read:org")
+                .queryParam("scope", GithubAPI.SCOPE)
                 .toUriString();
         headers.setLocation(URI.create(url));
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
@@ -67,6 +67,12 @@ public class UserController {
         logger.log(ClientLevel.CLIENT, "Authenticated!");
 
         return new ResponseEntity<Object>(PAT, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/delete-token")
+    public ResponseEntity<?> deleteToken() {
+        UserConfig.PERSONAL_ACCESS_TOKEN = null;
+        return ResponseEntity.ok("successfully");
     }
 
     //Get all organizations of user
