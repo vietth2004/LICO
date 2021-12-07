@@ -46,7 +46,8 @@ public class UserController {
                 .queryParam("scope", GithubAPI.SCOPE)
                 .toUriString();
         headers.setLocation(URI.create(url));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        headers.setAccessControlAllowOrigin("*");
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     // Capture redirect request then get access token
