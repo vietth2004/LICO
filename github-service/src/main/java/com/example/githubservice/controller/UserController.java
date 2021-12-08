@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpResponse;
 import java.util.Collections;
 
 @RestController
@@ -43,7 +46,8 @@ public class UserController {
                 .queryParam("scope", GithubAPI.SCOPE)
                 .toUriString();
         headers.setLocation(URI.create(url));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        headers.setAccessControlAllowOrigin("*");
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     // Capture redirect request then get access token
