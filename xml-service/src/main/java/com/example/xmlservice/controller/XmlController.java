@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class XmlController {
@@ -32,6 +33,13 @@ public class XmlController {
     @Autowired
     private XmlService xmlService;
 
+    /**
+     * Parse to xml nodes by sending project path
+     * @param folderPath
+     * @param javaNode
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/api/pathParse")
     public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException {
         long before = System.nanoTime();
@@ -44,8 +52,13 @@ public class XmlController {
         return new Response(nodes);
     }
 
+    /**
+     * Analyze dependencies from java node to xml nodes
+     * @param request
+     * @return
+     */
     @PostMapping("/api/dependency")
-    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) {
+    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) throws ExecutionException, InterruptedException {
         List<Dependency> dependencies = new ArrayList<>();
         long before = System.nanoTime();
         dependencies.addAll(xmlService.analyzeDependency(request, xmlNodes));
