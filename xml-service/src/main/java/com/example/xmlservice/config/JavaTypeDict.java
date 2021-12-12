@@ -2,6 +2,9 @@ package com.example.xmlservice.config;
 
 public class JavaTypeDict {
 
+    /**
+     * define dictionary for multiple java node type
+     */
     public static final String JAVA_ROOT_NODE = "JavaRootNode";
     public static final String JAVA_PACKAGE_NODE = "JavaPackageNode";
     public static final String JAVA_CLASS_NODE = "JavaClassNode";

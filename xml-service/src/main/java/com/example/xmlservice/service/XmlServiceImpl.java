@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.example.xmlservice.utils.NodeUtils.*;
@@ -81,11 +84,14 @@ public class XmlServiceImpl implements XmlService {
     }
 
     @Override
-    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) {
+    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException {
         List<Dependency> dependencies = new ArrayList<>();
-        dependencies.addAll(analyzeDependencyBetweenBeans(javaNode));
-        dependencies.addAll(analyzeDependencyFromBeanToView(javaNode, xmlNodes));
-        dependencies.addAll(analyzeDependencyFromControllerToView(javaNode, xmlNodes));
+        CompletableFuture dep1 = CompletableFuture.supplyAsync(() -> analyzeDependencyBetweenBeans(javaNode));
+        CompletableFuture dep2 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromBeanToView(javaNode, xmlNodes));
+        CompletableFuture dep3 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromControllerToView(javaNode, xmlNodes));
+        dependencies.addAll((Collection<? extends Dependency>) dep1.get());
+        dependencies.addAll((Collection<? extends Dependency>) dep2.get());
+        dependencies.addAll((Collection<? extends Dependency>) dep3.get());
         return dependencies;
     }
 
