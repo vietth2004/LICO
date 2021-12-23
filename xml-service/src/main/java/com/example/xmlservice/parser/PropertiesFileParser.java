@@ -4,6 +4,9 @@ import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.dom.Properties.PropertiesFileNode;
 import com.example.xmlservice.dom.Properties.PropertiesNode;
 import com.example.xmlservice.utils.Exception.JciaNotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.InputSource;
@@ -11,14 +14,28 @@ import org.xml.sax.InputSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class PropertiesFileParser implements IParser, IPathParser{
+@AllArgsConstructor
+@Getter
+@Setter
+public class PropertiesFileParser implements IParser, IPathParser, Callable {
 
     private static final Logger logger = LogManager.getLogger(PropertiesFileParser.class);
+
+    private String path;
+
+    @Override
+    public Node call() throws Exception {
+        return parse(path);
+    }
 
     @Override
     public Node parse(String path) throws JciaNotFoundException {
         PropertiesFileNode fileNode = new PropertiesFileNode();
+        String parentName = new File(path).getParentFile().getName();
+        String fileNameWithoutExt = removeFileExtension(new File(path).getName(), true);
+        fileNode.setFullyQualifiedName(parentName + "." + fileNameWithoutExt);
         fileNode.setAbsolutePath(path);
         fileNode.setEntityClass("PropertiesFileNode");
         return parse(fileNode);
@@ -63,6 +80,15 @@ public class PropertiesFileParser implements IParser, IPathParser{
             exception.printStackTrace();
         }
         return nodes;
+    }
+
+    public static String removeFileExtension(String filename, boolean removeAllExtensions) {
+        if (filename == null || filename.isEmpty()) {
+            return filename;
+        }
+
+        String extPattern = "(?<!^)[.]" + (removeAllExtensions ? ".*" : "[^.]*$");
+        return filename.replaceAll(extPattern, "");
     }
 
 }
