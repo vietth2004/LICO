@@ -8,6 +8,9 @@ import com.example.xmlservice.utils.Helper.FileHelper;
 import com.example.xmlservice.utils.Helper.JciaDomHelper;
 import com.example.xmlservice.utils.Helper.StringHelper;
 import com.example.xmlservice.utils.Log.ClientLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.*;
@@ -21,8 +24,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public class XmlFileParser implements IParser, IPathParser {
+@AllArgsConstructor
+@Getter
+@Setter
+public class XmlFileParser implements IParser, IPathParser, Callable {
+
+    private String path;
 
     private static final Logger logger = LogManager.getLogger(XmlFileParser.class);
 
@@ -30,10 +39,17 @@ public class XmlFileParser implements IParser, IPathParser {
     }
 
     @Override
+    public Node call() throws Exception {
+        return parse(this.path);
+    }
+
+    @Override
     public Node parse(String path) throws JciaNotFoundException {
         XmlFileNode node = new XmlFileNode();
         node.setAbsolutePath(path);
         node.setEntityClass("XmlFileNode");
+
+        logger.log(ClientLevel.CLIENT, "XmlFileParser is running in thread: " + Thread.currentThread().getName());
 
         return parse(node);
     }
@@ -178,4 +194,5 @@ public class XmlFileParser implements IParser, IPathParser {
         }
         return result;
     }
+
 }

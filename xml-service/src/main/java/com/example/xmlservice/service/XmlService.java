@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface XmlService {
-    List<Node> parseProjectWithPath(String path) throws IOException;
+    List<Node> parseProjectWithPath(String path) throws IOException, ExecutionException, InterruptedException;
     List<Node> parseProjectWithFile(MultipartFile file) throws IOException;
     List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException;
 }

@@ -41,7 +41,7 @@ public class XmlController {
      * @throws IOException
      */
     @PostMapping("/api/pathParse")
-    public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException {
+    public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException, ExecutionException, InterruptedException {
         long before = System.nanoTime();
         List<Node> nodes = xmlService.parseProjectWithPath(folderPath.getPath());
         long after =  System.nanoTime();

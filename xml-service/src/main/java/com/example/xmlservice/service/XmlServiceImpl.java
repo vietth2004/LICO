@@ -7,10 +7,8 @@ import com.example.xmlservice.dom.Bean.JsfBeanInjectionNode;
 import com.example.xmlservice.dom.Bean.JsfBeanNode;
 import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
-import com.example.xmlservice.dom.Properties.PropertiesFileNode;
 import com.example.xmlservice.parser.PropertiesFileParser;
 import com.example.xmlservice.parser.XmlFileParser;
-import com.example.xmlservice.utils.Exception.JciaNotFoundException;
 import com.example.xmlservice.utils.Helper.FileHelper;
 import com.example.xmlservice.utils.Helper.StringHelper;
 import com.example.xmlservice.utils.Log.ClientLevel;
@@ -25,8 +23,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import static com.example.xmlservice.utils.NodeUtils.*;
@@ -35,39 +32,34 @@ import static com.example.xmlservice.utils.NodeUtils.*;
 public class XmlServiceImpl implements XmlService {
 
     private final Logger logger = LogManager.getLogger(XmlServiceImpl.class);
+    private final ExecutorService THREADPOOL_FIXED_SIZE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public XmlServiceImpl(){}
 
     @Override
-    public List<Node> parseProjectWithPath(String folderPath) throws IOException {
-        XmlFileParser xmlFileParser = new XmlFileParser();
-        PropertiesFileParser propertiesFileParser = new PropertiesFileParser();
+    public List<Node> parseProjectWithPath(String folderPath) throws IOException, ExecutionException, InterruptedException {
         List<Node> xmlNodes = new ArrayList<>();
-        List<Node> propertiesFileNodes = new ArrayList<>();
 
         Path path = Paths.get(folderPath);
         List<Path> paths = FileHelper.listFiles(path);
+
+        /**
+         * Submit callable task to ThreadPool
+         */
+        List<Future<Node>> xmlNodeFutures = new ArrayList<>();
         paths.forEach(x -> {
             if(StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))){
-                try {
-                    Node parsedNode = xmlFileParser.parse(x.toString());
-                    if(parsedNode != null){
-                        xmlNodes.add(parsedNode);
-                    }
-                } catch (JciaNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else if(FileHelper.getFileExtension(x.toString()).equals("properties")) {
-                try {
-                    Node parsedPropertiesNode = propertiesFileParser.parse(x.toString());
-                    if(parsedPropertiesNode != null) {
-                        propertiesFileNodes.add(parsedPropertiesNode);
-                    }
-                } catch (JciaNotFoundException e) {
-                    e.printStackTrace();
-                }
+                    Future<Node> future = null;
+                    future = THREADPOOL_FIXED_SIZE.submit(new XmlFileParser(x.toString()));
+                    xmlNodeFutures.add(future);
             }
         });
+
+        for(Future<Node> future : xmlNodeFutures) {
+            Node parsedNode = future.get();
+            xmlNodes.add(parsedNode);
+        }
+
         logger.log(ClientLevel.CLIENT, xmlNodes.toArray().length);
         return xmlNodes;
     }
@@ -104,6 +96,8 @@ public class XmlServiceImpl implements XmlService {
         List<Dependency> dependencies = new ArrayList<>();
         List<JsfBeanNode> jsfBeanMap = getAllJsfBeanNode(nodes);
 
+        logger.log(ClientLevel.CLIENT, "analyzeDependencyBetweenBeans run in thread: " + Thread.currentThread().getName());
+
         List<JavaNode> jsfBeansInjection = findAllBeanInjection(nodes);
         List<JsfBeanInjectionNode> jsfBeanInjectionMap = new ArrayList<>();
         jsfBeansInjection.forEach(
@@ -121,7 +115,7 @@ public class XmlServiceImpl implements XmlService {
         for(JsfBeanNode beanNode : jsfBeanMap) {
             for(JsfBeanInjectionNode injectionNode : jsfBeanInjectionMap) {
                 if(injectionNode.getBeanInjection().equals(beanNode.getBeanName())) {
-                    logger.log(ClientLevel.CLIENT, "Bean inject bean: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getQualifiedName());
+//                    logger.log(ClientLevel.CLIENT, "Bean inject bean: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getQualifiedName());
                     dependencies.add(new Dependency(
                             injectionNode.getValue().getId(),
                             beanNode.getValue().getId(),
@@ -144,6 +138,9 @@ public class XmlServiceImpl implements XmlService {
     public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> javaNode, List<Node> xmlNodes){
         List<Dependency> dependencies = new ArrayList<>();
         List<JsfBeanNode> beanNodes = getAllJsfBeanNode(javaNode);
+
+        logger.log(ClientLevel.CLIENT, "analyzeDependencyFromBeanToView run in thread: " + Thread.currentThread().getName());
+
 
         /**
          * Get all javaBean nodes
@@ -180,7 +177,7 @@ public class XmlServiceImpl implements XmlService {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\.")[0];
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
-                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
+//                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
@@ -194,7 +191,7 @@ public class XmlServiceImpl implements XmlService {
                     String beanInjectionName = injectionNode.getBeanInjection();
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
-                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
+//                        logger.log(ClientLevel.CLIENT, "Bean inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
@@ -210,9 +207,9 @@ public class XmlServiceImpl implements XmlService {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
-                        if(beanNode.getValue().getId() == null)
-                            logger.log(ClientLevel.CLIENT, "Null node with name: " + beanNode.getBeanName());
-                        logger.log(ClientLevel.CLIENT, "Bean config in faces inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
+//                        if(beanNode.getValue().getId() == null)
+//                            logger.log(ClientLevel.CLIENT, "Null node with name: " + beanNode.getBeanName());
+//                        logger.log(ClientLevel.CLIENT, "Bean config in faces inject xhtml: " + beanNode.getValue().getSimpleName() + " ==> " + injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
