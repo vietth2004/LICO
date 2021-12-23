@@ -4,8 +4,10 @@ import com.example.xmlservice.ast.annotation.JavaAnnotation;
 import com.example.xmlservice.ast.annotation.MemberValuePair;
 import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.dom.Bean.JsfBeanNode;
+import com.example.xmlservice.dom.Bean.PropsBeanNode;
 import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
+import com.example.xmlservice.dom.Properties.PropertiesFileNode;
 import com.example.xmlservice.dom.Xml.XmlFileNode;
 import com.example.xmlservice.dom.Xml.XmlTagNode;
 import com.example.xmlservice.utils.Helper.FileHelper;
@@ -273,22 +275,31 @@ public class NodeUtils {
                 jsfBeanNodes.addAll(filterBeanFromFacesConfig(child, nodes));
             }
         }
+
         return jsfBeanNodes;
     }
 
     /**
-     * Get java node by name
-     * @param nodes
-     * @param name
+     * get all custom beans config from faces-config.xml file
+     * @param tagNode
+     * @param propsNode
      * @return
      */
-    public static JavaNode findJavaNodeByName(List<JavaNode> nodes, String name) {
-        List<JavaNode> result = nodes.stream().filter(
-                node -> node.getUniqueName().equals(name)
-        ).collect(Collectors.toList());
-        if(!result.isEmpty()) return result.get(0);
-        //TODO: Need to fix this one, some bean has not defined with uniquename, so I cant get bean for it
-        return new JavaNode();
+    public static Set<PropsBeanNode> filterPropBeanFromFacesConfig(Node tagNode, List<PropertiesFileNode> propsNode) {
+        Set<PropsBeanNode> propBeanNodes = new HashSet<>();
+
+        if(tagNode instanceof XmlTagNode) {
+            if(((XmlTagNode) tagNode).getTagName().equals("resource-bundle")) {
+                PropsBeanNode beanNode = new PropsBeanNode();
+                beanNode.setBeanName(prepareBeanNodeName(tagNode));
+                beanNode.setValue(preparePropBeanNodeValue(tagNode, propsNode));
+                propBeanNodes.add(beanNode);
+            }
+            for(Node child : tagNode.getChildren()) {
+                propBeanNodes.addAll(filterPropBeanFromFacesConfig(child, propsNode));
+            }
+        }
+        return propBeanNodes;
     }
 
     /**
@@ -310,6 +321,45 @@ public class NodeUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Get java node by name
+     * @param nodes
+     * @param name
+     * @return
+     */
+    public static JavaNode findJavaNodeByName(List<JavaNode> nodes, String name) {
+        List<JavaNode> result = nodes
+                .stream()
+                .filter(node -> node.getUniqueName().equals(name))
+                .collect(Collectors.toList());
+        if(!result.isEmpty()) return result.get(0);
+        //TODO: Need to fix this one, some bean has not defined with uniquename, so I cant get bean for it
+        return new JavaNode();
+    }
+
+    public static PropertiesFileNode preparePropBeanNodeValue(Node node, List<PropertiesFileNode> propsFileNodes) {
+        PropsBeanNode beanNode = new PropsBeanNode();
+        for(Node child : node.getChildren()) {
+            if(child instanceof XmlTagNode) {
+                String tagName = ((XmlTagNode) child).getTagName();
+                if(tagName.equals("base-name")) {
+                    PropertiesFileNode value = findPropsFileNodeByName(propsFileNodes, ((XmlTagNode) child).getContent());
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static PropertiesFileNode findPropsFileNodeByName(List<PropertiesFileNode> propsFileNodes, String name) {
+        List<PropertiesFileNode> result = propsFileNodes
+                .stream()
+                .filter(node -> node.getFullyQualifiedName().contains(name))
+                .collect(Collectors.toList());
+        if(!result.isEmpty()) return result.get(0);
+        return new PropertiesFileNode();
     }
 
     /**
