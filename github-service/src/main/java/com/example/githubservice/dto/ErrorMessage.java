@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CloneRepoResponse {
+public class ErrorMessage {
 
-    private String path;
+    private String message;
 
 }

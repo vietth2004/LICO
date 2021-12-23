@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Clone2RepoResponse {
-    private String repo1Path;
-    private String repo2Path;
+
+    private String path1;
+    private String path2;
+
 }

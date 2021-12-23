@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Response {
+public class CloneRepoPath {
 
-    private String access_token;
-    private String token_type;
-    private String scope;
+    private String path;
 
 }

@@ -1,4 +1,4 @@
-package com.example.githubservice.utils.Directory;
+package com.example.githubservice.utils;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
