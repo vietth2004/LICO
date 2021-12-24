@@ -1,0 +1,13 @@
+24-12-2021 11:35:38.764 INFO  c.e.g.GithubServiceApplication.logStarting - Starting GithubServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 16720 (C:\Users\thanh\Documents\JCIA-Microservices\github-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+24-12-2021 11:35:38.771 INFO  c.e.g.GithubServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+24-12-2021 11:35:42.751 INFO  c.e.g.GithubServiceApplication.logStarted - Started GithubServiceApplication in 5.737 seconds (JVM running for 7.879)
+24-12-2021 11:36:11.140 INFO  c.e.g.GithubServiceApplication.logStarting - Starting GithubServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 8848 (C:\Users\thanh\Documents\JCIA-Microservices\github-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+24-12-2021 11:36:11.145 INFO  c.e.g.GithubServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+24-12-2021 11:36:15.389 INFO  c.e.g.GithubServiceApplication.logStarted - Started GithubServiceApplication in 6.08 seconds (JVM running for 8.221)
+24-12-2021 11:36:33.493 INFO  c.e.g.c.RepositoryController.getRepoCommits - /repo/commits
+24-12-2021 11:36:33.496 INFO  c.e.githubservice.service.GitService.getAllCommits - Fetching repo commits...
+24-12-2021 11:36:33.497 INFO  c.e.githubservice.service.GitService.cloneRepo - Cloning repository: JCIA-Microservices
+24-12-2021 11:36:38.733 INFO  c.e.githubservice.service.GitService.cloneRepo - Done cloning repository: JCIA-Microservices
+24-12-2021 11:36:38.736 INFO  c.e.g.helper.GitRepoHelper.visitCommits - visiting commits...
+24-12-2021 11:36:38.742 INFO  c.e.g.helper.GitRepoHelper.visitCommits - walking repo: ./project/anonymous/JCIA-Microservices
+24-12-2021 11:36:38.751 INFO  c.e.g.helper.GitRepoHelper.visitCommits - List of branches: [Ref[refs/heads/Spring-dev=37d5d50847597393f0257d3bbf958a268303cc5f(-1)]]
