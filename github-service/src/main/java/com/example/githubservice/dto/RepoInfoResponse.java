@@ -1,4 +1,4 @@
-package com.example.githubservice.payload.response;
+package com.example.githubservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

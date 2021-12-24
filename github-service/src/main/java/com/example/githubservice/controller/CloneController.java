@@ -3,10 +3,11 @@ package com.example.githubservice.controller;
 import com.example.githubservice.dto.Clone2RepoResponse;
 import com.example.githubservice.dto.CloneRepoPath;
 import com.example.githubservice.dto.ErrorMessage;
-import com.example.githubservice.payload.request.*;
+import com.example.githubservice.payload.*;
 import com.example.githubservice.service.GitService;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import java.io.IOException;
 @RequestMapping("/api/git")
 public class CloneController {
 
+    private final Logger logger = LoggerFactory.getLogger(CloneController.class);
+
     @Autowired
     GitService gitService;
 
@@ -31,11 +34,12 @@ public class CloneController {
      */
     @GetMapping("/repo/clone")
     public ResponseEntity<?> cloneRepo(@RequestBody CloneRepoRequest request) {
+        logger.info("/repo/clone");
         if(Config.pathMap.get(request.hashCode()) == null) {
             try {
                 String path = gitService.cloneRepo(
-                        request.getUrl(), request.getRepoName(),
-                        request.getUserName(), request.getPat());
+                        request.getUrl(), request.getRepo(),
+                        request.getUsername(), request.getPat());
                 Config.pathMap.put(request.hashCode(), path);
                 return ResponseEntity
                         .status(HttpStatus.OK)
@@ -62,11 +66,14 @@ public class CloneController {
      */
     @GetMapping("/repo/clone/byBranch")
     public ResponseEntity<?> cloneRepoByBranch(@RequestBody CloneRepoByBranchRequest request) {
+
+        logger.info("/repo/clone/byBranch");
+
         if(Config.pathMap.get(request.hashCode()) == null) {
 
             try {
                 String path = gitService.cloneRepoByBranchName(
-                        request.getUrl(), request.getRepoName(),
+                        request.getUrl(), request.getRepo(),
                         request.getBranch(), request.getUsername(),
                         request.getPat()
                 );
@@ -95,10 +102,13 @@ public class CloneController {
      */
     @GetMapping("/repo/clone/byCommit")
     public ResponseEntity<?> cloneRepoByCommit(@RequestBody CloneRepoByCommitRequest request) {
+
+        logger.info("/repo/clone/byCommit");
+
         if(Config.pathMap.get(request.hashCode()) == null) {
             try {
                 String path = gitService.cloneRepoByCommit(
-                        request.getUrl(), request.getRepoName(),
+                        request.getUrl(), request.getRepo(),
                         request.getCommitSha(), request.getUsername(),
                         request.getPat()
                 );
@@ -127,9 +137,12 @@ public class CloneController {
      */
     @GetMapping("/repos/clone/byBranch")
     public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request) {
+
+        logger.info("/repos/clone/byBranch");
+
         try {
             Clone2RepoResponse response = gitService.clone2RepoByBranch(
-                    request.getUrl(), request.getRepoName(),
+                    request.getUrl(), request.getRepo(),
                     request.getBranch1(), request.getBranch2(),
                     request.getUsername(), request.getPat()
             );
@@ -148,9 +161,12 @@ public class CloneController {
 
     @GetMapping("/repos/clone/byCommit")
     public ResponseEntity<?> clone2RepoByCommit(@RequestBody Clone2RepoByCommitRequest request) {
+
+        logger.info("/repos/clone/byCommit");
+
         try {
             Clone2RepoResponse response = gitService.clone2RepoByCommits(
-                    request.getUrl(), request.getRepoName(),
+                    request.getUrl(), request.getRepo(),
                     request.getCommit1(), request.getCommit2(),
                     request.getUsername(), request.getPat()
             );

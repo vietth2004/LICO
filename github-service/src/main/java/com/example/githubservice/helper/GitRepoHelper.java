@@ -1,6 +1,6 @@
 package com.example.githubservice.helper;
 
-import com.example.githubservice.payload.response.CommitResponse;
+import com.example.githubservice.dto.CommitResponse;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -13,6 +13,8 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,17 +24,22 @@ import java.util.Map;
 
 public class GitRepoHelper {
 
-    public static List<CommitResponse> visitCommits(String path) {
+    private final static Logger logger = LoggerFactory.getLogger(GitRepoHelper.class);
 
+    public static List<CommitResponse> visitCommits(String path) {
+        logger.info("visiting commits...");
         List<CommitResponse> commitResponses = new ArrayList<>();
 
         try {
 
             Repository repo = new FileRepository(path + "/.git");
             Git git = new Git(repo);
+            logger.info("walking repo: {}", path);
             RevWalk walk = new RevWalk(repo);
 
             List<Ref> branches = git.branchList().call();
+
+            logger.info("List of branches: {}", branches);
 
             for (Ref branch : branches) {
                 String branchName = branch.getName();
@@ -68,6 +75,7 @@ public class GitRepoHelper {
                     }
                 }
             }
+            repo.close();
         } catch (NoHeadException e) {
             e.printStackTrace();
         } catch (GitAPIException e) {
@@ -81,7 +89,6 @@ public class GitRepoHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return commitResponses;
 
     }
