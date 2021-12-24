@@ -1,4 +1,4 @@
-package com.example.githubservice.payload;
+package com.example.githubservice.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CloneRepoByCommitRequest {
+public class CloneRepoByBranchRequest {
 
     private String url;
     private String repoName;
-    private String commitSha;
+    private String branch;
     private String username;
     private String pat;
 
