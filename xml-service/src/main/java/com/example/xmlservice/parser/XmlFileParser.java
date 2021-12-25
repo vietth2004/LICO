@@ -11,8 +11,8 @@ import com.example.xmlservice.utils.Log.ClientLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
@@ -33,7 +33,7 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
 
     private String path;
 
-    private static final Logger logger = LogManager.getLogger(XmlFileParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlFileParser.class);
 
     public XmlFileParser() {
     }
@@ -48,9 +48,6 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
         XmlFileNode node = new XmlFileNode();
         node.setAbsolutePath(path);
         node.setEntityClass("XmlFileNode");
-
-        logger.log(ClientLevel.CLIENT, "XmlFileParser is running in thread: " + Thread.currentThread().getName());
-
         return parse(node);
     }
 
@@ -77,14 +74,13 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
         } catch (Exception e) {
             logger.error(String.format("Error when parsing [%s]", node.getAbsolutePath()));
             //log for client
-            logger.log(ClientLevel.C_ERROR, "Encountered error when parse xml file");
+            logger.error("Encountered error when parse xml file");
         }
         return null;
     }
 
     private Node generateNodeTree(Node root) {
         List<Node> children = new ArrayList<>();
-
         NodeList nodeList = getNodeList(root);
         if (nodeList == null) return root;
         else {
@@ -113,7 +109,6 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
 
     private NodeList getNodeList(Node node) {
         NodeList nodeList = null;
-
         if (node instanceof XmlFileNode) {
             nodeList = ((XmlFileNode) node).getDocument().getChildNodes();
         } else if (node instanceof XmlTagNode) {
@@ -179,7 +174,6 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
     private Map<String, String> getListAttributes(org.w3c.dom.Node node) {
         Map<String, String> result = new HashMap<>();
         NamedNodeMap attrs = node.getAttributes();
-
         if (attrs == null) return result;
 
         int attrLength = attrs.getLength();

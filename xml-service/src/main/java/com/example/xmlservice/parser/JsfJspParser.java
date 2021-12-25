@@ -5,17 +5,12 @@ import com.example.xmlservice.dom.Jsp.JspTagNode;
 import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.utils.Exception.JciaNotFoundException;
 import com.example.xmlservice.utils.SupportParserJsp;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-
 import java.util.List;
 
 public class JsfJspParser implements IParser {
-
-    private static final Logger logger = LogManager.getLogger(JsfJspParser.class);
 
     private JspFileNode jspFileNode;
     private SupportParserJsp supportParserJsp;
@@ -24,7 +19,6 @@ public class JsfJspParser implements IParser {
     public Node parse(Node node) throws JciaNotFoundException {
         if (node == null) return node;
         this.jspFileNode = (JspFileNode) node;
-
         String contentFile = supportParserJsp.getContentFileWithoutComment(node);
         Document document = Jsoup.parse(contentFile, "utf-8");
         jspFileNode.setDocument(document);

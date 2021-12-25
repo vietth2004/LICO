@@ -149,7 +149,7 @@ public class NodeUtils {
      * @return
      */
     public static boolean checkNodeIsBean(JavaNode node, String criteria) {
-        if (node.getAnnotatesWithValue().size() > 0) {
+        if (!node.getAnnotatesWithValue().isEmpty()  || node.getAnnotatesWithValue() != null) {
             for(Object obj : node.getAnnotatesWithValue()) {
                 if(obj instanceof JavaAnnotation) {
                     if(((JavaAnnotation) obj).getName().equals(criteria))

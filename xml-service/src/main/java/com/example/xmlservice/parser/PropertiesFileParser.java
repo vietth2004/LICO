@@ -7,8 +7,8 @@ import com.example.xmlservice.utils.Exception.JciaNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import java.io.*;
@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 @Setter
 public class PropertiesFileParser implements IParser, IPathParser, Callable {
 
-    private static final Logger logger = LogManager.getLogger(PropertiesFileParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesFileParser.class);
 
     private String path;
 
@@ -65,15 +65,17 @@ public class PropertiesFileParser implements IParser, IPathParser, Callable {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                try {
-                    if(line.charAt(0) != 35) {
-                        PropertiesNode propertiesNode = new PropertiesNode();
-                        propertiesNode.setName(line.split("=")[0]);
-                        propertiesNode.setValue(line.split("=")[1]);
-                        nodes.add(propertiesNode);
+                if(line.length() > 0) {
+                    try {
+                        if(line.charAt(0) != 35) {
+                            PropertiesNode propertiesNode = new PropertiesNode();
+                            propertiesNode.setName(line.split("=")[0]);
+                            propertiesNode.setValue(line.split("=")[1]);
+                            nodes.add(propertiesNode);
+                        }
+                    } catch (StringIndexOutOfBoundsException e) {
+                        logger.error("StringIndexOutOfBoundsException in parsePropertiesNode in line: {}", line);
                     }
-                } catch (StringIndexOutOfBoundsException e) {
-//                    e.printStackTrace();
                 }
             }
         } catch (IOException exception) {
