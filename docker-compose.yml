@@ -1,0 +1,213 @@
+version: "3"
+
+services:
+
+  mysql-jcia-db:
+    image: "mysql:8.0.25"
+    environment:
+      - MYSQL_USER=thdtt
+      - MYSQL_ROOT_PASSWORD=Hihahiho09620@
+      - MYSQL_PASSWORD={[(Hash123!@#ing)]}
+      - MYSQL_MULTIPLE_DATABASE=micro_jcia_project, micro_jcia_user
+    ports:
+      - "3307:3306"
+    networks:
+      - jcia-network
+
+  discovery-service:
+    container_name: discovery-service
+    build:
+      context: discovery-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - jcia-network
+
+  utility-service:
+    container_name: utility-service
+    build:
+      context: utility-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  user-service:
+    container_name: user-service
+    build:
+      context: user-service
+      dockerfile: Dockerfile
+    environment:
+      - EUREKA_SERVER=discovery-service
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-jcia-db:3306/micro_jcia_user?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hihahiho09620@
+    ports:
+      - "8002:8002"
+    depends_on:
+      - discovery-service
+      - mysql-jcia-db
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  project-service:
+    container_name: project-service
+    build:
+      context: project-service
+      dockerfile: Dockerfile
+    environment:
+      - EUREKA_SERVER=discovery-service
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-jcia-db:3306/micro_jcia_project?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Hihahiho09620@
+    ports:
+      - "8003:8003"
+    depends_on:
+      - discovery-service
+      - mysql-jcia-db
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  parser-service:
+    container_name: parser-service
+    build:
+      context: parser-service
+      dockerfile: Dockerfile
+    ports:
+      - "7001:7001"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  java-service:
+    container_name: java-service
+    build:
+      context: java-service
+      dockerfile: Dockerfile
+    ports:
+      - "7002:7002"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  spring-service:
+    container_name: spring-service
+    build:
+      context: spring-service
+      dockerfile: Dockerfile
+    ports:
+      - "7003:7003"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  xml-service:
+    container_name: xml-service
+    build:
+      context: xml-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  cia-service:
+    container_name: cia-service
+    build:
+      context: cia-service
+      dockerfile: Dockerfile
+    ports:
+      - "6001:6001"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  version-compare-service:
+    container_name: version-compare-service
+    build:
+      context: version-compare-service
+      dockerfile: Dockerfile
+    ports:
+      - "6002:6002"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  file-service:
+    container_name: file-service
+    build:
+      context: file-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  github-service:
+    container_name: github-service
+    build:
+      context: github-service
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+networks:
+  jcia-network:
+    driver: bridge
