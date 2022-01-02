@@ -1,0 +1,3 @@
+02-01-2022 20:56:24.530 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 21040 (C:\Users\thanh\Documents\JCIA-Microservices\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 20:56:24.532 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 20:56:30.564 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 7.708 seconds (JVM running for 10.129)

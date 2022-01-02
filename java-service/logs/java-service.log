@@ -1,0 +1,3 @@
+02-01-2022 20:53:47.480 INFO  c.e.j.JavaServiceApplication.logStarting - Starting JavaServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 15052 (C:\Users\thanh\Documents\JCIA-Microservices\java-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 20:53:47.489 INFO  c.e.j.JavaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 20:53:56.189 INFO  c.e.j.JavaServiceApplication.logStarted - Started JavaServiceApplication in 10.869 seconds (JVM running for 14.201)

@@ -1,0 +1,2 @@
+02-01-2022 20:53:04.473 INFO  c.e.u.UtilityServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 20:53:14.854 INFO  c.e.u.UtilityServiceApplication.logStarted - Started UtilityServiceApplication in 15.023 seconds (JVM running for 19.18)

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +26,7 @@ public class RepositoryController {
     @Autowired
     private GitService gitService;
 
-    @GetMapping("/repo/branches")
+    @PostMapping("/repo/branches")
     public ResponseEntity<?> getRepoBranches(@RequestBody CloneRepoRequest request) {
 
         logger.info("/repo/branches");
@@ -37,7 +37,7 @@ public class RepositoryController {
                 .body(branches);
     }
 
-    @GetMapping("/repo/commits")
+    @PostMapping("/repo/commits")
     public ResponseEntity<?> getRepoCommits(@RequestBody CloneRepoRequest request) {
 
         logger.info("/repo/commits");
@@ -47,7 +47,7 @@ public class RepositoryController {
                 .body(gitService.getAllCommits(request));
     }
 
-    @GetMapping("/repo/info")
+    @PostMapping("/repo/info")
     public ResponseEntity<?> getRepoInfo(@RequestBody CloneRepoRequest request) {
 
         logger.info("/repo/info");

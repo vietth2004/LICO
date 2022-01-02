@@ -1,0 +1,3 @@
+02-01-2022 20:53:33.522 INFO  c.e.f.FileServiceApplication.logStarting - Starting FileServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 8964 (C:\Users\thanh\Documents\JCIA-Microservices\file-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 20:53:33.528 INFO  c.e.f.FileServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 20:53:43.118 INFO  c.e.f.FileServiceApplication.logStarted - Started FileServiceApplication in 11.725 seconds (JVM running for 15.258)

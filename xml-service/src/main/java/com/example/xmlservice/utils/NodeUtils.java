@@ -339,6 +339,12 @@ public class NodeUtils {
         return new JavaNode();
     }
 
+    /**
+     * get value from bean node
+     * @param node
+     * @param propsFileNodes
+     * @return
+     */
     public static PropertiesFileNode preparePropBeanNodeValue(Node node, List<PropertiesFileNode> propsFileNodes) {
         PropsBeanNode beanNode = new PropsBeanNode();
         for(Node child : node.getChildren()) {
@@ -353,6 +359,12 @@ public class NodeUtils {
         return null;
     }
 
+    /**
+     * find PropertiesFileNode by passed name
+     * @param propsFileNodes
+     * @param name
+     * @return
+     */
     public static PropertiesFileNode findPropsFileNodeByName(List<PropertiesFileNode> propsFileNodes, String name) {
         List<PropertiesFileNode> result = propsFileNodes
                 .stream()
