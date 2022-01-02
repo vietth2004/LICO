@@ -1,0 +1,3 @@
+02-01-2022 20:57:33.255 INFO  c.e.p.ParserServiceApplication.logStarting - Starting ParserServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 7548 (C:\Users\thanh\Documents\JCIA-Microservices\parser-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 20:57:33.264 INFO  c.e.p.ParserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 20:57:39.244 INFO  c.e.p.ParserServiceApplication.logStarted - Started ParserServiceApplication in 7.389 seconds (JVM running for 9.711)

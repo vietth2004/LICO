@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +32,7 @@ public class CloneController {
      * @param request
      * @return path where to save repo
      */
-    @GetMapping("/repo/clone")
+    @PostMapping("/repo/clone")
     public ResponseEntity<?> cloneRepo(@RequestBody CloneRepoRequest request) {
         logger.info("/repo/clone");
         if(Config.pathMap.get(request.hashCode()) == null) {
@@ -64,7 +64,7 @@ public class CloneController {
      * @param request
      * @return path where to save repo
      */
-    @GetMapping("/repo/clone/byBranch")
+    @PostMapping("/repo/clone/byBranch")
     public ResponseEntity<?> cloneRepoByBranch(@RequestBody CloneRepoByBranchRequest request) {
 
         logger.info("/repo/clone/byBranch");
@@ -100,7 +100,7 @@ public class CloneController {
      * @param request
      * @return path where to save repo
      */
-    @GetMapping("/repo/clone/byCommit")
+    @PostMapping("/repo/clone/byCommit")
     public ResponseEntity<?> cloneRepoByCommit(@RequestBody CloneRepoByCommitRequest request) {
 
         logger.info("/repo/clone/byCommit");
@@ -135,7 +135,7 @@ public class CloneController {
      * @param request
      * @return path where to save those repos
      */
-    @GetMapping("/repos/clone/byBranch")
+    @PostMapping("/repos/clone/byBranch")
     public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request) {
 
         logger.info("/repos/clone/byBranch");
@@ -159,7 +159,7 @@ public class CloneController {
                 .body(new ErrorMessage("Exception while cloning 2 repos by branch!"));
     }
 
-    @GetMapping("/repos/clone/byCommit")
+    @PostMapping("/repos/clone/byCommit")
     public ResponseEntity<?> clone2RepoByCommit(@RequestBody Clone2RepoByCommitRequest request) {
 
         logger.info("/repos/clone/byCommit");
