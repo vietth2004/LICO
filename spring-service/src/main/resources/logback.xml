@@ -4,6 +4,7 @@
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>spring-service/logs/spring-service.log</file>
+        <file>logs/spring-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>spring-service/logs/spring-service.%d{yyyy-MM-dd}.log</fileNamePattern>

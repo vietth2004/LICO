@@ -4,6 +4,7 @@
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>github-service/logs/git-service.log</file>
+        <file>logs/git-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>github-service/logs/git-service.%d{yyyy-MM-dd}.log</fileNamePattern>

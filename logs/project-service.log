@@ -1,0 +1,3 @@
+02-01-2022 21:05:19.375 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 19604 (C:\Users\thanh\Documents\JCIA-Microservices\project-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 21:05:19.381 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 21:05:34.388 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 17.032 seconds (JVM running for 20.188)

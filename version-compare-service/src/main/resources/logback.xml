@@ -4,6 +4,7 @@
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>version-compare-service/logs/version-compare.log</file>
+        <file>logs/version-compare.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>version-compare-service/logs/version-compare.%d{yyyy-MM-dd}.log</fileNamePattern>

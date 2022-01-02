@@ -1,0 +1,3 @@
+02-01-2022 21:04:38.832 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 16692 (C:\Users\thanh\Documents\JCIA-Microservices\cia-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 21:04:38.839 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 21:04:48.140 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 11.504 seconds (JVM running for 14.409)
