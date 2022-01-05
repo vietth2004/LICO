@@ -4,32 +4,55 @@
 
 JCIA is Java Change Impact Analysis software help you to easily determine all dependency in your Java Project. JCIA also helps to compare project version, calculate dependency impact, visualize your Project into clear diagrams.
 
-## Service
+## 1. Service
 
-### All Service Ports
+#### 1.1. All Service Ports
 - port 8761: Discovery-Service
 
-#### Administration
+#### 1.2. Administration
 - port 8001: Utility-Service
 - port 8002: User-Service
 - port 8003: Project-Service
 
-#### Parse Service
+#### 1.3. Parse Service
 - port 7001: Parser-Service
 - port 7002: Java-Service
 - port 7003: Spring-Service
 - port 3001: Xml-Service
 
-#### Algo Service
+#### 1.4. Algo Service
 - port 6001: Cia-Service
 - port 6002: VerControl-Service
 
-#### Support Service
+#### 1.5. Support Service
 - port 5001: File-Service
 
-#### Version Control Service
+#### 1.6. Version Control Service
 - port 4001: Github-Service
 
-#### Run
-- ```.\build.bat``` for the first time
-- ```docker compose up```
+
+## 2. Run
+
+#### 2.1. Prequisitives
+- MySql (version 8.x.x)
+- JDK 11
+- Apache Maven (version 3.x.x)
+
+#### 2.2. PostInstall
+Open mysql and create 2 databases: 
+
+- micro_jcia_user: ```create database micro_jcia_user```
+- micro_jcia_project: ```create database micro_jcia_project```
+
+#### 2.3. Install
+
+##### 2.3.1. Naive
+Download project and using services tool in Intellij to run 
+
+##### 2.3.2. Docker (Install Docker and docker-compose first)
+First step:
+
+- if linux, then run: ```.\build.sh```
+- else windows, then run: ```.\build.bat```
+
+Second: ```docker-compose up```
