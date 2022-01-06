@@ -1,0 +1,3 @@
+02-01-2022 21:05:26.334 INFO  c.e.s.SpringServiceApplication.logStarting - Starting SpringServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 19756 (C:\Users\thanh\Documents\JCIA-Microservices\spring-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+02-01-2022 21:05:26.336 INFO  c.e.s.SpringServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+02-01-2022 21:05:36.525 INFO  c.e.s.SpringServiceApplication.logStarted - Started SpringServiceApplication in 12.379 seconds (JVM running for 15.546)

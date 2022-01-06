@@ -4,6 +4,7 @@
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>discovery-server/logs/discovery-server.log</file>
+        <file>logs/discovery-server.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>discovery-server/logs/discovery-server.%d{yyyy-MM-dd}.log</fileNamePattern>

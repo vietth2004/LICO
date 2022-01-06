@@ -4,6 +4,7 @@
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>java-service/logs/java-service.log</file>
+        <file>logs/java-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>java-service/logs/java-service.%d{yyyy-MM-dd}.log</fileNamePattern>

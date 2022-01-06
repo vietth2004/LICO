@@ -4,6 +4,7 @@
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>cia-service/logs/cia-service.log</file>
+        <file>logs/cia-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>cia-service/logs/cia-service.%d{yyyy-MM-dd}.log</fileNamePattern>
