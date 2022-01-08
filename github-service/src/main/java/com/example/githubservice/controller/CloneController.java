@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/git")
+@RequestMapping("/api/git-service/")
 public class CloneController {
 
     private final Logger logger = LoggerFactory.getLogger(CloneController.class);

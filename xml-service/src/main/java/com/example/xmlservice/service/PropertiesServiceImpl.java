@@ -6,6 +6,7 @@ import com.example.xmlservice.dom.Bean.PropsBeanNode;
 import com.example.xmlservice.dom.Bean.XmlBeanInjectionNode;
 import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.dom.Properties.PropertiesFileNode;
+import com.example.xmlservice.dom.Properties.PropertiesNode;
 import com.example.xmlservice.parser.PropertiesFileParser;
 import com.example.xmlservice.utils.Helper.FileHelper;
 import com.example.xmlservice.utils.Log.ClientLevel;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -65,6 +67,14 @@ public class PropertiesServiceImpl implements PropertiesService{
         List<Dependency> dependencies = new ArrayList<>();
         List<PropsBeanNode> beanNodes = new ArrayList<>();
 
+        List<PropertiesNode> sortedPropertiesNode = propertiesFileNodes
+                .stream()
+                .flatMap(e -> e.getProperties().stream())
+                .collect(Collectors.toList())
+                .stream()
+                .sorted(Comparator.comparing(node -> node.getId()))
+                .collect(Collectors.toList());
+
         /**
          * Get all bean nodes
          */
@@ -98,15 +108,26 @@ public class PropertiesServiceImpl implements PropertiesService{
                  */
                 if(injectionNode.getBeanInjection().contains("[")) {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
+                    String injectedValue = injectionNode.getBeanInjection().split("\\[")[1].replace("]", "");
                     String beanName = beanNode.getBeanName();
-                    if(beanName.equals(beanInjectionName)) {
-                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getName(), injectionNode.getValue().getAbsolutePath(), beanName);
+                    for(PropertiesNode prop : beanNode.getValue().getProperties()) {
+                        if(prop.getName().equals(injectedValue) && beanName.equals(beanInjectionName)) {
+                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getBeanName(), injectionNode.getBeanInjection(), beanName);
                         dependencies.add(new Dependency(
-                                injectionNode.getValue().getId(),
+                                prop.getId(),
                                 beanNode.getValue().getId(),
                                 new DependencyCountTable(0,0,0,0,0, 1)
                         ));
+                        }
                     }
+//                    if(beanName.equals(beanInjectionName)) {
+//                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getName(), injectionNode.getValue().getAbsolutePath(), beanName);
+//                        dependencies.add(new Dependency(
+//                                injectionNode.getValue().getId(),
+//                                beanNode.getValue().getId(),
+//                                new DependencyCountTable(0,0,0,0,0, 1)
+//                        ));
+//                    }
                 }
             }
         }

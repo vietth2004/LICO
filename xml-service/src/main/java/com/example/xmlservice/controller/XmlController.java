@@ -16,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@RequestMapping("/api/xml-service/")
 public class XmlController {
 
     private final Logger logger = LoggerFactory.getLogger(XmlController.class);
@@ -47,10 +45,10 @@ public class XmlController {
      * @return
      * @throws IOException
      */
-    @PostMapping("/api/pathParse")
+    @PostMapping("/pathParse")
     public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException, ExecutionException, InterruptedException {
         long before = System.nanoTime();
-        logger.info("Run into API: /api/pathParse");
+        logger.info("Run into API: /pathParse");
         logger.info("Start building xml tree...");
         List<Node> xmlNodes = xmlService.parseProjectWithPath(folderPath.getPath());
         logger.info("Done parsing xml tree...");
@@ -71,11 +69,11 @@ public class XmlController {
      * @param request
      * @return
      */
-    @PostMapping("/api/dependency")
+    @PostMapping("/dependency")
     public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) throws ExecutionException, InterruptedException {
         List<Dependency> dependencies = new ArrayList<>();
         long before = System.nanoTime();
-        logger.info("Run into API: /api/dependency");
+        logger.info("Run into API: /dependency");
         logger.info("Analyzing dependency...");
         dependencies.addAll(xmlService.analyzeDependency(request, this.xmlNodes));
         dependencies.addAll(propService.analyzeDependencies(xmlNodes, this.propFileNodes));

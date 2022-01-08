@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/user-service/")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -37,7 +38,7 @@ public class UserController {
         this.accountRepository = accountRepository;
     }
 
-    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest) {
         try {
@@ -56,7 +57,7 @@ public class UserController {
         return ResponseEntity.ok(new AuthenticationResponse(jwt, userInfo.getUsername(), userInfo.getId()));
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {
             return ResponseEntity.ok(new AuthenticationResponse("Username is already used!"));
@@ -69,7 +70,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/user/{UserID}")
+    @GetMapping("/user/{UserID}")
     public User findByID(@PathVariable("UserID") Integer id) {
         Account user = accountRepository.findByID(id);
         user.setPassword(null);
@@ -77,7 +78,7 @@ public class UserController {
     }
 
 
-//    @PostMapping("/api/register")
+//    @PostMapping("/register")
 //    public ResponseEntity<?> register(@RequestBody User user) {
 //        System.out.println(user.getAccount().getId());
 //        if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {

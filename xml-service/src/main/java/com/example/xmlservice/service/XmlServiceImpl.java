@@ -161,10 +161,11 @@ public class XmlServiceImpl implements XmlService {
                  * analyze dependencies if bean has pattern #{abc.def()}
                  */
                 if(injectionNode.getBeanInjection().contains(".")) {
-                    String beanInjectionName = injectionNode.getBeanInjection().split("\\.")[0];
+                    String[] beanComponents = injectionNode.getBeanInjection().split("\\.");
+                    String beanInjectionName = beanComponents[0];
                     String beanName = beanNode.getBeanName();
                     if(beanName.equals(beanInjectionName)) {
-                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getSimpleName(), injectionNode.getValue().getAbsolutePath(), beanName);
+                        logger.info("Bean: {} call injectedBean: {} with path {}", beanNode.getValue().getSimpleName(), injectionNode.getBeanInjection(), injectionNode.getValue().getAbsolutePath());
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),

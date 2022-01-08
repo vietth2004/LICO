@@ -7,6 +7,7 @@ import com.example.versioncompareservice.service.VersionService;
 import mrmathami.cia.java.JavaCiaException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/version-compare-service/")
 public class VersionController {
 
     private final VersionService versionService;
@@ -27,13 +29,13 @@ public class VersionController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping("api/version-compare/byFile")
+    @PostMapping("/byFile")
     public Response versionCompareByFile(@RequestBody List<MultipartFile> files) throws JavaCiaException, IOException {
         return versionService.getCompare(files);
     }
 
 
-    @PostMapping("api/version-compare/byPath")
+    @PostMapping("/byPath")
     public Response versionCompareByPath(@RequestBody Version path) throws JavaCiaException, IOException {
         return versionService.getCompare(path);
     }

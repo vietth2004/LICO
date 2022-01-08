@@ -39,7 +39,7 @@ public class ParserServiceImpl implements ParserService{
 
     @Override
     public Request buildProject(MultipartFile file) {
-        String serverUrl = "http://localhost:7002/api/fileParse"; //java-service
+        String serverUrl = "http://localhost:7002/api/java-service/fileParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, Utils.getResponseEntity(file), Request.class);
         return request.getBody();
     }
@@ -55,7 +55,7 @@ public class ParserServiceImpl implements ParserService{
 
     @Override
     public Request buildProject(Path path) {
-        String serverUrl = "http://localhost:7002/api/pathParse"; //java-service
+        String serverUrl = "http://localhost:7002/api/java-service/pathParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, path, Request.class);
         return request.getBody();
     }

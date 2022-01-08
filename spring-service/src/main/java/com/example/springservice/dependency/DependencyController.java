@@ -5,11 +5,13 @@ import com.example.springservice.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/spring-service/")
 public class DependencyController {
 
     @Autowired
@@ -19,12 +21,12 @@ public class DependencyController {
         this.dependencyService = dependencyService;
     }
 
-    @PostMapping("/api/dependency/spring/response")
+    @PostMapping("/dependency/spring/response")
     public List<Dependency> getAllSpringDependencies(@RequestBody List<JavaNode> javaNodeList) {
         return dependencyService.getAllDependency(javaNodeList);
     }
 
-    @PostMapping("/api/dependency/spring")
+    @PostMapping("/dependency/spring")
     public Response returnResponse(@RequestBody List<JavaNode> javaNodeList) {
         return new Response(dependencyService.getAllDependency(javaNodeList));
     }
