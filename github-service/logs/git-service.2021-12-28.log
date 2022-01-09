@@ -1,3 +1,0 @@
-28-12-2021 20:33:07.423 INFO  c.e.g.GithubServiceApplication.logStarting - Starting GithubServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 16492 (C:\Users\thanh\Documents\JCIA-Microservices\github-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-28-12-2021 20:33:07.485 INFO  c.e.g.GithubServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-28-12-2021 20:33:14.226 INFO  c.e.g.GithubServiceApplication.logStarted - Started GithubServiceApplication in 8.413 seconds (JVM running for 10.886)

@@ -19,6 +19,7 @@
 /.settings/
 .project
 
+# output.json from javacia
 storage
 /output.json
 /java-service/output.json
@@ -30,3 +31,6 @@ storage
 /user-service/output.json
 /utility-service/output.json
 /version-compare-service/src/test/
+
+# log files
+*.log

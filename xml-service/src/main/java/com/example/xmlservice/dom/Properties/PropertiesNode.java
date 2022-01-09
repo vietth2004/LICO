@@ -4,10 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class PropertiesNode {
+    private static final AtomicInteger count = new AtomicInteger(0);
+    private int id;
     private String name;
     private String value;
+    public PropertiesNode(String name, String value) {
+        this.name = name;
+        this.value = value;
+        this.id = count.incrementAndGet();
+    }
+    public PropertiesNode() {
+        this.id = count.incrementAndGet();
+    }
 }

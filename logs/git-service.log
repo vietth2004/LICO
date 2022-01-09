@@ -1,3 +1,139 @@
-02-01-2022 21:04:58.313 INFO  c.e.g.GithubServiceApplication.logStarting - Starting GithubServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 12088 (C:\Users\thanh\Documents\JCIA-Microservices\github-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-02-01-2022 21:04:58.331 INFO  c.e.g.GithubServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-02-01-2022 21:05:07.021 INFO  c.e.g.GithubServiceApplication.logStarted - Started GithubServiceApplication in 10.898 seconds (JVM running for 13.22)
+08-01-2022 14:55:45.089 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_GITHUB-SERVICE/host.docker.internal:github-service:4001 - de-registration failedCannot execute request on any known server
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:77)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.DiscoveryClient.unregister(DiscoveryClient.java:972)
+	at com.netflix.discovery.DiscoveryClient.shutdown(DiscoveryClient.java:948)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:389)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeDestroyMethods(InitDestroyAnnotationBeanPostProcessor.java:347)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeDestruction(InitDestroyAnnotationBeanPostProcessor.java:177)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:184)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.run(DisposableBeanAdapter.java:177)
+	at org.springframework.cloud.context.scope.GenericScope$BeanLifecycleWrapper.destroy(GenericScope.java:390)
+	at org.springframework.cloud.context.scope.GenericScope.destroy(GenericScope.java:136)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:200)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:587)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:559)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1152)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:520)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1145)
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1106)
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1075)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.doClose(ServletWebServerApplicationContext.java:172)
+	at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1021)
+	at org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:131)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+08-01-2022 14:57:00.498 INFO  c.e.g.GithubServiceApplication.logStarting - Starting GithubServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 15688 (C:\Users\thanh\Documents\JCIA-Microservices\github-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+08-01-2022 14:57:00.505 INFO  c.e.g.GithubServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+08-01-2022 14:57:08.582 INFO  c.e.g.GithubServiceApplication.logStarted - Started GithubServiceApplication in 10.235 seconds (JVM running for 13.005)
+08-01-2022 15:58:45.468 INFO  c.e.g.controller.CloneController.cloneRepo - /repo/clone
+08-01-2022 15:58:45.477 INFO  c.e.githubservice.service.GitService.cloneRepo - Cloning repository: JCIA-Microservices
+08-01-2022 15:59:39.166 INFO  c.e.githubservice.service.GitService.cloneRepo - Done cloning repository: JCIA-Microservices
+08-01-2022 16:02:04.391 INFO  c.e.g.controller.CloneController.cloneRepo - /repo/clone
+08-01-2022 16:02:04.395 INFO  c.e.githubservice.service.GitService.cloneRepo - Cloning repository: jcia-ezc
+08-01-2022 16:02:27.457 INFO  c.e.githubservice.service.GitService.cloneRepo - Done cloning repository: jcia-ezc
+08-01-2022 16:02:37.005 INFO  c.e.g.controller.CloneController.cloneRepoByBranch - /repo/clone/byBranch
+08-01-2022 16:02:37.008 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository OpenCart in branch master
+08-01-2022 16:02:39.177 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository OpenCart in branch master
+08-01-2022 16:02:52.225 INFO  c.e.g.controller.CloneController.cloneRepoByBranch - /repo/clone/byBranch
+08-01-2022 16:02:52.227 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository jcia-ezc in branch develop
+08-01-2022 16:03:07.066 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository jcia-ezc in branch develop
+08-01-2022 16:03:24.044 INFO  c.e.g.controller.CloneController.cloneRepoByCommit - /repo/clone/byCommit
+08-01-2022 16:03:24.049 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Cloning repository OpenCart with commit 44ec3e5a83af8399ec8642de4ea695736a70c99d
+08-01-2022 16:03:51.731 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Done cloning repository OpenCart with commit 44ec3e5a83af8399ec8642de4ea695736a70c99d
+08-01-2022 16:04:00.577 INFO  c.e.g.controller.CloneController.cloneRepoByCommit - /repo/clone/byCommit
+08-01-2022 16:04:00.579 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Cloning repository jcia-ezc with commit 387360aca25fc8aad9997ebf50756d8980ec89a1
+08-01-2022 16:04:23.057 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Done cloning repository jcia-ezc with commit 387360aca25fc8aad9997ebf50756d8980ec89a1
+08-01-2022 16:04:51.140 INFO  c.e.g.controller.CloneController.clone2RepoByBranch - /repos/clone/byBranch
+08-01-2022 16:04:51.142 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Cloning repo in 2 branches: master, hihii
+08-01-2022 16:04:51.143 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository OpenCart in branch master
+08-01-2022 16:04:53.031 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository OpenCart in branch master
+08-01-2022 16:04:53.035 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository OpenCart in branch hihii
+08-01-2022 16:04:54.690 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository OpenCart in branch hihii
+08-01-2022 16:04:54.691 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Done cloning repo in 2 branches: master, hihii
+08-01-2022 16:05:54.772 INFO  c.e.g.controller.CloneController.clone2RepoByBranch - /repos/clone/byBranch
+08-01-2022 16:05:54.776 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Cloning repo in 2 branches: develop, master
+08-01-2022 16:05:54.778 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository jcia-ezc in branch develop
+08-01-2022 16:06:09.402 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository jcia-ezc in branch develop
+08-01-2022 16:06:09.404 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository jcia-ezc in branch master
+08-01-2022 16:06:25.250 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository jcia-ezc in branch master
+08-01-2022 16:06:25.251 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Done cloning repo in 2 branches: develop, master
+08-01-2022 16:12:24.388 INFO  c.e.g.c.RepositoryController.getRepoBranches - /repo/branches
+08-01-2022 16:12:24.390 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching repo branches...
+08-01-2022 16:12:26.131 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching branches done!
+08-01-2022 16:12:46.473 INFO  c.e.g.c.RepositoryController.getRepoBranches - /repo/branches
+08-01-2022 16:12:46.477 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching repo branches...
+08-01-2022 16:12:47.997 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching branches done!
+08-01-2022 16:14:23.477 INFO  c.e.g.c.RepositoryController.getRepoCommits - /repo/commits
+08-01-2022 16:14:23.479 INFO  c.e.githubservice.service.GitService.getAllCommits - Fetching repo commits...
+08-01-2022 16:14:23.482 INFO  c.e.g.helper.GitRepoHelper.visitCommits - visiting commits...
+08-01-2022 16:14:23.486 INFO  c.e.g.helper.GitRepoHelper.visitCommits - walking repo: ./project/anonymous/JCIA-Microservices
+08-01-2022 16:14:23.490 INFO  c.e.g.helper.GitRepoHelper.visitCommits - List of branches: [Ref[refs/heads/Spring-dev=a067cf8fab3c4bfcad2ee3be9c25bea44842d69d(-1)]]
+08-01-2022 16:14:37.844 INFO  c.e.g.c.RepositoryController.getRepoCommits - /repo/commits
+08-01-2022 16:14:37.846 INFO  c.e.githubservice.service.GitService.getAllCommits - Fetching repo commits...
+08-01-2022 16:14:37.847 INFO  c.e.g.helper.GitRepoHelper.visitCommits - visiting commits...
+08-01-2022 16:14:37.850 INFO  c.e.g.helper.GitRepoHelper.visitCommits - walking repo: ./project/anonymous/jcia-ezc
+08-01-2022 16:14:37.854 INFO  c.e.g.helper.GitRepoHelper.visitCommits - List of branches: [Ref[refs/heads/develop=387360aca25fc8aad9997ebf50756d8980ec89a1(-1)]]
+08-01-2022 16:15:16.004 INFO  c.e.g.c.RepositoryController.getRepoInfo - /repo/info
+08-01-2022 16:15:16.007 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching repo branches...
+08-01-2022 16:15:17.327 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching branches done!
+08-01-2022 16:15:17.329 INFO  c.e.githubservice.service.GitService.getAllCommits - Fetching repo commits...
+08-01-2022 16:15:17.330 INFO  c.e.g.helper.GitRepoHelper.visitCommits - visiting commits...
+08-01-2022 16:15:17.333 INFO  c.e.g.helper.GitRepoHelper.visitCommits - walking repo: ./project/anonymous/JCIA-Microservices
+08-01-2022 16:15:17.336 INFO  c.e.g.helper.GitRepoHelper.visitCommits - List of branches: [Ref[refs/heads/Spring-dev=a067cf8fab3c4bfcad2ee3be9c25bea44842d69d(-1)]]
+08-01-2022 16:15:34.026 INFO  c.e.g.c.RepositoryController.getRepoInfo - /repo/info
+08-01-2022 16:15:34.029 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching repo branches...
+08-01-2022 16:15:35.445 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching branches done!
+08-01-2022 16:15:35.446 INFO  c.e.githubservice.service.GitService.getAllCommits - Fetching repo commits...
+08-01-2022 16:15:35.447 INFO  c.e.g.helper.GitRepoHelper.visitCommits - visiting commits...
+08-01-2022 16:15:35.449 INFO  c.e.g.helper.GitRepoHelper.visitCommits - walking repo: ./project/anonymous/jcia-ezc
+08-01-2022 16:15:35.452 INFO  c.e.g.helper.GitRepoHelper.visitCommits - List of branches: [Ref[refs/heads/develop=387360aca25fc8aad9997ebf50756d8980ec89a1(-1)]]
+08-01-2022 17:01:18.105 INFO  c.e.g.c.RepositoryController.getRepoInfo - /repo/info
+08-01-2022 17:01:18.117 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching repo branches...
+08-01-2022 17:01:19.623 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching branches done!
+08-01-2022 17:01:19.624 INFO  c.e.githubservice.service.GitService.getAllCommits - Fetching repo commits...
+08-01-2022 17:01:19.624 INFO  c.e.g.helper.GitRepoHelper.visitCommits - visiting commits...
+08-01-2022 17:01:19.629 INFO  c.e.g.helper.GitRepoHelper.visitCommits - walking repo: ./project/anonymous/JCIA-Microservices
+08-01-2022 17:01:19.633 INFO  c.e.g.helper.GitRepoHelper.visitCommits - List of branches: [Ref[refs/heads/Spring-dev=a067cf8fab3c4bfcad2ee3be9c25bea44842d69d(-1)]]
+08-01-2022 17:01:26.668 INFO  c.e.g.controller.CloneController.cloneRepo - /repo/clone
+08-01-2022 17:01:45.019 INFO  c.e.g.controller.CloneController.cloneRepo - /repo/clone
+08-01-2022 17:04:45.627 INFO  c.e.g.controller.CloneController.cloneRepo - /repo/clone
+08-01-2022 17:04:48.728 INFO  c.e.g.controller.CloneController.cloneRepo - /repo/clone
+08-01-2022 17:04:51.454 INFO  c.e.g.controller.CloneController.cloneRepoByBranch - /repo/clone/byBranch
+08-01-2022 17:04:51.458 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository OpenCart in branch master
+08-01-2022 17:04:58.264 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository OpenCart in branch master
+08-01-2022 17:05:01.470 INFO  c.e.g.controller.CloneController.cloneRepoByBranch - /repo/clone/byBranch
+08-01-2022 17:05:01.476 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository jcia-ezc in branch develop
+08-01-2022 17:05:24.879 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository jcia-ezc in branch develop
+08-01-2022 17:05:36.936 INFO  c.e.g.controller.CloneController.cloneRepoByCommit - /repo/clone/byCommit
+08-01-2022 17:05:36.938 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Cloning repository OpenCart with commit 44ec3e5a83af8399ec8642de4ea695736a70c99d
+08-01-2022 17:06:01.396 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Done cloning repository OpenCart with commit 44ec3e5a83af8399ec8642de4ea695736a70c99d
+08-01-2022 17:06:14.688 INFO  c.e.g.controller.CloneController.cloneRepoByCommit - /repo/clone/byCommit
+08-01-2022 17:06:14.690 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Cloning repository jcia-ezc with commit 387360aca25fc8aad9997ebf50756d8980ec89a1
+08-01-2022 17:06:32.678 INFO  c.e.g.controller.CloneController.clone2RepoByBranch - /repos/clone/byBranch
+08-01-2022 17:06:32.684 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Cloning repo in 2 branches: master, hihii
+08-01-2022 17:06:32.685 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository OpenCart in branch master
+08-01-2022 17:06:34.977 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository OpenCart in branch master
+08-01-2022 17:06:34.979 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository OpenCart in branch hihii
+08-01-2022 17:06:37.804 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository OpenCart in branch hihii
+08-01-2022 17:06:37.806 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Done cloning repo in 2 branches: master, hihii
+08-01-2022 17:06:43.523 INFO  c.e.g.controller.CloneController.clone2RepoByBranch - /repos/clone/byBranch
+08-01-2022 17:06:43.526 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Cloning repo in 2 branches: develop, master
+08-01-2022 17:06:43.529 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository jcia-ezc in branch develop
+08-01-2022 17:06:45.843 INFO  c.e.githubservice.service.GitService.cloneRepoByCommit - Done cloning repository jcia-ezc with commit 387360aca25fc8aad9997ebf50756d8980ec89a1
+08-01-2022 17:07:02.427 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository jcia-ezc in branch develop
+08-01-2022 17:07:02.430 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Cloning repository jcia-ezc in branch master
+08-01-2022 17:07:22.727 INFO  c.e.githubservice.service.GitService.cloneRepoByBranchName - Done cloning repository jcia-ezc in branch master
+08-01-2022 17:07:22.728 INFO  c.e.githubservice.service.GitService.clone2RepoByBranch - Done cloning repo in 2 branches: develop, master
+08-01-2022 17:09:28.058 INFO  c.e.g.c.RepositoryController.getRepoBranches - /repo/branches
+08-01-2022 17:09:28.060 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching repo branches...
+08-01-2022 17:09:29.291 INFO  c.e.githubservice.service.GitService.fetchGitBranches - Fetching branches done!

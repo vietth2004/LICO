@@ -13,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.Objects;
 
 @RestController
+@RequestMapping("/api/project-service/")
 public class ProjectController {
 
     private final ProjectRepository projectRepository;
@@ -21,7 +22,7 @@ public class ProjectController {
         this.projectRepository = projectRepository;
     }
 
-    @GetMapping("api/project")
+    @GetMapping("/project")
     public Page<Project> getAllProjectByUser(
             @CookieValue(name = "user") String user,
             @RequestParam(name = "name", required = false) String name,
@@ -46,7 +47,7 @@ public class ProjectController {
         return projectPage;
     }
 
-    @PostMapping("api/save/project")
+    @PostMapping("/save/project")
     public ResponseEntity<?> saveProject(@RequestBody Project project){
         projectRepository.save(project);
         return ResponseEntity.ok(new AuthenticationResponse("Success!", project.getId()));

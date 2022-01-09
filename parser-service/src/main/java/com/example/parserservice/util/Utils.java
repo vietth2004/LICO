@@ -59,7 +59,7 @@ public class Utils {
         if(parser.equals("spring-parser")) {
 
             Request springs = restTemplate.postForObject(
-                    "http://localhost:7003/api/dependency/spring", //spring-service
+                    "http://localhost:7003/api/spring-service/dependency/spring", //spring-service
                     javaNodes,
                     Request.class);
 
@@ -131,7 +131,7 @@ public class Utils {
         RestTemplate restTemplate = new RestTemplate();
 
         CiaResponse ciaResponse = restTemplate.postForObject(
-                "http://localhost:6001/api/cia/calculate", //cia-service
+                "http://localhost:6001/api/cia-service/calculate", //cia-service
                 new CiaRequest(dependencies, size),
                 CiaResponse.class);
 

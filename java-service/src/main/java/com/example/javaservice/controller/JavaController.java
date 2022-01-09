@@ -13,50 +13,48 @@ import com.example.javaservice.model.Response;
 import com.example.javaservice.service.JavaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
 
 @RestController
+@RequestMapping("/api/java-service/")
 public class JavaController {
 
     @Autowired
     private JavaService javaService;
 
-    @PostMapping("/api/pathParse/toRoot")
+    @PostMapping("/pathParse/toRoot")
     public Node parseProjectByPathToRootNode(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot);
         return node;
     }
 
-    @PostMapping("/api/fileParse/toRoot")
+    @PostMapping("/fileParse/toRoot")
     public Node parseProjectByFileToRootNode(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         JavaNode node = new JavaNode(javaRoot);
         return node;
     }
 
-    @PostMapping("/api/fileParse/toNodes")
+    @PostMapping("/fileParse/toNodes")
     public List<JavaNode> parseProjectByFileToNodes(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException {
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return nodeList;
     }
 
-    @PostMapping("/api/pathParse/toNodes")
+    @PostMapping("/pathParse/toNodes")
     public List<JavaNode> parseProjectByPathToNodes(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return nodeList;
     }
 
-    @PostMapping("/api/pathParse/dependencies")
+    @PostMapping("/pathParse/dependencies")
     public List parseProjectByPathToDependencies(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot);
@@ -64,7 +62,7 @@ public class JavaController {
         return dependencies;
     }
 
-    @PostMapping("/api/fileParse/dependencies")
+    @PostMapping("/fileParse/dependencies")
     public List parseProjectByFileToToDependencies(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         JavaNode node = new JavaNode(javaRoot);
@@ -72,7 +70,7 @@ public class JavaController {
         return dependencies;
     }
 
-    @PostMapping("/api/fileParse")
+    @PostMapping("/fileParse")
     public Response parseProjectByFile(@RequestParam(name ="file") MultipartFile file) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         String path = "./project/" + "anonymous/" + file.getName() + ".project";
@@ -81,7 +79,7 @@ public class JavaController {
         return new Response(node, nodeList);
     }
 
-    @PostMapping("/api/pathParse")
+    @PostMapping("/pathParse")
     public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot, path.getPath());
