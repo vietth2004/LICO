@@ -58,8 +58,7 @@ public class GitService {
 
         Git git = Git.cloneRepository()
                 .setURI(url)
-                .setBranchesToClone(Arrays.asList("refs/heads/" + branchName))
-                .setNoCheckout(true)
+                .setBranch(branchName)
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
                 .setDirectory(new File(pathToSaved))
                 .call();
