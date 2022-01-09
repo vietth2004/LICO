@@ -4,17 +4,19 @@ import com.example.githubservice.dto.Clone2RepoResponse;
 import com.example.githubservice.dto.CloneRepoPath;
 import com.example.githubservice.dto.ErrorMessage;
 import com.example.githubservice.payload.*;
+import com.example.githubservice.payload.versioncompare.Response;
+import com.example.githubservice.payload.versioncompare.Version;
 import com.example.githubservice.service.GitService;
+import com.example.githubservice.service.VersionCompare;
+import mrmathami.cia.java.JavaCiaException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -26,6 +28,9 @@ public class CloneController {
 
     @Autowired
     GitService gitService;
+
+    @Autowired
+    VersionCompare versionCompare;
 
     /**
      * Clone repository
@@ -45,9 +50,9 @@ public class CloneController {
                         .status(HttpStatus.OK)
                         .body(new CloneRepoPath(path));
             } catch (GitAPIException e) {
-                e.printStackTrace();
+                logger.error("Exception in CloneController: {}", e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Exception in CloneController: {}", e);
             }
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -81,9 +86,9 @@ public class CloneController {
                         .status(HttpStatus.OK)
                         .body(new CloneRepoPath(path));
             } catch (GitAPIException e) {
-                e.printStackTrace();
+                logger.error("Exception in CloneController: {}", e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Exception in CloneController: {}", e);
             }
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -116,9 +121,9 @@ public class CloneController {
                         .status(HttpStatus.OK)
                         .body(new CloneRepoPath(path));
             } catch (GitAPIException e) {
-                e.printStackTrace();
+                logger.error("Exception in CloneController: {}", e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Exception in CloneController: {}", e);
             }
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -136,7 +141,7 @@ public class CloneController {
      * @return path where to save those repos
      */
     @PostMapping("/repos/clone/byBranch")
-    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request) {
+    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam boolean compare) {
 
         logger.info("/repos/clone/byBranch");
 
@@ -146,13 +151,23 @@ public class CloneController {
                     request.getBranch1(), request.getBranch2(),
                     request.getUsername(), request.getPat()
             );
-            return ResponseEntity
+            if(compare = false)
+                return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(response);
+            else {
+                Version version = new Version(response.getPath1(), response.getPath2());
+                Response result = versionCompare.compare(version);
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(result);
+            }
         } catch (GitAPIException e) {
-            e.printStackTrace();
+            logger.error("Exception in CloneController: {}", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Exception in CloneController: {}", e);
+        } catch (JavaCiaException e) {
+            logger.error("Exception in CloneController: {}", e);
         }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -160,7 +175,7 @@ public class CloneController {
     }
 
     @PostMapping("/repos/clone/byCommit")
-    public ResponseEntity<?> clone2RepoByCommit(@RequestBody Clone2RepoByCommitRequest request) {
+    public ResponseEntity<?> clone2RepoByCommit(@RequestBody Clone2RepoByCommitRequest request, @RequestParam boolean compare) {
 
         logger.info("/repos/clone/byCommit");
 
@@ -170,13 +185,23 @@ public class CloneController {
                     request.getCommit1(), request.getCommit2(),
                     request.getUsername(), request.getPat()
             );
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(response);
+            if(compare = false)
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(response);
+            else {
+                Version version = new Version(response.getPath1(), response.getPath2());
+                Response result = versionCompare.compare(version);
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(result);
+            }
         } catch (GitAPIException e) {
-            e.printStackTrace();
+            logger.error("Exception in CloneController: {}", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Exception in CloneController: {}", e);
+        } catch (JavaCiaException e) {
+            logger.error("Exception in CloneController: {}", e);
         }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
