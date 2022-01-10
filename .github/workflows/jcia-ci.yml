@@ -21,7 +21,7 @@ jobs:
       with:
         java-version: 11
     - name: test with maven
-      run: sh .github/scripts/mvn-verify.sh
+      run: sh ./.github/scripts/mvn-verify.sh
     - name: build with maven
       if: ${{success()}}
-      run: sh .github/scripts/mvn-build.sh
+      run: sh ./.github/scripts/mvn-build.sh
