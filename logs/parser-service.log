@@ -1,21 +1,4 @@
-09-01-2022 15:32:33.015 INFO  c.e.p.ParserServiceApplication.logStarting - Starting ParserServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 24088 (C:\Users\thanh\Documents\JCIA-Microservices\parser-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 15:32:33.035 INFO  c.e.p.ParserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 15:32:45.161 INFO  c.e.p.ParserServiceApplication.logStarted - Started ParserServiceApplication in 14.983 seconds (JVM running for 18.651)
-09-01-2022 15:40:22.258 ERROR c.netflix.discovery.DiscoveryClient.renew - DiscoveryClient_PARSER-SERVICE/host.docker.internal:parser-service:7001 - was unable to send heartbeat!
-com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
-	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
-	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:77)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:893)
-	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1457)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 15:40:47.518 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_PARSER-SERVICE/host.docker.internal:parser-service:7001 - de-registration failedCannot execute request on any known server
+10-01-2022 20:29:24.586 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_PARSER-SERVICE/host.docker.internal:parser-service:7001 - de-registration failedCannot execute request on any known server
 com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
 	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
 	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
@@ -49,6 +32,3 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 18:32:27.759 INFO  c.e.p.ParserServiceApplication.logStarting - Starting ParserServiceApplication using Java 11.0.12 on thdtt with PID 1544 (C:\Users\thanh\Documents\JCIA-Microservices\parser-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 18:32:27.759 INFO  c.e.p.ParserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 18:32:38.134 INFO  c.e.p.ParserServiceApplication.logStarted - Started ParserServiceApplication in 12.675 seconds (JVM running for 15.948)

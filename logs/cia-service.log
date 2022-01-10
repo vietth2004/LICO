@@ -1,7 +1,4 @@
-09-01-2022 15:31:51.220 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 14664 (C:\Users\thanh\Documents\JCIA-Microservices\cia-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 15:31:51.236 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 15:32:04.207 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 15.365 seconds (JVM running for 19.101)
-09-01-2022 15:40:01.585 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_CIA-SERVICE/host.docker.internal:cia-service:6001 - de-registration failedCannot execute request on any known server
+10-01-2022 20:29:23.406 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_CIA-SERVICE/host.docker.internal:cia-service:6001 - de-registration failedCannot execute request on any known server
 com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
 	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
 	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
@@ -35,6 +32,3 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 18:31:51.077 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.12 on thdtt with PID 2960 (C:\Users\thanh\Documents\JCIA-Microservices\cia-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 18:31:51.093 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 18:32:03.182 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 14.244 seconds (JVM running for 17.925)
