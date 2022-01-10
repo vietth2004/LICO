@@ -1671,3 +1671,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+10-01-2022 21:08:59.440 INFO  c.e.g.GithubServiceApplication.logStarting - Starting GithubServiceApplication using Java 11.0.12 on thdtt with PID 25484 (C:\Users\thanh\Documents\JCIA-Microservices\github-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:08:59.440 INFO  c.e.g.GithubServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:09:07.504 INFO  c.e.g.GithubServiceApplication.logStarted - Started GithubServiceApplication in 9.763 seconds (JVM running for 12.508)

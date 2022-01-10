@@ -32,3 +32,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+10-01-2022 21:10:02.569 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.12 on thdtt with PID 23388 (C:\Users\thanh\Documents\JCIA-Microservices\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:10:02.585 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:10:15.396 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 15.251 seconds (JVM running for 19.537)

@@ -1521,3 +1521,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+10-01-2022 21:10:23.897 INFO  c.e.xmlservice.XmlServiceApplication.logStarting - Starting XmlServiceApplication using Java 11.0.12 on thdtt with PID 10204 (C:\Users\thanh\Documents\JCIA-Microservices\xml-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:10:23.897 INFO  c.e.xmlservice.XmlServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:10:28.789 INFO  c.e.xmlservice.XmlServiceApplication.logStarted - Started XmlServiceApplication in 6.602 seconds (JVM running for 10.331)

@@ -32,3 +32,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+10-01-2022 21:08:36.846 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.12 on thdtt with PID 6412 (C:\Users\thanh\Documents\JCIA-Microservices\cia-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:08:36.846 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:08:46.903 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 11.986 seconds (JVM running for 14.904)

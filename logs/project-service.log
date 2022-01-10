@@ -32,3 +32,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+10-01-2022 21:09:28.683 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.12 on thdtt with PID 26408 (C:\Users\thanh\Documents\JCIA-Microservices\project-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:09:28.699 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:09:45.032 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 18.041 seconds (JVM running for 21.091)
