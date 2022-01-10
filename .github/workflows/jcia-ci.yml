@@ -22,30 +22,30 @@ jobs:
         java-version: 11
     - name: test with maven
       run: 
-        mvn -T 1C verify -f ./discovery-server/pom.xml -DskipTests
-        mvn -T 1C verify -f ./cia-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./file-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./github-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./java-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./parser-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./project-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./spring-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./user-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./utility-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./version-compare-service/pom.xml -DskipTests
-        mvn -T 1C verify -f ./xml-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./discovery-server/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./cia-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./file-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./github-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./java-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./parser-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./project-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./spring-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./user-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./utility-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./version-compare-service/pom.xml -DskipTests
+        - mvn: -T 1C verify -f ./xml-service/pom.xml -DskipTests
     - name: build with maven
       if: ${{success()}}
       run:
-        mvn -T 1C clean install compile package -f ./discovery-server/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./cia-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./file-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./github-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./java-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./parser-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./project-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./spring-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./user-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./utility-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./version-compare-service/pom.xml -DskipTests
-        mvn -T 1C clean install compile package -f ./xml-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./discovery-server/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./cia-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./file-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./github-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./java-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./parser-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./project-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./spring-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./user-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./utility-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./version-compare-service/pom.xml -DskipTests
+        - mvn: -T 1C clean install compile package -f ./xml-service/pom.xml -DskipTests
