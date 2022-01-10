@@ -2,16 +2,17 @@ name: JCIA CI
 
 on:
   push:
+  pull_request:
     branches:
-    - main
-    - datdev
-    - Spring-dev
+      - master
+      - datdev
+      - Spring-dev
 
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +36,7 @@ jobs:
           mvn -T 1C verify -f .\version-compare-service\pom.xml -DskipTests
           mvn -T 1C verify -f .\xml-service\pom.xml -DskipTests
       - name: build with maven
-      if: ${{success()}}
+        if: ${{success()}}
         run:
           mvn -T 1C clean install compile package -f .\discovery-server\pom.xml -DskipTests
           mvn -T 1C clean install compile package -f .\cia-service\pom.xml -DskipTests
