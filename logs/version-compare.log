@@ -1,49 +1,4 @@
-09-01-2022 15:33:16.711 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 3668 (C:\Users\thanh\Documents\JCIA-Microservices\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 15:33:16.730 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 15:33:28.987 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 15.942 seconds (JVM running for 19.99)
-09-01-2022 15:40:06.289 ERROR c.netflix.discovery.DiscoveryClient.renew - DiscoveryClient_VERSION-COMPARE-SERVICE/host.docker.internal:version-compare-service:6002 - was unable to send heartbeat!
-com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
-	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
-	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:77)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:893)
-	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1457)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 15:40:40.391 ERROR c.netflix.discovery.DiscoveryClient.renew - DiscoveryClient_VERSION-COMPARE-SERVICE/host.docker.internal:version-compare-service:6002 - was unable to send heartbeat!
-com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
-	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
-	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:77)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:893)
-	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1457)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 15:41:14.502 ERROR c.netflix.discovery.DiscoveryClient.renew - DiscoveryClient_VERSION-COMPARE-SERVICE/host.docker.internal:version-compare-service:6002 - was unable to send heartbeat!
-com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
-	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
-	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:77)
-	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
-	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:893)
-	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1457)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 15:41:35.479 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_VERSION-COMPARE-SERVICE/host.docker.internal:version-compare-service:6002 - de-registration failedCannot execute request on any known server
+10-01-2022 20:29:24.841 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_VERSION-COMPARE-SERVICE/host.docker.internal:version-compare-service:6002 - de-registration failedCannot execute request on any known server
 com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
 	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
 	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
@@ -77,6 +32,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
 	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 18:33:11.541 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.12 on thdtt with PID 16428 (C:\Users\thanh\Documents\JCIA-Microservices\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 18:33:11.541 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 18:33:27.787 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 19.413 seconds (JVM running for 23.436)
+10-01-2022 21:10:02.569 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.12 on thdtt with PID 23388 (C:\Users\thanh\Documents\JCIA-Microservices\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:10:02.585 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:10:15.396 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 15.251 seconds (JVM running for 19.537)

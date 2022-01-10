@@ -3,6 +3,7 @@ version: "3"
 services:
 
   mysql-jcia-db:
+    container_name: jcia-db
     image: "mysql:8.0.25"
     environment:
       - MYSQL_USER=thdtt
@@ -21,6 +22,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
+    networks:
+      - jcia-network
+
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8005:8005"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
     networks:
       - jcia-network
 
@@ -134,7 +151,7 @@ services:
       context: xml-service
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "7004:7004"
     environment:
       - EUREKA_SERVER=discovery-service
     depends_on:
@@ -198,7 +215,7 @@ services:
       context: github-service
       dockerfile: Dockerfile
     ports:
-      - "4001:4001"
+      - "8004:8004"
     environment:
       - EUREKA_SERVER=discovery-service
     depends_on:

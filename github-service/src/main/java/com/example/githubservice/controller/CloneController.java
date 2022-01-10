@@ -141,7 +141,7 @@ public class CloneController {
      * @return path where to save those repos
      */
     @PostMapping("/repos/clone/byBranch")
-    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam boolean compare) {
+    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam(required = false) boolean compare) {
 
         logger.info("/repos/clone/byBranch");
 
@@ -151,6 +151,7 @@ public class CloneController {
                     request.getBranch1(), request.getBranch2(),
                     request.getUsername(), request.getPat()
             );
+            //verify compare parameter
             if(compare = false)
                 return ResponseEntity
                     .status(HttpStatus.OK)
@@ -185,6 +186,7 @@ public class CloneController {
                     request.getCommit1(), request.getCommit2(),
                     request.getUsername(), request.getPat()
             );
+            //verify compare parameter
             if(compare = false)
                 return ResponseEntity
                         .status(HttpStatus.OK)

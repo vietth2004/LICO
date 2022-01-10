@@ -1,7 +1,4 @@
-09-01-2022 15:31:59.734 INFO  c.e.f.FileServiceApplication.logStarting - Starting FileServiceApplication using Java 11.0.12 on DESKTOP-8NE4FK9 with PID 13920 (C:\Users\thanh\Documents\JCIA-Microservices\file-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 15:31:59.757 INFO  c.e.f.FileServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 15:32:11.236 INFO  c.e.f.FileServiceApplication.logStarted - Started FileServiceApplication in 14.468 seconds (JVM running for 18.543)
-09-01-2022 15:40:18.113 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_FILE-SERVICE/host.docker.internal:file-service:5001 - de-registration failedCannot execute request on any known server
+10-01-2022 20:29:23.577 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_FILE-SERVICE/host.docker.internal:file-service:5001 - de-registration failedCannot execute request on any known server
 com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
 	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
 	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
@@ -35,6 +32,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:106)
 	at java.base/java.lang.Thread.run(Thread.java:834)
-09-01-2022 18:31:59.248 INFO  c.e.f.FileServiceApplication.logStarting - Starting FileServiceApplication using Java 11.0.12 on thdtt with PID 5844 (C:\Users\thanh\Documents\JCIA-Microservices\file-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-09-01-2022 18:31:59.248 INFO  c.e.f.FileServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-09-01-2022 18:32:08.453 INFO  c.e.f.FileServiceApplication.logStarted - Started FileServiceApplication in 11.774 seconds (JVM running for 15.357)
+10-01-2022 21:08:44.222 INFO  c.e.f.FileServiceApplication.logStarting - Starting FileServiceApplication using Java 11.0.12 on thdtt with PID 14112 (C:\Users\thanh\Documents\JCIA-Microservices\file-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
+10-01-2022 21:08:44.222 INFO  c.e.f.FileServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+10-01-2022 21:08:52.812 INFO  c.e.f.FileServiceApplication.logStarted - Started FileServiceApplication in 10.618 seconds (JVM running for 14.175)

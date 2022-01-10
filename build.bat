@@ -10,3 +10,4 @@ call mvn -T 1C clean install compile package -f .\user-service\pom.xml -DskipTes
 call mvn -T 1C clean install compile package -f .\utility-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f .\version-compare-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f .\xml-service\pom.xml -DskipTests
+call mvn -T 1C clean install compile package -f .\api-gateway\pom.xml -DskipTests

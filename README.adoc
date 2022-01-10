@@ -4,6 +4,9 @@
 
 JCIA is Java Change Impact Analysis software help you to easily determine all dependency in your Java Project. JCIA also helps to compare project version, calculate dependency impact, visualize your Project into clear diagrams.
 
+## IMPORTANT:
+#### Default port is 8005 due to API-Gateway
+
 ## 1. Service
 
 #### 1.1. All Service Ports
