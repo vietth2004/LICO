@@ -134,7 +134,7 @@ services:
       context: xml-service
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "7004:7004"
     environment:
       - EUREKA_SERVER=discovery-service
     depends_on:
@@ -198,7 +198,7 @@ services:
       context: github-service
       dockerfile: Dockerfile
     ports:
-      - "4001:4001"
+      - "8004:8004"
     environment:
       - EUREKA_SERVER=discovery-service
     depends_on:
