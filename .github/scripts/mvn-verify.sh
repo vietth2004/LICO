@@ -10,5 +10,5 @@ mvn verify -f ./spring-service/pom.xml -DskipTests
 mvn verify -f ./user-service/pom.xml -DskipTests
 mvn verify -f ./utility-service/pom.xml -DskipTests
 mvn verify -f ./version-compare-service/pom.xml -DskipTests
+mvn verify -f ./xml-service/pom.xml -DskipTests
 mvn verify -f ./api-gateway/pom.xml -DskipTests
-
