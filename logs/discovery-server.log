@@ -1,2 +1,2 @@
-10-01-2022 21:08:31.766 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-10-01-2022 21:08:44.176 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 15.174 seconds (JVM running for 18.483)
+15-01-2022 21:29:03.999 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+15-01-2022 21:29:22.802 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 22.57 seconds (JVM running for 26.126)

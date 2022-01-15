@@ -141,7 +141,7 @@ public class CloneController {
      * @return path where to save those repos
      */
     @PostMapping("/repos/clone/byBranch")
-    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam(required = false) boolean compare) {
+    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam boolean compare) {
 
         logger.info("/repos/clone/byBranch");
 

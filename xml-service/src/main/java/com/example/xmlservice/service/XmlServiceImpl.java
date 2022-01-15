@@ -16,12 +16,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -40,7 +42,8 @@ public class XmlServiceImpl implements XmlService {
         List<Node> xmlNodes = new ArrayList<>();
         Path path = Paths.get(folderPath);
         List<Path> paths = FileHelper.listFiles(path);
-
+        Set<File> subDirs = FileHelper.listAllSubDirs(new File(path.toString()));
+        
         /**
          * Submit callable task to ThreadPool
          */
