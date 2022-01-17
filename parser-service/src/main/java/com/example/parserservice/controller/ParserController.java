@@ -13,9 +13,7 @@ import java.util.List;
 @RequestMapping("/api/parser-service/")
 public class ParserController {
 
-
     private final ParserService parserService;
-
 
     public ParserController(ParserService parserService) {
         this.parserService = parserService;

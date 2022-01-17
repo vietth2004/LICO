@@ -2,6 +2,7 @@ package com.example.parserservice.download;
 
 import com.example.parserservice.download.config.FileStorageProperties;
 import com.example.parserservice.download.exception.FileStorageException;
+import com.example.parserservice.util.JwtUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -23,9 +24,12 @@ public class ProjectService {
 
     private final Path fileStorageLocation;
 
+    private final JwtUtils jwtUtils;
+
     @Autowired
-    public ProjectService(FileStorageProperties fileStorageProperties) {
+    public ProjectService(FileStorageProperties fileStorageProperties, JwtUtils jwtUtils) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
+        this.jwtUtils = jwtUtils;
 
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -38,7 +42,13 @@ public class ProjectService {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         String filePath = "./project/" + fileName;
-        String folderPath = "./project/" + user + "/" + fileName + ".project";
+        String userPath = user;
+
+        if(!userPath.equals("anonymous")){
+            userPath = jwtUtils.extractUsername(user);
+        }
+
+        String folderPath = "./project/" + userPath + "/" + fileName + ".project";
 //        String folderPath = "D:\\" + fileName;  "anonymous/" +
 
         try {
@@ -48,7 +58,7 @@ public class ProjectService {
             }
 
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Path targetLocation = this.fileStorageLocation.resolve(fileName + "/" + userPath);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             System.out.println(filePath + " " + folderPath);
             unzipFile(filePath, folderPath);

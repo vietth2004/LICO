@@ -39,12 +39,14 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    public String storeFile(MultipartFile file, String user, String project) {
         // Normalize file name
         String fileNameWithExtension = StringUtils.cleanPath(file.getOriginalFilename());
         String fileNameWithoutExtension = file.getName();
-        String filePath = "./project/" + fileNameWithExtension;
-        String folderPath = "./project/anonymous/compare/" + fileNameWithExtension + "-project";
+
+
+        String filePath = "./project/" + user + "/" + project +  "/" + fileNameWithExtension;
+        String folderPath = "./project/" + user + "/" + project +  "/" + fileNameWithExtension + "-project";
 
         try {
             // Check if the file's name contains invalid characters
@@ -52,8 +54,12 @@ public class FileStorageService {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileNameWithExtension);
             }
 
+            new File("./project/" + user + "/" + project).mkdirs();
+
+            String zipFilePath = user + "/" + project +  "/" + fileNameWithExtension;
+
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileNameWithExtension);
+            Path targetLocation = this.fileStorageLocation.resolve(zipFilePath);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             unzipFile(filePath, folderPath);
 
