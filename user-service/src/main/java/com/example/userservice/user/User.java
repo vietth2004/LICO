@@ -2,6 +2,7 @@ package com.example.userservice.user;
 
 import com.example.userservice.account.Account;
 import com.example.userservice.model.NamedEntity;
+import com.example.userservice.token.Token;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,19 +18,19 @@ public class User extends NamedEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Account account;
 
-    @Column(name = "token")
-    private String token = new String();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Token> tokenList = new ArrayList<>();
 
     public User() {
 
     }
 
-    public String getToken() {
-        return token;
+    public List<Token> getToken() {
+        return tokenList;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setToken(List<Token> token) {
+        this.tokenList = token;
     }
 
     public Account getAccount() {

@@ -1497,3 +1497,7 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1035)
 	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1011)
 	at org.springframework.context.support.AbstractApplicationContext$1.run(AbstractApplicationContext.java:931)
+18-01-2022 15:55:17.896 INFO  c.e.u.UserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+18-01-2022 15:55:23.931 INFO  c.e.u.UserServiceApplication.logStarted - Started UserServiceApplication in 8.556 seconds (JVM running for 9.293)
+18-01-2022 15:56:13.078 INFO  c.e.u.UserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+18-01-2022 15:56:19.506 INFO  c.e.u.UserServiceApplication.logStarted - Started UserServiceApplication in 8.991 seconds (JVM running for 9.743)
