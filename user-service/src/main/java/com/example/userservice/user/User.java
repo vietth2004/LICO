@@ -17,8 +17,19 @@ public class User extends NamedEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Account account;
 
+    @Column(name = "token")
+    private String token = new String();
+
     public User() {
 
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Account getAccount() {
