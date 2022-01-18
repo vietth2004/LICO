@@ -67,8 +67,8 @@ public class VersionServiceImpl implements VersionService{
         String oldVersion = fileStorageService.storeFile(files.get(0), userPath, project);
         String newVersion = fileStorageService.storeFile(files.get(1), userPath, project);
 
-        version.setOldVersion("./project/" + userPath + "/" + project + "/" + oldVersion + "-project");
-        version.setNewVersion("./project/" + userPath + "/" + project + "/" + newVersion + "-project");
+        version.setOldVersion("./project/" + userPath + "/" + project + "/" + oldVersion + ".project");
+        version.setNewVersion("./project/" + userPath + "/" + project + "/" + newVersion + ".project");
 
         return getCompare(version);
     }

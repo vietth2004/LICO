@@ -38,17 +38,13 @@ public class ProjectService {
         }
     }
 
-    public String storeFile(MultipartFile file, String user) {
+    public String storeFile(MultipartFile file, String user, String project) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String filePath = "./project/" + fileName;
-        String userPath = user;
 
-        if(!userPath.equals("anonymous")){
-            userPath = jwtUtils.extractUsername(user);
-        }
-
-        String folderPath = "./project/" + userPath + "/" + fileName + ".project";
+        // Init file path
+        String filePath = "./project/" + user + "/" + project +  "/" + fileName;
+        String folderPath = "./project/" + user + "/" + project +  "/" + fileName + ".project";
 //        String folderPath = "D:\\" + fileName;  "anonymous/" +
 
         try {
@@ -57,12 +53,13 @@ public class ProjectService {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
+            new File("./project/" + user + "/" + project).mkdirs();
+
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileName + "/" + userPath);
+            Path targetLocation = this.fileStorageLocation.resolve(user + "/" + project + "/" + fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             System.out.println(filePath + " " + folderPath);
             unzipFile(filePath, folderPath);
-
             return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);

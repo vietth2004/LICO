@@ -32,15 +32,16 @@ public class ParserServiceImpl implements ParserService{
     //Build Project with Multipart File
     //**
     @Override
-    public Response build(List<String> parserList, MultipartFile file, String user) {
-        String fileName = projectService.storeFile(file, user);
-        String userPath = user;
+    public Response build(List<String> parserList, MultipartFile file, String user, String project) {
 
+        String userPath = user;
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
         }
 
-        Path filePath = new Path("./project/" + userPath + "/" + fileName + ".project");
+        String fileName = projectService.storeFile(file, userPath, project);
+
+        Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
         Request request = buildProject(filePath);
         return Utils.getResponse(parserList, request, filePath.getPath());
     }
