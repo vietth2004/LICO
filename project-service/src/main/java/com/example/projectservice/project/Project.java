@@ -18,6 +18,14 @@ public class Project extends NamedEntity {
     @Column(name = "user")
     private String user;
 
+    public Project() {
+    }
+
+    public Project(Integer id, String name, String user) {
+        super(id, name);
+        this.user = user;
+    }
+
     public List<Version> getVersionList() {
         return versionList;
     }

@@ -3,10 +3,10 @@ package com.example.projectservice.response;
 public class AuthenticationResponse {
 
     private final String jwt;
-    private String id;
+    private Integer id;
     private Boolean success;
 
-    public AuthenticationResponse(String jwt, String id) {
+    public AuthenticationResponse(String jwt, Integer id) {
         this.jwt = jwt;
         this.id = id;
         this.success = true;
@@ -21,11 +21,11 @@ public class AuthenticationResponse {
         return jwt;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
