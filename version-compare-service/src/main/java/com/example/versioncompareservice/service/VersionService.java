@@ -11,11 +11,10 @@ import java.util.List;
 
 public interface VersionService {
 
-    Response getCompare (MultipartFile[] files) throws JavaCiaException, IOException;
 
     Response getCompare (List<MultipartFile> files) throws JavaCiaException, IOException;
 
     Response getCompare (Version files) throws JavaCiaException, IOException;
 
-    JavaNode GetCompareRootNode (Version files) throws JavaCiaException, IOException;
+    Response getCompare (List<MultipartFile> files, String user, String project) throws JavaCiaException, IOException;
 }

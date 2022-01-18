@@ -5,10 +5,7 @@ import com.example.versioncompareservice.model.Version;
 import com.example.versioncompareservice.service.FileStorageService;
 import com.example.versioncompareservice.service.VersionService;
 import mrmathami.cia.java.JavaCiaException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,13 +27,17 @@ public class VersionController {
     }
 
     @PostMapping("/byFile")
-    public Response versionCompareByFile(@RequestBody List<MultipartFile> files) throws JavaCiaException, IOException {
-        return versionService.getCompare(files);
+    public Response versionCompareByFile(@RequestBody List<MultipartFile> files,
+                                         @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project,
+                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user) throws JavaCiaException, IOException {
+        System.out.println(project);
+        return versionService.getCompare(files, user, project);
     }
 
 
     @PostMapping("/byPath")
-    public Response versionCompareByPath(@RequestBody Version path) throws JavaCiaException, IOException {
+    public Response versionCompareByPath(@RequestBody Version path,
+                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user) throws JavaCiaException, IOException {
         return versionService.getCompare(path);
     }
 

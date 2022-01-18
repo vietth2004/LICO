@@ -13,9 +13,7 @@ import java.util.List;
 @RequestMapping("/api/parser-service/")
 public class ParserController {
 
-
     private final ParserService parserService;
-
 
     public ParserController(ParserService parserService) {
         this.parserService = parserService;
@@ -25,8 +23,9 @@ public class ParserController {
     @PostMapping("/parse/file")
     public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
                                                   @RequestBody MultipartFile file,
-                                                  @RequestParam(name="user", required = false, defaultValue = "anonymous") String user) throws IOException {
-        return parserService.build(parserList, file, user);
+                                                  @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
+                                                  @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
+        return parserService.build(parserList, file, user, project);
     }
 
     @PostMapping("/parse/path")

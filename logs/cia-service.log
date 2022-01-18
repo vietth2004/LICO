@@ -1,4 +1,21 @@
-10-01-2022 20:29:23.406 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_CIA-SERVICE/host.docker.internal:cia-service:6001 - de-registration failedCannot execute request on any known server
+18-01-2022 14:27:51.770 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.13 on ALEISTER with PID 20000 (F:\$Project$\JCIA-Microservices\cia-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
+18-01-2022 14:27:51.775 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+18-01-2022 14:27:57.808 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 8.014 seconds (JVM running for 8.852)
+18-01-2022 15:00:32.210 ERROR c.netflix.discovery.DiscoveryClient.renew - DiscoveryClient_CIA-SERVICE/localhost:cia-service:6001 - was unable to send heartbeat!
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$3.execute(EurekaHttpClientDecorator.java:92)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:77)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.sendHeartBeat(EurekaHttpClientDecorator.java:89)
+	at com.netflix.discovery.DiscoveryClient.renew(DiscoveryClient.java:893)
+	at com.netflix.discovery.DiscoveryClient$HeartbeatThread.run(DiscoveryClient.java:1457)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+18-01-2022 15:00:34.440 ERROR c.netflix.discovery.DiscoveryClient.unregister - DiscoveryClient_CIA-SERVICE/localhost:cia-service:6001 - de-registration failedCannot execute request on any known server
 com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
 	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
 	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
@@ -31,7 +48,4 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:131)
 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
 	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:100)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-10-01-2022 21:08:36.846 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.12 on thdtt with PID 6412 (C:\Users\thanh\Documents\JCIA-Microservices\cia-service\target\classes started by thanh in C:\Users\thanh\Documents\JCIA-Microservices)
-10-01-2022 21:08:36.846 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-10-01-2022 21:08:46.903 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 11.986 seconds (JVM running for 14.904)
+	at java.base/java.lang.Thread.run(Thread.java:829)

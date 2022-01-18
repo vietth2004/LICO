@@ -4,6 +4,7 @@ import com.example.versioncompareservice.ast.node.JavaNode;
 import com.example.versioncompareservice.ast.utility.Utility;
 import com.example.versioncompareservice.model.Response;
 import com.example.versioncompareservice.model.Version;
+import com.example.versioncompareservice.utils.JwtUtils;
 import com.example.versioncompareservice.utils.Utils;
 import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.JavaCiaException;
@@ -31,7 +32,7 @@ public class VersionServiceImpl implements VersionService{
 
     final FileStorageService fileStorageService;
 
-
+    final JwtUtils jwtUtils;
 
     public static final JavaDependencyWeightTable DEPENDENCY_WEIGHT_TABLE = JavaDependencyWeightTable.of(Map.of(
             JavaDependency.USE, 1.0,
@@ -48,33 +49,26 @@ public class VersionServiceImpl implements VersionService{
             JavaDependency.OVERRIDE, 0.3
     ));
 
-    public VersionServiceImpl(FileStorageService fileStorageService) {
+    public VersionServiceImpl(FileStorageService fileStorageService, JwtUtils jwtUtils) {
         this.fileStorageService = fileStorageService;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
-    public Response getCompare(MultipartFile[] files) {
-        return new Response();
-    }
-
-    @Override
-    public Response getCompare(List<MultipartFile> files) throws JavaCiaException, IOException {
+    public Response getCompare(List<MultipartFile> files, String user, String project) throws JavaCiaException, IOException {
         Version version = new Version();
+        String userPath = user;
 
-//        for (MultipartFile file : files) {
-//            if(file.getOriginalFilename().contains("new")) {
-//                String fileName = fileStorageService.storeFile(file);
-//                version.setNewVersion("./project/anonymous/compare/" + fileName + "-project");
-//            } else {
-//                String fileName = fileStorageService.storeFile(file);
-//                version.setOldVersion("./project/anonymous/compare/" + fileName + "-project");
-//            }
-//        }
+        if(!userPath.equals("anonymous")){
+            userPath = jwtUtils.extractUsername(user);
+        }
 
-        String oldVersion = fileStorageService.storeFile(files.get(0));
-        String newVersion = fileStorageService.storeFile(files.get(1));
-        version.setOldVersion("./project/anonymous/compare/" + oldVersion + "-project");
-        version.setNewVersion("./project/anonymous/compare/" + newVersion + "-project");
+        //Save file
+        String oldVersion = fileStorageService.storeFile(files.get(0), userPath, project);
+        String newVersion = fileStorageService.storeFile(files.get(1), userPath, project);
+
+        version.setOldVersion("./project/" + userPath + "/" + project + "/" + oldVersion + ".project");
+        version.setNewVersion("./project/" + userPath + "/" + project + "/" + newVersion + ".project");
 
         return getCompare(version);
     }
@@ -82,19 +76,21 @@ public class VersionServiceImpl implements VersionService{
     @Override
     public Response getCompare(Version files) throws JavaCiaException, IOException {
 
+        //Old version path
         final Path inputPathA = Path.of(files.getOldVersion());
         final BuildInputSources inputSourcesA = new BuildInputSources(inputPathA);
         Utils.getFileList(inputSourcesA.createModule("core", inputPathA), inputPathA);
 
-
+        //New version path
         final Path inputPathB = Path.of(files.getNewVersion());
         final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
         Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
 
-        System.out.println(inputSourcesA.getPath().toString());
-        System.out.println(inputSourcesB.getPath().toString());
-        System.out.println();
+//        System.out.println(inputSourcesA.getPath().toString());
+//        System.out.println(inputSourcesB.getPath().toString());
+//        System.out.println();
 
+        //Compare two version
         final JavaProjectSnapshot projectSnapshotA = ProjectBuilder.createProjectSnapshot("JSON-java-before",
                 DEPENDENCY_WEIGHT_TABLE, inputSourcesA, Set.of(new JavaBuildParameter(List.of(), true)));
 
@@ -104,55 +100,25 @@ public class VersionServiceImpl implements VersionService{
         JavaProjectSnapshotComparison snapshotComparison = ProjectBuilder.createProjectSnapshotComparison(
                 "compare", projectSnapshotB, projectSnapshotA, DEPENDENCY_IMPACT_TABLE);
 
-//        List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes(), "changed");
-//        List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes(), "added");
-//        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted");
-//        List<JavaNode> unchangedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getUnchangedNodes(), "unchanged");
-
+        //Node initialization
         List<JavaNode> changedNodes = new ArrayList<>();
         List<JavaNode> addedNodes = new ArrayList<>();
         List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "removed");
         List<Pair<Integer, JavaNode>> removedNodes = new ArrayList<>();
         List<JavaNode> unchangedNodes = new ArrayList<>();
-
         JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
 
+        //Bind to Tree Node
         applyCompare(rootNode, changedNodes, addedNodes, removedNodes, unchangedNodes, snapshotComparison);
-
-//        rootNode = Utils.convertNode(rootNode, changedNodes, addedNodes);
 
         return new Response(changedNodes, deletedNodes, addedNodes, rootNode);
     }
 
     @Override
-    public JavaNode GetCompareRootNode(Version files) throws JavaCiaException, IOException {
-
-//        final Path inputPathA = Path.of(files.getOldVersion());
-//        final BuildInputSources inputSourcesA = new BuildInputSources(inputPathA);
-//        Utils.getFileList(inputSourcesA.createModule("core", inputPathA), inputPathA);
-//
-//        final Path inputPathB = Path.of(files.getNewVersion());
-//        final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
-//        Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
-//
-//        final JavaProjectSnapshot projectSnapshotA = ProjectBuilder.createProjectSnapshot("JSON-java-before",
-//                DEPENDENCY_WEIGHT_TABLE, inputSourcesA, Set.of(new JavaBuildParameter(List.of(), true)));
-//
-//        final JavaProjectSnapshot projectSnapshotB = ProjectBuilder.createProjectSnapshot("JSON-java-after",
-//                DEPENDENCY_WEIGHT_TABLE, inputSourcesB, Set.of(new JavaBuildParameter(List.of(), true)));
-//
-//        JavaProjectSnapshotComparison snapshotComparison = ProjectBuilder.createProjectSnapshotComparison(
-//                "compare", projectSnapshotB, projectSnapshotA, DEPENDENCY_IMPACT_TABLE);
-//
-//        List<JavaNode> changedNodes = Utility.convertJavaNodePairSet(snapshotComparison.getChangedNodes());
-//        List<JavaNode> addedNodes = Utility.convertJavaNodeSet(snapshotComparison.getAddedNodes());
-//        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes());
-//
-//        JavaNode rootNode = new JavaNode(snapshotComparison.getCurrentSnapshot().getRootNode());
-//        return rootNode;
-
-        return new JavaNode();
+    public Response getCompare(List<MultipartFile> files) throws JavaCiaException, IOException {
+        return null;
     }
+
 
     public void applyCompare(JavaNode rootNode,
                              List<JavaNode> changedNodes,
@@ -202,6 +168,8 @@ public class VersionServiceImpl implements VersionService{
         bindRemovedNode(rootNode, deletedNodes, changedNodesBind, projectSize);
     }
 
+
+    //Node binding
     private void bindRemovedNode(JavaNode rootNode,
                          List<Pair<Integer, JavaNode>> deletedNodes,
                          List<Pair<Integer, Integer>> changedNodesBind,
