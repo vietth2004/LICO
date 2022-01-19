@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "project")
+@Table(name = "project",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "user"}))
 public class Project extends NamedEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.EAGER)

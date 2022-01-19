@@ -10,17 +10,17 @@ import java.util.Date;
 
 @Entity
 @Table(name = "version",
-uniqueConstraints = @UniqueConstraint(columnNames = {"name", "id"}))
+uniqueConstraints = @UniqueConstraint(columnNames = {"name", "pid"}))
 public class Version extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pid", referencedColumnName = "id")
     private Project project;
 
-    @Column(name = "path", unique = true)
+    @Column(name = "path")
     private String path = new String();
 
-    @Column(name = "file", unique = true)
+    @Column(name = "file")
     private String file = new String();
 
     @Column(name = "date")
