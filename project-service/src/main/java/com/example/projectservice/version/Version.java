@@ -9,17 +9,18 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "version")
+@Table(name = "version",
+uniqueConstraints = @UniqueConstraint(columnNames = {"name", "id"}))
 public class Version extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pid", referencedColumnName = "id")
     private Project project;
 
-    @Column(name = "path")
+    @Column(name = "path", unique = true)
     private String path = new String();
 
-    @Column(name = "file")
+    @Column(name = "file", unique = true)
     private String file = new String();
 
     @Column(name = "date")

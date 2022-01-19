@@ -35,3 +35,4 @@ storage
 # log files
 *.log
 /logs
+/logs/
