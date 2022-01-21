@@ -18,7 +18,6 @@ JCIA is Java Change Impact Analysis software help you to easily determine all de
 - port 8002: User-Service
 - port 8003: Project-Service
 - port 8004: Github-Service
-- port 8005: API-Gateway
 
 #### 1.3. Parse Service
 - port 7001: Parser-Service
