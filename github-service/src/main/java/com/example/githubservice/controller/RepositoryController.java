@@ -5,6 +5,7 @@ import com.example.githubservice.dto.BranchesResponse;
 import com.example.githubservice.dto.CommitResponse;
 import com.example.githubservice.dto.RepoInfoResponse;
 import com.example.githubservice.service.GitService;
+import com.netflix.discovery.EurekaClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

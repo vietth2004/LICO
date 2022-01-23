@@ -1,5 +1,6 @@
 package com.example.parserservice.service;
 
+import com.example.parserservice.constant.HostIPConstants;
 import com.example.parserservice.download.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
@@ -26,6 +27,9 @@ public class ParserServiceImpl implements ParserService{
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private HostIPConstants ipConstants;
+
     //**
     //Build Project with Multipart File
     //**
@@ -39,7 +43,7 @@ public class ParserServiceImpl implements ParserService{
 
     @Override
     public Request buildProject(MultipartFile file) {
-        String serverUrl = "http://localhost:7002/api/java-service/fileParse"; //java-service
+        String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/fileParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, Utils.getResponseEntity(file), Request.class);
         return request.getBody();
     }
@@ -55,7 +59,7 @@ public class ParserServiceImpl implements ParserService{
 
     @Override
     public Request buildProject(Path path) {
-        String serverUrl = "http://localhost:7002/api/java-service/pathParse"; //java-service
+        String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, path, Request.class);
         return request.getBody();
     }
