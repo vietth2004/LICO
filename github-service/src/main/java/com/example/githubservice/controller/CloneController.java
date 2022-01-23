@@ -32,10 +32,12 @@ public class CloneController {
     @Autowired
     VersionCompare versionCompare;
 
+
     /**
      * Clone repository
      * @param request
      * @return path where to save repo
+     * @RequestParam(required = true) String url, @RequestParam(required = false, defaultValue = "") String pat
      */
     @PostMapping("/repo/clone")
     public ResponseEntity<?> cloneRepo(@RequestBody CloneRepoRequest request) {
@@ -141,7 +143,7 @@ public class CloneController {
      * @return path where to save those repos
      */
     @PostMapping("/repos/clone/byBranch")
-    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam(required = false) boolean compare) {
+    public ResponseEntity<?> clone2RepoByBranch(@RequestBody Clone2RepoByBranchRequest request, @RequestParam boolean compare) {
 
         logger.info("/repos/clone/byBranch");
 
