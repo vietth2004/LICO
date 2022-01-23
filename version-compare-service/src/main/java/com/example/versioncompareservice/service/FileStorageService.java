@@ -39,27 +39,32 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    public String storeFile(MultipartFile file, String user, String project) {
         // Normalize file name
-        String fileNameWithExtension = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileNameWithoutExtension = file.getName();
-        String filePath = "./project/" + fileNameWithExtension;
-        String folderPath = "./project/anonymous/compare/" + fileNameWithExtension + "-project";
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+        // Init file path
+        String filePath = "./project/" + user + "/" + project +  "/" + fileName;
+        String folderPath = "./project/" + user + "/" + project +  "/" + fileName + ".project";
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileNameWithExtension.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileNameWithExtension);
+            if(fileName.contains("..")) {
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
+            new File("./project/" + user + "/" + project).mkdirs();
+
+            String zipFilePath = user + "/" + project +  "/" + fileName;
+
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileNameWithExtension);
+            Path targetLocation = this.fileStorageLocation.resolve(zipFilePath);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             unzipFile(filePath, folderPath);
 
-            return fileNameWithExtension;
+            return fileName;
         } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileNameWithExtension + ". Please try again!", ex);
+            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
 

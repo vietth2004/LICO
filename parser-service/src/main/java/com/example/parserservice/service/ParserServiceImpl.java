@@ -4,15 +4,14 @@ import com.example.parserservice.constant.HostIPConstants;
 import com.example.parserservice.download.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
+import com.example.parserservice.util.JwtUtils;
 import com.example.parserservice.util.Utils;
-import mrmathami.cia.java.jdt.project.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -20,8 +19,11 @@ public class ParserServiceImpl implements ParserService{
 
     final ProjectService projectService;
 
-    public ParserServiceImpl(ProjectService projectService) {
+    final JwtUtils jwtUtils;
+
+    public ParserServiceImpl(ProjectService projectService, JwtUtils jwtUtils) {
         this.projectService = projectService;
+        this.jwtUtils = jwtUtils;
     }
 
     @Autowired
@@ -34,9 +36,16 @@ public class ParserServiceImpl implements ParserService{
     //Build Project with Multipart File
     //**
     @Override
-    public Response build(List<String> parserList, MultipartFile file, String user) {
-        String fileName = projectService.storeFile(file, user);
-        Path filePath = new Path("./project/" + user + "/" + fileName + ".project");
+    public Response build(List<String> parserList, MultipartFile file, String user, String project) {
+
+        String userPath = user;
+        if(!userPath.equals("anonymous")){
+            userPath = jwtUtils.extractUsername(user);
+        }
+
+        String fileName = projectService.storeFile(file, userPath, project);
+
+        Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
         Request request = buildProject(filePath);
         return Utils.getResponse(parserList, request, filePath.getPath());
     }

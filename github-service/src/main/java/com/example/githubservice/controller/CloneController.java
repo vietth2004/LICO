@@ -32,10 +32,12 @@ public class CloneController {
     @Autowired
     VersionCompare versionCompare;
 
+
     /**
      * Clone repository
      * @param request
      * @return path where to save repo
+     * @RequestParam(required = true) String url, @RequestParam(required = false, defaultValue = "") String pat
      */
     @PostMapping("/repo/clone")
     public ResponseEntity<?> cloneRepo(@RequestBody CloneRepoRequest request) {

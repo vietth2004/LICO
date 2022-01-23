@@ -4,15 +4,18 @@ on:
   push:
   pull_request:
     branches:
-    - main
-    - datdev
-    - Spring-dev
+      - '*'
+      - '*/*'
+      - '**'
 
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build-unix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     
     steps:
     - uses: actions/checkout@v2
@@ -25,3 +28,17 @@ jobs:
     - name: build with maven
       if: ${{success()}}
       run: sh ./.github/scripts/mvn-build.sh
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: test with maven
+      run: ./.github/scripts/mvn-verify.bat
+    - name: build with maven
+      if: ${{success()}}
+      run: ./.github/scripts/mvn-build.bat

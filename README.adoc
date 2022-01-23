@@ -11,6 +11,7 @@ JCIA is Java Change Impact Analysis software help you to easily determine all de
 
 #### 1.1. All Service Ports
 - port 8761: Discovery-Service
+- port 8005: API-Gateway
 
 #### 1.2. Administration
 - port 8001: Utility-Service
@@ -39,7 +40,7 @@ JCIA is Java Change Impact Analysis software help you to easily determine all de
 - JDK 11
 - Apache Maven (version 3.x.x)
 
-#### 2.2. PostInstall
+#### 2.2. Pre-Install
 Open mysql and create 2 databases: 
 
 - micro_jcia_user: ```create database micro_jcia_user```
