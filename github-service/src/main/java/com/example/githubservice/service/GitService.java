@@ -17,6 +17,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class GitService {
 
     private static final Logger logger = LoggerFactory.getLogger(GitService.class);
 
+    @Async
     public String cloneRepo(String url, String repoName, String username, String pat) throws GitAPIException, IOException {
         logger.info("Cloning repository: {}", repoName);
         String pathToSaved = "./project/anonymous/" + repoName;
@@ -49,6 +51,7 @@ public class GitService {
         return pathToSaved;
     }
 
+    @Async
     public String cloneRepoByBranchName(String url, String repoName, String branchName, String username, String pat) throws GitAPIException, IOException {
         logger.info("Cloning repository {} in branch {}", repoName, branchName);
         String pathToSaved = "./project/anonymous/" + repoName + "-" + branchName;
@@ -67,6 +70,7 @@ public class GitService {
         return pathToSaved;
     }
 
+    @Async
     public String cloneRepoByCommit(String url, String repoName, String commitSha, String username, String pat) throws GitAPIException, IOException {
         String pathToSaved = "./project/anonymous/" + repoName + "-" + commitSha;
         logger.info("Cloning repository {} with commit {}", repoName, commitSha);
@@ -91,6 +95,7 @@ public class GitService {
 
     }
 
+    @Async
     public Clone2RepoResponse clone2RepoByBranch
             (String url, String repo, String branch1, String branch2, String username, String pat)
             throws GitAPIException, IOException {
@@ -101,6 +106,7 @@ public class GitService {
         return new Clone2RepoResponse(path1, path2);
     }
 
+    @Async
     public Clone2RepoResponse clone2RepoByCommits
             (String url, String repo,
              String commitSha1, String commitSha2,
@@ -112,6 +118,7 @@ public class GitService {
         return new Clone2RepoResponse(path1, path2);
     }
 
+    @Async
     public BranchesResponse fetchGitBranches(String gitUrl, String username, String pat)
     {
         logger.info("Fetching repo branches...");
@@ -145,6 +152,7 @@ public class GitService {
         return response;
     }
 
+    @Async
     public List<CommitResponse> getAllCommits(CloneRepoRequest request) {
         logger.info("Fetching repo commits...");
         if(Config.pathMap.get(request.hashCode()) == null) {
