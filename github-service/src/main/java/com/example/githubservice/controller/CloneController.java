@@ -32,7 +32,6 @@ public class CloneController {
     @Autowired
     VersionCompare versionCompare;
 
-
     /**
      * Clone repository
      * @param request
