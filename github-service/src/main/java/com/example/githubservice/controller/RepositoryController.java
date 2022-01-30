@@ -1,22 +1,23 @@
 package com.example.githubservice.controller;
 
-import com.example.githubservice.payload.CloneRepoRequest;
+import com.example.githubservice.dto.ErrorMessage;
 import com.example.githubservice.dto.BranchesResponse;
 import com.example.githubservice.dto.CommitResponse;
 import com.example.githubservice.dto.RepoInfoResponse;
 import com.example.githubservice.service.GitService;
-import com.netflix.discovery.EurekaClient;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/git-service/")
@@ -28,33 +29,108 @@ public class RepositoryController {
     private GitService gitService;
 
     @PostMapping("/repo/branches")
-    public ResponseEntity<?> getRepoBranches(@RequestBody CloneRepoRequest request) {
-
+    public ResponseEntity<?> getRepoBranches(
+            @RequestParam String url,
+            @RequestParam(required = false, defaultValue = "anonymous") String user,
+            @RequestParam(required = false, defaultValue = "") String token
+    ) {
         logger.info("/repo/branches");
-
-        BranchesResponse branches = gitService.fetchGitBranches(request.getUrl(), request.getUsername(), request.getPat());
+        BranchesResponse branches = null;
+        String repoName = Arrays
+                .stream(url.split("/"))
+                .filter(name -> name.endsWith(".git"))
+                .collect(Collectors.toList())
+                .get(0)
+                .replace(".git", "");
+        try {
+            branches = gitService.fetchGitBranches(url, user, token);
+        } catch (GitAPIException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorMessage(
+                            HttpStatus.UNAUTHORIZED.value(),
+                            new Date(),
+                            "Cannot fetch repo branches: " + url,
+                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
+                    ));
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(branches);
     }
 
     @PostMapping("/repo/commits")
-    public ResponseEntity<?> getRepoCommits(@RequestBody CloneRepoRequest request) {
-
+    public ResponseEntity<?> getRepoCommits(
+            @RequestParam String url,
+            @RequestParam(required = false, defaultValue = "master") String branch,
+            @RequestParam(required = false, defaultValue = "anonymous") String user,
+            @RequestParam(required = false, defaultValue = "") String token
+    ) {
         logger.info("/repo/commits");
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(gitService.getAllCommits(request));
+        String repoName = Arrays
+                .stream(url.split("/"))
+                .filter(name -> name.endsWith(".git"))
+                .collect(Collectors.toList())
+                .get(0)
+                .replace(".git", "");
+
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(gitService.getAllCommitsInBranch(url, repoName, branch, user, token));
+        } catch (GitAPIException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorMessage(
+                            HttpStatus.UNAUTHORIZED.value(),
+                            new Date(),
+                            "Cannot fetch repo branches: " + url,
+                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
+                    ));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PostMapping("/repo/info")
-    public ResponseEntity<?> getRepoInfo(@RequestBody CloneRepoRequest request) {
+    public ResponseEntity<?> getRepoInfo(
+            @RequestParam String url,
+            @RequestParam(required = false, defaultValue = "anonymous") String user,
+            @RequestParam(required = false, defaultValue = "") String token
+    ) {
 
         logger.info("/repo/info");
 
-        BranchesResponse branches = gitService.fetchGitBranches(request.getUrl(), request.getUsername(), request.getPat());
-        List<CommitResponse> commits = gitService.getAllCommits(request);
+        String repoName = Arrays
+                .stream(url.split("/"))
+                .filter(name -> name.endsWith(".git"))
+                .collect(Collectors.toList())
+                .get(0)
+                .replace(".git", "");
+
+        BranchesResponse branches = null;
+        try {
+            branches = gitService.fetchGitBranches(url, user, token);
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+        List<CommitResponse> commits = null;
+        try {
+            commits = gitService.getAllCommits(url, repoName, branches.getShortName(), user, token);
+        } catch (GitAPIException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorMessage(
+                            HttpStatus.UNAUTHORIZED.value(),
+                            new Date(),
+                            "Cannot fetch repo branches: " + url,
+                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
+                    ));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         RepoInfoResponse response = new RepoInfoResponse(branches, commits);
         return ResponseEntity
                 .status(HttpStatus.OK)
