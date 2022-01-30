@@ -7,6 +7,7 @@ import com.example.githubservice.dto.BranchesResponse;
 import com.example.githubservice.dto.CommitResponse;
 import com.example.githubservice.utils.DeleteFileVisitor;
 import com.example.githubservice.utils.DirectoryUtils;
+import com.example.githubservice.utils.ZipUtils;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -17,6 +18,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,9 @@ import static com.example.githubservice.helper.GitRepoHelper.visitCommits;
 
 @Service
 public class GitService {
+
+    @Autowired
+    ZipUtils zipUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(GitService.class);
 
@@ -47,6 +52,7 @@ public class GitService {
                 .call();
         git.getRepository().close();
         logger.info("Done cloning repository: {}", repoName);
+        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
         return pathToSaved;
     }
 
@@ -65,6 +71,7 @@ public class GitService {
                 .call();
         git.getRepository().close();
         logger.info("Done cloning repository {} in branch {}", repoName, branchName);
+        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
         return pathToSaved;
     }
 
@@ -85,9 +92,9 @@ public class GitService {
                 .setName(commitSha);
 
         Ref ref = checkoutCommand.call();
-
         clonedRepo.getRepository().close();
         logger.info("Done cloning repository {} with commit {}", repoName, commitSha);
+        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
         return pathToSaved;
 
     }
