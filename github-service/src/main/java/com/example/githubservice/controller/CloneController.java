@@ -10,6 +10,7 @@ import com.example.githubservice.service.VersionCompare;
 import mrmathami.cia.java.JavaCiaException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.lib.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,10 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "anonymous") String user) {
         String repoName = Arrays
                 .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
+                .filter(name -> name.endsWith(Constants.DOT_GIT))
                 .collect(Collectors.toList())
                 .get(0)
-                .replace(".git", "");
+                .replace(Constants.DOT_GIT, "");
         try {
             String path = gitService.cloneRepo(url, repoName, user, token);
             return ResponseEntity.ok(new CloneRepoPath(path));
@@ -90,10 +91,10 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "anonymous") String user) {
         String repoName = Arrays
                 .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
+                .filter(name -> name.endsWith(Constants.DOT_GIT))
                 .collect(Collectors.toList())
                 .get(0)
-                .replace(".git", "");
+                .replace(Constants.DOT_GIT, "");
         try {
             String path = gitService.cloneRepoByBranchName(url, repoName, branch, user, token);
             return ResponseEntity.ok(new CloneRepoPath(path));
@@ -131,10 +132,10 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "anonymous") String user) {
         String repoName = Arrays
                 .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
+                .filter(name -> name.endsWith(Constants.DOT_GIT))
                 .collect(Collectors.toList())
                 .get(0)
-                .replace(".git", "");
+                .replace(Constants.DOT_GIT, "");
         try {
             String path = gitService.cloneRepoByCommit(url, repoName, commit, user, token);
             return ResponseEntity.ok(new CloneRepoPath(path));
@@ -175,10 +176,10 @@ public class CloneController {
     ) {
         String repoName = Arrays
                 .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
+                .filter(name -> name.endsWith(Constants.DOT_GIT))
                 .collect(Collectors.toList())
                 .get(0)
-                .replace(".git", "");
+                .replace(Constants.DOT_GIT, "");
         try {
             Clone2RepoResponse res = gitService.clone2RepoByBranch(url, repoName, branch1, branch2, user, token);
             if(compare == false)
@@ -230,10 +231,10 @@ public class CloneController {
     ) {
         String repoName = Arrays
                 .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
+                .filter(name -> name.endsWith(Constants.DOT_GIT))
                 .collect(Collectors.toList())
                 .get(0)
-                .replace(".git", "");
+                .replace(Constants.DOT_GIT, "");
         try {
             Clone2RepoResponse res = gitService.clone2RepoByCommits(url, repoName, commit1, commit2, user, token);
             if(compare == false)

@@ -19,7 +19,8 @@ public class ZipUtils {
 
     @Async
     public void pack(String sourceDirPath, String zipFilePath) throws IOException {
-        log.info("Zipping folder {} into {} zip file", sourceDirPath, zipFilePath);
+        log.info("Zipping folder {} into {}", sourceDirPath, zipFilePath);
+        DirectoryUtils.deleteDir(new File(zipFilePath));
         Path p = Files.createFile(Paths.get(zipFilePath));
         Path pp = Paths.get(sourceDirPath);
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p));
@@ -37,6 +38,7 @@ public class ZipUtils {
                             }
                         });
         }
+        log.info("Done zipping folder {}", sourceDirPath);
     }
 
 }

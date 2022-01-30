@@ -108,7 +108,7 @@ public class GitService {
     public Clone2RepoResponse clone2RepoByCommits
             (String url, String repo,
              String commitSha1, String commitSha2,
-            String username, String pat) throws GitAPIException, IOException {
+             String username, String pat) throws GitAPIException, IOException {
         logger.info("Cloning repo with 2 commits: {}, {}", commitSha1, commitSha2);
         String path1 = cloneRepoByCommit(url, repo, commitSha1, username, pat);
         String path2 = cloneRepoByCommit(url, repo, commitSha2, username, pat);
@@ -150,7 +150,10 @@ public class GitService {
         for(String branch : branches) {
             commitSet.addAll(getAllCommitsInBranch(url, repoName, branch, user, token));
         }
-        return commitSet.stream().collect(Collectors.toList());
+        return commitSet
+                .stream()
+                .sorted(Comparator.comparing(CommitResponse::getTime))
+                .collect(Collectors.toList());
     }
 
 }
