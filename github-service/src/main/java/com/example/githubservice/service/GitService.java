@@ -1,22 +1,20 @@
 package com.example.githubservice.service;
 
-import com.example.githubservice.controller.Config;
 import com.example.githubservice.dto.Clone2RepoResponse;
-import com.example.githubservice.payload.CloneRepoRequest;
 import com.example.githubservice.dto.BranchesResponse;
 import com.example.githubservice.dto.CommitResponse;
 import com.example.githubservice.utils.DeleteFileVisitor;
 import com.example.githubservice.utils.DirectoryUtils;
+import com.example.githubservice.utils.ZipUtils;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -24,17 +22,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.githubservice.helper.GitRepoHelper.visitCommits;
 
 @Service
 public class GitService {
 
+    @Autowired
+    ZipUtils zipUtils;
+
     private static final Logger logger = LoggerFactory.getLogger(GitService.class);
 
     public String cloneRepo(String url, String repoName, String username, String pat) throws GitAPIException, IOException {
         logger.info("Cloning repository: {}", repoName);
-        String pathToSaved = "./project/anonymous/" + repoName;
+        String pathToSaved = "./project/" + username + "/" + repoName;
 
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
@@ -46,6 +48,7 @@ public class GitService {
                 .call();
         git.getRepository().close();
         logger.info("Done cloning repository: {}", repoName);
+        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
         return pathToSaved;
     }
 
@@ -64,6 +67,7 @@ public class GitService {
                 .call();
         git.getRepository().close();
         logger.info("Done cloning repository {} in branch {}", repoName, branchName);
+        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
         return pathToSaved;
     }
 
@@ -84,9 +88,9 @@ public class GitService {
                 .setName(commitSha);
 
         Ref ref = checkoutCommand.call();
-
         clonedRepo.getRepository().close();
         logger.info("Done cloning repository {} with commit {}", repoName, commitSha);
+        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
         return pathToSaved;
 
     }
@@ -112,61 +116,41 @@ public class GitService {
         return new Clone2RepoResponse(path1, path2);
     }
 
-    public BranchesResponse fetchGitBranches(String gitUrl, String username, String pat)
-    {
+    public BranchesResponse fetchGitBranches(String gitUrl, String username, String pat) throws GitAPIException {
         logger.info("Fetching repo branches...");
         Collection<Ref> refs;
         BranchesResponse response = new BranchesResponse();
-        try {
-            refs = Git.lsRemoteRepository()
-                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
-                    .setHeads(true)
-                    .setRemote(gitUrl)
-                    .call();
-            List<String> shortName = new ArrayList<>();
-            List<String> fullName = new ArrayList<>();
-            for (Ref ref : refs) {
-                fullName.add(ref.getName());
-                shortName.add(ref.getName().substring(ref.getName().lastIndexOf("/")+1, ref.getName().length()));
-            }
-            Collections.sort(shortName);
-            Collections.sort(fullName);
-            response.setFullName(fullName);
-            response.setShortName(shortName);
-        } catch (InvalidRemoteException e) {
-            logger.error(" InvalidRemoteException occurred in fetchGitBranches", e);
-            e.printStackTrace();
-        } catch (TransportException e) {
-            logger.error(" TransportException occurred in fetchGitBranches", e);
-        } catch (GitAPIException e) {
-            logger.error(" GitAPIException occurred in fetchGitBranches", e);
+        refs = Git.lsRemoteRepository()
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+                .setHeads(true)
+                .setRemote(gitUrl)
+                .call();
+        List<String> shortName = new ArrayList<>();
+        List<String> fullName = new ArrayList<>();
+        for (Ref ref : refs) {
+            fullName.add(ref.getName());
+            shortName.add(ref.getName().substring(ref.getName().lastIndexOf("/")+1, ref.getName().length()));
         }
+        Collections.sort(shortName);
+        Collections.sort(fullName);
+        response.setFullName(fullName);
+        response.setShortName(shortName);
         logger.info("Fetching branches done!");
         return response;
     }
 
-    public List<CommitResponse> getAllCommits(CloneRepoRequest request) {
-        logger.info("Fetching repo commits...");
-        if(Config.pathMap.get(request.hashCode()) == null) {
-            try {
-                String path = cloneRepo(
-                        request.getUrl(), request.getRepo(),
-                        request.getUsername(), request.getPat());
-                Config.pathMap.put(request.hashCode(), path);
-                List<CommitResponse> responses = visitCommits(path);
-                return responses;
-            } catch (GitAPIException e) {
-                logger.error(" GitAPIException occurred in fetchGitBranches", e);
-            } catch (IOException e) {
-                logger.error(" IOException occurred in fetchGitBranches", e);
-            }
-        } else {
-            String path = Config.pathMap.get(request.hashCode());
-            List<CommitResponse> responses = visitCommits(path);
-            return responses;
+    public List<CommitResponse> getAllCommitsInBranch(String url, String repoName, String branch, String user, String token) throws GitAPIException, IOException {
+        String path = cloneRepoByBranchName(url, repoName, branch, user, token);
+        List<CommitResponse> responses = visitCommits(path);
+        return responses;
+    }
+
+    public List<CommitResponse> getAllCommits(String url, String repoName, List<String> branches, String user, String token) throws GitAPIException, IOException {
+        Set<CommitResponse> commitSet = new HashSet<>();
+        for(String branch : branches) {
+            commitSet.addAll(getAllCommitsInBranch(url, repoName, branch, user, token));
         }
-        logger.info("Fetching commits done!");
-        return new ArrayList<>();
+        return commitSet.stream().collect(Collectors.toList());
     }
 
 }
