@@ -62,7 +62,7 @@ public class RepositoryController {
     @PostMapping("/repo/commits")
     public ResponseEntity<?> getRepoCommits(
             @RequestParam String url,
-            @RequestParam(required = false, defaultValue = "master") String branch,
+            @RequestParam String branch,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false, defaultValue = "") String token
     ) {
