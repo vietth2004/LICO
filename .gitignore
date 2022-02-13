@@ -36,3 +36,6 @@ storage
 *.log
 /logs
 /logs/
+logs/cia-service.log
+logs/discovery-server.log
+*.log
