@@ -208,7 +208,6 @@ public class Utility {
 
         for(AbstractNode node : nodes) {
             mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable dependencyCountTable = (mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable) Dependencies.get(node);
-//            System.out.println(dependencyCountTable.getCount(JavaDependency.USE));
         }
     }
 }

@@ -13,7 +13,7 @@ public class Token {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "uid", unique = true)
+    @JoinColumn(name = "uid")
     private User user;
 
     private String description = new String();
