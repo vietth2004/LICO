@@ -9,16 +9,18 @@ import javax.persistence.*;
 public class Account {
 
     @Id
-    @Column(name = "id")
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "uid")
+    @JoinColumn(name = "uid", unique = true)
     private User user;
 
+    @Column(name = "username", unique = true)
     private String username = new String();
 
+    @Column(name = "password")
     private String password = new String();
 
     public String getUsername() {
@@ -37,11 +39,11 @@ public class Account {
         this.password = password;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public String getUser() {
+    public Integer getUser() {
         return user.getId();
     }
 
@@ -49,10 +51,12 @@ public class Account {
         this.user = user;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     public Account() {
     }
+
+
 }

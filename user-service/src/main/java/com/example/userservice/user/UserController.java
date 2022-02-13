@@ -60,13 +60,15 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
+
         if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {
             return ResponseEntity.ok(new AuthenticationResponse("Username is already used!"));
         }
 
         try {
             //Create and Save User
-            User tempUser = new User(user);
+
+            User tempUser = new User(user.getId(), user.getName(), user.getMail());
             userRepository.save(tempUser);
 
             //Create and Save Account
@@ -75,8 +77,10 @@ public class UserController {
 
             return ResponseEntity.ok(new AuthenticationResponse("Registered", user.getAccount().getUsername(), tempUser.getId()));
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.ok(new AuthenticationResponse("Email or username or name is already use", "none", "0"));
-        } catch (Exception e) {
+
+            return ResponseEntity.ok(new AuthenticationResponse("Email or username or name is already use", "none", 0));
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok(new AuthenticationResponse("Sum Ting Wong!"));
         }
@@ -89,21 +93,5 @@ public class UserController {
         return userRepository.findByID(user.getId());
     }
 
-
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(@RequestBody User user) {
-//        System.out.println(user.getAccount().getId());
-//        if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {
-//            return ResponseEntity.ok(new AuthenticationResponse("Username is already used!"));
-//        } else {
-//            try {
-//                userRepository.save(user);
-//                return ResponseEntity.ok(new AuthenticationResponse("Registered", user.getAccount().getUsername()));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return ResponseEntity.ok(new AuthenticationResponse("Mail is already use!"));
-//            }
-//        }
-//    }
     
 }

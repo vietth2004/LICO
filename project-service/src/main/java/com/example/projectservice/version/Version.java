@@ -3,15 +3,18 @@ package com.example.projectservice.version;
 
 import com.example.projectservice.model.NamedEntity;
 import com.example.projectservice.project.Project;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-@Table(name = "version")
+@Table(name = "version",
+uniqueConstraints = @UniqueConstraint(columnNames = {"name", "pid"}))
 public class Version extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "pid", referencedColumnName = "id")
     private Project project;
 
     @Column(name = "path")
@@ -20,10 +23,13 @@ public class Version extends NamedEntity {
     @Column(name = "file")
     private String file = new String();
 
+    @Column(name = "date")
+    private Date uploadDate = new Date();
+
     public Version() {
     }
 
-    public Version(String id, String name, String path) {
+    public Version(Integer id, String name, String path) {
         super(id, name);
         this.path = path;
     }
@@ -36,7 +42,7 @@ public class Version extends NamedEntity {
         this.path = path;
     }
 
-    public String getProject() {
+    public Integer getProject() {
         return project.getId();
     }
 
@@ -50,5 +56,13 @@ public class Version extends NamedEntity {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date date) {
+        this.uploadDate = date;
     }
 }
