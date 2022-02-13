@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +43,7 @@ public class CloneController {
      * @return path where to save repo
      * @RequestParam(required = true) String url, @RequestParam(required = false, defaultValue = "") String pat
      */
-    @PostMapping("/repo/clone")
+    @GetMapping("/repo/clone")
     public ResponseEntity<?> cloneRepo(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "") String token,
@@ -83,7 +83,7 @@ public class CloneController {
      * Clone repo by branch
      * @return path where to save repo
      */
-    @PostMapping("/repo/clone/byBranch")
+    @GetMapping("/repo/clone/byBranch")
     public ResponseEntity<?> cloneRepoByBranch(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "master") String branch,
@@ -124,7 +124,7 @@ public class CloneController {
      * Clone repo by commit
      * @return path where to save repo
      */
-    @PostMapping("/repo/clone/byCommit")
+    @GetMapping("/repo/clone/byCommit")
     public ResponseEntity<?> cloneRepoByCommit(
             @RequestParam String url,
             @RequestParam String commit,
@@ -165,7 +165,7 @@ public class CloneController {
      * Clone 2 repo by branch name
      * @return path where to save those repos
      */
-    @PostMapping("/repos/clone/byBranch")
+    @GetMapping("/repos/clone/byBranch")
     public ResponseEntity<?> clone2RepoByBranch(
             @RequestParam String url,
             @RequestParam String branch1,
@@ -220,7 +220,7 @@ public class CloneController {
                 ));
     }
 
-    @PostMapping("/repos/clone/byCommit")
+    @GetMapping("/repos/clone/byCommit")
     public ResponseEntity<?> clone2RepoByCommit(
             @RequestParam String url,
             @RequestParam String commit1,

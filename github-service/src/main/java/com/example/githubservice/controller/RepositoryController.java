@@ -28,7 +28,7 @@ public class RepositoryController {
     @Autowired
     private GitService gitService;
 
-    @PostMapping("/repo/branches")
+    @GetMapping("/repo/branches")
     public ResponseEntity<?> getRepoBranches(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
@@ -59,7 +59,7 @@ public class RepositoryController {
                 .body(branches);
     }
 
-    @PostMapping("/repo/commits")
+    @GetMapping("/repo/commits")
     public ResponseEntity<?> getRepoCommits(
             @RequestParam String url,
             @RequestParam String branch,
@@ -94,7 +94,7 @@ public class RepositoryController {
         return null;
     }
 
-    @PostMapping("/repo/info")
+    @GetMapping("/repo/info")
     public ResponseEntity<?> getRepoInfo(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
