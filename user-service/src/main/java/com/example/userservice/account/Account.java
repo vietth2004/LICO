@@ -10,6 +10,7 @@ public class Account {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @OneToOne

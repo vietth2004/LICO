@@ -1,13 +1,13 @@
 package com.example.userservice.model;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class NamedEntity {
+public abstract class NamedEntity implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name="name")

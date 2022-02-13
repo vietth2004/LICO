@@ -9,6 +9,7 @@ import com.example.userservice.security.utils.JwtUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,11 +63,22 @@ public class UserController {
         if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {
             return ResponseEntity.ok(new AuthenticationResponse("Username is already used!"));
         }
+
         try {
-            userRepository.save(user);
-            return ResponseEntity.ok(new AuthenticationResponse("Registered", user.getAccount().getUsername()));
+            //Create and Save User
+            User tempUser = new User(user);
+            userRepository.save(tempUser);
+
+            //Create and Save Account
+            user.getAccount().setUser(userRepository.findByID(tempUser.getId()));
+            accountRepository.save(user.getAccount());
+
+            return ResponseEntity.ok(new AuthenticationResponse("Registered", user.getAccount().getUsername(), tempUser.getId()));
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.ok(new AuthenticationResponse("Email or username or name is already use", "none", "0"));
         } catch (Exception e) {
-            return ResponseEntity.ok(new AuthenticationResponse("Mail is already use!"));
+            e.printStackTrace();
+            return ResponseEntity.ok(new AuthenticationResponse("Sum Ting Wong!"));
         }
     }
 
