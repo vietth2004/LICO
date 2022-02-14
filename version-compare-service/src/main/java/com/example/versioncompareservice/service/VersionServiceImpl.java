@@ -56,6 +56,7 @@ public class VersionServiceImpl implements VersionService{
 
     @Override
     public Response getCompare(List<MultipartFile> files, String user, String project) throws JavaCiaException, IOException {
+        //Create Version
         Version version = new Version();
         String userPath = user;
 
@@ -85,10 +86,6 @@ public class VersionServiceImpl implements VersionService{
         final Path inputPathB = Path.of(files.getNewVersion());
         final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
         Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
-
-//        System.out.println(inputSourcesA.getPath().toString());
-//        System.out.println(inputSourcesB.getPath().toString());
-//        System.out.println();
 
         //Compare two version
         final JavaProjectSnapshot projectSnapshotA = ProjectBuilder.createProjectSnapshot("JSON-java-before",
@@ -155,9 +152,9 @@ public class VersionServiceImpl implements VersionService{
 
         //add removed nodes
         for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
-            System.out.println(javaNode.getUniqueName());
-            System.out.println("Parent: " + javaNode.getParent().getUniqueName() + ": " + javaNode.getParent().getId());
-            System.out.println();
+//            System.out.println(javaNode.getUniqueName());
+//            System.out.println("Parent: " + javaNode.getParent().getUniqueName() + ": " + javaNode.getParent().getId());
+//            System.out.println();
             deletedNodes.add(new Pair<>(javaNode.getParent().getId(), new JavaNode(javaNode, "deleted")));
         }
 
