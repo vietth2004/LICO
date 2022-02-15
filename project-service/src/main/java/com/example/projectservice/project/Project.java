@@ -1,7 +1,7 @@
 package com.example.projectservice.project;
 
 
-import com.example.projectservice.model.NamedEntity;
+import com.example.projectservice.entity.NamedEntity;
 import com.example.projectservice.version.Version;
 
 import javax.persistence.*;

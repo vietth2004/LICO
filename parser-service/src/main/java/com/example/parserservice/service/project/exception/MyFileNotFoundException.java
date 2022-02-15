@@ -1,4 +1,4 @@
-package com.example.parserservice.download.exception;
+package com.example.parserservice.service.project.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

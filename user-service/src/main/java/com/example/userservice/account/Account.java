@@ -1,17 +1,14 @@
 package com.example.userservice.account;
 
+import com.example.userservice.entity.Entity;
 import com.example.userservice.user.User;
 
 import javax.persistence.*;
 
-@Entity
+
+@javax.persistence.Entity
 @Table(name = "account")
-public class Account {
-
-    @Id
-
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Account extends Entity {
 
     @OneToOne
     @JoinColumn(name = "uid", unique = true)
@@ -39,20 +36,12 @@ public class Account {
         this.password = password;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public Integer getUser() {
         return user.getId();
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Account() {

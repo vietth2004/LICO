@@ -1,5 +1,7 @@
-package com.example.projectservice.project;
+package com.example.projectservice.controller;
 
+import com.example.projectservice.project.Project;
+import com.example.projectservice.project.ProjectRepository;
 import com.example.projectservice.response.AuthenticationResponse;
 import com.example.projectservice.version.Version;
 import com.example.projectservice.version.VersionRepository;

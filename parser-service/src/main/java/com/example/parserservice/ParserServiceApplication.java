@@ -1,6 +1,6 @@
 package com.example.parserservice;
 
-import com.example.parserservice.download.config.FileStorageProperties;
+import com.example.parserservice.service.project.config.FileStorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

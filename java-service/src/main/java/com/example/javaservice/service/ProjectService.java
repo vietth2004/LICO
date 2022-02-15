@@ -1,7 +1,7 @@
 package com.example.javaservice.service;
 
-import com.example.javaservice.file.config.FileStorageProperties;
-import com.example.javaservice.file.exception.FileStorageException;
+import com.example.javaservice.project.config.FileStorageProperties;
+import com.example.javaservice.project.exception.FileStorageException;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;

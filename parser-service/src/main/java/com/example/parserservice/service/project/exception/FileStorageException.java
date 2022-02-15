@@ -1,4 +1,4 @@
-package com.example.javaservice.file.exception;
+package com.example.parserservice.service.project.exception;
 
 public class FileStorageException extends RuntimeException {
     public FileStorageException(String message) {

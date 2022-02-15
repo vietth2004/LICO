@@ -1,4 +1,4 @@
-package com.example.userservice.user;
+package com.example.userservice.controller;
 
 import com.example.userservice.account.Account;
 import com.example.userservice.account.AccountRepository;
@@ -6,6 +6,8 @@ import com.example.userservice.security.model.AuthenticationRequest;
 import com.example.userservice.security.model.AuthenticationResponse;
 import com.example.userservice.security.service.UserDetailService;
 import com.example.userservice.security.utils.JwtUtils;
+import com.example.userservice.user.User;
+import com.example.userservice.user.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

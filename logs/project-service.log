@@ -283,8 +283,8 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 18-01-2022 21:42:02.772 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.13 on ALEISTER with PID 5844 (F:\$Project$\JCIA-Microservices\project-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
 18-01-2022 21:42:02.775 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 18-01-2022 21:42:09.513 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 8.178 seconds (JVM running for 8.97)
-18-01-2022 21:49:35.179 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [chipset] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [chipset] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [chipset] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 21:49:35.179 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [chipset] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [chipset] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [chipset] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -292,7 +292,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllProjectByUser$98a5e910$1(ProjectController.java:38)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllProjectByUser$98a5e910$1(ProjectController.java:38)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -325,7 +325,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy107.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllProjectByUser(ProjectController.java:35)
+	at com.example.projectservice.controller.ProjectController.getAllProjectByUser(ProjectController.java:35)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -379,8 +379,8 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 18-01-2022 21:49:54.395 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.13 on ALEISTER with PID 23424 (F:\$Project$\JCIA-Microservices\project-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
 18-01-2022 21:49:54.397 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 18-01-2022 21:50:00.735 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 7.7 seconds (JVM running for 8.508)
-18-01-2022 21:52:29.485 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 21:52:29.485 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -388,7 +388,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:71)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:71)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -421,7 +421,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy110.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:65)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:65)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -564,7 +564,7 @@ java.sql.SQLSyntaxErrorException: Table 'micro_jcia_project.project' doesn't exi
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -712,7 +712,7 @@ java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child 
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -854,7 +854,7 @@ java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child 
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -995,7 +995,7 @@ java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child 
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1102,7 +1102,7 @@ java.lang.IllegalArgumentException: Parameter value [%5%] did not match expected
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllProjectByUser(ProjectController.java:35)
+	at com.example.projectservice.controller.ProjectController.getAllProjectByUser(ProjectController.java:35)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1159,8 +1159,8 @@ java.lang.IllegalArgumentException: Parameter value [%5%] did not match expected
 18-01-2022 22:11:55.339 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.13 on ALEISTER with PID 12948 (F:\$Project$\JCIA-Microservices\project-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
 18-01-2022 22:11:55.341 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 18-01-2022 22:12:01.494 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 7.547 seconds (JVM running for 8.387)
-18-01-2022 22:12:35.802 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 22:12:35.802 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -1168,7 +1168,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:71)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:71)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -1201,7 +1201,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:65)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:65)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1351,7 +1351,7 @@ org.hibernate.TransientPropertyValueException: object references an unsaved tran
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1402,8 +1402,8 @@ org.hibernate.TransientPropertyValueException: object references an unsaved tran
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:829)
-18-01-2022 22:33:30.604 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 22:33:30.604 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [project_id] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -1411,7 +1411,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:71)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:71)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -1444,7 +1444,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:65)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:65)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1601,7 +1601,7 @@ java.sql.SQLIntegrityConstraintViolationException: Column 'pid' cannot be null
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1746,7 +1746,7 @@ java.sql.SQLIntegrityConstraintViolationException: Column 'pid' cannot be null
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1891,7 +1891,7 @@ java.sql.SQLIntegrityConstraintViolationException: Column 'pid' cannot be null
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -2036,7 +2036,7 @@ java.sql.SQLIntegrityConstraintViolationException: Column 'pid' cannot be null
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy108.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveProject(ProjectController.java:55)
+	at com.example.projectservice.controller.ProjectController.saveProject(ProjectController.java:55)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -2158,7 +2158,7 @@ org.hibernate.PersistentObjectException: detached entity passed to persist: com.
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.save(Unknown Source)
-	at com.example.projectservice.project.ProjectController.saveVersion(ProjectController.java:91)
+	at com.example.projectservice.controller.ProjectController.saveVersion(ProjectController.java:91)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -2215,8 +2215,8 @@ org.hibernate.PersistentObjectException: detached entity passed to persist: com.
 18-01-2022 23:01:24.031 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.13 on ALEISTER with PID 6496 (F:\$Project$\JCIA-Microservices\project-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
 18-01-2022 23:01:24.033 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 18-01-2022 23:01:29.752 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 7.076 seconds (JVM running for 7.843)
-18-01-2022 23:01:32.512 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [ipd] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [ipd] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [ipd] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 23:01:32.512 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [ipd] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [ipd] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [ipd] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -2224,7 +2224,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:80)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:80)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -2257,7 +2257,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -2311,8 +2311,8 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 18-01-2022 23:01:50.849 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.13 on ALEISTER with PID 17344 (F:\$Project$\JCIA-Microservices\project-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
 18-01-2022 23:01:50.851 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 18-01-2022 23:01:56.524 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 6.994 seconds (JVM running for 7.68)
-18-01-2022 23:01:57.788 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 23:01:57.788 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -2320,7 +2320,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:80)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:80)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -2353,7 +2353,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -2407,8 +2407,8 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 18-01-2022 23:02:24.521 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.13 on ALEISTER with PID 23332 (F:\$Project$\JCIA-Microservices\project-service\target\classes started by amagg in F:\$Project$\JCIA-Microservices)
 18-01-2022 23:02:24.523 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 18-01-2022 23:02:30.274 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 7.083 seconds (JVM running for 7.779)
-18-01-2022 23:02:32.017 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.model.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.model.NamedEntity]] with root cause
-java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.model.NamedEntity]
+18-01-2022 23:02:32.017 ERROR o.a.c.c.C.[.[.[.[dispatcherServlet].log - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.entity.NamedEntity]; nested exception is java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.entity.NamedEntity]] with root cause
+java.lang.IllegalArgumentException: Unable to locate Attribute  with the the given name [pid] on this ManagedType [com.example.projectservice.entity.NamedEntity]
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.checkNotNull(AbstractManagedType.java:148)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:119)
 	at org.hibernate.metamodel.model.domain.internal.AbstractManagedType.getAttribute(AbstractManagedType.java:117)
@@ -2416,7 +2416,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.hibernate.query.criteria.internal.path.AbstractFromImpl.locateAttributeInternal(AbstractFromImpl.java:111)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.locateAttribute(AbstractPathImpl.java:204)
 	at org.hibernate.query.criteria.internal.path.AbstractPathImpl.get(AbstractPathImpl.java:177)
-	at com.example.projectservice.project.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:82)
+	at com.example.projectservice.controller.ProjectController.lambda$getAllVersionInProjectByUser$aee83b7a$1(ProjectController.java:82)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.applySpecificationToCriteria(SimpleJpaRepository.java:819)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:750)
 	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.getQuery(SimpleJpaRepository.java:708)
@@ -2449,7 +2449,7 @@ java.lang.IllegalArgumentException: Unable to locate Attribute  with the the giv
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -2559,7 +2559,7 @@ java.lang.IllegalArgumentException: Parameter value [3] did not match expected t
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:215)
 	at com.sun.proxy.$Proxy111.findAll(Unknown Source)
-	at com.example.projectservice.project.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
+	at com.example.projectservice.controller.ProjectController.getAllVersionInProjectByUser(ProjectController.java:74)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

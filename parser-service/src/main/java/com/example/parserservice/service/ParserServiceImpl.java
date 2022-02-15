@@ -1,7 +1,7 @@
 package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
-import com.example.parserservice.download.ProjectService;
+import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.util.JwtUtils;
