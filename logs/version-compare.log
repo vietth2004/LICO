@@ -1,3 +1,3 @@
-13-02-2022 16:02:49.937 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.11 on thdtt with PID 21132 (C:\Users\thanh\Documents\jcia\backend\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-13-02-2022 16:02:49.950 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-13-02-2022 16:02:57.651 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 9.689 seconds (JVM running for 13.986)
+15-02-2022 19:39:12.994 INFO  c.e.v.VersionCompareServiceApplication.logStarting - Starting VersionCompareServiceApplication using Java 11.0.11 on thdtt with PID 7872 (C:\Users\thanh\Documents\jcia\backend\version-compare-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
+15-02-2022 19:39:13.021 INFO  c.e.v.VersionCompareServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+15-02-2022 19:39:24.447 INFO  c.e.v.VersionCompareServiceApplication.logStarted - Started VersionCompareServiceApplication in 14.616 seconds (JVM running for 19.373)

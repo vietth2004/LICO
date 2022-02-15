@@ -1,3 +1,3 @@
-13-02-2022 16:02:40.320 INFO  c.e.s.SpringServiceApplication.logStarting - Starting SpringServiceApplication using Java 11.0.11 on thdtt with PID 19908 (C:\Users\thanh\Documents\jcia\backend\spring-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-13-02-2022 16:02:40.335 INFO  c.e.s.SpringServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-13-02-2022 16:02:51.267 INFO  c.e.s.SpringServiceApplication.logStarted - Started SpringServiceApplication in 12.743 seconds (JVM running for 17.596)
+15-02-2022 19:38:37.938 INFO  c.e.s.SpringServiceApplication.logStarting - Starting SpringServiceApplication using Java 11.0.11 on thdtt with PID 14960 (C:\Users\thanh\Documents\jcia\backend\spring-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
+15-02-2022 19:38:37.949 INFO  c.e.s.SpringServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+15-02-2022 19:38:52.405 INFO  c.e.s.SpringServiceApplication.logStarted - Started SpringServiceApplication in 16.351 seconds (JVM running for 19.999)
