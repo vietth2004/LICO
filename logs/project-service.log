@@ -1,3 +1,0 @@
-15-02-2022 19:38:28.801 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.11 on thdtt with PID 16092 (C:\Users\thanh\Documents\jcia\backend\project-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-15-02-2022 19:38:28.816 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-15-02-2022 19:38:46.765 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 19.73 seconds (JVM running for 23.853)

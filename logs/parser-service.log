@@ -1,3 +1,0 @@
-15-02-2022 19:38:20.199 INFO  c.e.p.ParserServiceApplication.logStarting - Starting ParserServiceApplication using Java 11.0.11 on thdtt with PID 9648 (C:\Users\thanh\Documents\jcia\backend\parser-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-15-02-2022 19:38:20.211 INFO  c.e.p.ParserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-15-02-2022 19:38:30.025 INFO  c.e.p.ParserServiceApplication.logStarted - Started ParserServiceApplication in 11.736 seconds (JVM running for 16.62)

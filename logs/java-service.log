@@ -1,3 +1,0 @@
-15-02-2022 19:39:32.907 INFO  c.e.j.JavaServiceApplication.logStarting - Starting JavaServiceApplication using Java 11.0.11 on thdtt with PID 8528 (C:\Users\thanh\Documents\jcia\backend\java-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-15-02-2022 19:39:32.922 INFO  c.e.j.JavaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-15-02-2022 19:39:40.326 INFO  c.e.j.JavaServiceApplication.logStarted - Started JavaServiceApplication in 9.26 seconds (JVM running for 13.317)
