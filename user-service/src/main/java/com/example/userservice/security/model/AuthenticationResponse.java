@@ -5,10 +5,10 @@ public class AuthenticationResponse {
 
     private final String jwt;
     private String username;
-    private String id;
+    private Integer id;
     private Boolean success;
 
-    public AuthenticationResponse(String jwt, String username, String id) {
+    public AuthenticationResponse(String jwt, String username, Integer id) {
         this.jwt = jwt;
         this.username = username;
         this.id = id;
@@ -30,11 +30,11 @@ public class AuthenticationResponse {
         return jwt;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
