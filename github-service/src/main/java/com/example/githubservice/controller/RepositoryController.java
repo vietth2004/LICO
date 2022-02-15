@@ -28,7 +28,7 @@ public class RepositoryController {
     @Autowired
     private GitService gitService;
 
-    @PostMapping("/repo/branches")
+    @GetMapping("/repo/branches")
     public ResponseEntity<?> getRepoBranches(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
@@ -59,10 +59,10 @@ public class RepositoryController {
                 .body(branches);
     }
 
-    @PostMapping("/repo/commits")
+    @GetMapping("/repo/commits")
     public ResponseEntity<?> getRepoCommits(
             @RequestParam String url,
-            @RequestParam(required = false, defaultValue = "master") String branch,
+            @RequestParam String branch,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false, defaultValue = "") String token
     ) {
@@ -94,7 +94,7 @@ public class RepositoryController {
         return null;
     }
 
-    @PostMapping("/repo/info")
+    @GetMapping("/repo/info")
     public ResponseEntity<?> getRepoInfo(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
@@ -135,6 +135,11 @@ public class RepositoryController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
+    }
+
+    @GetMapping("/repo/isGit")
+    public ResponseEntity checkIfGitRepo(@RequestParam String path) {
+        return ResponseEntity.ok(gitService.isGitRepo(path));
     }
 
 }

@@ -1,9 +1,11 @@
 package com.example.userservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+
 
 @MappedSuperclass
-public abstract class NamedEntity {
+public abstract class NamedEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

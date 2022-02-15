@@ -11,6 +11,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +109,7 @@ public class GitService {
     public Clone2RepoResponse clone2RepoByCommits
             (String url, String repo,
              String commitSha1, String commitSha2,
-            String username, String pat) throws GitAPIException, IOException {
+             String username, String pat) throws GitAPIException, IOException {
         logger.info("Cloning repo with 2 commits: {}, {}", commitSha1, commitSha2);
         String path1 = cloneRepoByCommit(url, repo, commitSha1, username, pat);
         String path2 = cloneRepoByCommit(url, repo, commitSha2, username, pat);
@@ -150,7 +151,25 @@ public class GitService {
         for(String branch : branches) {
             commitSet.addAll(getAllCommitsInBranch(url, repoName, branch, user, token));
         }
-        return commitSet.stream().collect(Collectors.toList());
+        return commitSet
+                .stream()
+                .sorted(Comparator.comparing(CommitResponse::getTime))
+                .collect(Collectors.toList());
+    }
+
+    public boolean isGitRepo(String path) {
+        try {
+            Git git = Git.open(new File(path));
+            Repository repo = git.getRepository();
+            for (Ref ref : repo.getAllRefs().values()) {
+                if (ref.getObjectId() == null)
+                    continue;
+                return true;
+            }
+            return false;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
 }

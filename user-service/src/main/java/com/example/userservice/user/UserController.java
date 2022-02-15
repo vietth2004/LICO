@@ -67,6 +67,7 @@ public class UserController {
 
         try {
             //Create and Save User
+
             User tempUser = new User(user.getId(), user.getName(), user.getMail());
             userRepository.save(tempUser);
 
@@ -76,6 +77,7 @@ public class UserController {
 
             return ResponseEntity.ok(new AuthenticationResponse("Registered", user.getAccount().getUsername(), tempUser.getId()));
         } catch (DataIntegrityViolationException e) {
+
             return ResponseEntity.ok(new AuthenticationResponse("Email or username or name is already use", "none", 0));
         }
         catch (Exception e) {
