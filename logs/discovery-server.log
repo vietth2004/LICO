@@ -1,14 +1,42 @@
-13-02-2022 16:00:40.895 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-13-02-2022 16:00:57.557 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 21.136 seconds (JVM running for 25.999)
-18-01-2022 14:27:39.623 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-18-01-2022 14:27:44.165 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 7.122 seconds (JVM running for 8.111)
-18-01-2022 15:02:38.801 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-18-01-2022 15:02:43.237 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 7.008 seconds (JVM running for 7.96)
-18-01-2022 15:12:34.235 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-18-01-2022 15:12:38.869 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 7.208 seconds (JVM running for 8.401)
-18-01-2022 15:54:31.147 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-18-01-2022 15:54:35.487 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 6.959 seconds (JVM running for 7.759)
-18-01-2022 21:41:52.424 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-18-01-2022 21:41:57.196 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 7.426 seconds (JVM running for 8.385)
-30-01-2022 14:58:14.209 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-30-01-2022 14:58:24.397 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 12.36 seconds (JVM running for 15.288)
+16-02-2022 09:29:25.143 ERROR c.n.e.c.ReplicationTaskProcessor.process - It seems to be a socket read timeout exception, it will retry later. if it continues to happen and some eureka node occupied all the cpu time, you should set property 'eureka.server.peer-node-read-timeout-ms' to a bigger value
+com.sun.jersey.api.client.ClientHandlerException: java.net.SocketTimeoutException: Read timed out
+	at com.sun.jersey.client.apache4.ApacheHttpClient4Handler.handle(ApacheHttpClient4Handler.java:187)
+	at com.netflix.eureka.cluster.DynamicGZIPContentEncodingFilter.handle(DynamicGZIPContentEncodingFilter.java:48)
+	at com.netflix.discovery.EurekaIdentityHeaderFilter.handle(EurekaIdentityHeaderFilter.java:27)
+	at com.sun.jersey.api.client.Client.handle(Client.java:652)
+	at com.sun.jersey.api.client.WebResource.handle(WebResource.java:682)
+	at com.sun.jersey.api.client.WebResource.access$200(WebResource.java:74)
+	at com.sun.jersey.api.client.WebResource$Builder.post(WebResource.java:570)
+	at com.netflix.eureka.transport.JerseyReplicationClient.submitBatchUpdates(JerseyReplicationClient.java:116)
+	at com.netflix.eureka.cluster.ReplicationTaskProcessor.process(ReplicationTaskProcessor.java:80)
+	at com.netflix.eureka.util.batcher.TaskExecutors$BatchWorkerRunnable.run(TaskExecutors.java:193)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.base/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at org.apache.http.impl.io.AbstractSessionInputBuffer.fillBuffer(AbstractSessionInputBuffer.java:161)
+	at org.apache.http.impl.io.SocketInputBuffer.fillBuffer(SocketInputBuffer.java:82)
+	at org.apache.http.impl.io.AbstractSessionInputBuffer.readLine(AbstractSessionInputBuffer.java:278)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:138)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56)
+	at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259)
+	at org.apache.http.impl.AbstractHttpClientConnection.receiveResponseHeader(AbstractHttpClientConnection.java:286)
+	at org.apache.http.impl.conn.DefaultClientConnection.receiveResponseHeader(DefaultClientConnection.java:257)
+	at org.apache.http.impl.conn.AbstractClientConnAdapter.receiveResponseHeader(AbstractClientConnAdapter.java:230)
+	at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273)
+	at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125)
+	at org.apache.http.impl.client.DefaultRequestDirector.tryExecute(DefaultRequestDirector.java:684)
+	at org.apache.http.impl.client.DefaultRequestDirector.execute(DefaultRequestDirector.java:486)
+	at org.apache.http.impl.client.AbstractHttpClient.doExecute(AbstractHttpClient.java:835)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:118)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:56)
+	at com.sun.jersey.client.apache4.ApacheHttpClient4Handler.handle(ApacheHttpClient4Handler.java:173)
+	... 10 common frames omitted
+16-02-2022 18:09:35.703 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+16-02-2022 18:09:48.335 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 14.984 seconds (JVM running for 18.021)
+16-02-2022 20:23:40.432 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+16-02-2022 20:23:51.568 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 13.558 seconds (JVM running for 16.394)
+16-02-2022 20:36:39.481 INFO  c.e.d.DiscoveryServerApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+16-02-2022 20:36:53.599 INFO  c.e.d.DiscoveryServerApplication.logStarted - Started DiscoveryServerApplication in 16.684 seconds (JVM running for 19.469)
