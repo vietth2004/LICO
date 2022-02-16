@@ -11,3 +11,4 @@ call mvn verify -f .\utility-service\pom.xml
 call mvn verify -f .\version-compare-service\pom.xml
 call mvn verify -f .\jsf-service\pom.xml
 call mvn verify -f .\api-gateway\pom.xml
+call mvn verify -f .\strut-service\pom.xml

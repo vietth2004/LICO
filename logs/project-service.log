@@ -258,3 +258,6 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 16-02-2022 20:37:09.890 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.11 on thdtt with PID 15780 (C:\Users\thanh\Documents\jcia\backend\project-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
 16-02-2022 20:37:09.897 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 16-02-2022 20:37:25.646 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 17.466 seconds (JVM running for 20.903)
+16-02-2022 21:48:08.855 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.11 on thdtt with PID 12968 (C:\Users\thanh\Documents\jcia\backend\project-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
+16-02-2022 21:48:08.863 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+16-02-2022 21:48:23.587 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 16.243 seconds (JVM running for 19.27)

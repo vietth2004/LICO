@@ -59,4 +59,8 @@ public class HostIPConstants {
     public String getGithubServiceIp() {
         return eurekaClient.getApplication(GITHUB_SERVICE).getInstances().get(0).getIPAddr();
     }
+
+    public String getStrutServiceIp() {
+        return eurekaClient.getApplication(STRUT_SERVICE).getInstances().get(0).getIPAddr();
+    }
 }

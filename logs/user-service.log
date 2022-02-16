@@ -1540,3 +1540,5 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 	at java.base/java.lang.Thread.run(Thread.java:829)
 16-02-2022 20:37:26.365 INFO  c.e.u.UserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
 16-02-2022 20:37:49.772 INFO  c.e.u.UserServiceApplication.logStarted - Started UserServiceApplication in 26.446 seconds (JVM running for 30.77)
+16-02-2022 21:48:24.803 INFO  c.e.u.UserServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+16-02-2022 21:48:46.566 INFO  c.e.u.UserServiceApplication.logStarted - Started UserServiceApplication in 24.922 seconds (JVM running for 28.469)

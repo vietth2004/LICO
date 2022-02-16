@@ -34,7 +34,6 @@ public class RepositoryController {
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false, defaultValue = "") String token
     ) {
-        logger.info("/repo/branches");
         BranchesResponse branches = null;
         String repoName = Arrays
                 .stream(url.split("/"))

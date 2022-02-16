@@ -3,7 +3,6 @@ package com.example.strutservice.search;
 import com.example.strutservice.condition.ICondition;
 import com.example.strutservice.dom.Node;
 import com.example.strutservice.utils.Helper.FileHelper;
-import com.example.strutservice.utils.Log.ClientLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,8 +14,6 @@ import java.util.List;
  * Created by jcia on 23/03/2017.
  */
 public class NodeSearch {
-
-    private static final Logger logger = LogManager.getLogger(NodeSearch.class);
 
     public static List<Node> searchNode(Node n, ICondition condition, String relativePath) {
         List<Node> listNode = new ArrayList<>();
@@ -156,12 +153,8 @@ public class NodeSearch {
     public static void logWarn(List<Node> list) {
         if (list.size() > 1) {
             ArrayList<String> pathList = new ArrayList<>();
-            for (Node node : list) pathList.add(node.getRelativePath());
-            logger.warn(String.format(
-                    "There are more than one result of %s: %s", list.get(0).getName(), pathList));
-            logger.log(ClientLevel.C_ERROR, String.format(
-                    "Can not found [%s] due to many matching results [%s]",
-                    list.get(0).getName(), pathList));
+            for (Node node : list)
+                pathList.add(node.getRelativePath());
         }
     }
 }

@@ -11,3 +11,4 @@ call mvn -T 1C clean install compile package -f .\utility-service\pom.xml
 call mvn -T 1C clean install compile package -f .\version-compare-service\pom.xml
 call mvn -T 1C clean install compile package -f .\jsf-service\pom.xml
 call mvn -T 1C clean install compile package -f .\api-gateway\pom.xml
+call mvn -T 1C clean install compile package -f .\strut-service\pom.xml

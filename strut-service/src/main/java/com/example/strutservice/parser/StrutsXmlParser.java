@@ -12,9 +12,6 @@ import com.example.strutservice.search.NodeSearch;
 import com.example.strutservice.utils.Exception.JciaNotFoundException;
 import com.example.strutservice.utils.Helper.NodeHelper;
 import com.example.strutservice.utils.Helper.StrutsHelper;
-import com.example.strutservice.utils.Log.ClientLevel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +21,6 @@ import java.util.List;
  */
 public class StrutsXmlParser extends XmlFileParser {
 
-    private static final Logger logger = LogManager.getLogger(StrutsXmlParser.class);
     private StrutsConfigurationNode rootNode;
 
     public StrutsXmlParser() {
@@ -101,9 +97,7 @@ public class StrutsXmlParser extends XmlFileParser {
 
         XmlFileNode childXml = (XmlFileNode) NodeSearch.searchOneNode(root, new XmlFileNodeCondition(), relativePath);
         if (childXml == null) {
-            logger.error(String.format("Could not load struts configuration file [%s]", relativePath));
             //log for client
-            logger.log(ClientLevel.C_ERROR, String.format("Could not load struts configuration file [%s]", relativePath));
             return null;
         }
 

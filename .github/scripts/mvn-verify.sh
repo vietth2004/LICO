@@ -12,3 +12,4 @@ mvn verify -f ./utility-service/pom.xml -DskipTests
 mvn verify -f ./version-compare-service/pom.xml -DskipTests
 mvn verify -f ./jsf-service/pom.xml -DskipTests
 mvn verify -f ./api-gateway/pom.xml -DskipTests
+mvn verify -f ./strut-service/pom.xml -DskipTests

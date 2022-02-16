@@ -11,7 +11,6 @@ import com.example.strutservice.tiles.validator.StrutsTitlesPluginValidator;
 import com.example.strutservice.utils.Exception.JciaNotFoundException;
 import com.example.strutservice.utils.Exception.JciaNotSupportedException;
 import com.example.strutservice.utils.JciaData;
-import com.example.strutservice.utils.Log.ClientLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.Attribute;
@@ -24,8 +23,6 @@ import java.util.Map;
  * Created by cuong on 4/15/2017.
  */
 public class TilesAnalyzer extends BaseAnalyzer {
-
-    private static final Logger logger = LogManager.getLogger(TilesAnalyzer.class);
 
     private List<Node> jspFileNodes;
     private Map<String, TilesDefinition> defsMap;
@@ -41,7 +38,7 @@ public class TilesAnalyzer extends BaseAnalyzer {
     public Node analyzeDependencies(Node rootNode) {
 
         try {
-            logger.log(ClientLevel.CLIENT, "Start Analyzing Struts Tiles...");
+
 
             validator = new StrutsTitlesPluginValidator(webXmlNode);
             if (!validator.isSupported(rootNode)) {
@@ -60,14 +57,11 @@ public class TilesAnalyzer extends BaseAnalyzer {
             //!!!
             doAnalyzing();
 
-            logger.log(ClientLevel.CLIENT, "Done Analyzing Struts Tiles!");
+
         } catch (JciaNotSupportedException e) {
-            logger.error("Could not find any Struts Tiles Configuration in web.xml");
-            logger.log(ClientLevel.C_ERROR, "Could not find any Struts Tiles Configuration in web.xml");
-            logger.log(ClientLevel.C_ERROR, "Ignore Analyzing Struts Tiles Plugin");
+
         } catch (JciaNotFoundException e) {
-            logger.log(ClientLevel.C_ERROR, "Could not found tiles.xml");
-            logger.log(ClientLevel.C_ERROR, "Ignore Analyzing Struts Tiles Plugin");
+
         }
 
         return rootNode;
