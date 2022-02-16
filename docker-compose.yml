@@ -161,6 +161,22 @@ services:
     networks:
       - jcia-network
 
+  strut-service:
+    container_name: strut-service
+    build:
+      context: strut-service
+      dockerfile: Dockerfile
+    ports:
+      - "7005:7005"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
   cia-service:
     container_name: cia-service
     build:
