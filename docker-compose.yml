@@ -145,13 +145,29 @@ services:
     networks:
       - jcia-network
 
-  xml-service:
-    container_name: xml-service
+  jsf-service:
+    container_name: jsf-service
     build:
-      context: xml-service
+      context: jsf-service
       dockerfile: Dockerfile
     ports:
       - "7004:7004"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
+  strut-service:
+    container_name: strut-service
+    build:
+      context: strut-service
+      dockerfile: Dockerfile
+    ports:
+      - "7005:7005"
     environment:
       - EUREKA_SERVER=discovery-service
     depends_on:
@@ -209,10 +225,10 @@ services:
     networks:
       - jcia-network
 
-  github-service:
-    container_name: github-service
+  git-service:
+    container_name: git-service
     build:
-      context: github-service
+      context: git-service
       dockerfile: Dockerfile
     ports:
       - "8004:8004"
