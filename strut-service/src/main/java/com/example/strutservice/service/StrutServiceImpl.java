@@ -2,7 +2,9 @@ package com.example.strutservice.service;
 
 import com.example.strutservice.ast.dependency.Dependency;
 import com.example.strutservice.ast.node.JavaNode;
+import com.example.strutservice.dom.Jsp.JspFileNode;
 import com.example.strutservice.dom.Node;
+import com.example.strutservice.parser.StrutsJspParser;
 import com.example.strutservice.utils.Helper.FileHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,7 @@ import java.util.concurrent.Executors;
 public class StrutServiceImpl implements StrutService{
 
     private final ExecutorService THREADPOOL_FIXED_SIZE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private StrutsJspParser strutsJspParser = new StrutsJspParser();
 
     @Override
     public List<Node> parseProjectWithPath(String foldePath) throws IOException, ExecutionException, InterruptedException {
@@ -29,9 +32,18 @@ public class StrutServiceImpl implements StrutService{
         List<Node> xmlNodes = new ArrayList<>();
         Path path = Paths.get(foldePath);
         List<Path> paths = FileHelper.listFiles(path);
-        Set<File> subDirs = FileHelper.listAllSubDirs(new File(path.toString()));
+        List<Node> nodes = new ArrayList<>();
 
-        return null;
+        paths.forEach(p -> {
+            if(p.toString().endsWith(".jsp")) {
+                Node jspNode = new JspFileNode();
+                jspNode.setName(new File(p.toString()).getName());
+                jspNode.setAbsolutePath(p.toString());
+                nodes.add(strutsJspParser.parse(jspNode));
+            }
+        });
+
+        return nodes;
     }
 
     @Override

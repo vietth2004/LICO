@@ -36,3 +36,7 @@ storage
 *.log
 /logs
 /logs/
+
+#config file with db props
+user-service/src/main/resources/application.properties
+project-service/src/main/resources/application.properties

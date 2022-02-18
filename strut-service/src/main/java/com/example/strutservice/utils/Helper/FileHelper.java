@@ -81,4 +81,19 @@ public class FileHelper {
         return new String(Files.readAllBytes(Paths.get(path)), "UTF-8");
     }
 
+    public static ArrayList<String> getChildNames(String rootPath) {
+        ArrayList<String> childNames = new ArrayList<>();
+        File file = new File(rootPath);
+        String[] children = file.list();
+
+        if (children == null)
+            return childNames;
+
+        for (String child : children) {
+            childNames.add(child);
+        }
+        return childNames;
+
+    }
+
 }
