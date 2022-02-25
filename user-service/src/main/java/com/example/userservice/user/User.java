@@ -1,7 +1,7 @@
 package com.example.userservice.user;
 
 import com.example.userservice.account.Account;
-import com.example.userservice.model.NamedEntity;
+import com.example.userservice.entity.NamedEntity;
 import com.example.userservice.token.Token;
 
 import javax.persistence.*;

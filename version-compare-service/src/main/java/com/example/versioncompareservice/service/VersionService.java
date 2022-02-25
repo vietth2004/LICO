@@ -1,6 +1,5 @@
 package com.example.versioncompareservice.service;
 
-import com.example.versioncompareservice.ast.node.JavaNode;
 import com.example.versioncompareservice.model.Response;
 import com.example.versioncompareservice.model.Version;
 import mrmathami.cia.java.JavaCiaException;

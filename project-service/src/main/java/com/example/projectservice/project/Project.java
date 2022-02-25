@@ -1,7 +1,7 @@
 package com.example.projectservice.project;
 
 
-import com.example.projectservice.model.NamedEntity;
+import com.example.projectservice.entity.NamedEntity;
 import com.example.projectservice.version.Version;
 
 import javax.persistence.*;
@@ -16,6 +16,8 @@ public class Project extends NamedEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.EAGER)
     private List<Version> versionList = new ArrayList<>();
 
+    private Boolean gitProject = false;
+
     @Column(name = "user")
     private String user;
 
@@ -24,6 +26,13 @@ public class Project extends NamedEntity {
 
     public Project(Integer id, String name, String user) {
         super(id, name);
+        this.user = user;
+    }
+
+    public Project(Integer id, String name, List<Version> versionList, Boolean gitProject, String user) {
+        super(id, name);
+        this.versionList = versionList;
+        this.gitProject = gitProject;
         this.user = user;
     }
 
@@ -41,5 +50,13 @@ public class Project extends NamedEntity {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public Boolean getGitProject() {
+        return gitProject;
+    }
+
+    public void setGitProject(Boolean gitProject) {
+        this.gitProject = gitProject;
     }
 }

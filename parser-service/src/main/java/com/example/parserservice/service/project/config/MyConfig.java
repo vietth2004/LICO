@@ -1,4 +1,4 @@
-package com.example.parserservice.download.config;
+package com.example.parserservice.service.project.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

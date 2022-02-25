@@ -53,3 +53,17 @@ version-compare-service/logs/
 #config file with db props
 user-service/src/main/resources/application.properties
 project-service/src/main/resources/application.properties
+logs/api-gateway.log
+logs/cia-service.log
+logs/discovery-server.log
+logs/file-service.log
+logs/git-service.log
+logs/java-service.log
+logs/jsf-service.log
+logs/parser-service.log
+logs/project-service.log
+logs/spring-service.log
+logs/strut-service.log
+logs/utility-service.log
+logs/compare-service.log
+*.log
