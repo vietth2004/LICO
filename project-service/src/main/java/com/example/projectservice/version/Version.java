@@ -1,9 +1,8 @@
 package com.example.projectservice.version;
 
 
-import com.example.projectservice.model.NamedEntity;
+import com.example.projectservice.entity.NamedEntity;
 import com.example.projectservice.project.Project;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.Date;

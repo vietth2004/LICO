@@ -1,4 +1,4 @@
-package com.example.javaservice.file.config;
+package com.example.javaservice.project.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

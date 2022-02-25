@@ -1,15 +1,12 @@
-package com.example.userservice.model;
+package com.example.userservice.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 
 @MappedSuperclass
-public abstract class NamedEntity implements Serializable {
+public abstract class NamedEntity extends Entity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
     @Column(name="name", unique = true)
     private String name;
@@ -18,16 +15,8 @@ public abstract class NamedEntity implements Serializable {
     }
 
     public NamedEntity(Integer id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

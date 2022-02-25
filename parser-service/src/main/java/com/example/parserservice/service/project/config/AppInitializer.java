@@ -1,4 +1,4 @@
-package com.example.javaservice.file.config;
+package com.example.parserservice.service.project.config;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
