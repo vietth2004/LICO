@@ -1,6 +1,0 @@
-22-02-2022 20:34:27.026 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.11 on thdtt with PID 13544 (C:\Users\thanh\Documents\jcia\backend\project-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-22-02-2022 20:34:27.043 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-22-02-2022 20:34:51.215 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 27.266 seconds (JVM running for 32.982)
-25-02-2022 21:22:33.911 INFO  c.e.p.ProjectServiceApplication.logStarting - Starting ProjectServiceApplication using Java 11.0.11 on thdtt with PID 16956 (C:\Users\thanh\Documents\jcia\backend\project-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-25-02-2022 21:22:33.917 INFO  c.e.p.ProjectServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-25-02-2022 21:22:49.051 INFO  c.e.p.ProjectServiceApplication.logStarted - Started ProjectServiceApplication in 17.138 seconds (JVM running for 20.625)
