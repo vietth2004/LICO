@@ -27,10 +27,10 @@ public class StrutServiceImpl implements StrutService{
     private StrutsJspParser strutsJspParser = new StrutsJspParser();
 
     @Override
-    public List<Node> parseProjectWithPath(String foldePath) throws IOException, ExecutionException, InterruptedException {
+    public List<Node> parseProjectWithPath(String folderPath) throws IOException, ExecutionException, InterruptedException {
 
         List<Node> xmlNodes = new ArrayList<>();
-        Path path = Paths.get(foldePath);
+        Path path = Paths.get(folderPath);
         List<Path> paths = FileHelper.listFiles(path);
         List<Node> nodes = new ArrayList<>();
 
@@ -53,6 +53,15 @@ public class StrutServiceImpl implements StrutService{
 
     @Override
     public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException {
-        return null;
+        List<Dependency> dependencies = new ArrayList<>();
+        List<Dependency> strutActionDeps;
+        List<Dependency> strutDeps;
+        List<Dependency> strutInterceptorDeps;
+        List<Dependency> strutInterceptorStackDeps;
+        List<Dependency> strutJspDeps;
+        List<Dependency> strutPackageDeps;
+        List<Dependency> strutResultDeps;
+        List<Dependency> strutResultTypeDeps;
+        return dependencies;
     }
 }
