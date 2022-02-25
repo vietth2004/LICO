@@ -1,3 +1,0 @@
-13-02-2022 16:01:59.806 INFO  c.e.ciaservice.CiaServiceApplication.logStarting - Starting CiaServiceApplication using Java 11.0.11 on thdtt with PID 20640 (C:\Users\thanh\Documents\jcia\backend\cia-service\target\classes started by thanh in C:\Users\thanh\Documents\jcia\backend)
-13-02-2022 16:01:59.825 INFO  c.e.ciaservice.CiaServiceApplication.logStartupProfileInfo - No active profile set, falling back to default profiles: default
-13-02-2022 16:02:12.336 INFO  c.e.ciaservice.CiaServiceApplication.logStarted - Started CiaServiceApplication in 14.76 seconds (JVM running for 19.486)

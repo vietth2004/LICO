@@ -137,4 +137,9 @@ public class RepositoryController {
                 .body(response);
     }
 
+    @GetMapping("/repo/isGit")
+    public ResponseEntity checkIfGitRepo(@RequestParam String path) {
+        return ResponseEntity.ok(gitService.isGitRepo(path));
+    }
+
 }

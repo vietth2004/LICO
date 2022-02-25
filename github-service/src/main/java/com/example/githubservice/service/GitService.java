@@ -11,6 +11,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,6 +155,21 @@ public class GitService {
                 .stream()
                 .sorted(Comparator.comparing(CommitResponse::getTime))
                 .collect(Collectors.toList());
+    }
+
+    public boolean isGitRepo(String path) {
+        try {
+            Git git = Git.open(new File(path));
+            Repository repo = git.getRepository();
+            for (Ref ref : repo.getAllRefs().values()) {
+                if (ref.getObjectId() == null)
+                    continue;
+                return true;
+            }
+            return false;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
 }
