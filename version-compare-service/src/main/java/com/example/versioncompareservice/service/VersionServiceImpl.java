@@ -17,6 +17,7 @@ import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
 import mrmathami.cia.java.tree.node.JavaMethodNode;
+import mrmathami.cia.java.tree.type.JavaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -130,7 +131,15 @@ public class VersionServiceImpl implements VersionService{
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getUnchangedNodes()) {
             if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
-                if(!((JavaMethodNode) javaNode.getA()).getReturnType().equals(((JavaMethodNode) javaNode.getB()).getReturnType())) {
+                String oldNode = ((JavaMethodNode) javaNode.getA()).getReturnType().getDescription();
+                String newNode = ((JavaMethodNode) javaNode.getB()).getReturnType().getDescription();
+//
+//                System.out.println();
+//
+//                System.out.println(oldNode.toString());
+//                System.out.println(newNode.toString());
+
+                if(!oldNode.equals(newNode)) {
                     changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
                 }
             } else {
