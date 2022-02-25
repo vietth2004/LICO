@@ -28,10 +28,9 @@ public class ProjectController {
     }
 
     @GetMapping("/project/get")
-    public Page<Project> getAllProjectByUser(
-            @CookieValue(name = "user") String user,
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "id", required = false) String id,
+    public Page<Project> getAllProjectByUser(@CookieValue(name = "user") String user,
+                                             @RequestParam(name = "name", required = false) String name,
+                                             @RequestParam(name = "id", required = false) String id,
             Pageable pageable){
 
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
@@ -68,10 +67,9 @@ public class ProjectController {
     }
 
     @GetMapping("/version/get")
-    public Page<Version> getAllVersionInProjectByUser(
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "pid") Integer id,
-            Pageable pageable){
+    public Page<Version> getAllVersionInProjectByUser(@RequestParam(name = "name", required = false) String name,
+                                                      @RequestParam(name = "pid") Integer id,
+                                                      Pageable pageable){
 
         Page<Version> versionPage = versionRepository.findAll((Specification<Version>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
