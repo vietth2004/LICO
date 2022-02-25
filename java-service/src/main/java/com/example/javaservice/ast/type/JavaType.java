@@ -30,7 +30,7 @@ public class JavaType {
     public JavaType(AbstractType abstractType) {
         this.entityClass = abstractType.getEntityClass();
         this.idClass = abstractType.getIdClass();
-        this.id = abstractType.getId();
+//        this.id = abstractType.getId();
         this.describe = abstractType.getDescription();
 
         this.annotates = Utility.convertAnnotates(abstractType.getAnnotates());

@@ -1,5 +1,7 @@
 package com.example.strutservice.controller;
 
+import com.example.strutservice.ast.dependency.Dependency;
+import com.example.strutservice.ast.node.JavaNode;
 import com.example.strutservice.dom.Node;
 import com.example.strutservice.dto.Request;
 import com.example.strutservice.service.StrutService;
@@ -22,11 +24,14 @@ public class StrutController {
     @Autowired
     private StrutService strutService;
 
+    List<Node> strutNodes = new ArrayList<>();
+
     @PostMapping("/pathParse")
     public ResponseEntity pathParse(@RequestBody Request request) {
         List<Node> jspNodes = new ArrayList<>();
         try {
-            jspNodes.addAll(strutService.parseProjectWithPath(request.getPath()));
+            strutNodes = strutService.parseProjectWithPath(request.getPath());
+            jspNodes.addAll(strutNodes);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -38,8 +43,16 @@ public class StrutController {
     }
 
     @PostMapping("/dependency")
-    public ResponseEntity getDependency() {
-        return ResponseEntity.ok("pathParse");
+    public ResponseEntity getDependency(@RequestBody List<JavaNode> request) {
+        List<Dependency> dependencies = new ArrayList<>();
+        try {
+            dependencies.addAll(strutService.analyzeDependency(request, strutNodes));
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(dependencies);
     }
 
 }
