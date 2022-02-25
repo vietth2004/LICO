@@ -1,7 +1,7 @@
 call mvn verify -f .\discovery-server\pom.xml
 call mvn verify -f .\cia-service\pom.xml
 call mvn verify -f .\file-service\pom.xml
-call mvn verify -f .\github-service\pom.xml 
+call mvn verify -f .\git-service\pom.xml
 call mvn verify -f .\java-service\pom.xml
 call mvn verify -f .\parser-service\pom.xml 
 call mvn verify -f .\project-service\pom.xml
@@ -9,5 +9,6 @@ call mvn verify -f .\spring-service\pom.xml
 call mvn verify -f .\user-service\pom.xml
 call mvn verify -f .\utility-service\pom.xml
 call mvn verify -f .\version-compare-service\pom.xml
-call mvn verify -f .\xml-service\pom.xml
+call mvn verify -f .\jsf-service\pom.xml
 call mvn verify -f .\api-gateway\pom.xml
+call mvn verify -f .\strut-service\pom.xml

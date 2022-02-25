@@ -32,8 +32,10 @@ public class APIGatewayConfig {
                         .uri("http://localhost:8001/"))
                 .route("version-compare-service", rt -> rt.path("/api/version-compare-service/**")
                         .uri("http://localhost:6002/"))
-                .route("xml-service", rt -> rt.path("/api/xml-service/**")
+                .route("jsf-service", rt -> rt.path("/api/jsf-service/**")
                         .uri("http://localhost:7004/"))
+                .route("strut-service", rt -> rt.path("/api/strut-service/**")
+                        .uri("http://localhost:7005/"))
                 .build();
 
     }
