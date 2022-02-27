@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -60,7 +61,6 @@ public class GetCommitThread implements Callable {
     public String cloneRepoByBranchName(String url, String repoName, String branchName, String username, String pat) throws GitAPIException, IOException {
         log.info("Cloning repository {} in branch {}", repoName, branchName);
         String pathToSaved = "./project/anonymous/" + repoName + "-" + branchName;
-
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
 
@@ -72,7 +72,7 @@ public class GetCommitThread implements Callable {
                 .call();
         git.getRepository().close();
         log.info("Done cloning repository {} in branch {}", repoName, branchName);
-        pack(pathToSaved, pathToSaved + ".zip");
+        Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
     }
 
@@ -141,29 +141,6 @@ public class GetCommitThread implements Callable {
         }
         return commitResponses;
 
-    }
-
-    public void pack(String sourceDirPath, String zipFilePath) throws IOException {
-        log.info("Zipping folder {} into {}", sourceDirPath, zipFilePath);
-        DirectoryUtils.deleteDir(new File(zipFilePath));
-        Path p = Files.createFile(Paths.get(zipFilePath));
-        Path pp = Paths.get(sourceDirPath);
-        try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p));
-             Stream<Path> paths = Files.walk(pp)) {
-            paths
-                    .filter(path -> !Files.isDirectory(path))
-                    .forEach(path -> {
-                        ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
-                        try {
-                            zs.putNextEntry(zipEntry);
-                            Files.copy(path, zs);
-                            zs.closeEntry();
-                        } catch (IOException e) {
-                            System.err.println(e);
-                        }
-                    });
-        }
-        log.info("Done zipping folder {}", sourceDirPath);
     }
 
 }
