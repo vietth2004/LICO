@@ -11,6 +11,7 @@ import com.example.gitservice.utils.ZipUtils;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -42,8 +43,15 @@ public class GitService {
     private static final Logger logger = LoggerFactory.getLogger(GitService.class);
 
     public String cloneRepo(String url, String repoName, String username, String pat) throws GitAPIException, IOException {
+
         logger.info("Cloning repository: {}", repoName);
         String pathToSaved = "./project/" + username + "/" + repoName;
+
+        if(Files.exists(Path.of(pathToSaved))) {
+            if(isGitRepo(pathToSaved)) {
+                return updateCloneCommand(pathToSaved, username, repoName, pat, "master");
+            }
+        }
 
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
@@ -61,8 +69,12 @@ public class GitService {
 
     public String cloneRepoByBranchName(String url, String repoName, String branchName, String username, String pat) throws GitAPIException, IOException {
         logger.info("Cloning repository {} in branch {}", repoName, branchName);
-        String pathToSaved = "./project/anonymous/" + repoName + "-" + branchName;
-
+        String pathToSaved = "./project/" + username + "/" + repoName + "-" + branchName;
+        if(Files.exists(Path.of(pathToSaved))) {
+            if(isGitRepo(pathToSaved)) {
+                return updateCloneCommand(pathToSaved, username, repoName, pat, branchName);
+            }
+        }
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
 
@@ -79,11 +91,15 @@ public class GitService {
     }
 
     public String cloneRepoByCommit(String url, String repoName, String commitSha, String username, String pat) throws GitAPIException, IOException {
-        String pathToSaved = "./project/anonymous/" + repoName + "-" + commitSha;
+        String pathToSaved = "./project/" + username + "/" + repoName + "-" + commitSha;
         logger.info("Cloning repository {} with commit {}", repoName, commitSha);
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
-
+        if(Files.exists(Path.of(pathToSaved))) {
+            if(isGitRepo(pathToSaved)) {
+                return pathToSaved;
+            }
+        }
         CloneCommand cloneCommand = Git.cloneRepository()
                 .setURI(url)
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
@@ -100,6 +116,24 @@ public class GitService {
         Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
 
+    }
+
+    public String updateCloneCommand(String pathToSaved, String username, String repoName, String pat, String branch) throws IOException, GitAPIException {
+        File gitWorkDir = new File(pathToSaved);
+        Git git = Git.open(gitWorkDir);
+        PullResult result = git.pull()
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+                .setRemote("origin")
+                .setRemoteBranchName(branch)
+                .call();
+        git.getRepository().close();
+        if (result.isSuccessful()) {
+            logger.info("Done cloning repository: {}", repoName);
+            return pathToSaved;
+        } else {
+            logger.info("Error in cloning repository: {}", repoName);
+            return null;
+        }
     }
 
     public Clone2RepoResponse clone2RepoByBranch
@@ -154,9 +188,6 @@ public class GitService {
 
     public List<CommitResponse> getAllCommits(String url, String repoName, List<String> branches, String user, String token) throws GitAPIException, IOException {
         Set<CommitResponse> commitSet = new HashSet<>();
-//        for(String branch : branches) {
-//            commitSet.addAll(getAllCommitsInBranch(url, repoName, branch, user, token));
-//        }
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<List<CommitResponse>>> futures = new ArrayList<>();
         for(String branch : branches) {
