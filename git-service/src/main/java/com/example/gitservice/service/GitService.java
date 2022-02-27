@@ -4,6 +4,7 @@ import com.example.gitservice.dto.Clone2RepoResponse;
 import com.example.gitservice.dto.BranchesResponse;
 import com.example.gitservice.dto.CommitResponse;
 import com.example.gitservice.thread.GetCommitThread;
+import com.example.gitservice.thread.ZipFolderThread;
 import com.example.gitservice.utils.DeleteFileVisitor;
 import com.example.gitservice.utils.DirectoryUtils;
 import com.example.gitservice.utils.ZipUtils;
@@ -54,7 +55,7 @@ public class GitService {
                 .call();
         git.getRepository().close();
         logger.info("Done cloning repository: {}", repoName);
-        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
+        Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
     }
 
@@ -73,7 +74,7 @@ public class GitService {
                 .call();
         git.getRepository().close();
         logger.info("Done cloning repository {} in branch {}", repoName, branchName);
-        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
+        Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
     }
 
@@ -96,7 +97,7 @@ public class GitService {
         Ref ref = checkoutCommand.call();
         clonedRepo.getRepository().close();
         logger.info("Done cloning repository {} with commit {}", repoName, commitSha);
-        zipUtils.pack(pathToSaved, pathToSaved + ".zip");
+        Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
 
     }
