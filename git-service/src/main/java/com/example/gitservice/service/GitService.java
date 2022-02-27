@@ -3,6 +3,7 @@ package com.example.gitservice.service;
 import com.example.gitservice.dto.Clone2RepoResponse;
 import com.example.gitservice.dto.BranchesResponse;
 import com.example.gitservice.dto.CommitResponse;
+import com.example.gitservice.thread.GetCommitThread;
 import com.example.gitservice.utils.DeleteFileVisitor;
 import com.example.gitservice.utils.DirectoryUtils;
 import com.example.gitservice.utils.ZipUtils;
@@ -23,6 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.example.gitservice.helper.GitRepoHelper.visitCommits;
@@ -148,8 +153,24 @@ public class GitService {
 
     public List<CommitResponse> getAllCommits(String url, String repoName, List<String> branches, String user, String token) throws GitAPIException, IOException {
         Set<CommitResponse> commitSet = new HashSet<>();
+//        for(String branch : branches) {
+//            commitSet.addAll(getAllCommitsInBranch(url, repoName, branch, user, token));
+//        }
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<List<CommitResponse>>> futures = new ArrayList<>();
         for(String branch : branches) {
-            commitSet.addAll(getAllCommitsInBranch(url, repoName, branch, user, token));
+            Future<List<CommitResponse>> future = executor.submit(new GetCommitThread(url, repoName, branch, user, token));
+            futures.add(future);
+        }
+        executor.shutdown();
+        for(Future<List<CommitResponse>> future : futures) {
+            try {
+                commitSet.addAll(future.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
         return commitSet
                 .stream()
