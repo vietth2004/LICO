@@ -1,15 +1,15 @@
-@RD /S /Q ".\discovery-server\logs\" 2 > null
-@RD /S /Q ".\cia-service\logs\" 2 > null
-@RD /S /Q ".\file-service\logs\" 2 > null
-@RD /S /Q ".\git-service\logs\" 2 > null
-@RD /S /Q ".\java-service\logs\" 2 > null
-@RD /S /Q ".\parser-service\logs\" 2 > null
-@RD /S /Q ".\project-service\logs\" 2 > null
-@RD /S /Q ".\spring-service\logs\" 2 > null
-@RD /S /Q ".\user-service\logs\" 2 > null
-@RD /S /Q ".\utility-service\logs\" 2 > null
-@RD /S /Q ".\version-compare-service\logs\" 2 > null
-@RD /S /Q ".\jsf-service\logs\" 2 > null
-@RD /S /Q ".\api-gateway\logs\" 2 > null
-@RD /S /Q ".\strut-service\logs\" 2 > null
-@RD /S /Q ".\logs\" 2 > null
+@RD /S /Q ".\discovery-server\logs\"
+@RD /S /Q ".\cia-service\logs\"
+@RD /S /Q ".\file-service\logs\"
+@RD /S /Q ".\git-service\logs\"
+@RD /S /Q ".\java-service\logs\"
+@RD /S /Q ".\parser-service\logs\"
+@RD /S /Q ".\project-service\logs\"
+@RD /S /Q ".\spring-service\logs\"
+@RD /S /Q ".\user-service\logs\"
+@RD /S /Q ".\utility-service\logs\"
+@RD /S /Q ".\version-compare-service\logs\"
+@RD /S /Q ".\jsf-service\logs\"
+@RD /S /Q ".\api-gateway\logs\"
+@RD /S /Q ".\strut-service\logs\"
+@RD /S /Q ".\logs\"
