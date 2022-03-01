@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
 
@@ -17,6 +17,7 @@ services:
 
   discovery-service:
     container_name: discovery-service
+    image: discovery-service:latest
     build:
       context: discovery-server
       dockerfile: Dockerfile
@@ -27,6 +28,7 @@ services:
 
   api-gateway:
     container_name: api-gateway
+    image: api-gateway:latest
     build:
       context: api-gateway
       dockerfile: Dockerfile
@@ -43,6 +45,7 @@ services:
 
   utility-service:
     container_name: utility-service
+    image: utility-service:latest
     build:
       context: utility-service
       dockerfile: Dockerfile
@@ -59,6 +62,7 @@ services:
 
   user-service:
     container_name: user-service
+    image: user-service:latest
     build:
       context: user-service
       dockerfile: Dockerfile
@@ -79,6 +83,7 @@ services:
 
   project-service:
     container_name: project-service
+    image: project-service:latest
     build:
       context: project-service
       dockerfile: Dockerfile
@@ -99,6 +104,7 @@ services:
 
   parser-service:
     container_name: parser-service
+    image: parser-service:latest
     build:
       context: parser-service
       dockerfile: Dockerfile
@@ -115,6 +121,7 @@ services:
 
   java-service:
     container_name: java-service
+    image: java-service:latest
     build:
       context: java-service
       dockerfile: Dockerfile
@@ -131,6 +138,7 @@ services:
 
   spring-service:
     container_name: spring-service
+    image: spring-service:latest
     build:
       context: spring-service
       dockerfile: Dockerfile
@@ -145,10 +153,11 @@ services:
     networks:
       - jcia-network
 
-  xml-service:
-    container_name: xml-service
+  jsf-service:
+    container_name: jsf-service
+    image: jsf-service:latest
     build:
-      context: xml-service
+      context: jsf-service
       dockerfile: Dockerfile
     ports:
       - "7004:7004"
@@ -161,8 +170,26 @@ services:
     networks:
       - jcia-network
 
+  strut-service:
+    container_name: strut-service
+    image: strut-service:latest
+    build:
+      context: strut-service
+      dockerfile: Dockerfile
+    ports:
+      - "7005:7005"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
   cia-service:
     container_name: cia-service
+    image: cia-service:latest
     build:
       context: cia-service
       dockerfile: Dockerfile
@@ -178,7 +205,8 @@ services:
       - jcia-network
 
   version-compare-service:
-    container_name: version-compare-service
+    container_name: version-compare
+    image: version-compare:latest
     build:
       context: version-compare-service
       dockerfile: Dockerfile
@@ -195,6 +223,7 @@ services:
 
   file-service:
     container_name: file-service
+    image: file-service:latest
     build:
       context: file-service
       dockerfile: Dockerfile
@@ -209,10 +238,11 @@ services:
     networks:
       - jcia-network
 
-  github-service:
-    container_name: github-service
+  git-service:
+    container_name: git-service
+    image: git-service:latest
     build:
-      context: github-service
+      context: git-service
       dockerfile: Dockerfile
     ports:
       - "8004:8004"
@@ -227,4 +257,5 @@ services:
 
 networks:
   jcia-network:
+    name: jcia-network
     driver: bridge

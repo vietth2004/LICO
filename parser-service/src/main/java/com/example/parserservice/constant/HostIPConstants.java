@@ -53,11 +53,14 @@ public class HostIPConstants {
     }
 
     public String getXmlServiceIp() {
-        return eurekaClient.getApplication(XML_SERVICE).getInstances().get(0).getIPAddr();
+        return eurekaClient.getApplication(JSF_SERVICE).getInstances().get(0).getIPAddr();
     }
 
     public String getGithubServiceIp() {
         return eurekaClient.getApplication(GITHUB_SERVICE).getInstances().get(0).getIPAddr();
     }
 
+    public String getStrutServiceIp() {
+        return eurekaClient.getApplication(STRUT_SERVICE).getInstances().get(0).getIPAddr();
+    }
 }
