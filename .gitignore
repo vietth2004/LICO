@@ -67,3 +67,5 @@ logs/strut-service.log
 logs/utility-service.log
 logs/compare-service.log
 *.log
+
+*.properties
