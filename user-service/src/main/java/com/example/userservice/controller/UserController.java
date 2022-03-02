@@ -18,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/user-service/")
 public class UserController {
@@ -93,6 +95,14 @@ public class UserController {
         Account user = accountRepository.findByID(id);
         user.setPassword(null);
         return userRepository.findByID(user.getId());
+    }
+
+    @GetMapping("/user/token-username")
+    public ResponseEntity<?> getTokenInfo (@RequestParam String jwt) {
+        String username = jwtTokenUtil.extractUsername(jwt);
+        Date expireDate = jwtTokenUtil.extractExpiration(jwt);
+
+        return ResponseEntity.ok(new AuthenticationResponse(expireDate.toString(), username, 0));
     }
 
     
