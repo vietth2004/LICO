@@ -69,10 +69,12 @@ public class NodeUtils {
         List<JavaNode> jsfBeans = new ArrayList<>();
         javaNodes.forEach(
                 node -> {
-                    if(checkNodeIsBean(node, "Named"))
-                        jsfBeans.add(node);
-                    if(checkNodeIsBean(node, "ManagedBean"))
-                        jsfBeans.add(node);
+                    if(node != null) {
+                        if(checkNodeIsBean(node, "Named"))
+                            jsfBeans.add(node);
+                        if(checkNodeIsBean(node, "ManagedBean"))
+                            jsfBeans.add(node);
+                    }
                 }
         );
         return jsfBeans;
@@ -103,8 +105,8 @@ public class NodeUtils {
      * @return
      */
     public static String findBeanName(JavaNode node) {
-        if(node.getAnnotatesWithValue().size() > 0) {
-            for(Object obj : node.getAnnotatesWithValue()) {
+        if(node.getAnnotates().size() > 0) {
+            for(Object obj : node.getAnnotates()) {
                 if(obj instanceof JavaAnnotation) {
                     if(((JavaAnnotation) obj).getMemberValuePair().size() > 0) {
                         for(Object pair : ((JavaAnnotation) obj).getMemberValuePair()) {
@@ -128,7 +130,7 @@ public class NodeUtils {
      * @return
      */
     public static String findBeanInjectionName(JavaNode node) {
-        for(Object obj : node.getAnnotatesWithValue()){
+        for(Object obj : node.getAnnotates()){
             if(obj instanceof JavaAnnotation) {
                 if(((JavaAnnotation) obj).getMemberValuePair().size() > 0) {
                     for(MemberValuePair pair : ((JavaAnnotation) obj).getMemberValuePair()) {
@@ -149,10 +151,10 @@ public class NodeUtils {
      * @return
      */
     public static boolean checkNodeIsBean(JavaNode node, String criteria) {
-        if (!node.getAnnotatesWithValue().isEmpty()  || node.getAnnotatesWithValue() != null) {
-            for(Object obj : node.getAnnotatesWithValue()) {
+        if (node.getAnnotates() != null) {
+            for(Object obj : node.getAnnotates()) {
                 if(obj instanceof JavaAnnotation) {
-                    if(((JavaAnnotation) obj).getName().equals(criteria))
+                    if(((JavaAnnotation) obj).getName().endsWith(criteria))
                         return true;
                 }
             }
