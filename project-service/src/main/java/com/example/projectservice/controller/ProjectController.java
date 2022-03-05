@@ -5,6 +5,8 @@ import com.example.projectservice.project.ProjectRepository;
 import com.example.projectservice.response.AuthenticationResponse;
 import com.example.projectservice.version.Version;
 import com.example.projectservice.version.VersionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/project-service/")
 public class ProjectController {
+    private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     private final ProjectRepository projectRepository;
 
@@ -28,15 +32,16 @@ public class ProjectController {
     }
 
     @GetMapping("/project/get")
-    public Page<Project> getAllProjectByUser(@CookieValue(name = "user") String user,
+    public Page<Project> getAllProjectByUser(@RequestHeader(name = "Token") String token,
                                              @RequestParam(name = "name", required = false) String name,
                                              @RequestParam(name = "id", required = false) String id,
-            Pageable pageable){
+                                             Pageable pageable){
+        logger.info("Token: {}", token);
 
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
-            if (Objects.nonNull(user)) {
-                p = cb.and(p, cb.like(root.get("user"), "%" + user + "%"));
+            if (Objects.nonNull(token)) {
+                p = cb.and(p, cb.like(root.get("user"), "%" + token + "%"));
             }
             if (Objects.nonNull(name)) {
                 p = cb.and(p, cb.like(root.get("name"), "%" + name + "%"));
