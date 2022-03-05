@@ -1,12 +1,15 @@
 package com.example.gitservice.controller;
 
+import com.example.gitservice.constant.HostIPConstants;
 import com.example.gitservice.dto.Clone2RepoResponse;
 import com.example.gitservice.dto.CloneRepoPath;
 import com.example.gitservice.dto.ErrorMessage;
+import com.example.gitservice.dto.parser.Request;
 import com.example.gitservice.payload.versioncompare.Response;
 import com.example.gitservice.payload.versioncompare.Version;
 import com.example.gitservice.service.GitService;
 import com.example.gitservice.service.VersionCompare;
+import com.example.gitservice.utils.Utils;
 import mrmathami.cia.java.JavaCiaException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
@@ -19,10 +22,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +44,9 @@ public class CloneController {
     @Autowired
     VersionCompare versionCompare;
 
+    @Autowired
+    private HostIPConstants ipConstants;
+
     /**
      * Clone repository
      * @return path where to save repo
@@ -46,7 +56,9 @@ public class CloneController {
     public ResponseEntity<?> cloneRepo(
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "") String token,
-            @RequestParam(required = false, defaultValue = "anonymous") String user) {
+            @RequestParam(required = false, defaultValue = "anonymous") String user,
+            @RequestParam(required = false) boolean analysis,
+            @RequestParam(name="parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))
@@ -55,7 +67,15 @@ public class CloneController {
                 .replace(Constants.DOT_GIT, "");
         try {
             String path = gitService.cloneRepo(url, repoName, user, token);
-            return ResponseEntity.ok(new CloneRepoPath(path));
+            if(analysis == false)
+                return ResponseEntity.ok(new CloneRepoPath(path));
+            else {
+                RestTemplate restTemplate = new RestTemplate();
+                String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
+                ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, new CloneRepoPath(path), Request.class);
+                com.example.gitservice.dto.parser.Response res = Utils.getResponse(parserList, request.getBody(), path);
+                return ResponseEntity.ok(res);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GitAPIException e) {
@@ -87,7 +107,9 @@ public class CloneController {
             @RequestParam String url,
             @RequestParam(required = false, defaultValue = "master") String branch,
             @RequestParam(required = false, defaultValue = "") String token,
-            @RequestParam(required = false, defaultValue = "anonymous") String user) {
+            @RequestParam(required = false, defaultValue = "anonymous") String user,
+            @RequestParam(required = false) boolean analysis,
+            @RequestParam(name="parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))
@@ -96,7 +118,15 @@ public class CloneController {
                 .replace(Constants.DOT_GIT, "");
         try {
             String path = gitService.cloneRepoByBranchName(url, repoName, branch, user, token);
-            return ResponseEntity.ok(new CloneRepoPath(path));
+            if(analysis == false)
+                return ResponseEntity.ok(new CloneRepoPath(path));
+            else {
+                RestTemplate restTemplate = new RestTemplate();
+                String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
+                ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, new CloneRepoPath(path), Request.class);
+                com.example.gitservice.dto.parser.Response res = Utils.getResponse(parserList, request.getBody(), path);
+                return ResponseEntity.ok(res);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GitAPIException e) {
@@ -105,7 +135,7 @@ public class CloneController {
                     .body(new ErrorMessage(
                             HttpStatus.UNAUTHORIZED.value(),
                             new Date(),
-                            "Cannot clone repo: " + url,
+                            "Cannot clone repo: " + url + " in branch: " + branch,
                             "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
                     ));
         }
@@ -114,7 +144,7 @@ public class CloneController {
                 .body(new ErrorMessage(
                         HttpStatus.FORBIDDEN.value(),
                         new Date(),
-                        "Cannot clone repo: " + url,
+                        "Cannot clone repo: " + url + " in branch: " + branch,
                         "Unauthorized/Invalid token to repo: " + repoName
                 ));
     }
@@ -128,7 +158,9 @@ public class CloneController {
             @RequestParam String url,
             @RequestParam String commit,
             @RequestParam(required = false, defaultValue = "") String token,
-            @RequestParam(required = false, defaultValue = "anonymous") String user) {
+            @RequestParam(required = false, defaultValue = "anonymous") String user,
+            @RequestParam(required = false) boolean analysis,
+            @RequestParam(name="parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))
@@ -137,7 +169,15 @@ public class CloneController {
                 .replace(Constants.DOT_GIT, "");
         try {
             String path = gitService.cloneRepoByCommit(url, repoName, commit, user, token);
-            return ResponseEntity.ok(new CloneRepoPath(path));
+            if(analysis == false)
+                return ResponseEntity.ok(new CloneRepoPath(path));
+            else {
+                RestTemplate restTemplate = new RestTemplate();
+                String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
+                ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, new CloneRepoPath(path), Request.class);
+                com.example.gitservice.dto.parser.Response res = Utils.getResponse(parserList, request.getBody(), path);
+                return ResponseEntity.ok(res);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GitAPIException e) {
@@ -146,7 +186,7 @@ public class CloneController {
                     .body(new ErrorMessage(
                             HttpStatus.UNAUTHORIZED.value(),
                             new Date(),
-                            "Cannot clone repo: " + url,
+                            "Cannot clone repo: " + url + " with commit: " + commit,
                             "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
                     ));
         }
@@ -155,7 +195,7 @@ public class CloneController {
                 .body(new ErrorMessage(
                         HttpStatus.FORBIDDEN.value(),
                         new Date(),
-                        "Cannot clone repo: " + url,
+                        "Cannot clone repo: " + url + " with commit: " + commit,
                         "Unauthorized/Invalid token to repo: " + repoName
                 ));
     }
