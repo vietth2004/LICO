@@ -42,7 +42,7 @@ public class GitService {
 
     private static final Logger logger = LoggerFactory.getLogger(GitService.class);
 
-    public String cloneRepo(String url, String repoName, String username, String pat) throws GitAPIException, IOException {
+    public String cloneRepo(String url, String repoName, String username, String pat) throws IOException {
 
         logger.info("Cloning repository: {}", repoName);
         String pathToSaved = "./project/" + username + "/" + repoName;
@@ -56,18 +56,34 @@ public class GitService {
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
 
-        Git git = Git.cloneRepository()
-                .setURI(url)
-                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
-                .setDirectory(new File(pathToSaved))
-                .call();
+        Git git = null;
+        try {
+            git = Git.cloneRepository()
+                    .setURI(url)
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+                    .setDirectory(new File(pathToSaved))
+                    .call();
+        } catch (GitAPIException e) {
+            git.getRepository().close();
+            try {
+                git.gc().call();
+            } catch (GitAPIException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
         git.getRepository().close();
+        try {
+            git.gc().call();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
         logger.info("Done cloning repository: {}", repoName);
         Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
     }
 
-    public String cloneRepoByBranchName(String url, String repoName, String branchName, String username, String pat) throws GitAPIException, IOException {
+    public String cloneRepoByBranchName(String url, String repoName, String branchName, String username, String pat) throws IOException {
         logger.info("Cloning repository {} in branch {}", repoName, branchName);
         String pathToSaved = "./project/" + username + "/" + repoName + "-" + branchName;
         if(Files.exists(Path.of(pathToSaved))) {
@@ -78,19 +94,35 @@ public class GitService {
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
 
-        Git git = Git.cloneRepository()
-                .setURI(url)
-                .setBranch(branchName)
-                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
-                .setDirectory(new File(pathToSaved))
-                .call();
+        Git git = null;
+        try {
+            git = Git.cloneRepository()
+                    .setURI(url)
+                    .setBranch(branchName)
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+                    .setDirectory(new File(pathToSaved))
+                    .call();
+        } catch (GitAPIException e) {
+            git.getRepository().close();
+            try {
+                git.gc().call();
+            } catch (GitAPIException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
         git.getRepository().close();
+        try {
+            git.gc().call();
+        } catch (GitAPIException ex) {
+            ex.printStackTrace();
+        }
         logger.info("Done cloning repository {} in branch {}", repoName, branchName);
         Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
         return pathToSaved;
     }
 
-    public String cloneRepoByCommit(String url, String repoName, String commitSha, String username, String pat) throws GitAPIException, IOException {
+    public String cloneRepoByCommit(String url, String repoName, String commitSha, String username, String pat) throws IOException {
         String pathToSaved = "./project/" + username + "/" + repoName + "-" + commitSha;
         logger.info("Cloning repository {} with commit {}", repoName, commitSha);
         DirectoryUtils.deleteDir(new File(pathToSaved));
@@ -105,12 +137,33 @@ public class GitService {
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
                 .setDirectory(new File(pathToSaved));
 
-        Git clonedRepo = cloneCommand.call();
+        Git clonedRepo = null;
+        try {
+            clonedRepo = cloneCommand.call();
+        } catch (GitAPIException e) {
+            cloneCommand.getRepository().close();
+            try {
+                clonedRepo.gc().call();
+            } catch (GitAPIException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
 
         CheckoutCommand checkoutCommand = clonedRepo.checkout()
                 .setName(commitSha);
-
-        Ref ref = checkoutCommand.call();
+        Ref ref;
+        try {
+            ref = checkoutCommand.call();
+        } catch (GitAPIException e) {
+            cloneCommand.getRepository().close();
+            try {
+                clonedRepo.gc().call();
+            } catch (GitAPIException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
         clonedRepo.getRepository().close();
         logger.info("Done cloning repository {} with commit {}", repoName, commitSha);
         Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
@@ -118,15 +171,31 @@ public class GitService {
 
     }
 
-    public String updateCloneCommand(String pathToSaved, String username, String repoName, String pat, String branch) throws IOException, GitAPIException {
+    public String updateCloneCommand(String pathToSaved, String username, String repoName, String pat, String branch) throws IOException {
         File gitWorkDir = new File(pathToSaved);
         Git git = Git.open(gitWorkDir);
-        PullResult result = git.pull()
-                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
-                .setRemote("origin")
-                .setRemoteBranchName(branch)
-                .call();
+        PullResult result = null;
+        try {
+            result = git.pull()
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+                    .setRemote("origin")
+                    .setRemoteBranchName(branch)
+                    .call();
+        } catch (GitAPIException e) {
+            git.getRepository().close();
+            try {
+                git.gc().call();
+            } catch (GitAPIException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
         git.getRepository().close();
+        try {
+            git.gc().call();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
         if (result.isSuccessful()) {
             logger.info("Done cloning repository: {}", repoName);
             return pathToSaved;

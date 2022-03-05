@@ -78,15 +78,6 @@ public class CloneController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GitAPIException e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorMessage(
-                            HttpStatus.UNAUTHORIZED.value(),
-                            new Date(),
-                            "Cannot clone repo: " + url,
-                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
-                    ));
         }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -129,15 +120,6 @@ public class CloneController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GitAPIException e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorMessage(
-                            HttpStatus.UNAUTHORIZED.value(),
-                            new Date(),
-                            "Cannot clone repo: " + url + " in branch: " + branch,
-                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
-                    ));
         }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -180,15 +162,6 @@ public class CloneController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GitAPIException e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorMessage(
-                            HttpStatus.UNAUTHORIZED.value(),
-                            new Date(),
-                            "Cannot clone repo: " + url + " with commit: " + commit,
-                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
-                    ));
         }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
