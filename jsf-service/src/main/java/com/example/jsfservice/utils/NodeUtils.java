@@ -269,9 +269,11 @@ public class NodeUtils {
         if(tagNode instanceof XmlTagNode) {
             if(((XmlTagNode) tagNode).getTagName().equals("resource-bundle")) {
                 JsfBeanNode beanNode = new JsfBeanNode();
-                beanNode.setValue(prepareBeanNodeValue(tagNode, nodes));
-                beanNode.setBeanName(prepareBeanNodeName(tagNode));
-                jsfBeanNodes.add(beanNode);
+                if(prepareBeanNodeValue(tagNode, nodes) != null) {
+                    beanNode.setValue(prepareBeanNodeValue(tagNode, nodes));
+                    beanNode.setBeanName(prepareBeanNodeName(tagNode));
+                    jsfBeanNodes.add(beanNode);
+                }
             }
             for(Node child : tagNode.getChildren()) {
                 jsfBeanNodes.addAll(filterBeanFromFacesConfig(child, nodes));
@@ -318,7 +320,8 @@ public class NodeUtils {
                 String tagName = ((XmlTagNode) child).getTagName();
                 if(tagName.equals("base-name")) {
                     JavaNode value = findJavaNodeByName(nodes, ((XmlTagNode) child).getContent());
-                    return value;
+                    if(value != null)
+                        return value;
                 }
             }
         }
@@ -338,7 +341,7 @@ public class NodeUtils {
                 .collect(Collectors.toList());
         if(!result.isEmpty()) return result.get(0);
         //TODO: Need to fix this one, some bean has not defined with uniquename, so I cant get bean for it
-        return new JavaNode();
+        return null;
     }
 
     /**

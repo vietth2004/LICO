@@ -74,7 +74,7 @@ public class JsfController {
         logger.info("Run into API: /dependency");
         logger.info("Analyzing dependency...");
         dependencies.addAll(xmlService.analyzeDependency(request, this.xmlNodes));
-        dependencies.addAll(propService.analyzeDependencies(xmlNodes, this.propFileNodes));
+//        dependencies.addAll(propService.analyzeDependencies(xmlNodes, this.propFileNodes));
         long after = System.nanoTime();
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());
