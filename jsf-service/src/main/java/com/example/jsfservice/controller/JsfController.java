@@ -6,8 +6,11 @@ import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.dom.Properties.PropertiesFileNode;
 import com.example.jsfservice.dto.Request;
 import com.example.jsfservice.dto.Response;
+import com.example.jsfservice.dto.java.JavaResponse;
+import com.example.jsfservice.dto.parser.ParserResponse;
 import com.example.jsfservice.service.PropertiesService;
 import com.example.jsfservice.service.XmlService;
+import com.example.jsfservice.utils.JavaUtils;
 import com.example.jsfservice.utils.NodeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,9 @@ public class JsfController {
 
     @Autowired
     private PropertiesService propService;
+
+    @Autowired
+    JavaUtils javaUtils;
 
     /**
      * Parse to xml nodes by sending project path
@@ -80,6 +86,25 @@ public class JsfController {
         logger.info("Number of dependencies: " + dependencies.size());
         logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
         return new ResponseEntity<List<Dependency>>(dependencies, HttpStatus.OK);
+    }
+
+    @PostMapping("/analyze")
+    public ResponseEntity<ParserResponse> analyzeProject(@RequestBody Request req) throws IOException, ExecutionException, InterruptedException {
+        long before = System.nanoTime();
+        logger.info("Run into API: /analyze");
+        logger.info("Analyzing dependency...");
+        JavaResponse javaNode = javaUtils.getJavaNode(req);
+        List<Node> xmlNodes = xmlService.parseProjectWithPath(req.getPath());
+        List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(req.getPath());
+        List<Dependency> dependencies = new ArrayList<>();
+        dependencies.addAll(xmlService.analyzeDependency(javaNode.getAllNodes(), xmlNodes));
+        dependencies.addAll(propService.analyzeDependencies(xmlNodes, propFileNodes));
+        ParserResponse response = new ParserResponse(xmlNodes, dependencies);
+        long after = System.nanoTime();
+        logger.info("Done analyzing dependency...");
+        logger.info("Number of dependencies: " + dependencies.size());
+        logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
+        return new ResponseEntity<ParserResponse>(response, HttpStatus.OK);
     }
 
 }

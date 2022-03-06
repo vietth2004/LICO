@@ -232,7 +232,7 @@ public class NodeUtils {
                 Matcher matcher = pattern.matcher(value);
                 if(matcher.matches()){
                     XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9.\\[\\]]", ""));
+                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9\\-.\\[\\]]", ""));
                     beanInjectionNode.setValue(node);
                     nodes.add(beanInjectionNode);
                 }
@@ -245,7 +245,7 @@ public class NodeUtils {
                 Matcher matcherContent = pattern.matcher(((XmlTagNode) node).getContent());
                 if (matcherContent.matches()) {
                     XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-                    beanInjectionNode.setBeanInjection(((XmlTagNode) node).getContent().replaceAll("[^a-zA-Z0-9.\\[\\]]", ""));
+                    beanInjectionNode.setBeanInjection(((XmlTagNode) node).getContent().replaceAll("[^a-zA-Z0-9\\-.\\[\\]]", ""));
                     beanInjectionNode.setValue(node);
                     nodes.add(beanInjectionNode);
                 }

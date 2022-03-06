@@ -1,3 +1,6 @@
+call mvn verify -f .\core-engine\core\pom.xml
+call mvn verify -f .\core-engine\jdt\pom.xml
+call mvn verify -f .\core-engine\utils\pom.xml
 call mvn verify -f .\discovery-server\pom.xml
 call mvn verify -f .\cia-service\pom.xml
 call mvn verify -f .\file-service\pom.xml
