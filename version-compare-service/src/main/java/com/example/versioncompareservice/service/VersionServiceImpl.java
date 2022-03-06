@@ -17,7 +17,6 @@ import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
 import mrmathami.cia.java.tree.node.JavaMethodNode;
-import mrmathami.cia.java.tree.type.JavaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

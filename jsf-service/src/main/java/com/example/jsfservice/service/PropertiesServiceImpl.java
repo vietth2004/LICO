@@ -109,24 +109,26 @@ public class PropertiesServiceImpl implements PropertiesService{
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
                     String injectedValue = injectionNode.getBeanInjection().split("\\[")[1].replace("]", "");
                     String beanName = beanNode.getBeanName();
-                    for(PropertiesNode prop : beanNode.getValue().getProperties()) {
-                        if(prop.getName().equals(injectedValue) && beanName.equals(beanInjectionName)) {
-                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getBeanName(), injectionNode.getBeanInjection(), beanName);
+                    if(beanNode.getValue().getProperties() != null) {
+                        for (PropertiesNode prop : beanNode.getValue().getProperties()) {
+                            if (prop.getName().equals(injectedValue) && beanName.equals(beanInjectionName)) {
+                                logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getBeanName(), injectionNode.getBeanInjection(), beanName);
+                                dependencies.add(new Dependency(
+                                        prop.getId(),
+                                        beanNode.getValue().getId(),
+                                        new DependencyCountTable(0, 0, 0, 0, 0, 1)
+                                ));
+                            }
+                        }
+                    }
+                    if(beanName.equals(beanInjectionName)) {
+                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getName(), injectionNode.getValue().getAbsolutePath(), beanName);
                         dependencies.add(new Dependency(
-                                prop.getId(),
+                                injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
                                 new DependencyCountTable(0,0,0,0,0, 1)
                         ));
-                        }
                     }
-//                    if(beanName.equals(beanInjectionName)) {
-//                        logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getName(), injectionNode.getValue().getAbsolutePath(), beanName);
-//                        dependencies.add(new Dependency(
-//                                injectionNode.getValue().getId(),
-//                                beanNode.getValue().getId(),
-//                                new DependencyCountTable(0,0,0,0,0, 1)
-//                        ));
-//                    }
                 }
             }
         }
