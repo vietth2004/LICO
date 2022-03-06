@@ -6,6 +6,7 @@ import com.example.gitservice.dto.CommitResponse;
 import com.example.gitservice.dto.RepoInfoResponse;
 import com.example.gitservice.service.GitService;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +35,34 @@ public class RepositoryController {
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false, defaultValue = "") String token
     ) {
+        String repoName = "";
         BranchesResponse branches = null;
-        String repoName = Arrays
+        try {
+            repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(".git"))
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(".git", "");
-        try {
             branches = gitService.fetchGitBranches(url, user, token);
         } catch (GitAPIException e) {
+            if(e instanceof TransportException)
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new ErrorMessage(
+                                HttpStatus.UNAUTHORIZED.value(),
+                                new Date(),
+                                "Cannot fetch repo branches: " + url,
+                                "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
+                        ));
+        } catch (IndexOutOfBoundsException e) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorMessage(
-                            HttpStatus.UNAUTHORIZED.value(),
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
                             new Date(),
                             "Cannot fetch repo branches: " + url,
-                            "Unauthorized/Invalid token to repo: " + repoName + ". Please check token in your request!"
+                            "Cannot open connection to repository. Please check repository url!"
                     ));
         }
         return ResponseEntity
@@ -66,15 +78,15 @@ public class RepositoryController {
             @RequestParam(required = false, defaultValue = "") String token
     ) {
         logger.info("/repo/commits");
-
-        String repoName = Arrays
+        String repoName = "";
+        try {
+        repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(".git"))
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(".git", "");
 
-        try {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(gitService.getAllCommitsInBranch(url, repoName, branch, user, token));
@@ -89,6 +101,15 @@ public class RepositoryController {
                     ));
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorMessage(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            new Date(),
+                            "Cannot fetch repo branches: " + url,
+                            "Cannot open connection to repository. Please check repository url!"
+                    ));
         }
         return null;
     }
@@ -101,16 +122,16 @@ public class RepositoryController {
     ) {
 
         logger.info("/repo/info");
-
-        String repoName = Arrays
+        String repoName = "";
+        BranchesResponse branches = null;
+        try {
+            repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(".git"))
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(".git", "");
 
-        BranchesResponse branches = null;
-        try {
             branches = gitService.fetchGitBranches(url, user, token);
         } catch (GitAPIException e) {
             e.printStackTrace();
@@ -129,6 +150,15 @@ public class RepositoryController {
                     ));
         } catch (IOException e) {
             e.printStackTrace();
+        }  catch (IndexOutOfBoundsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorMessage(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            new Date(),
+                            "Cannot fetch repo branches: " + url,
+                            "Cannot open connection to repository. Please check repository url!"
+                    ));
         }
         RepoInfoResponse response = new RepoInfoResponse(branches, commits);
         return ResponseEntity

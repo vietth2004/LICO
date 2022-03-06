@@ -27,9 +27,9 @@ public class JciaDispatcher extends Dispatcher {
     protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
         return new JciaStrutsXmlConfigurationProvider(filename, errorIfMissing, ctx, classPath);
     }
-
-    @Override
-    protected XmlConfigurationProvider createXmlConfigurationProvider(String filename, boolean errorIfMissing) {
-        return new JciaXmlConfigurationProvider(filename, errorIfMissing, classPath);
-    }
+//
+//    @Override
+//    protected XmlConfigurationProvider createXmlConfigurationProvider(String filename, boolean errorIfMissing) {
+//        return new JciaXmlConfigurationProvider(filename, errorIfMissing, classPath);
+//    }
 }

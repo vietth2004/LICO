@@ -47,7 +47,7 @@ public class XmlServiceImpl implements XmlService {
          * Submit callable task to ThreadPool
          */
         List<Future<Node>> xmlNodeFutures = new ArrayList<>();
-        paths.forEach(x -> {
+        paths.forEach(x -> {    
             if(StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))){
                     Future<Node> future = null;
                     future = THREADPOOL_FIXED_SIZE.submit(new XmlFileParser(x.toString()));
