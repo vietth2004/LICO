@@ -1,4 +1,7 @@
 #!bin/bash
+mvn verify -f .\core-engine\core\pom.xml
+mvn verify -f .\core-engine\jdt\pom.xml
+mvn verify -f .\core-engine\utils\pom.xml
 mvn verify -f ./discovery-server/pom.xml -DskipTests
 mvn verify -f ./cia-service/pom.xml -DskipTests
 mvn verify -f ./file-service/pom.xml -DskipTests
