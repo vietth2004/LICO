@@ -68,10 +68,12 @@ public class PropertiesFileParser implements IParser, IPathParser, Callable {
                 if(line.length() > 0) {
                     try {
                         if(line.charAt(0) != 35) {
-                            PropertiesNode propertiesNode = new PropertiesNode();
-                            propertiesNode.setName(line.split("=")[0]);
-                            propertiesNode.setValue(line.split("=")[1]);
-                            nodes.add(propertiesNode);
+                            if(line.split("=").length>1) {
+                                PropertiesNode propertiesNode = new PropertiesNode();
+                                propertiesNode.setName(line.split("=")[0]);
+                                propertiesNode.setValue(line.split("=")[1]);
+                                nodes.add(propertiesNode);
+                            }
                         }
                     } catch (StringIndexOutOfBoundsException e) {
                         logger.error("StringIndexOutOfBoundsException in parsePropertiesNode in line: {}", line);

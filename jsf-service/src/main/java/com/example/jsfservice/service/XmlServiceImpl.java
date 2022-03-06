@@ -47,7 +47,7 @@ public class XmlServiceImpl implements XmlService {
          * Submit callable task to ThreadPool
          */
         List<Future<Node>> xmlNodeFutures = new ArrayList<>();
-        paths.forEach(x -> {
+        paths.forEach(x -> {    
             if(StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))){
                     Future<Node> future = null;
                     future = THREADPOOL_FIXED_SIZE.submit(new XmlFileParser(x.toString()));
@@ -77,12 +77,12 @@ public class XmlServiceImpl implements XmlService {
     @Override
     public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException {
         List<Dependency> dependencies = new ArrayList<>();
-        CompletableFuture dep1 = CompletableFuture.supplyAsync(() -> analyzeDependencyBetweenBeans(javaNode));
+//        CompletableFuture dep1 = CompletableFuture.supplyAsync(() -> analyzeDependencyBetweenBeans(javaNode));
         CompletableFuture dep2 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromBeanToView(javaNode, xmlNodes));
-        CompletableFuture dep3 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromControllerToView(javaNode, xmlNodes));
-        dependencies.addAll((Collection<? extends Dependency>) dep1.get());
+//        CompletableFuture dep3 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromControllerToView(javaNode, xmlNodes));
+//        dependencies.addAll((Collection<? extends Dependency>) dep1.get());
         dependencies.addAll((Collection<? extends Dependency>) dep2.get());
-        dependencies.addAll((Collection<? extends Dependency>) dep3.get());
+//        dependencies.addAll((Collection<? extends Dependency>) dep3.get());
         return dependencies;
     }
 
