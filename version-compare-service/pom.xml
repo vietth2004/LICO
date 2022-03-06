@@ -86,7 +86,8 @@
         <repository>
             <id>my-repo</id>
             <name>MrMaThaMi personal Repo</name>
-            <url>https://raw.githubusercontent.com/thanhminhmr/repository/main/</url>
+<!--            <url>https://raw.githubusercontent.com/thanhminhmr/repository/main/</url>-->
+            <url>file://../core-engine/</url>
         </repository>
     </repositories>
 
