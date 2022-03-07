@@ -3,6 +3,7 @@ package com.example.jsfservice.utils;
 import com.example.jsfservice.ast.annotation.JavaAnnotation;
 import com.example.jsfservice.ast.annotation.MemberValuePair;
 import com.example.jsfservice.ast.node.JavaNode;
+import com.example.jsfservice.constant.JsfConstants;
 import com.example.jsfservice.dom.Bean.JsfBeanNode;
 import com.example.jsfservice.dom.Bean.PropsBeanNode;
 import com.example.jsfservice.dom.Bean.XmlBeanInjectionNode;
@@ -11,8 +12,6 @@ import com.example.jsfservice.dom.Properties.PropertiesFileNode;
 import com.example.jsfservice.dom.Xml.XmlFileNode;
 import com.example.jsfservice.dom.Xml.XmlTagNode;
 import com.example.jsfservice.utils.Helper.FileHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,8 +22,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class NodeUtils {
-
-    private static final Logger logger = LogManager.getLogger(NodeUtils.class);
 
     /**
      * Recalculate id in all xml nodes by total javaNods
@@ -53,7 +50,6 @@ public class NodeUtils {
         if(rootNode.getChildren().size() > 0) {
             for(Object child : rootNode.getChildren()) {
                 JavaNode childNode = null;
-                System.out.println("Daucatmoi");
             }
         }
 
@@ -70,9 +66,9 @@ public class NodeUtils {
         javaNodes.forEach(
                 node -> {
                     if(node != null) {
-                        if(checkNodeIsBean(node, "Named"))
+                        if(checkNodeIsBean(node, JsfConstants.NAMED_NODE))
                             jsfBeans.add(node);
-                        if(checkNodeIsBean(node, "ManagedBean"))
+                        if(checkNodeIsBean(node, JsfConstants.MANAGED_BEAN_NODE))
                             jsfBeans.add(node);
                     }
                 }
@@ -90,9 +86,9 @@ public class NodeUtils {
         List<JavaNode> jsfBeanInjection = new ArrayList<>();
         javaNodes.forEach(
                 node -> {
-                    if(checkNodeIsBean(node, "Inject"))
+                    if(checkNodeIsBean(node, JsfConstants.INJECT_NODE))
                         jsfBeanInjection.add(node);
-                    if(checkNodeIsBean(node, "ManagedProperty"))
+                    if(checkNodeIsBean(node, JsfConstants.MANAGED_PROPERTY_NODE))
                         jsfBeanInjection.add(node);
                 }
         );
@@ -196,7 +192,7 @@ public class NodeUtils {
                 .stream()
                 .filter(node -> FileHelper
                         .getFileExtension(node.getName())
-                        .equals("xhtml"))
+                        .equals(JsfConstants.JSF_EXTENSIONS))
                 .collect(Collectors.toList());
     }
 
@@ -222,7 +218,7 @@ public class NodeUtils {
      */
     public static Set<XmlBeanInjectionNode> filterTagNode(Node node) {
         Set<XmlBeanInjectionNode> nodes = new HashSet<>();
-        Pattern pattern = Pattern.compile("\\#\\{(.*?)}");
+        Pattern pattern = Pattern.compile(JsfConstants.JSF_BEAN_TAG_INJECT_PATTERN);
         if(node instanceof XmlTagNode) {
 
             /**
@@ -267,7 +263,7 @@ public class NodeUtils {
         Set<JsfBeanNode> jsfBeanNodes = new HashSet<>();
 
         if(tagNode instanceof XmlTagNode) {
-            if(((XmlTagNode) tagNode).getTagName().equals("resource-bundle")) {
+            if(((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
                 JsfBeanNode beanNode = new JsfBeanNode();
                 if(prepareBeanNodeValue(tagNode, nodes) != null) {
                     beanNode.setValue(prepareBeanNodeValue(tagNode, nodes));
@@ -293,7 +289,7 @@ public class NodeUtils {
         Set<PropsBeanNode> propBeanNodes = new HashSet<>();
 
         if(tagNode instanceof XmlTagNode) {
-            if(((XmlTagNode) tagNode).getTagName().equals("resource-bundle")) {
+            if(((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
                 PropsBeanNode beanNode = new PropsBeanNode();
                 beanNode.setBeanName(prepareBeanNodeName(tagNode));
                 beanNode.setValue(preparePropBeanNodeValue(tagNode, propsNode));
@@ -318,7 +314,7 @@ public class NodeUtils {
         for(Node child : node.getChildren()) {
             if (child instanceof XmlTagNode) {
                 String tagName = ((XmlTagNode) child).getTagName();
-                if(tagName.equals("base-name")) {
+                if(tagName.equals(JsfConstants.JSF_BASE_NAME_TAG)) {
                     JavaNode value = findJavaNodeByName(nodes, ((XmlTagNode) child).getContent());
                     if(value != null)
                         return value;
@@ -355,7 +351,7 @@ public class NodeUtils {
         for(Node child : node.getChildren()) {
             if(child instanceof XmlTagNode) {
                 String tagName = ((XmlTagNode) child).getTagName();
-                if(tagName.equals("base-name")) {
+                if(tagName.equals(JsfConstants.JSF_BASE_NAME_TAG)) {
                     PropertiesFileNode value = findPropsFileNodeByName(propsFileNodes, ((XmlTagNode) child).getContent());
                     return value;
                 }

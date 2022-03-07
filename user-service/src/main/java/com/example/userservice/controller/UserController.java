@@ -8,6 +8,7 @@ import com.example.userservice.security.service.UserDetailService;
 import com.example.userservice.security.utils.JwtUtils;
 import com.example.userservice.user.User;
 import com.example.userservice.user.UserRepository;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/user-service/")
@@ -43,13 +46,20 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
-            @RequestBody AuthenticationRequest authenticationRequest) {
+            @RequestBody AuthenticationRequest authenticationRequest,
+            HttpServletRequest request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (Exception e) {
             return ResponseEntity.ok(new AuthenticationResponse("Incorrect username or password"));
         }
+
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
+        }
+        logger.log(Level.INFO ,"User IP: " + ipAddress);
 
         final UserDetails userDetails = userDetailService
                 .loadUserByUsername(authenticationRequest.getUsername());

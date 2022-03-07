@@ -83,7 +83,8 @@ public class PropertiesServiceImpl implements PropertiesService{
         for(Node child : allChildren) {
             injectionNodes.addAll(filterTagNode(child));
         }
-
+        injectionNodes = injectionNodes.stream().filter(node -> node.getBeanInjection().contains("[")).collect(Collectors.toList());
+        injectionNodes = injectionNodes.stream().filter(node -> node.getBeanInjection().contains("]")).collect(Collectors.toList());
         /**
          * Get all custom bean from faces-config.xml file
          */
