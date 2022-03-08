@@ -5,6 +5,7 @@ import com.example.strutservice.ast.node.JavaNode;
 import com.example.strutservice.dom.Jsp.JspFileNode;
 import com.example.strutservice.dom.Node;
 import com.example.strutservice.parser.StrutsJspParser;
+import com.example.strutservice.utils.Converter;
 import com.example.strutservice.utils.Helper.FileHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,31 @@ public class StrutServiceImpl implements StrutService{
             }
         });
 
+        List<com.example.strutservice.ast.node.Node> nodeList = Converter.convertStrutsNodesToNodes(nodes);
+
         return nodes;
+    }
+
+    @Override
+    public List<com.example.strutservice.ast.node.Node> parseProject(String folderPath) throws IOException {
+
+        List<Node> xmlNodes = new ArrayList<>();
+        Path path = Paths.get(folderPath);
+        List<Path> paths = FileHelper.listFiles(path);
+        List<Node> nodes = new ArrayList<>();
+
+        paths.forEach(p -> {
+            if(p.toString().endsWith(".jsp")) {
+                Node jspNode = new JspFileNode();
+                jspNode.setName(new File(p.toString()).getName());
+                jspNode.setAbsolutePath(p.toString());
+                nodes.add(strutsJspParser.parse(jspNode));
+            }
+        });
+
+        List<com.example.strutservice.ast.node.Node> nodeList = Converter.convertStrutsNodesToNodes(nodes);
+
+        return nodeList;
     }
 
     @Override

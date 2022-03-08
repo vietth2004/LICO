@@ -14,4 +14,5 @@ public interface StrutService {
     List<Node> parseProjectWithPath(String path) throws IOException, ExecutionException, InterruptedException;
     List<Node> parseProjectWithFile(MultipartFile file) throws IOException;
     List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException;
+    List<com.example.strutservice.ast.node.Node> parseProject(String folderPath) throws IOException, ExecutionException, InterruptedException;
 }
