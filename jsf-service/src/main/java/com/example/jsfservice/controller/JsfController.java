@@ -104,7 +104,7 @@ public class JsfController {
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());
         logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
-        return new ResponseEntity<ParserResponse>((ParserResponse) null, HttpStatus.OK);
+        return new ResponseEntity<ParserResponse>(response, HttpStatus.OK);
     }
 
 }

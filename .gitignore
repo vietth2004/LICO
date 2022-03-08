@@ -67,3 +67,8 @@ logs/strut-service.log
 logs/utility-service.log
 logs/compare-service.log
 *.log
+
+# Build folders
+/target
+/target/
+/target/*

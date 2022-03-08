@@ -71,7 +71,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
+    public ResponseEntity<?> register(@RequestBody User user, HttpServletRequest request) {
+
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
+        }
+        logger.log(Level.INFO ,"User IP: " + ipAddress);
 
         if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {
             return ResponseEntity.ok(new AuthenticationResponse("Username is already used!"));

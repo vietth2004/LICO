@@ -190,6 +190,7 @@ public class NodeUtils {
     public static List<Node> xhtmlNodeFilter(List<Node> nodes) {
         return nodes
                 .stream()
+                .filter(node -> node != null)
                 .filter(node -> FileHelper
                         .getFileExtension(node.getName())
                         .equals(JsfConstants.JSF_EXTENSIONS))

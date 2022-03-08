@@ -146,14 +146,15 @@ public class XmlServiceImpl implements XmlService {
             injectionNodes.addAll(filterTagNode(child));
         }
 
-        injectionNodes = injectionNodes.stream().filter(node -> !node.getBeanInjection().contains("[")).collect(Collectors.toList());
-        injectionNodes = injectionNodes.stream().filter(node -> !node.getBeanInjection().contains("]")).collect(Collectors.toList());
+        injectionNodes = injectionNodes.stream().filter(node -> node != null).filter(node -> !node.getBeanInjection().contains("[")).collect(Collectors.toList());
+        injectionNodes = injectionNodes.stream().filter(node -> node != null).filter(node -> !node.getBeanInjection().contains("]")).collect(Collectors.toList());
 
         /**
          * Get all custom bean from faces-config.xml file
          */
         List<Node> faceConfig = xmlNodes
                 .stream()
+                .filter(node -> node != null)
                 .filter(node -> node.getName().equals("faces-config.xml"))
                 .collect(Collectors.toList());
 
