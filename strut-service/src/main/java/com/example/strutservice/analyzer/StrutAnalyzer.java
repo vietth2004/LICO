@@ -3,6 +3,7 @@ package com.example.strutservice.analyzer;
 import com.example.strutservice.ast.dependency.Dependency;
 import com.example.strutservice.ast.node.JavaNode;
 import com.example.strutservice.ast.node.StrutsNode;
+import com.example.strutservice.dom.Jsp.JspTagNode;
 import com.example.strutservice.dom.Jsp.StrutsInterceptor;
 import com.example.strutservice.dom.Node;
 
