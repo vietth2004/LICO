@@ -30,7 +30,6 @@ public class StrutServiceImpl implements StrutService{
     @Override
     public List<Node> parseProjectWithPath(String folderPath) throws IOException, ExecutionException, InterruptedException {
 
-        List<Node> xmlNodes = new ArrayList<>();
         Path path = Paths.get(folderPath);
         List<Path> paths = FileHelper.listFiles(path);
         List<Node> nodes = new ArrayList<>();
@@ -44,32 +43,10 @@ public class StrutServiceImpl implements StrutService{
             }
         });
 
-        List<com.example.strutservice.ast.node.Node> nodeList = Converter.convertStrutsNodesToNodes(nodes);
 
         return nodes;
     }
 
-    @Override
-    public List<com.example.strutservice.ast.node.Node> parseProject(String folderPath) throws IOException {
-
-        List<Node> xmlNodes = new ArrayList<>();
-        Path path = Paths.get(folderPath);
-        List<Path> paths = FileHelper.listFiles(path);
-        List<Node> nodes = new ArrayList<>();
-
-        paths.forEach(p -> {
-            if(p.toString().endsWith(".jsp")) {
-                Node jspNode = new JspFileNode();
-                jspNode.setName(new File(p.toString()).getName());
-                jspNode.setAbsolutePath(p.toString());
-                nodes.add(strutsJspParser.parse(jspNode));
-            }
-        });
-
-        List<com.example.strutservice.ast.node.Node> nodeList = Converter.convertStrutsNodesToNodes(nodes);
-
-        return nodeList;
-    }
 
     @Override
     public List<Node> parseProjectWithFile(MultipartFile file) throws IOException {

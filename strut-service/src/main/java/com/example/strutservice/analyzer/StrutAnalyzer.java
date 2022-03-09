@@ -12,8 +12,6 @@ public class StrutAnalyzer {
     public static List<Dependency> actionDependencyAnalyzer(List<JavaNode> javaNodes, List<Node> strutsNodes) {
         List<Dependency> strutActionDeps = new ArrayList<>();
 
-
-
         return strutActionDeps;
     }
 
