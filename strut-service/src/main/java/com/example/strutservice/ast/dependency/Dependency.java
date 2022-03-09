@@ -13,10 +13,10 @@ public class Dependency {
         this.calleeNode = calleeNode;
     }
 
-    public Dependency(Integer callerNode, Integer calleeNode, DependencyCountTable javaDependency) {
+    public Dependency(Integer callerNode, Integer calleeNode, DependencyCountTable dependency) {
         this.callerNode = callerNode;
         this.calleeNode = calleeNode;
-        this.type = javaDependency;
+        this.type = dependency;
     }
 
     public Integer getCallerNode() {
