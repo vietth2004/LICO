@@ -1,5 +1,6 @@
 package com.example.strutservice.service;
 
+import com.example.strutservice.analyzer.StrutActionAnalyzer;
 import com.example.strutservice.ast.dependency.Dependency;
 import com.example.strutservice.ast.node.JavaNode;
 import com.example.strutservice.dom.Jsp.JspFileNode;
@@ -79,14 +80,40 @@ public class StrutServiceImpl implements StrutService{
     @Override
     public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException {
         List<Dependency> dependencies = new ArrayList<>();
-        List<Dependency> strutActionDeps;
-        List<Dependency> strutDeps;
-        List<Dependency> strutInterceptorDeps;
-        List<Dependency> strutInterceptorStackDeps;
-        List<Dependency> strutJspDeps;
-        List<Dependency> strutPackageDeps;
-        List<Dependency> strutResultDeps;
-        List<Dependency> strutResultTypeDeps;
+
+        //Struts Action Dependency
+        List<Dependency> strutActionDeps = StrutActionAnalyzer.actionDependencyAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutActionDeps);
+
+        //Struts Dependency
+        List<Dependency> strutDeps = StrutActionAnalyzer.strutsDependencyAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutDeps);
+
+        //Struts Interceptor Dependency
+        List<Dependency> strutInterceptorDeps = StrutActionAnalyzer.strutInterceptorDepsAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutInterceptorDeps);
+
+        //Struts Interceptor Stack Dependency
+        List<Dependency> strutInterceptorStackDeps = StrutActionAnalyzer.strutInterceptorStackDepsAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutInterceptorStackDeps);
+
+        //Struts Jsp Dependency
+        List<Dependency> strutJspDeps = StrutActionAnalyzer.strutJspDepsAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutJspDeps);
+
+        //Struts Package Dependency
+        List<Dependency> strutPackageDeps = StrutActionAnalyzer.strutPackageDepsAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutPackageDeps);
+
+        //Struts Result Dependency
+        List<Dependency> strutResultDeps = StrutActionAnalyzer.strutResultDepsAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutResultDeps);
+
+        //Struts ResultType Dependency
+        List<Dependency> strutResultTypeDeps = StrutActionAnalyzer.strutResultTypeDepsAnalyzer(javaNode, xmlNodes);
+        dependencies.addAll(strutResultTypeDeps);
+
+
         return dependencies;
     }
 }

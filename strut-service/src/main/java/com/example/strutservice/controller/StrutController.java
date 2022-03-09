@@ -24,7 +24,7 @@ public class StrutController {
 
 //    List<Node> strutNodes = new ArrayList<>();
 
-    @PostMapping("/pathParse")
+    @PostMapping("/pathParse/new")
     public ResponseEntity pathParse(@RequestBody Request request) {
         List<Node> jspNodes = new ArrayList<>();
         List<com.example.strutservice.ast.node.Node> nodes = new ArrayList<>();
@@ -40,6 +40,22 @@ public class StrutController {
             e.printStackTrace();
         }
         return ResponseEntity.ok(nodes);
+    }
+
+    @PostMapping("/pathParse/old")
+    public ResponseEntity oldPathParse(@RequestBody Request request) {
+        List<Node> jspNodes = new ArrayList<>();
+        try {
+            List<Node> strutNodes = strutService.parseProjectWithPath(request.getPath());
+            jspNodes.addAll(strutNodes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(jspNodes);
     }
 
     @PostMapping("/dependency")
