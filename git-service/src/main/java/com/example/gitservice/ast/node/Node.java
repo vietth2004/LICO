@@ -1,6 +1,6 @@
 package com.example.gitservice.ast.node;
 
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
 import mrmathami.cia.java.tree.node.JavaNode;
 
 public class Node {

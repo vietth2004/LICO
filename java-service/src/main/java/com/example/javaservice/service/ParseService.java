@@ -2,9 +2,7 @@ package com.example.javaservice.service;
 
 import com.example.javaservice.ast.annotation.JavaAnnotation;
 import com.netflix.discovery.shared.Pair;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.tree.annotate.JavaAnnotate;
-import mrmathami.cia.java.tree.node.attribute.JavaAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
 import org.eclipse.jdt.core.dom.*;
 import com.example.javaservice.ast.annotation.MemberValuePair;
 

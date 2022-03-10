@@ -4,12 +4,12 @@ import com.example.gitservice.ast.annotation.JavaAnnotation;
 import com.example.gitservice.ast.dependency.Pair;
 import com.example.gitservice.ast.type.JavaType;
 import com.example.gitservice.ast.utility.Utility;
-import mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
-import mrmathami.cia.java.jdt.tree.node.MethodNode;
-import mrmathami.cia.java.jdt.tree.node.RootNode;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.dependency.DependencyCountTable;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.InterfaceNode;
+import mrmathami.cia.java.jdt.project.tree.node.MethodNode;
+import mrmathami.cia.java.jdt.project.tree.node.RootNode;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 
 import java.io.Serializable;

@@ -4,10 +4,10 @@ package com.example.springservice.ast.type;
 import com.example.springservice.ast.annotation.JavaAnnotation;
 import com.example.springservice.ast.node.Node;
 import com.example.springservice.ast.utility.Utility;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.jdt.tree.type.ReferenceType;
-import mrmathami.cia.java.jdt.tree.type.SimpleType;
-import mrmathami.cia.java.jdt.tree.type.SyntheticType;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.project.tree.type.ReferenceType;
+import mrmathami.cia.java.jdt.project.tree.type.SimpleType;
+import mrmathami.cia.java.jdt.project.tree.type.SyntheticType;
 
 import java.util.ArrayList;
 import java.util.List;

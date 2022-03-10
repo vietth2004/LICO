@@ -5,11 +5,11 @@ import com.example.parserservice.ast.annotation.JavaAnnotation;
 import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.type.JavaType;
 import com.example.parserservice.ast.utility.Utility;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
-import mrmathami.cia.java.jdt.tree.node.MethodNode;
-import mrmathami.cia.java.jdt.tree.node.RootNode;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.InterfaceNode;
+import mrmathami.cia.java.jdt.project.tree.node.MethodNode;
+import mrmathami.cia.java.jdt.project.tree.node.RootNode;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 
 import java.io.Serializable;

@@ -5,12 +5,10 @@ import com.example.springservice.ast.dependency.Pair;
 import com.example.springservice.ast.type.JavaType;
 import com.example.springservice.ast.utility.Utility;
 import mrmathami.annotations.Nonnull;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
-import mrmathami.cia.java.jdt.tree.node.MethodNode;
-import mrmathami.cia.java.jdt.tree.node.RootNode;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.InterfaceNode;
+import mrmathami.cia.java.jdt.project.tree.node.RootNode;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractAnnotatedNode;
 
 import java.util.ArrayList;
 import java.util.List;

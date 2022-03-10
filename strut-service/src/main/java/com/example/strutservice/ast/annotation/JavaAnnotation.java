@@ -1,6 +1,6 @@
 package com.example.strutservice.ast.annotation;
 
-import mrmathami.cia.java.jdt.tree.annotate.Annotate;
+import mrmathami.cia.java.jdt.project.tree.annotate.Annotate;
 
 import java.util.ArrayList;
 import java.util.List;

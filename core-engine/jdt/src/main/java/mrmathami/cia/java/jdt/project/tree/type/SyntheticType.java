@@ -16,15 +16,11 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node;
+package mrmathami.cia.java.jdt.project.tree.type;
 
 import mrmathami.annotations.Nonnull;
-import mrmathami.annotations.Nullable;
-import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractParameterizedModifiedAnnotatedNode;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.tree.node.JavaEnumNode;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.tree.type.JavaSyntheticType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,41 +29,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public final class EnumNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaEnumNode {
+public final class SyntheticType extends AbstractType implements JavaSyntheticType {
 
 	private static final long serialVersionUID = -1L;
 
-	@Nullable private final String binaryName;
-	@Nonnull private transient List<AbstractType> implementsInterfaces = List.of();
+	@Nonnull private transient List<AbstractType> bounds = List.of();
 
 
-	public EnumNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, @Nullable String binaryName) {
-		super(sourceFile, parent, simpleName);
-		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
-				InterfaceNode.class, PackageNode.class, RootNode.class);
-
-		this.binaryName = binaryName;
+	public SyntheticType(@Nonnull String description) {
+		super(description);
 	}
 
 
 	//region Getter & Setter
 
-	@Nullable
-	@Override
-	public String getBinaryName() {
-		return binaryName;
-	}
-
 	@Nonnull
 	@Override
-	public List<AbstractType> getImplementsInterfaces() {
-		return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
+	public List<AbstractType> getBounds() {
+		return isFrozen() ? bounds : Collections.unmodifiableList(bounds);
 	}
 
-	public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
+	public void setBounds(@Nonnull List<AbstractType> bounds) {
 		assertNonFrozen();
-		this.implementsInterfaces = implementsInterfaces;
+		this.bounds = bounds;
 	}
 
 	//endregion Getter & Setter
@@ -77,8 +61,8 @@ public final class EnumNode extends AbstractParameterizedModifiedAnnotatedNode i
 	@Override
 	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
 		if (super.internalFreeze(map)) return true;
-		this.implementsInterfaces = List.copyOf(implementsInterfaces);
-		for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
+		this.bounds = List.copyOf(bounds);
+		for (final AbstractType bound : bounds) bound.internalFreeze(map);
 		return false;
 	}
 
@@ -86,14 +70,14 @@ public final class EnumNode extends AbstractParameterizedModifiedAnnotatedNode i
 			throws IOException, UnsupportedOperationException {
 		assertFrozen();
 		outputStream.defaultWriteObject();
-		outputStream.writeObject(implementsInterfaces);
+		outputStream.writeObject(bounds);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(@Nonnull ObjectInputStream inputStream)
 			throws IOException, ClassNotFoundException, ClassCastException {
 		inputStream.defaultReadObject();
-		this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
+		this.bounds = (List<AbstractType>) inputStream.readObject();
 	}
 
 	//endregion Serialization Helper
@@ -101,17 +85,11 @@ public final class EnumNode extends AbstractParameterizedModifiedAnnotatedNode i
 	//region Jsonify
 
 	@Override
-	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-		super.internalToReferenceJsonStart(builder);
-		builder.append(", \"binaryName\": \"").append(binaryName).append('"');
-	}
-
-	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (!implementsInterfaces.isEmpty()) {
-			builder.append(", \"implementsInterfaces\": [");
-			internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
+		if (!bounds.isEmpty()) {
+			builder.append(", \"bounds\": [");
+			internalArrayToReferenceJson(builder, indentation, bounds);
 			builder.append('\n').append(indentation).append(']');
 		}
 	}
