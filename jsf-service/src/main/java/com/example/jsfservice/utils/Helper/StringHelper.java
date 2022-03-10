@@ -5,7 +5,7 @@ import java.util.List;
 
 public class StringHelper {
 
-    public static List<String> SUPPORTED_EXTENSIONS = Arrays.asList("html", "htm", "xml", "xhtml", "jsp");
+    public static List<String> SUPPORTED_EXTENSIONS = Arrays.asList("xml", "xhtml", "jsp");
 
     public static String strip(String input) {
         return input.trim();
