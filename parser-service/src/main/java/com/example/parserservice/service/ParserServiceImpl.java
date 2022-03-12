@@ -79,8 +79,18 @@ public class ParserServiceImpl implements ParserService{
     @Override
     public Response build(List<String> parserList, Path path) {
         log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
-        Request request = buildProject(path);
-        JSFResponse jsf = buildJsf(path);
+        CompletableFuture<Request> reqFuture = CompletableFuture.supplyAsync(() -> buildProject(path));
+        CompletableFuture<JSFResponse> jsfFuture = CompletableFuture.supplyAsync(() -> buildJsf(path));
+        Request request = null;
+        JSFResponse jsf = null;
+        try {
+            request = reqFuture.get();
+            jsf = jsfFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return Utils.getResponse(parserList, request, path.getPath(), jsf);
     }
 
