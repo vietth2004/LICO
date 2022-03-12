@@ -1,6 +1,7 @@
 package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
+import com.example.parserservice.model.jsf.JSFResponse;
 import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
@@ -42,12 +43,12 @@ public class ParserServiceImpl implements ParserService{
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
         }
-
         String fileName = projectService.storeFile(file, userPath, project);
 
         Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
         Request request = buildProject(filePath);
-        return Utils.getResponse(parserList, request, filePath.getPath());
+        JSFResponse jsf = buildJsf(filePath);
+        return Utils.getResponse(parserList, request, filePath.getPath(), jsf);
     }
 
     @Override
@@ -63,7 +64,8 @@ public class ParserServiceImpl implements ParserService{
     @Override
     public Response build(List<String> parserList, Path path) {
         Request request = buildProject(path);
-        return Utils.getResponse(parserList, request, path.getPath());
+        JSFResponse jsf = buildJsf(path);
+        return Utils.getResponse(parserList, request, path.getPath(), jsf);
     }
 
     @Override
@@ -71,6 +73,13 @@ public class ParserServiceImpl implements ParserService{
         String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, path, Request.class);
         return request.getBody();
+    }
+
+    @Override
+    public JSFResponse buildJsf(Path path) {
+        String serverUrl = "http://" + ipConstants.getXmlServiceIp() + ":7004/api/jsf-service/analyze";
+        ResponseEntity<JSFResponse> jsfResponse = restTemplate.postForEntity(serverUrl, path, JSFResponse.class);
+        return jsfResponse.getBody();
     }
 
 
