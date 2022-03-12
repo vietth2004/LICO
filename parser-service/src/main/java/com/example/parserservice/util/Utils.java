@@ -78,13 +78,13 @@ public class Utils {
             if(Resource.PARSER.contains(parser)) {
                 dependencies = wrapDependency(dependencies, getDependencies(parser, javaNodes), "SPRING");
             }
+            if(Resource.PARSER.contains(parser) && parser.equals("jsf-parser"))
+                dependencies.addAll(jsfResponse.getAllDependencies());
         }
 
         wrapRootNode(javaNode, dependencies);
 
         List nodes = getNodesWeight(dependencies, javaNodes.size());
-
-        dependencies.addAll(jsfResponse.getAllDependencies());
 
         return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path, jsfResponse.getAllNodes());
     }
