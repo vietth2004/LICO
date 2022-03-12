@@ -39,5 +39,9 @@ public class VersionController {
         return versionService.getCompare(path);
     }
 
+    @PostMapping("/hello")
+    public String versionCompareByPath() throws JavaCiaException, IOException {
+        return "hello";
+    }
 
 }
