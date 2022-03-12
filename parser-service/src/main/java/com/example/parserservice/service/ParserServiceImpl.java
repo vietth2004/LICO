@@ -7,6 +7,7 @@ import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.util.JwtUtils;
 import com.example.parserservice.util.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
+@Slf4j
 public class ParserServiceImpl implements ParserService{
 
     final ProjectService projectService;
@@ -38,7 +42,7 @@ public class ParserServiceImpl implements ParserService{
     //**
     @Override
     public Response build(List<String> parserList, MultipartFile file, String user, String project) {
-
+        log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String userPath = user;
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
@@ -46,13 +50,24 @@ public class ParserServiceImpl implements ParserService{
         String fileName = projectService.storeFile(file, userPath, project);
 
         Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
-        Request request = buildProject(filePath);
-        JSFResponse jsf = buildJsf(filePath);
+        CompletableFuture<Request> reqFuture = CompletableFuture.supplyAsync(() -> buildProject(filePath));
+        CompletableFuture<JSFResponse> jsfFuture = CompletableFuture.supplyAsync(() -> buildJsf(filePath));
+        Request request = null;
+        JSFResponse jsf = null;
+        try {
+            request = reqFuture.get();
+            jsf = jsfFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return Utils.getResponse(parserList, request, filePath.getPath(), jsf);
     }
 
     @Override
     public Request buildProject(MultipartFile file) {
+        log.info("Function: buildProject() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/fileParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, Utils.getResponseEntity(file), Request.class);
         return request.getBody();
@@ -63,6 +78,7 @@ public class ParserServiceImpl implements ParserService{
     //**
     @Override
     public Response build(List<String> parserList, Path path) {
+        log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         Request request = buildProject(path);
         JSFResponse jsf = buildJsf(path);
         return Utils.getResponse(parserList, request, path.getPath(), jsf);
@@ -70,6 +86,7 @@ public class ParserServiceImpl implements ParserService{
 
     @Override
     public Request buildProject(Path path) {
+        log.info("Function: buildProject() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
         ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, path, Request.class);
         return request.getBody();
@@ -77,10 +94,10 @@ public class ParserServiceImpl implements ParserService{
 
     @Override
     public JSFResponse buildJsf(Path path) {
+        log.info("Function: buildJsf() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String serverUrl = "http://" + ipConstants.getXmlServiceIp() + ":7004/api/jsf-service/analyze";
         ResponseEntity<JSFResponse> jsfResponse = restTemplate.postForEntity(serverUrl, path, JSFResponse.class);
         return jsfResponse.getBody();
     }
-
 
 }
