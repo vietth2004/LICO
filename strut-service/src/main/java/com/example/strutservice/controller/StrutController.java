@@ -5,12 +5,10 @@ import com.example.strutservice.ast.node.JavaNode;
 import com.example.strutservice.dom.Node;
 import com.example.strutservice.dto.Request;
 import com.example.strutservice.service.StrutService;
+import com.example.strutservice.utils.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,13 +22,31 @@ public class StrutController {
     @Autowired
     private StrutService strutService;
 
-    List<Node> strutNodes = new ArrayList<>();
+//    List<Node> strutNodes = new ArrayList<>();
 
-    @PostMapping("/pathParse")
+    @PostMapping("/pathParse/new")
     public ResponseEntity pathParse(@RequestBody Request request) {
         List<Node> jspNodes = new ArrayList<>();
+        List<com.example.strutservice.ast.node.Node> nodes = new ArrayList<>();
         try {
-            strutNodes = strutService.parseProjectWithPath(request.getPath());
+            List<Node> strutNodes = strutService.parseProjectWithPath(request.getPath());
+            jspNodes.addAll(strutNodes);
+            nodes = Converter.convertStrutsNodesToNodes(jspNodes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(nodes);
+    }
+
+    @PostMapping("/pathParse/old")
+    public ResponseEntity oldPathParse(@RequestBody Request request) {
+        List<Node> jspNodes = new ArrayList<>();
+        try {
+            List<Node> strutNodes = strutService.parseProjectWithPath(request.getPath());
             jspNodes.addAll(strutNodes);
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,10 +59,14 @@ public class StrutController {
     }
 
     @PostMapping("/dependency")
-    public ResponseEntity getDependency(@RequestBody List<JavaNode> request) {
+    public ResponseEntity getDependency(@RequestBody List<JavaNode> request,
+                                        @RequestParam String path) {
         List<Dependency> dependencies = new ArrayList<>();
         try {
+            List<Node> strutNodes = strutService.parseProjectWithPath(path);
             dependencies.addAll(strutService.analyzeDependency(request, strutNodes));
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
