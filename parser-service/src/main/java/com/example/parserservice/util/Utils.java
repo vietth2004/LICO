@@ -6,6 +6,7 @@ import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.model.Response;
 import com.example.parserservice.model.cia.CiaRequest;
 import com.example.parserservice.model.cia.CiaResponse;
+import com.example.parserservice.model.jsf.JSFResponse;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.model.parser.Resource;
 import org.springframework.http.HttpEntity;
@@ -68,23 +69,24 @@ public class Utils {
         return dependencies;
     }
 
-    public static Response getResponse(List<String> parserList, Request request, String path) {
+    public static Response getResponse(List<String> parserList, Request request, String path, JSFResponse jsfResponse) {
         JavaNode javaNode = request.getRootNode();
         List javaNodes = request.getAllNodes();
-
         List<Dependency> dependencies = request.getAllDependencies();
 
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
                 dependencies = wrapDependency(dependencies, getDependencies(parser, javaNodes), "SPRING");
             }
+            if(Resource.PARSER.contains(parser) && parser.equals("jsf-parser"))
+                dependencies.addAll(jsfResponse.getAllDependencies());
         }
 
         wrapRootNode(javaNode, dependencies);
 
         List nodes = getNodesWeight(dependencies, javaNodes.size());
 
-        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path);
+        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path, jsfResponse.getAllNodes());
     }
 
     private static void wrapRootNode(JavaNode javaNode, List<Dependency> dependencies) {
