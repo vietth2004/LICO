@@ -15,18 +15,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-import static com.example.jsfservice.utils.NodeUtils.*;
+import static com.example.jsfservice.utils.ParserUtils.*;
 
 @Service
 public class XmlServiceImpl implements XmlService {

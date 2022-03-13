@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.example.jsfservice.utils.NodeUtils.*;
+import static com.example.jsfservice.utils.ParserUtils.*;
 
 @Service
 public class PropertiesServiceImpl implements PropertiesService{

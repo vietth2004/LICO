@@ -1,5 +1,6 @@
 package com.jcia.xml;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.jcia.xml.dom.Node;
 import com.jcia.xml.parser.XmlFileParser;
@@ -14,10 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Main {
 
@@ -49,6 +47,9 @@ public class Main {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(xmlNodes);
 
+        //Parse project (submit each node into future - multithreading)
         System.out.println(json);
+
     }
+
 }

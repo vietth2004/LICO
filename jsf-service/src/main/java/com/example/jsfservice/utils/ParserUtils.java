@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class NodeUtils {
+public class ParserUtils {
 
     /**
      * Recalculate id in all xml nodes by total javaNods
