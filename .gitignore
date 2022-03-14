@@ -73,3 +73,4 @@ logs/compare-service.log
 /target
 /target/
 /target/*
+/jsf-service/target/
