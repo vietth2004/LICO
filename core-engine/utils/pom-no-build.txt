@@ -24,7 +24,7 @@
 
 	<groupId>mrmathami</groupId>
 	<artifactId>mrmathami.utils</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.6</version>
 
 	<name>MrMaThaMi's utilities</name>
 	<description>Many utilities I often use in my code.</description>

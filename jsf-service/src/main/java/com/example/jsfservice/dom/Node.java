@@ -23,6 +23,7 @@ public class Node implements Serializable {
     protected String fullyQualifiedName = new String();
     protected String absolutePath;
     protected String entityClass;
+    protected String status;
 
     @JsonIgnore
     @JciaIgnore
@@ -94,6 +95,14 @@ public class Node implements Serializable {
     public void addChild(Node child) {
         if (child != null)
             this.children.add(child);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void addChildren(List<Node> children) {
@@ -215,7 +224,12 @@ public class Node implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((absolutePath == null) ? 0 : absolutePath.hashCode());
+        result = prime * result + (id ^ (id >>> 32));
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
     }
 
     /**
@@ -354,6 +368,8 @@ public class Node implements Serializable {
     public String toString() {
         return "Node{" +
                 "name='" + name + '\'' +
+                ", children='" + getChildren() + '\'' +
                 '}';
     }
+
 }

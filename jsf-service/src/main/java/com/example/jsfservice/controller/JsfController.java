@@ -2,16 +2,19 @@ package com.example.jsfservice.controller;
 
 import com.example.jsfservice.ast.dependency.Dependency;
 import com.example.jsfservice.ast.node.JavaNode;
+import com.example.jsfservice.compare.CompareService;
 import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.dom.Properties.PropertiesFileNode;
 import com.example.jsfservice.dto.Request;
 import com.example.jsfservice.dto.Response;
+import com.example.jsfservice.dto.compare.CompareRequest;
+import com.example.jsfservice.dto.compare.CompareResponse;
 import com.example.jsfservice.dto.java.JavaResponse;
 import com.example.jsfservice.dto.parser.ParserResponse;
 import com.example.jsfservice.service.PropertiesService;
 import com.example.jsfservice.service.XmlService;
 import com.example.jsfservice.utils.JavaUtils;
-import com.example.jsfservice.utils.NodeUtils;
+import com.example.jsfservice.utils.ParserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,9 @@ public class JsfController {
     private PropertiesService propService;
 
     @Autowired
+    private CompareService compareService;
+
+    @Autowired
     JavaUtils javaUtils;
 
     /**
@@ -64,7 +70,7 @@ public class JsfController {
         this.xmlNodes.addAll(xmlNodes);
         this.propFileNodes.addAll(propFileNodes);
         logger.info("Recalculating xmlNode id by javaNode id...");
-        NodeUtils.reCalculateXmlNodesId(javaNode, this.xmlNodes);
+        ParserUtils.reCalculateXmlNodesId(javaNode, this.xmlNodes);
         return new Response(xmlNodes);
     }
 
@@ -105,6 +111,22 @@ public class JsfController {
         logger.info("Number of dependencies: " + dependencies.size());
         logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
         return new ResponseEntity<ParserResponse>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/compare")
+    public ResponseEntity<CompareResponse> compare(@RequestBody CompareRequest request) throws IOException, ExecutionException, InterruptedException {
+        long before = System.nanoTime();
+        logger.info("Run into API: /compare");
+        logger.info("Comparing tree...");
+
+        List<Node> oldVer = xmlService.parseProjectWithPath(request.getOldPath());
+        List<Node> newVer = xmlService.parseProjectWithPath(request.getNewPath());
+        CompareResponse response = compareService.getCompare(oldVer, newVer);
+
+        long after = System.nanoTime();
+        logger.info("Done comparing tree...");
+        logger.info("Comparing tree done in " + (after - before)/1000000 + " ms!");
+        return ResponseEntity.ok(response);
     }
 
 }

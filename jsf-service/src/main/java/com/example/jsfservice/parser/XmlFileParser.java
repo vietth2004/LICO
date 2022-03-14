@@ -47,6 +47,8 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
     public Node parse(String path) throws JciaNotFoundException {
         XmlFileNode node = new XmlFileNode();
         node.setAbsolutePath(path);
+        String fullyQualifiedName = new File(new File(path).getParent()).getName() + ">" + new File(path).getName();
+        node.setFullyQualifiedName(fullyQualifiedName);
         node.setEntityClass("XmlFileNode");
         return parse(node);
     }
@@ -133,6 +135,7 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
         if (nodeName != null) node.setName(nodeName);
 
         node.setTagName(domNode.getNodeName());
+        node.setFullyQualifiedName(parent.getFullyQualifiedName() + ">" + node.getTagName());
 
         // set content for leaf node
         for (int i = 0; i < domNode.getChildNodes().getLength(); i++) {
