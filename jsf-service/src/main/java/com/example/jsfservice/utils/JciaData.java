@@ -9,6 +9,7 @@ import java.util.Map;
 public class JciaData {
 
     private static final Logger logger = LogManager.getLogger(JciaData.class);
+    private static JciaData instances;
 
     /**
      * Path Ignore
@@ -98,7 +99,17 @@ public class JciaData {
     }
 
     public static JciaData getInstance() {
-        return THREAD_LOCAL.get();
+//        return THREAD_LOCAL.get();
+        if(instances == null) {
+            //synchronized block to remove overhead
+            synchronized (JciaData.class) {
+                if (instances == null) {
+                    // if instance is null, initialize
+                    instances = new JciaData();
+                }
+            }
+        }
+        return instances;
     }
 
     public Object getData(Integer dataKey) {

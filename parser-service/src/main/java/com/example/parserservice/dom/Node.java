@@ -12,10 +12,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.MINIMAL_CLASS,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "json_type")
+//@JsonTypeInfo(
+//        use = JsonTypeInfo.Id.MINIMAL_CLASS,
+//        include = JsonTypeInfo.As.PROPERTY,
+//        property = "json_type")
 public class Node implements Serializable {
     private static final long serialVersionUID = -1411216676620846129L;
     protected int id;
