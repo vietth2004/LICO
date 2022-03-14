@@ -5,7 +5,11 @@ import com.example.strutservice.ast.dependency.Dependency;
 import com.example.strutservice.ast.node.JavaNode;
 import com.example.strutservice.dom.Jsp.JspFileNode;
 import com.example.strutservice.dom.Node;
+import com.example.strutservice.dom.Xml.XmlFileNode;
 import com.example.strutservice.parser.StrutsJspParser;
+import com.example.strutservice.parser.XmlFileParser;
+import com.example.strutservice.utils.Exception.JciaException;
+import com.example.strutservice.utils.Exception.JciaNotFoundException;
 import com.example.strutservice.utils.Helper.FileHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +38,7 @@ public class StrutServiceImpl implements StrutService{
         List<Node> nodes = new ArrayList<>();
 
         paths.forEach(p -> {
+
             if(p.toString().endsWith(".jsp")) {
                 Node jspNode = new JspFileNode();
                 jspNode.setName(new File(p.toString()).getName());
@@ -41,6 +46,7 @@ public class StrutServiceImpl implements StrutService{
                 nodes.add(strutsJspParser.parse(jspNode));
             }
         });
+
 
 
         return nodes;
@@ -53,47 +59,47 @@ public class StrutServiceImpl implements StrutService{
     }
 
     @Override
-    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes) throws ExecutionException, InterruptedException {
+    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> strutsNodes) throws ExecutionException, InterruptedException {
         List<Dependency> dependencies = new ArrayList<>();
         StrutAnalyzer strutAnalyzer;
 
         //Struts Action Dependency
         strutAnalyzer = new ActionDependencyAnalyzer();
-        List<Dependency> strutActionDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutActionDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutActionDeps);
 
         //Struts Dependency
-//        List<Dependency> strutDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+//        List<Dependency> strutDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
 //        dependencies.addAll(strutDeps);
 
         //Struts Interceptor Dependency
         strutAnalyzer = new InterceptorDepsAnalyzer();
-        List<Dependency> strutInterceptorDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutInterceptorDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutInterceptorDeps);
 
         //Struts Interceptor Stack Dependency
         strutAnalyzer = new InterceptorStackDepsAnalyzer();
-        List<Dependency> strutInterceptorStackDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutInterceptorStackDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutInterceptorStackDeps);
 
         //Struts Jsp Dependency
         strutAnalyzer = new JspDepsAnalyzer();
-        List<Dependency> strutJspDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutJspDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutJspDeps);
 
         //Struts Package Dependency
         strutAnalyzer = new PackageDepsAnalyzer();
-        List<Dependency> strutPackageDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutPackageDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutPackageDeps);
 
         //Struts Result Dependency
         strutAnalyzer = new ResultDepsAnalyzer();
-        List<Dependency> strutResultDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutResultDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutResultDeps);
 
         //Struts ResultType Dependency
         strutAnalyzer = new ResultTypeDepsAnalyzer();
-        List<Dependency> strutResultTypeDeps = strutAnalyzer.analyze(javaNode, xmlNodes);
+        List<Dependency> strutResultTypeDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
         dependencies.addAll(strutResultTypeDeps);
 
 
