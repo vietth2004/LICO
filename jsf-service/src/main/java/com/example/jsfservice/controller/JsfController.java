@@ -101,6 +101,7 @@ public class JsfController {
         logger.info("Analyzing dependency...");
         JavaResponse javaNode = javaUtils.getJavaNode(req);
         List<Node> xmlNodes = xmlService.parseProjectWithPath(req.getPath());
+        ParserUtils.reCalculateXmlNodesId(javaNode.getAllNodes().size(), xmlNodes);
         List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(req.getPath());
         List<Dependency> dependencies = new ArrayList<>();
         dependencies.addAll(xmlService.analyzeDependency(javaNode.getAllNodes(), xmlNodes));
