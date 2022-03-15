@@ -45,7 +45,7 @@ public class StrutServiceImpl implements StrutService{
             }
         });
 
-        nodes.addAll(xmlRequest.getXmlNode(folderPath));
+//        nodes.addAll(xmlRequest.getXmlNode(folderPath));
 
         return nodes;
     }

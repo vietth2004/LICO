@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("/api/strut-service/")
+@RequestMapping("/api/jsp-service/")
 public class JspController {
 
     @Autowired
