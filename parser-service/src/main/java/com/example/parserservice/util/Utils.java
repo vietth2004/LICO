@@ -75,7 +75,7 @@ public class Utils {
         List<Dependency> dependencies = request.getAllDependencies();
 
         for (String parser : parserList) {
-            if(Resource.PARSER.contains(parser)) {
+            if(Resource.PARSER.contains(parser) && parser.equals("spring-parser")) {
                 dependencies = wrapDependency(dependencies, getDependencies(parser, javaNodes), "SPRING");
             }
             if(Resource.PARSER.contains(parser) && parser.equals("jsf-parser"))
