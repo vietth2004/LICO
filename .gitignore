@@ -68,7 +68,6 @@ logs/utility-service.log
 logs/compare-service.log
 *.log
 
-*.properties
 # Build folders
 /target
 /target/
