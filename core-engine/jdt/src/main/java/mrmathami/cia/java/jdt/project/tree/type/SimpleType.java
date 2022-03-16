@@ -16,30 +16,22 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node;
+package mrmathami.cia.java.jdt.project.tree.type;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
-import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.tree.node.JavaFieldNode;
+import mrmathami.cia.java.tree.type.JavaSimpleType;
 
-import java.util.List;
-import java.util.Map;
-
-public final class FieldNode extends AbstractModifiedAnnotatedNode implements JavaFieldNode {
+public final class SimpleType extends AbstractType implements JavaSimpleType {
 
 	private static final long serialVersionUID = -1L;
 
-	@Nullable private AbstractType type;
+	@Nullable
+	private AbstractType innerType;
 
 
-	public FieldNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, @Nonnull String simpleName) {
-		super(sourceFile, parent, simpleName);
-		checkParent(parent, AnnotationNode.class, ClassNode.class, EnumNode.class,
-				InterfaceNode.class, MethodNode.class);
+	public SimpleType(@Nonnull String description) {
+		super(description);
 	}
 
 
@@ -47,36 +39,25 @@ public final class FieldNode extends AbstractModifiedAnnotatedNode implements Ja
 
 	@Nullable
 	@Override
-	public AbstractType getType() {
-		return type;
+	public AbstractType getInnerType() {
+		return innerType;
 	}
 
-	public void setType(@Nullable AbstractType type) {
+	public void setInnerType(@Nullable AbstractType innerType) {
 		assertNonFrozen();
-		this.type = type;
+		this.innerType = innerType;
 	}
 
 	//endregion Getter & Setter
-
-	//region Serialization Helper
-
-	@Override
-	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-		if (super.internalFreeze(map)) return true;
-		if (type != null) type.internalFreeze(map);
-		return false;
-	}
-
-	//endregion Serialization Helper
 
 	//region Jsonify
 
 	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (type != null) {
-			builder.append(", \"type\": { ");
-			type.internalToReferenceJson(builder);
+		if (innerType != null) {
+			builder.append(", \"innerType\": { ");
+			innerType.internalToReferenceJson(builder);
 			builder.append(" }");
 		}
 	}

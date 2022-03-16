@@ -1,6 +1,6 @@
 package com.example.gitservice.ast.annotation;
 
-import mrmathami.cia.java.jdt.tree.annotate.Annotate;
+import mrmathami.cia.java.jdt.project.tree.annotate.Annotate;
 
 public class JavaAnnotation {
     private String entityClass = new String();

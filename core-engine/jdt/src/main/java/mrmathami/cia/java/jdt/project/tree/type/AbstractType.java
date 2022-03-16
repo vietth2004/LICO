@@ -16,11 +16,12 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.type;
+package mrmathami.cia.java.jdt.project.tree.type;
 
 import mrmathami.annotations.Nonnull;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.tree.type.JavaSyntheticType;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.annotate.Annotate;
+import mrmathami.cia.java.tree.type.JavaType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,15 +30,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public final class SyntheticType extends AbstractType implements JavaSyntheticType {
+public abstract class AbstractType extends AbstractIdentifiedEntity implements JavaType {
 
 	private static final long serialVersionUID = -1L;
 
-	@Nonnull private transient List<AbstractType> bounds = List.of();
+	@Nonnull private final String description;
+	@Nonnull private transient List<Annotate> annotates = List.of();
 
 
-	public SyntheticType(@Nonnull String description) {
-		super(description);
+	public AbstractType(@Nonnull String description) {
+		this.description = description;
 	}
 
 
@@ -45,13 +47,19 @@ public final class SyntheticType extends AbstractType implements JavaSyntheticTy
 
 	@Nonnull
 	@Override
-	public List<AbstractType> getBounds() {
-		return isFrozen() ? bounds : Collections.unmodifiableList(bounds);
+	public final String getDescription() {
+		return description;
 	}
 
-	public void setBounds(@Nonnull List<AbstractType> bounds) {
+	@Nonnull
+	@Override
+	public final List<Annotate> getAnnotates() {
+		return isFrozen() ? annotates : Collections.unmodifiableList(annotates);
+	}
+
+	public final void setAnnotates(@Nonnull List<Annotate> annotates) {
 		assertNonFrozen();
-		this.bounds = bounds;
+		this.annotates = annotates;
 	}
 
 	//endregion Getter & Setter
@@ -61,8 +69,8 @@ public final class SyntheticType extends AbstractType implements JavaSyntheticTy
 	@Override
 	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
 		if (super.internalFreeze(map)) return true;
-		this.bounds = List.copyOf(bounds);
-		for (final AbstractType bound : bounds) bound.internalFreeze(map);
+		this.annotates = List.copyOf(annotates);
+		for (final Annotate annotate : annotates) annotate.internalFreeze(map);
 		return false;
 	}
 
@@ -70,14 +78,14 @@ public final class SyntheticType extends AbstractType implements JavaSyntheticTy
 			throws IOException, UnsupportedOperationException {
 		assertFrozen();
 		outputStream.defaultWriteObject();
-		outputStream.writeObject(bounds);
+		outputStream.writeObject(annotates);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(@Nonnull ObjectInputStream inputStream)
 			throws IOException, ClassNotFoundException, ClassCastException {
 		inputStream.defaultReadObject();
-		this.bounds = (List<AbstractType>) inputStream.readObject();
+		this.annotates = (List<Annotate>) inputStream.readObject();
 	}
 
 	//endregion Serialization Helper
@@ -85,15 +93,27 @@ public final class SyntheticType extends AbstractType implements JavaSyntheticTy
 	//region Jsonify
 
 	@Override
+	protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
+		super.internalToReferenceJsonEnd(builder);
+		builder.append(", \"describe\": \"").append(description).append('"');
+	}
+
+	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (!bounds.isEmpty()) {
-			builder.append(", \"bounds\": [");
-			internalArrayToReferenceJson(builder, indentation, bounds);
+		if (!annotates.isEmpty()) {
+			builder.append(", \"annotates\": [");
+			internalArrayToJson(builder, indentation, false, annotates);
 			builder.append('\n').append(indentation).append(']');
 		}
 	}
 
 	//endregion Jsonify
+
+	@Nonnull
+	@Override
+	public final String toString() {
+		return description;
+	}
 
 }
