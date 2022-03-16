@@ -129,8 +129,7 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
         if (parent instanceof XmlTagNode)
             nodeName = parent.getName() + ">" + domNode.getNodeName();
         else if (parent instanceof XmlFileNode)
-            nodeName = domNode.getNodeName();
-        if (nodeName != null) node.setName(nodeName);
+        if (nodeName != null) node.setName(domNode.getNodeName());
 
         node.setTagName(domNode.getNodeName());
         node.setFullyQualifiedName(parent.getFullyQualifiedName() + ">" + node.getTagName());
