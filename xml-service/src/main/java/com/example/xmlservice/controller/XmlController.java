@@ -1,10 +1,8 @@
 package com.example.xmlservice.controller;
 
-import com.example.xmlservice.ast.dependency.Dependency;
-import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.dto.Request;
-import com.example.xmlservice.service.StrutService;
+import com.example.xmlservice.service.XmlService;
 import com.example.xmlservice.utils.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +15,10 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/xml-service/")
-public class StrutController {
+public class XmlController {
 
     @Autowired
-    private StrutService strutService;
+    private XmlService strutService;
 
 //    List<Node> strutNodes = new ArrayList<>();
 

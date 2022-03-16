@@ -53,7 +53,7 @@ public class HostIPConstants {
     }
 
     public String getXmlServiceIp() {
-        return eurekaClient.getApplication(JSF_SERVICE).getInstances().get(0).getIPAddr();
+        return eurekaClient.getApplication(XML_SERVICE).getInstances().get(0).getIPAddr();
     }
 
     public String getGithubServiceIp() {
@@ -62,5 +62,13 @@ public class HostIPConstants {
 
     public String getStrutServiceIp() {
         return eurekaClient.getApplication(STRUT_SERVICE).getInstances().get(0).getIPAddr();
+    }
+
+    public String getJsfServiceIP() {
+        return eurekaClient.getApplication(JSF_SERVICE).getInstances().get(0).getIPAddr();
+    }
+
+    public String getJspServiceIp() {
+        return eurekaClient.getApplication(JSP_SERVICE).getInstances().get(0).getIPAddr();
     }
 }

@@ -1,8 +1,8 @@
 package com.example.parserservice.dom.Xml;
 
 import com.example.parserservice.dom.Node;
-import com.example.parserservice.util.Type.ComponentType;
-import com.example.parserservice.util.Type.Tier;
+import com.example.parserservice.util.type.ComponentType;
+import com.example.parserservice.util.type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.w3c.dom.Document;
 

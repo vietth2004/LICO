@@ -1,4 +1,4 @@
-package com.example.parserservice.util.Helper;
+package com.example.parserservice.util.helper;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;

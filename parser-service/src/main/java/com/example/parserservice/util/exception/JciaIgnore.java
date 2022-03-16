@@ -1,4 +1,4 @@
-package com.example.parserservice.util.Exception;
+package com.example.parserservice.util.exception;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

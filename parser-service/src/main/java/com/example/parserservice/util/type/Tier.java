@@ -1,4 +1,4 @@
-package com.example.parserservice.util.Type;
+package com.example.parserservice.util.type;
 
 import java.util.HashSet;
 import java.util.Set;

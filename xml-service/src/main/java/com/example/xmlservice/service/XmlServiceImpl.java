@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-public class StrutServiceImpl implements StrutService{
+public class XmlServiceImpl implements XmlService {
 
     private final ExecutorService THREADPOOL_FIXED_SIZE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private XmlFileParser xmlFileParser = new XmlFileParser();

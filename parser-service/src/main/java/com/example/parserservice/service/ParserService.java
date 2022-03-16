@@ -16,8 +16,4 @@ public interface ParserService {
     Response build(List<String> parser, MultipartFile file, String user, String project) throws IOException;
 
     Response build(List<String> parser, Path path) throws IOException;
-
-    Request buildProject(Path path) throws IOException;
-
-    JSFResponse buildJsf(Path path) throws IOException;
 }

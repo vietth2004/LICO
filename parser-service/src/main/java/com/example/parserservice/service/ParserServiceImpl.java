@@ -2,11 +2,14 @@ package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
 import com.example.parserservice.model.jsf.JSFResponse;
+import com.example.parserservice.model.jsp.JspRequest;
+import com.example.parserservice.model.xml.XmlRequest;
 import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.util.JwtUtils;
-import com.example.parserservice.util.Utils;
+import com.example.parserservice.util.worker.Getter;
+import com.example.parserservice.util.worker.Requester;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +40,8 @@ public class ParserServiceImpl implements ParserService{
     @Autowired
     private HostIPConstants ipConstants;
 
+    private Requester requester;
+
     //**
     //Build Project with Multipart File
     //**
@@ -62,14 +67,14 @@ public class ParserServiceImpl implements ParserService{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return Utils.getResponse(parserList, request, filePath.getPath(), jsf);
+        return Getter.getResponse(parserList, request, filePath.getPath());
     }
 
     @Override
     public Request buildProject(MultipartFile file) {
         log.info("Function: buildProject() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/fileParse"; //java-service
-        ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, Utils.getResponseEntity(file), Request.class);
+        ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, Requester.getResponseEntity(file), Request.class);
         return request.getBody();
     }
 
@@ -95,23 +100,35 @@ public class ParserServiceImpl implements ParserService{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return Utils.getResponse(parserList, request, path.getPath(), jsf);
+        return Getter.getResponse(parserList, request, path.getPath(), jsf);
     }
 
-    @Override
-    public Request buildProject(Path path) {
-        log.info("Function: buildProject() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
-        String serverUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
-        ResponseEntity<Request> request = restTemplate.postForEntity(serverUrl, path, Request.class);
-        return request.getBody();
-    }
-
-    @Override
     public JSFResponse buildJsf(Path path) {
         log.info("Function: buildJsf() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
-        String serverUrl = "http://" + ipConstants.getXmlServiceIp() + ":7004/api/jsf-service/analyze";
+        String serverUrl = "http://" + ipConstants.getJsfServiceIP() + ":7004/api/jsf-service/analyze";
         ResponseEntity<JSFResponse> jsfResponse = restTemplate.postForEntity(serverUrl, path, JSFResponse.class);
         return jsfResponse.getBody();
     }
 
+    public Request buildProject(Path path) {
+        log.info("Function: buildProject() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
+        String javaServerUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
+        String xmlServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/xml-service/pathParse/old"; //xml-service
+        String jspServerUrl = "http://" + ipConstants.getJspServiceIp() + ":7005/api/jsp-service/pathParse/old"; //xml-service
+
+        ResponseEntity<Request> javaRequest = restTemplate.postForEntity(javaServerUrl, path, Request.class);
+        ResponseEntity<List> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, List.class);
+        ResponseEntity<List> jspRequest = restTemplate.postForEntity(jspServerUrl, path, List.class);
+
+        Request request = new Request(
+                javaRequest.getBody().getRootNode()
+                , javaRequest.getBody().getAllDependencies()
+                , javaRequest.getBody().getAllNodes()
+                , xmlRequest.getBody()
+                , jspRequest.getBody()
+                );
+
+
+        return request;
+    }
 }

@@ -1,7 +1,5 @@
 package com.example.xmlservice.service;
 
-import com.example.xmlservice.ast.dependency.Dependency;
-import com.example.xmlservice.ast.node.JavaNode;
 import com.example.xmlservice.dom.Node;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public interface StrutService {
+public interface XmlService {
     List<Node> parseProjectWithPath(String path) throws IOException, ExecutionException, InterruptedException;
     List<Node> parseProjectWithFile(MultipartFile file) throws IOException;
 }
