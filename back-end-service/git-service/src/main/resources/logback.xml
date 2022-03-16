@@ -7,7 +7,7 @@
         <file>logs/git-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>git-service/logs/git-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/git-service/logs/git-service.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>

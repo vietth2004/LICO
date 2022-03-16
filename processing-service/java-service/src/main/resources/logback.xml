@@ -7,7 +7,7 @@
         <file>logs/java-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>java-service/logs/java-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/java-service/logs/java-service.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>

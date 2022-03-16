@@ -7,7 +7,7 @@
         <file>logs/jsf-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>jsf-service/logs/jsf-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/jsf-service/logs/jsf-service.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>

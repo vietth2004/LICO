@@ -76,3 +76,5 @@ logs/compare-service.log
 /xml-service/src/test/
 /processing-service/jsf-service/target/
 /processing-service/jsf-service/src/test/
+/management-service/api-gateway/src/test/
+/service-log/

@@ -7,7 +7,7 @@
         <file>logs/strut-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>strut-service/logs/strut-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/strut-service/logs/strut-service.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>

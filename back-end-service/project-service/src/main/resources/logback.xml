@@ -7,7 +7,7 @@
         <file>logs/project-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>project-service/logs/project-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/project-service/logs/project-service.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>
