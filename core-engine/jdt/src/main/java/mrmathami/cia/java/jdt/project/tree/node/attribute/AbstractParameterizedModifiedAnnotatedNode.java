@@ -16,15 +16,15 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node.attribute;
+package mrmathami.cia.java.jdt.project.tree.node.attribute;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.annotate.Annotate;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.tree.node.attribute.JavaAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
+import mrmathami.cia.java.tree.node.attribute.JavaParameterizedNode;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,34 +33,36 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractAnnotatedNode extends AbstractNonRootNode implements JavaAnnotatedNode {
+public abstract class AbstractParameterizedModifiedAnnotatedNode extends AbstractModifiedAnnotatedNode
+		implements JavaParameterizedNode {
 
 	private static final long serialVersionUID = -1L;
 
-	@Nonnull private transient List<Annotate> annotates = List.of();
+	@Nonnull private transient List<AbstractType> typeParameters = List.of();
 
 
-	public AbstractAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+	public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
 			@Nonnull String simpleName) {
 		super(sourceFile, parent, simpleName);
 	}
 
-	public AbstractAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+	public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
 			@Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
 		super(sourceFile, parent, simpleName, uniqueNameSuffix);
 	}
+
 
 	//region Getter & Setter
 
 	@Nonnull
 	@Override
-	public final List<Annotate> getAnnotates() {
-		return isFrozen() ? annotates : Collections.unmodifiableList(annotates);
+	public final List<AbstractType> getTypeParameters() {
+		return isFrozen() ? typeParameters : Collections.unmodifiableList(typeParameters);
 	}
 
-	public final void setAnnotates(@Nonnull List<Annotate> annotates) {
+	public final void setTypeParameters(@Nonnull List<AbstractType> typeParameters) {
 		assertNonFrozen();
-		this.annotates = annotates;
+		this.typeParameters = typeParameters;
 	}
 
 	//endregion Getter & Setter
@@ -70,8 +72,8 @@ public abstract class AbstractAnnotatedNode extends AbstractNonRootNode implemen
 	@Override
 	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
 		if (super.internalFreeze(map)) return true;
-		this.annotates = List.copyOf(annotates);
-		for (final Annotate annotate : annotates) annotate.internalFreeze(map);
+		this.typeParameters = List.copyOf(typeParameters);
+		for (final AbstractType typeParameter : typeParameters) typeParameter.internalFreeze(map);
 		return false;
 	}
 
@@ -79,14 +81,14 @@ public abstract class AbstractAnnotatedNode extends AbstractNonRootNode implemen
 			throws IOException, UnsupportedOperationException {
 		assertFrozen();
 		outputStream.defaultWriteObject();
-		outputStream.writeObject(annotates);
+		outputStream.writeObject(typeParameters);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(@Nonnull ObjectInputStream inputStream)
 			throws IOException, ClassNotFoundException, ClassCastException {
 		inputStream.defaultReadObject();
-		this.annotates = (List<Annotate>) inputStream.readObject();
+		this.typeParameters = (List<AbstractType>) inputStream.readObject();
 	}
 
 	//endregion Serialization Helper
@@ -96,9 +98,9 @@ public abstract class AbstractAnnotatedNode extends AbstractNonRootNode implemen
 	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (!annotates.isEmpty()) {
-			builder.append(", \"annotates\": [");
-			internalArrayToReferenceJson(builder, indentation, annotates);
+		if (!typeParameters.isEmpty()) {
+			builder.append(", \"typeParameters\": [");
+			internalArrayToReferenceJson(builder, indentation, typeParameters);
 			builder.append('\n').append(indentation).append(']');
 		}
 	}

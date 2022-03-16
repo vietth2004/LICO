@@ -16,7 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.dependency;
+package mrmathami.cia.java.jdt.project.tree.dependency;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;

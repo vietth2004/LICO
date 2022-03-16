@@ -16,12 +16,13 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.type;
+package mrmathami.cia.java.jdt.project.tree.type;
 
 import mrmathami.annotations.Nonnull;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.annotate.Annotate;
-import mrmathami.cia.java.tree.type.JavaType;
+import mrmathami.annotations.Nullable;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.tree.type.JavaReferenceType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,36 +31,42 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractType extends AbstractIdentifiedEntity implements JavaType {
+public final class ReferenceType extends AbstractType implements JavaReferenceType {
 
 	private static final long serialVersionUID = -1L;
 
-	@Nonnull private final String description;
-	@Nonnull private transient List<Annotate> annotates = List.of();
+	@Nullable private AbstractNode node;
+
+	@Nonnull private transient List<AbstractType> arguments = List.of();
 
 
-	public AbstractType(@Nonnull String description) {
-		this.description = description;
+	public ReferenceType(@Nonnull String description) {
+		super(description);
 	}
 
 
 	//region Getter & Setter
 
-	@Nonnull
+	@Nullable
 	@Override
-	public final String getDescription() {
-		return description;
+	public AbstractNode getNode() {
+		return node;
 	}
 
-	@Nonnull
-	@Override
-	public final List<Annotate> getAnnotates() {
-		return isFrozen() ? annotates : Collections.unmodifiableList(annotates);
-	}
-
-	public final void setAnnotates(@Nonnull List<Annotate> annotates) {
+	public void setNode(@Nonnull AbstractNode node) {
 		assertNonFrozen();
-		this.annotates = annotates;
+		this.node = node;
+	}
+
+	@Nonnull
+	@Override
+	public List<AbstractType> getArguments() {
+		return isFrozen() ? arguments : Collections.unmodifiableList(arguments);
+	}
+
+	public void setArguments(@Nonnull List<AbstractType> arguments) {
+		assertNonFrozen();
+		this.arguments = arguments;
 	}
 
 	//endregion Getter & Setter
@@ -69,8 +76,8 @@ public abstract class AbstractType extends AbstractIdentifiedEntity implements J
 	@Override
 	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
 		if (super.internalFreeze(map)) return true;
-		this.annotates = List.copyOf(annotates);
-		for (final Annotate annotate : annotates) annotate.internalFreeze(map);
+		this.arguments = List.copyOf(arguments);
+		for (final AbstractType argument : arguments) argument.internalFreeze(map);
 		return false;
 	}
 
@@ -78,14 +85,14 @@ public abstract class AbstractType extends AbstractIdentifiedEntity implements J
 			throws IOException, UnsupportedOperationException {
 		assertFrozen();
 		outputStream.defaultWriteObject();
-		outputStream.writeObject(annotates);
+		outputStream.writeObject(arguments);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(@Nonnull ObjectInputStream inputStream)
 			throws IOException, ClassNotFoundException, ClassCastException {
 		inputStream.defaultReadObject();
-		this.annotates = (List<Annotate>) inputStream.readObject();
+		this.arguments = (List<AbstractType>) inputStream.readObject();
 	}
 
 	//endregion Serialization Helper
@@ -93,27 +100,20 @@ public abstract class AbstractType extends AbstractIdentifiedEntity implements J
 	//region Jsonify
 
 	@Override
-	protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
-		super.internalToReferenceJsonEnd(builder);
-		builder.append(", \"describe\": \"").append(description).append('"');
-	}
-
-	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (!annotates.isEmpty()) {
-			builder.append(", \"annotates\": [");
-			internalArrayToJson(builder, indentation, false, annotates);
+		if (node != null) {
+			builder.append(", \"node\": { ");
+			node.internalToReferenceJson(builder);
+			builder.append(" }");
+		}
+		if (!arguments.isEmpty()) {
+			builder.append(", \"arguments\": [");
+			internalArrayToReferenceJson(builder, indentation, arguments);
 			builder.append('\n').append(indentation).append(']');
 		}
 	}
 
 	//endregion Jsonify
-
-	@Nonnull
-	@Override
-	public final String toString() {
-		return description;
-	}
 
 }

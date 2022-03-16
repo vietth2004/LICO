@@ -16,12 +16,12 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node;
+package mrmathami.cia.java.jdt.project.tree.node;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractModifiedAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractModifiedAnnotatedNode;
 import mrmathami.cia.java.tree.node.JavaAnnotationNode;
 
 public final class AnnotationNode extends AbstractModifiedAnnotatedNode implements JavaAnnotationNode {
@@ -33,7 +33,7 @@ public final class AnnotationNode extends AbstractModifiedAnnotatedNode implemen
 	public AnnotationNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
 			@Nonnull String simpleName, @Nullable String binaryName) {
 		super(sourceFile, parent, simpleName);
-		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
+		AbstractNode.checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
 				InterfaceNode.class, PackageNode.class, RootNode.class);
 
 		this.binaryName = binaryName;

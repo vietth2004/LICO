@@ -7,9 +7,9 @@ import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.ast.node.Node;
 import com.example.parserservice.ast.type.JavaType;
 import mrmathami.annotations.Nonnull;
-import mrmathami.cia.java.jdt.tree.annotate.Annotate;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.project.tree.annotate.Annotate;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class Utility {
     }
 
     @Nonnull
-    public static List convertMap(Map<AbstractNode, mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable> nodeList) {
+    public static List convertMap(Map<AbstractNode, mrmathami.cia.java.jdt.project.tree.dependency.DependencyCountTable> nodeList) {
         List<Pair> javaNodeList = new ArrayList<>();
         for(AbstractNode node : nodeList.keySet()) {
             DependencyCountTable dependencyCountTable = new DependencyCountTable(nodeList.get(node));
@@ -132,7 +132,7 @@ public class Utility {
 
 
         for(AbstractNode node : nodes) {
-            mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable dependencyCountTable = (mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable) Dependencies.get(node);
+            mrmathami.cia.java.jdt.project.tree.dependency.DependencyCountTable dependencyCountTable = (mrmathami.cia.java.jdt.project.tree.dependency.DependencyCountTable) Dependencies.get(node);
 //            System.out.println(dependencyCountTable.getCount(JavaDependency.USE));
         }
     }

@@ -16,15 +16,15 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node;
+package mrmathami.cia.java.jdt.project.tree.node;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractParameterizedModifiedAnnotatedNode;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.tree.node.JavaInterfaceNode;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractParameterizedModifiedAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
+import mrmathami.cia.java.tree.node.JavaClassNode;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,20 +33,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public final class InterfaceNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaInterfaceNode {
+public final class ClassNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaClassNode {
 
 	private static final long serialVersionUID = -1L;
 
 	@Nullable private final String binaryName;
+	@Nullable private AbstractType extendsClass;
 
-	@Nonnull private transient List<AbstractType> extendsInterfaces = List.of();
+	@Nonnull private transient List<AbstractType> implementsInterfaces = List.of();
 
 
-	public InterfaceNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, @Nullable String binaryName) {
-		super(sourceFile, parent, simpleName);
-		checkParent(parent, AnnotationNode.class, ClassNode.class, EnumNode.class,
-				InterfaceNode.class, PackageNode.class, RootNode.class);
+	public ClassNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, @Nonnull String name,
+			@Nullable String binaryName) {
+		super(sourceFile, parent, name);
+		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class, FieldNode.class,
+				InterfaceNode.class, MethodNode.class, PackageNode.class, RootNode.class);
 
 		this.binaryName = binaryName;
 	}
@@ -60,15 +61,26 @@ public final class InterfaceNode extends AbstractParameterizedModifiedAnnotatedN
 		return binaryName;
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
-	public List<AbstractType> getExtendsInterfaces() {
-		return isFrozen() ? extendsInterfaces : Collections.unmodifiableList(extendsInterfaces);
+	public AbstractType getExtendsClass() {
+		return extendsClass;
 	}
 
-	public void setExtendsInterfaces(@Nonnull List<AbstractType> extendsInterfaces) {
+	public void setExtendsClass(@Nullable AbstractType extendsClass) {
 		assertNonFrozen();
-		this.extendsInterfaces = extendsInterfaces;
+		this.extendsClass = extendsClass;
+	}
+
+	@Nonnull
+	@Override
+	public List<AbstractType> getImplementsInterfaces() {
+		return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
+	}
+
+	public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
+		assertNonFrozen();
+		this.implementsInterfaces = implementsInterfaces;
 	}
 
 	//endregion Getter & Setter
@@ -78,8 +90,9 @@ public final class InterfaceNode extends AbstractParameterizedModifiedAnnotatedN
 	@Override
 	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
 		if (super.internalFreeze(map)) return true;
-		this.extendsInterfaces = List.copyOf(extendsInterfaces);
-		for (final AbstractType type : extendsInterfaces) type.internalFreeze(map);
+		this.implementsInterfaces = List.copyOf(implementsInterfaces);
+		if (extendsClass != null) extendsClass.internalFreeze(map);
+		for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
 		return false;
 	}
 
@@ -87,14 +100,14 @@ public final class InterfaceNode extends AbstractParameterizedModifiedAnnotatedN
 			throws IOException, UnsupportedOperationException {
 		assertFrozen();
 		outputStream.defaultWriteObject();
-		outputStream.writeObject(extendsInterfaces);
+		outputStream.writeObject(implementsInterfaces);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(@Nonnull ObjectInputStream inputStream)
 			throws IOException, ClassNotFoundException, ClassCastException {
 		inputStream.defaultReadObject();
-		this.extendsInterfaces = (List<AbstractType>) inputStream.readObject();
+		this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
 	}
 
 	//endregion Serialization Helper
@@ -110,9 +123,14 @@ public final class InterfaceNode extends AbstractParameterizedModifiedAnnotatedN
 	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (!extendsInterfaces.isEmpty()) {
-			builder.append(", \"extendsInterfaces\": [");
-			internalArrayToReferenceJson(builder, indentation, extendsInterfaces);
+		if (extendsClass != null) {
+			builder.append(", \"extendsClass\": { ");
+			extendsClass.internalToReferenceJson(builder);
+			builder.append(" }");
+		}
+		if (!implementsInterfaces.isEmpty()) {
+			builder.append(", \"implementsInterfaces\": [");
+			internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
 			builder.append('\n').append(indentation).append(']');
 		}
 	}

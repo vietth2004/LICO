@@ -16,13 +16,13 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node.attribute;
+package mrmathami.cia.java.jdt.project.tree.node.attribute;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.node.RootNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.RootNode;
 import mrmathami.cia.java.project.JavaSourceFile;
 
 public abstract class AbstractNonRootNode extends AbstractNode {

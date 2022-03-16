@@ -16,13 +16,13 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.annotate;
+package mrmathami.cia.java.jdt.project.tree.annotate;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.AbstractNonIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.AbstractNonIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
 import mrmathami.cia.java.tree.annotate.JavaAnnotate;
 
 import java.io.IOException;

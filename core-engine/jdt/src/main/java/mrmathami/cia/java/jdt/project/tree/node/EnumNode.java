@@ -16,15 +16,15 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node.attribute;
+package mrmathami.cia.java.jdt.project.tree.node;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.jdt.project.SourceFile;
-import mrmathami.cia.java.jdt.tree.AbstractIdentifiedEntity;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.tree.node.attribute.JavaParameterizedNode;
+import mrmathami.cia.java.jdt.project.tree.AbstractIdentifiedEntity;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractParameterizedModifiedAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
+import mrmathami.cia.java.tree.node.JavaEnumNode;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,36 +33,41 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractParameterizedModifiedAnnotatedNode extends AbstractModifiedAnnotatedNode
-		implements JavaParameterizedNode {
+public final class EnumNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaEnumNode {
 
 	private static final long serialVersionUID = -1L;
 
-	@Nonnull private transient List<AbstractType> typeParameters = List.of();
+	@Nullable private final String binaryName;
+	@Nonnull private transient List<AbstractType> implementsInterfaces = List.of();
 
 
-	public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName) {
+	public EnumNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+			@Nonnull String simpleName, @Nullable String binaryName) {
 		super(sourceFile, parent, simpleName);
-	}
+		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
+				InterfaceNode.class, PackageNode.class, RootNode.class);
 
-	public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
-		super(sourceFile, parent, simpleName, uniqueNameSuffix);
+		this.binaryName = binaryName;
 	}
 
 
 	//region Getter & Setter
 
-	@Nonnull
+	@Nullable
 	@Override
-	public final List<AbstractType> getTypeParameters() {
-		return isFrozen() ? typeParameters : Collections.unmodifiableList(typeParameters);
+	public String getBinaryName() {
+		return binaryName;
 	}
 
-	public final void setTypeParameters(@Nonnull List<AbstractType> typeParameters) {
+	@Nonnull
+	@Override
+	public List<AbstractType> getImplementsInterfaces() {
+		return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
+	}
+
+	public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
 		assertNonFrozen();
-		this.typeParameters = typeParameters;
+		this.implementsInterfaces = implementsInterfaces;
 	}
 
 	//endregion Getter & Setter
@@ -72,8 +77,8 @@ public abstract class AbstractParameterizedModifiedAnnotatedNode extends Abstrac
 	@Override
 	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
 		if (super.internalFreeze(map)) return true;
-		this.typeParameters = List.copyOf(typeParameters);
-		for (final AbstractType typeParameter : typeParameters) typeParameter.internalFreeze(map);
+		this.implementsInterfaces = List.copyOf(implementsInterfaces);
+		for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
 		return false;
 	}
 
@@ -81,14 +86,14 @@ public abstract class AbstractParameterizedModifiedAnnotatedNode extends Abstrac
 			throws IOException, UnsupportedOperationException {
 		assertFrozen();
 		outputStream.defaultWriteObject();
-		outputStream.writeObject(typeParameters);
+		outputStream.writeObject(implementsInterfaces);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void readObject(@Nonnull ObjectInputStream inputStream)
 			throws IOException, ClassNotFoundException, ClassCastException {
 		inputStream.defaultReadObject();
-		this.typeParameters = (List<AbstractType>) inputStream.readObject();
+		this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
 	}
 
 	//endregion Serialization Helper
@@ -96,11 +101,17 @@ public abstract class AbstractParameterizedModifiedAnnotatedNode extends Abstrac
 	//region Jsonify
 
 	@Override
+	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+		super.internalToReferenceJsonStart(builder);
+		builder.append(", \"binaryName\": \"").append(binaryName).append('"');
+	}
+
+	@Override
 	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
 		super.internalToJsonStart(builder, indentation);
-		if (!typeParameters.isEmpty()) {
-			builder.append(", \"typeParameters\": [");
-			internalArrayToReferenceJson(builder, indentation, typeParameters);
+		if (!implementsInterfaces.isEmpty()) {
+			builder.append(", \"implementsInterfaces\": [");
+			internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
 			builder.append('\n').append(indentation).append(']');
 		}
 	}

@@ -16,10 +16,10 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package mrmathami.cia.java.jdt.tree.node;
+package mrmathami.cia.java.jdt.project.tree.node;
 
 import mrmathami.annotations.Nonnull;
-import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
+import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.tree.node.JavaPackageNode;
 
 public final class PackageNode extends AbstractAnnotatedNode implements JavaPackageNode {

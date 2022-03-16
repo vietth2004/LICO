@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import mrmathami.cia.java.JavaCiaException;
-import mrmathami.cia.java.jdt.tree.node.RootNode;
+import mrmathami.cia.java.jdt.project.tree.node.RootNode;
 
 @RestController
 @RequestMapping("/api/java-service/")

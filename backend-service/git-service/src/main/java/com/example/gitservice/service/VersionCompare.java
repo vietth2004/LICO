@@ -10,7 +10,7 @@ import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
 import mrmathami.cia.java.jdt.project.builder.parameter.BuildInputSources;
 import mrmathami.cia.java.jdt.project.builder.parameter.JavaBuildParameter;
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
 import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.node.JavaMethodNode;
