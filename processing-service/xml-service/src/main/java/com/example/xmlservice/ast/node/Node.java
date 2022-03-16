@@ -1,6 +1,6 @@
 package com.example.xmlservice.ast.node;
 
-import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
 
 public class Node {
 

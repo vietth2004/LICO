@@ -3,10 +3,10 @@ package com.example.jspservice.ast.type;
 import com.example.jspservice.ast.annotation.JavaAnnotation;
 import com.example.jspservice.ast.node.Node;
 import com.example.jspservice.ast.utility.Utility;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.jdt.tree.type.ReferenceType;
-import mrmathami.cia.java.jdt.tree.type.SimpleType;
-import mrmathami.cia.java.jdt.tree.type.SyntheticType;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.project.tree.type.ReferenceType;
+import mrmathami.cia.java.jdt.project.tree.type.SimpleType;
+import mrmathami.cia.java.jdt.project.tree.type.SyntheticType;
 
 import java.util.List;
 

@@ -33,7 +33,7 @@ public class ProjectController {
 
     @GetMapping("/project/get")
     public Page<Project> getAllProjectByUser(@RequestParam(name = "user") String user,
-                                             @RequestParam(name = "name", required = false) String name,
+                                             @RequestParam(name = "name", required = false) String name, 
                                              @RequestParam(name = "id", required = false) String id,
                                              Pageable pageable){
         logger.info("Token: {}", user);
