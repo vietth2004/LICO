@@ -32,16 +32,16 @@ public class ProjectController {
     }
 
     @GetMapping("/project/get")
-    public Page<Project> getAllProjectByUser(@RequestHeader(name = "Token") String token,
+    public Page<Project> getAllProjectByUser(@RequestParam(name = "user") String user,
                                              @RequestParam(name = "name", required = false) String name,
                                              @RequestParam(name = "id", required = false) String id,
                                              Pageable pageable){
-        logger.info("Token: {}", token);
+        logger.info("Token: {}", user);
 
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
-            if (Objects.nonNull(token)) {
-                p = cb.and(p, cb.like(root.get("user"), "%" + token + "%"));
+            if (Objects.nonNull(user)) {
+                p = cb.and(p, cb.like(root.get("user"), "%" + user + "%"));
             }
             if (Objects.nonNull(name)) {
                 p = cb.and(p, cb.like(root.get("name"), "%" + name + "%"));
