@@ -25,7 +25,7 @@ import java.util.List;
 public class Requester {
 
     @Autowired
-    private HostIPConstants ipConstants;
+    private static HostIPConstants ipConstants;
 
     public static List getDependencies(String parser, Request request) {
         RestTemplate restTemplate = new RestTemplate();
@@ -34,7 +34,7 @@ public class Requester {
         if(parser.equals("spring-parser")) {
 
             Request springs = restTemplate.postForObject(
-                    "http://localhost:7003/api/spring-service/dependency/spring", //spring-service
+                    "http://localhost:7003/api/spring-service/dependency/spring",
                     request,
                     Request.class);
 
@@ -51,12 +51,12 @@ public class Requester {
         }
 
         if(parser.equals("jsf-parser")) {
-            Request struts = restTemplate.postForObject(
-                    "http://localhost:7007/api/jsf-service/dependency/jsf", //jsf-service
+            Request jsf = restTemplate.postForObject(
+                    "http://localhost:7004/api/jsf-service/dependency/jsf", //jsf-service
                     request,
                     Request.class);
 
-            dependencies.addAll(struts.getAllDependencies());
+            dependencies.addAll(jsf.getAllDependencies());
         }
 
         return dependencies;

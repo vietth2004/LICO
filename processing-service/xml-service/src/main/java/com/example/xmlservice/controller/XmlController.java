@@ -19,18 +19,18 @@ import java.util.concurrent.ExecutionException;
 public class XmlController {
 
     @Autowired
-    private XmlService strutService;
+    private XmlService xmlService;
 
 //    List<Node> strutNodes = new ArrayList<>();
 
     @PostMapping("/pathParse/new")
     public ResponseEntity pathParse(@RequestBody Request request) {
-        List<Node> jspNodes = new ArrayList<>();
+        List<Node> xmlNodes = new ArrayList<>();
         List<com.example.xmlservice.ast.node.Node> nodes = new ArrayList<>();
         try {
-            List<Node> strutNodes = strutService.parseProjectWithPath(request.getPath());
-            jspNodes.addAll(strutNodes);
-            nodes = Converter.convertStrutsNodesToNodes(jspNodes);
+            List<Node> parsedNodes = xmlService.parseProjectWithPath(request.getPath());
+            xmlNodes.addAll(parsedNodes);
+            nodes = Converter.convertStrutsNodesToNodes(xmlNodes);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -43,10 +43,10 @@ public class XmlController {
 
     @PostMapping("/pathParse/old")
     public ResponseEntity oldPathParse(@RequestBody Request request) {
-        List<Node> jspNodes = new ArrayList<>();
+        List<Node> xmlNodes = new ArrayList<>();
         try {
-            List<Node> strutNodes = strutService.parseProjectWithPath(request.getPath());
-            jspNodes.addAll(strutNodes);
+            List<Node> parsedNodes = xmlService.parseProjectWithPath(request.getPath());
+            xmlNodes.addAll(parsedNodes);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -54,7 +54,7 @@ public class XmlController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(new Response(jspNodes));
+        return ResponseEntity.ok(new Response(xmlNodes));
     }
 
 }

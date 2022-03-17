@@ -79,14 +79,15 @@ public class JsfController {
      * @param request
      * @return
      */
-    @PostMapping("/dependency")
-    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody List<JavaNode> request) throws ExecutionException, InterruptedException {
+    @PostMapping("/dependency/jsf")
+    public ResponseEntity<List<Dependency>> analyzeDependency(@RequestBody com.example.jsfservice.dto.parser.Request request) throws ExecutionException, InterruptedException, IOException {
         List<Dependency> dependencies = new ArrayList<>();
         long before = System.nanoTime();
         logger.info("Run into API: /dependency");
         logger.info("Analyzing dependency...");
-        dependencies.addAll(xmlService.analyzeDependency(request, this.xmlNodes));
-//        dependencies.addAll(propService.analyzeDependencies(xmlNodes, this.propFileNodes));
+        List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(request.getPath());
+        dependencies.addAll(xmlService.analyzeDependency(request.getJavaNodes(), request.getXmlNodes()));
+        dependencies.addAll(propService.analyzeDependencies(xmlNodes, propFileNodes));
         long after = System.nanoTime();
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());

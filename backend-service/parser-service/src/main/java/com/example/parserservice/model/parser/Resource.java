@@ -10,6 +10,7 @@ public class Resource {
             Arrays.asList(
                     "java-parser",
                     "spring-parser",
-                    "jsf-parser"
+                    "jsf-parser",
+                    "struts-parser"
             ));
 }

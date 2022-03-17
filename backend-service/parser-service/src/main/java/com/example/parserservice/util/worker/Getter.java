@@ -65,9 +65,9 @@ public class Getter {
         List<Dependency> dependencies = request.getAllDependencies();
         List xmlNodes = request.getXmlNodes();
         List jspNodes = request.getJspNodes();
+        List propNodes = request.getPropertiesNodes();
 
-
-        Request frameworkRequest = new Request(javaNode, javaNodes, dependencies, xmlNodes, jspNodes);
+        Request frameworkRequest = new Request(javaNode, javaNodes, dependencies, xmlNodes, jspNodes, propNodes, path);
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
                 dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "SPRING");
@@ -80,6 +80,9 @@ public class Getter {
 
         List nodes = Requester.getNodesWeight(dependencies, javaNodes.size());
 
-        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path, xmlNodes, jspNodes);
+        return
+                new Response(javaNode, dependencies, javaNodes,
+                            nodes, jspNodes, propNodes,
+                            javaNodes.size(), path, xmlNodes);
     }
 }

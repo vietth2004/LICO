@@ -1,9 +1,8 @@
-package com.example.parserservice.model.parser;
+package com.example.jsfservice.dto.parser;
 
-import com.example.parserservice.ast.dependency.Dependency;
-import com.example.parserservice.ast.node.JavaNode;
-import com.example.parserservice.dom.Node;
-import com.example.parserservice.dom.Properties.PropertiesFileNode;
+import com.example.jsfservice.ast.dependency.Dependency;
+import com.example.jsfservice.ast.node.JavaNode;
+import com.example.jsfservice.dom.Node;
 
 import java.util.List;
 
@@ -18,8 +17,6 @@ public class Request {
     private List<Node> xmlNodes;
 
     private List<Node> jspNodes;
-
-    private List<PropertiesFileNode> propertiesNodes;
 
     private String path;
 
@@ -53,16 +50,6 @@ public class Request {
         this.javaNodes = javaNodes;
         this.xmlNodes = xmlNodes;
         this.jspNodes = jspNodes;
-        this.path = path;
-    }
-
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List<Node> xmlNodes, List<Node> jspNodes, List<PropertiesFileNode> propertiesNodes, String path) {
-        this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
-        this.javaNodes = javaNodes;
-        this.xmlNodes = xmlNodes;
-        this.jspNodes = jspNodes;
-        this.propertiesNodes = propertiesNodes;
         this.path = path;
     }
 
@@ -112,13 +99,5 @@ public class Request {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public List<PropertiesFileNode> getPropertiesNodes() {
-        return propertiesNodes;
-    }
-
-    public void setPropertiesNodes(List<PropertiesFileNode> propertiesNodes) {
-        this.propertiesNodes = propertiesNodes;
     }
 }

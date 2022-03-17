@@ -110,11 +110,13 @@ public class ParserServiceImpl implements ParserService{
         log.info("Function: buildProject() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String javaServerUrl = "http://" + ipConstants.getJavaServiceIp() + ":7002/api/java-service/pathParse"; //java-service
         String xmlServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/xml-service/pathParse/old"; //xml-service
-        String jspServerUrl = "http://" + ipConstants.getJspServiceIp() + ":7005/api/jsp-service/pathParse/old"; //xml-service
+        String jspServerUrl = "http://" + ipConstants.getJspServiceIp() + ":7005/api/jsp-service/pathParse/old"; //jsp-service
+        String propServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/prop-service/pathParse/old"; //xml-service
 
         ResponseEntity<Request> javaRequest = restTemplate.postForEntity(javaServerUrl, path, Request.class);
         ResponseEntity<Request> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, Request.class);
         ResponseEntity<Request> jspRequest = restTemplate.postForEntity(jspServerUrl, path, Request.class);
+        ResponseEntity<Request> propRequest = restTemplate.postForEntity(propServerUrl, path, Request.class);
 
         Request request = new Request(
                 javaRequest.getBody().getRootNode()
@@ -122,6 +124,8 @@ public class ParserServiceImpl implements ParserService{
                 , javaRequest.getBody().getJavaNodes()
                 , xmlRequest.getBody().getXmlNodes()
                 , jspRequest.getBody().getJspNodes()
+                , propRequest.getBody().getPropertiesNodes()
+                , path.getPath()
                 );
 
         return request;

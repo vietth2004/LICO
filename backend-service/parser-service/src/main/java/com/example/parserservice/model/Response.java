@@ -2,6 +2,7 @@ package com.example.parserservice.model;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
+import com.example.parserservice.dom.Node;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class Response {
     private List nodesWeight;
 
     private List jspNodes;
+
+    private List propertiesNodes;
 
     private Integer totalNodes;
 
@@ -135,6 +138,26 @@ public class Response {
         this.totalNodes = allNodes.size();
     }
 
+    public Response(JavaNode rootNode,
+                    List<Dependency> allDependencies,
+                    List javaNodes,
+                    List nodesWeight,
+                    List jspNodes,
+                    List propertiesNodes,
+                    Integer totalNodes,
+                    String address,
+                    List<Node> xmlNodes) {
+        this.rootNode = rootNode;
+        this.allDependencies = allDependencies;
+        this.javaNodes = javaNodes;
+        this.nodesWeight = nodesWeight;
+        this.jspNodes = jspNodes;
+        this.propertiesNodes = propertiesNodes;
+        this.totalNodes = totalNodes;
+        this.address = address;
+        this.xmlNodes = xmlNodes;
+    }
+
     public JavaNode getRootNode() {
         return rootNode;
     }
@@ -189,5 +212,13 @@ public class Response {
 
     public void setJspNodes(List jspNodes) {
         this.jspNodes = jspNodes;
+    }
+
+    public List getPropertiesNodes() {
+        return propertiesNodes;
+    }
+
+    public void setPropertiesNodes(List propertiesNodes) {
+        this.propertiesNodes = propertiesNodes;
     }
 }
