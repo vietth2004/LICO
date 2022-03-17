@@ -10,7 +10,7 @@ public class Response {
 
     private JavaNode RootNode;
 
-    private List<JavaNode> allNodes = new ArrayList<>();
+    private List<JavaNode> javaNodes = new ArrayList<>();
 
     private List allDependencies = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class Response {
 
     public Response(JavaNode javaNode, List<JavaNode> javaNodeList) {
         this.RootNode = javaNode;
-        this.allNodes = javaNodeList;
+        this.javaNodes = javaNodeList;
         this.allDependencies = Utility.getDependency(javaNode);
     }
 
@@ -31,12 +31,12 @@ public class Response {
         this.RootNode = rootNode;
     }
 
-    public List<JavaNode> getAllNodes() {
-        return allNodes;
+    public List<JavaNode> getJavaNodes() {
+        return javaNodes;
     }
 
-    public void setAllNodes(List<JavaNode> allNodes) {
-        this.allNodes = allNodes;
+    public void setJavaNodes(List<JavaNode> javaNodes) {
+        this.javaNodes = javaNodes;
     }
 
     public List getAllDependencies() {

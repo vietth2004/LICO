@@ -12,9 +12,11 @@ public class Response {
 
     private List<Dependency> allDependencies;
 
-    private List allNodes;
+    private List javaNodes;
 
     private List nodesWeight;
+
+    private List jspNodes;
 
     private Integer totalNodes;
 
@@ -33,37 +35,64 @@ public class Response {
     public Response(JavaNode rootNode, Integer totalNodes, List allNodes) {
         this.rootNode = rootNode;
         this.totalNodes = totalNodes;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
     }
 
     public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
     }
 
     public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies, String address) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
         this.address = address;
     }
 
-    public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies, String address, List<com.example.parserservice.dom.Node> xmlNodes) {
+    public Response(JavaNode rootNode
+            , Integer totalNodes
+            , List allNodes
+            , List<Dependency> allDependencies
+            , String address
+            , List<com.example.parserservice.dom.Node> xmlNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
         this.address = address;
         this.xmlNodes = xmlNodes;
     }
 
-    public Response(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List nodesWeight, Integer totalNodes, String address, List<com.example.parserservice.dom.Node> xmlNodes) {
+    public Response(JavaNode rootNode
+            , Integer totalNodes
+            , List allNodes
+            , List<Dependency> allDependencies
+            , String address
+            , List<com.example.parserservice.dom.Node> xmlNodes
+            , List jspNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
+        this.totalNodes = totalNodes;
+        this.address = address;
+        this.xmlNodes = xmlNodes;
+        this.jspNodes = jspNodes;
+    }
+
+    public Response(JavaNode rootNode
+            , List<Dependency> allDependencies
+            , List allNodes
+            , List nodesWeight
+            , Integer totalNodes
+            , String address
+            , List<com.example.parserservice.dom.Node> xmlNodes) {
+        this.rootNode = rootNode;
+        this.allDependencies = allDependencies;
+        this.javaNodes = allNodes;
         this.nodesWeight = nodesWeight;
         this.totalNodes = totalNodes;
         this.address = address;
@@ -74,8 +103,8 @@ public class Response {
         return allDependencies;
     }
 
-    public List getAllNodes() {
-        return allNodes;
+    public List getJavaNodes() {
+        return javaNodes;
     }
 
     public List<com.example.parserservice.dom.Node> getXmlNodes() {
@@ -94,14 +123,14 @@ public class Response {
     public Response(JavaNode rootNode, List<Dependency> allDependencies, List allNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.totalNodes = allNodes.size();
     }
 
     public Response(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List nodesWeight) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.nodesWeight = nodesWeight;
         this.totalNodes = allNodes.size();
     }
@@ -126,8 +155,8 @@ public class Response {
 //        return allNodes;
 //    }
 
-    public void setAllNodes(List allNodes) {
-        this.allNodes = allNodes;
+    public void setJavaNodes(List javaNodes) {
+        this.javaNodes = javaNodes;
     }
 
     public Integer getTotalNodes() {
@@ -152,5 +181,13 @@ public class Response {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List getJspNodes() {
+        return jspNodes;
+    }
+
+    public void setJspNodes(List jspNodes) {
+        this.jspNodes = jspNodes;
     }
 }
