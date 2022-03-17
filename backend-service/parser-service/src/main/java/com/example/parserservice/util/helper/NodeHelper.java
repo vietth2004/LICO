@@ -1,4 +1,4 @@
-package com.example.parserservice.util.Helper;
+package com.example.parserservice.util.helper;
 
 import com.example.parserservice.dom.FileNode;
 import com.example.parserservice.dom.Node;

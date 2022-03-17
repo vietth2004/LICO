@@ -1,4 +1,4 @@
-package com.example.parserservice.util.Helper;
+package com.example.parserservice.util.helper;
 
 import java.io.File;
 import java.io.FilenameFilter;

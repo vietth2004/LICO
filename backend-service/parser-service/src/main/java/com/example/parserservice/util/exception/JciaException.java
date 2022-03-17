@@ -1,4 +1,4 @@
-package com.example.parserservice.util.Exception;
+package com.example.parserservice.util.exception;
 
 public class JciaException extends Exception {
 
