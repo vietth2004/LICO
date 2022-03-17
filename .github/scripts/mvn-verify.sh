@@ -2,19 +2,17 @@
 mvn verify -f ./core-engine/core/pom.xml
 mvn verify -f ./core-engine/jdt/pom.xml
 mvn verify -f ./core-engine/utils/pom.xml
-mvn verify -f ./management-service/discovery-server/pom.xml -DskipTests
-mvn verify -f ./processing-service/cia-service/pom.xml -DskipTests
-mvn verify -f ./back-end-service/file-service/pom.xml -DskipTests
-mvn verify -f ./back-end-service/git-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/java-service/pom.xml -DskipTests
-mvn verify -f ./back-end-service/parser-service/pom.xml -DskipTests
-mvn verify -f ./back-end-service/project-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/spring-service/pom.xml -DskipTests
-mvn verify -f ./back-end-service/user-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/utility-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/version-compare-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/jsf-service/pom.xml -DskipTests
-mvn verify -f ./management-service/api-gateway/pom.xml -DskipTests
-mvn verify -f ./processing-service/struts-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/jsp-service/pom.xml -DskipTests
-mvn verify -f ./processing-service/xml-service/pom.xml -DskipTests
+mvn verify -f ./discovery-server/pom.xml -DskipTests
+mvn verify -f ./cia-service/pom.xml -DskipTests
+mvn verify -f ./file-service/pom.xml -DskipTests
+mvn verify -f ./git-service/pom.xml -DskipTests
+mvn verify -f ./java-service/pom.xml -DskipTests
+mvn verify -f ./parser-service/pom.xml -DskipTests
+mvn verify -f ./project-service/pom.xml -DskipTests
+mvn verify -f ./spring-service/pom.xml -DskipTests
+mvn verify -f ./user-service/pom.xml -DskipTests
+mvn verify -f ./utility-service/pom.xml -DskipTests
+mvn verify -f ./version-compare-service/pom.xml -DskipTests
+mvn verify -f ./jsf-service/pom.xml -DskipTests
+mvn verify -f ./api-gateway/pom.xml -DskipTests
+mvn verify -f ./strut-service/pom.xml -DskipTests

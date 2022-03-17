@@ -3,11 +3,11 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>processing-service/utility-service/logs/utility-service.log</file>
+        <file>utility-service/logs/utility-service.log</file>
         <file>logs/utility-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>processing-service/utility-service/logs/utility-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/utility-service/logs/utility-service.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>

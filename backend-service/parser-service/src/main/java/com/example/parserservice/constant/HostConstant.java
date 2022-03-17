@@ -14,6 +14,8 @@ public class HostConstant {
     public static final String VERSION_COMPARE_SERVICE = "VERSION-COMPARE-SERVICE";
     public static final String JSF_SERVICE = "JSF-SERVICE";
     public static final String GITHUB_SERVICE = "GITHUB-SERVICE";
-    public static final String STRUT_SERVICE = "STRUTS-SERVICE";
+    public static final String STRUT_SERVICE = "STRUT-SERVICE";
+    public static final String XML_SERVICE = "XML-SERVICE";
+    public static final String JSP_SERVICE = "JSP-SERVICE";
 
 }
