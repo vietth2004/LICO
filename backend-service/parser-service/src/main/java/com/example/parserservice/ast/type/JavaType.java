@@ -3,11 +3,11 @@ package com.example.parserservice.ast.type;
 
 import com.example.parserservice.ast.annotation.JavaAnnotation;
 import com.example.parserservice.ast.node.Node;
-import com.example.parserservice.ast.utility.Converter;
-import mrmathami.cia.java.jdt.tree.type.AbstractType;
-import mrmathami.cia.java.jdt.tree.type.ReferenceType;
-import mrmathami.cia.java.jdt.tree.type.SimpleType;
-import mrmathami.cia.java.jdt.tree.type.SyntheticType;
+import com.example.parserservice.ast.utility.Utility;
+import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.project.tree.type.ReferenceType;
+import mrmathami.cia.java.jdt.project.tree.type.SimpleType;
+import mrmathami.cia.java.jdt.project.tree.type.SyntheticType;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class JavaType {
         this.id = abstractType.getId();
         this.describe = abstractType.getDescription();
 
-        this.annotates = Converter.convertAnnotates(abstractType.getAnnotates());
+        this.annotates = Utility.convertAnnotates(abstractType.getAnnotates());
 
         if(abstractType instanceof SimpleType) {
             if(((SimpleType) abstractType).getInnerType()!= null) {
@@ -42,14 +42,14 @@ public class JavaType {
         }
 
         if(abstractType instanceof ReferenceType) {
-            this.arguments = Converter.convertArguments(((ReferenceType) abstractType).getArguments());
+            this.arguments = Utility.convertArguments(((ReferenceType) abstractType).getArguments());
             if(((ReferenceType) abstractType).getNode() != null) {
                 this.node = new Node(((ReferenceType) abstractType).getNode());
             }
         }
 
         if(abstractType instanceof SyntheticType) {
-            this.bounds = Converter.convertArguments(((SyntheticType) abstractType).getBounds());
+            this.bounds = Utility.convertArguments(((SyntheticType) abstractType).getBounds());
         }
     }
 

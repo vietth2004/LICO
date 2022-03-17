@@ -3,11 +3,11 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>api-gateway/logs/api-gateway.log</file>
+        <file>management-service/api-gateway/logs/api-gateway.log</file>
         <file>logs/api-gateway.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>service-log/api-gateway/logs/api-gateway.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>management-service/api-gateway/logs/api-gateway.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>

@@ -20,7 +20,7 @@ package mrmathami.cia.java.jdt.project;
 
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
-import mrmathami.cia.java.jdt.tree.dependency.DependencyWeightTable;
+import mrmathami.cia.java.jdt.project.tree.dependency.DependencyWeightTable;
 import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.tree.node.JavaRootNode;
 
