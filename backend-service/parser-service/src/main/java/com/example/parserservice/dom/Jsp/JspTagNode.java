@@ -1,7 +1,7 @@
 package com.example.parserservice.dom.Jsp;
 
 import com.example.parserservice.dom.Node;
-import com.example.parserservice.util.exception.JciaIgnore;
+import com.example.parserservice.util.Exception.JciaIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jsoup.nodes.Element;
 

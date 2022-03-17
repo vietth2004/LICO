@@ -1,10 +1,10 @@
 package com.example.parserservice.dom;
 
-import com.example.parserservice.util.exception.JciaIgnore;
-import com.example.parserservice.util.helper.NodeHelper;
+import com.example.parserservice.util.Exception.JciaIgnore;
+import com.example.parserservice.util.Helper.NodeHelper;
 import com.example.parserservice.util.JciaData;
-import com.example.parserservice.util.type.ComponentType;
-import com.example.parserservice.util.type.Tier;
+import com.example.parserservice.util.Type.ComponentType;
+import com.example.parserservice.util.Type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.File;
