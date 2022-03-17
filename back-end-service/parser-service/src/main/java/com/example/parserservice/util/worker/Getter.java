@@ -41,36 +41,38 @@ public class Getter {
         return dependenciesTempList;
     }
 
-    public static Response getResponse(List<String> parserList, Request request, String path, JSFResponse jsfResponse) {
-        JavaNode javaNode = request.getRootNode();
-        List javaNodes = request.getAllNodes();
-        List<Dependency> dependencies = request.getAllDependencies();
-
-        for (String parser : parserList) {
-            if(Resource.PARSER.contains(parser)) {
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, javaNodes), "SPRING");
-            }
-        }
-
-        Wrapper.wrapRootNode(javaNode, dependencies);
-
-        List nodes = Requester.getNodesWeight(dependencies, javaNodes.size());
-
-        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path, jsfResponse.getAllNodes());
-    }
+//    public static Response getResponse(List<String> parserList, Request request, String path, JSFResponse jsfResponse) {
+//        JavaNode javaNode = request.getRootNode();
+//        List javaNodes = request.getJavaNodes();
+//        List<Dependency> dependencies = request.getAllDependencies();
+//
+//        for (String parser : parserList) {
+//            if(Resource.PARSER.contains(parser)) {
+//                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, javaNodes), "SPRING");
+//            }
+//        }
+//
+//        Wrapper.wrapRootNode(javaNode, dependencies);
+//
+//        List nodes = Requester.getNodesWeight(dependencies, javaNodes.size());
+//
+//        return new Response(javaNode, javaNodes.size(), javaNodes, dependencies, path, jsfResponse.getAllNodes());
+//    }
 
     public static Response getResponse(List<String> parserList, Request request, String path) {
         JavaNode javaNode = request.getRootNode();
-        List javaNodes = request.getAllNodes();
+        List javaNodes = request.getJavaNodes();
         List<Dependency> dependencies = request.getAllDependencies();
         List xmlNodes = request.getXmlNodes();
         List jspNodes = request.getJspNodes();
 
+
+        Request frameworkRequest = new Request(javaNode, javaNodes, dependencies, xmlNodes, jspNodes);
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, javaNodes), "SPRING");
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, javaNodes), "JSF");
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, javaNodes), "STRUTS");
+                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "SPRING");
+                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "JSF");
+                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "STRUTS");
             }
         }
 

@@ -2,6 +2,7 @@ package com.example.parserservice.util.worker;
 
 import com.example.parserservice.constant.HostIPConstants;
 import com.example.parserservice.model.Path;
+import com.example.parserservice.model.Response;
 import com.example.parserservice.model.cia.CiaRequest;
 import com.example.parserservice.model.cia.CiaResponse;
 import com.example.parserservice.model.jsf.JSFResponse;
@@ -26,7 +27,7 @@ public class Requester {
     @Autowired
     private HostIPConstants ipConstants;
 
-    public static List getDependencies(String parser, List javaNodes) {
+    public static List getDependencies(String parser, Request request) {
         RestTemplate restTemplate = new RestTemplate();
         List dependencies = new ArrayList();
 
@@ -34,7 +35,7 @@ public class Requester {
 
             Request springs = restTemplate.postForObject(
                     "http://localhost:7003/api/spring-service/dependency/spring", //spring-service
-                    javaNodes,
+                    request,
                     Request.class);
 
             dependencies.addAll(springs.getAllDependencies());
@@ -43,7 +44,7 @@ public class Requester {
         if(parser.equals("struts-parser")) {
             Request struts = restTemplate.postForObject(
                     "http://localhost:7007/api/struts-service/dependency/struts", //struts-service
-                    javaNodes,
+                    request,
                     Request.class);
 
             dependencies.addAll(struts.getAllDependencies());
@@ -52,7 +53,7 @@ public class Requester {
         if(parser.equals("jsf-parser")) {
             Request struts = restTemplate.postForObject(
                     "http://localhost:7007/api/jsf-service/dependency/jsf", //jsf-service
-                    javaNodes,
+                    request,
                     Request.class);
 
             dependencies.addAll(struts.getAllDependencies());

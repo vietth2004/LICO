@@ -12,7 +12,7 @@ public class Request {
 
     private List<Dependency> allDependencies;
 
-    private List allNodes;
+    private List javaNodes;
 
     private List<Node> xmlNodes;
 
@@ -24,20 +24,20 @@ public class Request {
     public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
     }
 
     public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List xmlNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.xmlNodes = xmlNodes;
     }
 
     public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List xmlNodes, List jspNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.allNodes = allNodes;
+        this.javaNodes = allNodes;
         this.xmlNodes = xmlNodes;
         this.jspNodes = jspNodes;
     }
@@ -58,12 +58,12 @@ public class Request {
         this.allDependencies = allDependencies;
     }
 
-    public List getAllNodes() {
-        return allNodes;
+    public List getJavaNodes() {
+        return javaNodes;
     }
 
-    public void setAllNodes(List allNodes) {
-        this.allNodes = allNodes;
+    public void setJavaNodes(List javaNodes) {
+        this.javaNodes = javaNodes;
     }
 
     public List getXmlNodes() {

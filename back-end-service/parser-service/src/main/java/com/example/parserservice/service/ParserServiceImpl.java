@@ -1,10 +1,7 @@
 package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
-import com.example.parserservice.dom.Node;
 import com.example.parserservice.model.jsf.JSFResponse;
-import com.example.parserservice.model.jsp.JspRequest;
-import com.example.parserservice.model.xml.XmlRequest;
 import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
@@ -119,7 +116,7 @@ public class ParserServiceImpl implements ParserService{
         Request request = new Request(
                 javaRequest.getBody().getRootNode()
                 , javaRequest.getBody().getAllDependencies()
-                , javaRequest.getBody().getAllNodes()
+                , javaRequest.getBody().getJavaNodes()
                 , xmlRequest.getBody().getXmlNodes()
                 , jspRequest.getBody().getJspNodes()
                 );

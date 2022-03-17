@@ -38,7 +38,7 @@ public class Wrapper {
     }
 
     public static Request wrapXmlAndJspNode(Request request) {
-        int totalNodes = request.getAllNodes().size();
+        int totalNodes = request.getJavaNodes().size();
 
         List<Node> xmlNodes = new ArrayList<>();
         List<Node> jspNodes = new ArrayList<>();
@@ -49,7 +49,7 @@ public class Wrapper {
         Request tmpRequest = new Request(
                 request.getRootNode()
                 , request.getAllDependencies()
-                , request.getAllNodes()
+                , request.getJavaNodes()
                 , request.getXmlNodes()
                 , request.getJspNodes());
 
