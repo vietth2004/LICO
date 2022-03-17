@@ -1,18 +1,17 @@
 package com.example.parserservice.util.worker;
 
+import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.constant.HostIPConstants;
-import com.example.parserservice.model.Path;
-import com.example.parserservice.model.Response;
+import com.example.parserservice.model.FrameworkRequest;
 import com.example.parserservice.model.cia.CiaRequest;
 import com.example.parserservice.model.cia.CiaResponse;
-import com.example.parserservice.model.jsf.JSFResponse;
 import com.example.parserservice.model.parser.Request;
+import com.example.parserservice.model.spring.SpringResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -27,16 +26,24 @@ public class Requester {
     @Autowired
     private HostIPConstants ipConstants;
 
-    public static List getDependencies(String parser, Request request) {
+    public static List<Dependency> getDependencies(String parser, Request request) {
         RestTemplate restTemplate = new RestTemplate();
-        List dependencies = new ArrayList();
+//        Request frameworkRequest = new Request(
+//                request.getRootNode(),
+//                request.getAllDependencies(),
+//                request.getJavaNodes(),
+//                request.getXmlNodes(),
+//                request.getJspNodes());
+
+
+        List<Dependency> dependencies = new ArrayList();
 
         if(parser.equals("spring-parser")) {
 
-            Request springs = restTemplate.postForObject(
-                    "http://localhost:7003/api/spring-service/dependency/spring", //spring-service
-                    request,
-                    Request.class);
+            SpringResponse springs = restTemplate.postForObject(
+                    "http://localhost:7003/api/spring-service/dependency/spring" //spring-service
+                    , new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes())
+                    , SpringResponse.class);
 
             dependencies.addAll(springs.getAllDependencies());
         }
@@ -44,7 +51,7 @@ public class Requester {
         if(parser.equals("struts-parser")) {
             Request struts = restTemplate.postForObject(
                     "http://localhost:7007/api/struts-service/dependency/struts", //struts-service
-                    request,
+                    new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes()),
                     Request.class);
 
             dependencies.addAll(struts.getAllDependencies());
@@ -53,7 +60,7 @@ public class Requester {
         if(parser.equals("jsf-parser")) {
             Request struts = restTemplate.postForObject(
                     "http://localhost:7007/api/jsf-service/dependency/jsf", //jsf-service
-                    request,
+                    new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes()),
                     Request.class);
 
             dependencies.addAll(struts.getAllDependencies());

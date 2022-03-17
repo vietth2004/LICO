@@ -4,9 +4,10 @@ import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Node;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Request {
+public class Request implements Serializable {
 
     private JavaNode rootNode;
 
@@ -21,23 +22,18 @@ public class Request {
     public Request() {
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes) {
-        this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
-        this.javaNodes = allNodes;
+    public Request(List<JavaNode> javaNodes) {
+        this.javaNodes = javaNodes;
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List xmlNodes) {
+    public Request(JavaNode rootNode,
+                   List<Dependency> allDependencies,
+                   List javaNodes,
+                   List<Node> xmlNodes,
+                   List<Node> jspNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
-        this.javaNodes = allNodes;
-        this.xmlNodes = xmlNodes;
-    }
-
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List xmlNodes, List jspNodes) {
-        this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
-        this.javaNodes = allNodes;
+        this.javaNodes = javaNodes;
         this.xmlNodes = xmlNodes;
         this.jspNodes = jspNodes;
     }
@@ -50,7 +46,7 @@ public class Request {
         this.rootNode = rootNode;
     }
 
-    public List getAllDependencies() {
+    public List<Dependency> getAllDependencies() {
         return allDependencies;
     }
 
@@ -66,7 +62,7 @@ public class Request {
         this.javaNodes = javaNodes;
     }
 
-    public List getXmlNodes() {
+    public List<Node> getXmlNodes() {
         return xmlNodes;
     }
 
@@ -74,7 +70,7 @@ public class Request {
         this.xmlNodes = xmlNodes;
     }
 
-    public List getJspNodes() {
+    public List<Node> getJspNodes() {
         return jspNodes;
     }
 
