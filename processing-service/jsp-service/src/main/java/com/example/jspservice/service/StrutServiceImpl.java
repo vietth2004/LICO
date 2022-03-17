@@ -1,8 +1,6 @@
 package com.example.jspservice.service;
 
-import com.example.jspservice.analyzer.*;
-import com.example.jspservice.ast.dependency.Dependency;
-import com.example.jspservice.ast.node.JavaNode;
+//import com.example.jspservice.analyzer.*;
 import com.example.jspservice.dom.Jsp.JspFileNode;
 import com.example.jspservice.dom.Node;
 import com.example.jspservice.parser.StrutsJspParser;
@@ -56,55 +54,55 @@ public class StrutServiceImpl implements StrutService{
         return null;
     }
 
-    @Override
-    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> strutsNodes) throws ExecutionException, InterruptedException {
-        List<Dependency> dependencies = new ArrayList<>();
-        StrutAnalyzer strutAnalyzer;
-
-        //Struts Action Dependency
-        strutAnalyzer = new ActionDependencyAnalyzer();
-        List<Dependency> strutActionDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutActionDeps);
-
-        //Struts Dependency
-//        List<Dependency> strutDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-//        dependencies.addAll(strutDeps);
-
-        //Struts Interceptor Dependency
-        strutAnalyzer = new InterceptorDepsAnalyzer();
-        List<Dependency> strutInterceptorDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutInterceptorDeps);
-
-        //Struts Interceptor Stack Dependency
-        strutAnalyzer = new InterceptorStackDepsAnalyzer();
-        List<Dependency> strutInterceptorStackDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutInterceptorStackDeps);
-
-        //Struts Jsp Dependency
-        strutAnalyzer = new JspDepsAnalyzer();
-        List<Dependency> strutJspDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutJspDeps);
-
-        //Struts Package Dependency
-        strutAnalyzer = new PackageDepsAnalyzer();
-        List<Dependency> strutPackageDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutPackageDeps);
-
-        //Struts Result Dependency
-        strutAnalyzer = new ResultDepsAnalyzer();
-        List<Dependency> strutResultDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutResultDeps);
-
-        //Struts ResultType Dependency
-        strutAnalyzer = new ResultTypeDepsAnalyzer();
-        List<Dependency> strutResultTypeDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
-        dependencies.addAll(strutResultTypeDeps);
-
-        return dependencies;
-    }
-
-    @Override
-    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes, List<Node> strutsNode) throws ExecutionException, InterruptedException {
-        return null;
-    }
+//    @Override
+//    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> strutsNodes) throws ExecutionException, InterruptedException {
+//        List<Dependency> dependencies = new ArrayList<>();
+//        StrutAnalyzer strutAnalyzer;
+//
+//        //Struts Action Dependency
+//        strutAnalyzer = new ActionDependencyAnalyzer();
+//        List<Dependency> strutActionDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutActionDeps);
+//
+//        //Struts Dependency
+////        List<Dependency> strutDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+////        dependencies.addAll(strutDeps);
+//
+//        //Struts Interceptor Dependency
+//        strutAnalyzer = new InterceptorDepsAnalyzer();
+//        List<Dependency> strutInterceptorDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutInterceptorDeps);
+//
+//        //Struts Interceptor Stack Dependency
+//        strutAnalyzer = new InterceptorStackDepsAnalyzer();
+//        List<Dependency> strutInterceptorStackDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutInterceptorStackDeps);
+//
+//        //Struts Jsp Dependency
+//        strutAnalyzer = new JspDepsAnalyzer();
+//        List<Dependency> strutJspDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutJspDeps);
+//
+//        //Struts Package Dependency
+//        strutAnalyzer = new PackageDepsAnalyzer();
+//        List<Dependency> strutPackageDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutPackageDeps);
+//
+//        //Struts Result Dependency
+//        strutAnalyzer = new ResultDepsAnalyzer();
+//        List<Dependency> strutResultDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutResultDeps);
+//
+//        //Struts ResultType Dependency
+//        strutAnalyzer = new ResultTypeDepsAnalyzer();
+//        List<Dependency> strutResultTypeDeps = strutAnalyzer.analyze(javaNode, strutsNodes);
+//        dependencies.addAll(strutResultTypeDeps);
+//
+//        return dependencies;
+//    }
+//
+//    @Override
+//    public List<Dependency> analyzeDependency(List<JavaNode> javaNode, List<Node> xmlNodes, List<Node> strutsNode) throws ExecutionException, InterruptedException {
+//        return null;
+//    }
 }

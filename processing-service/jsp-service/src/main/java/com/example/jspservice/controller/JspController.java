@@ -59,21 +59,21 @@ public class JspController {
         return ResponseEntity.ok(new Response(jspNodes));
     }
 
-    @PostMapping("/dependency")
-    public ResponseEntity getDependency(@RequestBody List<JavaNode> request,
-                                        @RequestParam String path) {
-        List<Dependency> dependencies = new ArrayList<>();
-        try {
-            List<Node> strutNodes = strutService.parseProjectWithPath(path);
-            dependencies.addAll(strutService.analyzeDependency(request, strutNodes));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok(dependencies);
-    }
+//    @PostMapping("/dependency")
+//    public ResponseEntity getDependency(@RequestBody List<JavaNode> request,
+//                                        @RequestParam String path) {
+//        List<Dependency> dependencies = new ArrayList<>();
+//        try {
+//            List<Node> strutNodes = strutService.parseProjectWithPath(path);
+//            dependencies.addAll(strutService.analyzeDependency(request, strutNodes));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok(dependencies);
+//    }
 
 }
