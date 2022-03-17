@@ -6,6 +6,7 @@ import com.example.jspservice.dom.Node;
 import com.example.jspservice.dto.Request;
 import com.example.jspservice.service.StrutService;
 import com.example.jspservice.utils.Converter;
+import com.example.jspservice.utils.communicator.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,7 @@ public class JspController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(jspNodes);
+        return ResponseEntity.ok(new Response(jspNodes));
     }
 
     @PostMapping("/dependency")

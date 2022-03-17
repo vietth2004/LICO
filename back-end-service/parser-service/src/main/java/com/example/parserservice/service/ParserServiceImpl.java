@@ -1,6 +1,7 @@
 package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
+import com.example.parserservice.dom.Node;
 import com.example.parserservice.model.jsf.JSFResponse;
 import com.example.parserservice.model.jsp.JspRequest;
 import com.example.parserservice.model.xml.XmlRequest;
@@ -10,6 +11,7 @@ import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.util.JwtUtils;
 import com.example.parserservice.util.worker.Getter;
 import com.example.parserservice.util.worker.Requester;
+import com.example.parserservice.util.worker.Wrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,12 +58,9 @@ public class ParserServiceImpl implements ParserService{
 
         Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
         CompletableFuture<Request> reqFuture = CompletableFuture.supplyAsync(() -> buildProject(filePath));
-        CompletableFuture<JSFResponse> jsfFuture = CompletableFuture.supplyAsync(() -> buildJsf(filePath));
         Request request = null;
-        JSFResponse jsf = null;
         try {
             request = reqFuture.get();
-            jsf = jsfFuture.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -89,18 +88,15 @@ public class ParserServiceImpl implements ParserService{
          * Submit parser task to future (multithreading)
          */
         CompletableFuture<Request> reqFuture = CompletableFuture.supplyAsync(() -> buildProject(path));
-        CompletableFuture<JSFResponse> jsfFuture = CompletableFuture.supplyAsync(() -> buildJsf(path));
         Request request = null;
-        JSFResponse jsf = null;
         try {
             request = reqFuture.get();
-            jsf = jsfFuture.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return Getter.getResponse(parserList, request, path.getPath(), jsf);
+        return Getter.getResponse(parserList, request, path.getPath());
     }
 
     public JSFResponse buildJsf(Path path) {
@@ -117,17 +113,18 @@ public class ParserServiceImpl implements ParserService{
         String jspServerUrl = "http://" + ipConstants.getJspServiceIp() + ":7005/api/jsp-service/pathParse/old"; //xml-service
 
         ResponseEntity<Request> javaRequest = restTemplate.postForEntity(javaServerUrl, path, Request.class);
-        ResponseEntity<List> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, List.class);
-        ResponseEntity<List> jspRequest = restTemplate.postForEntity(jspServerUrl, path, List.class);
+        ResponseEntity<Request> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, Request.class);
+        ResponseEntity<Request> jspRequest = restTemplate.postForEntity(jspServerUrl, path, Request.class);
 
         Request request = new Request(
                 javaRequest.getBody().getRootNode()
                 , javaRequest.getBody().getAllDependencies()
                 , javaRequest.getBody().getAllNodes()
-                , xmlRequest.getBody()
-                , jspRequest.getBody()
+                , xmlRequest.getBody().getXmlNodes()
+                , jspRequest.getBody().getJspNodes()
                 );
 
+        Wrapper.wrapXmlAndJspNode(request);
 
         return request;
     }

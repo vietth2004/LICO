@@ -2,6 +2,7 @@ package com.example.parserservice.model.parser;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
+import com.example.parserservice.dom.Node;
 
 import java.util.List;
 
@@ -13,9 +14,9 @@ public class Request {
 
     private List allNodes;
 
-    private List xmlNodes;
+    private List<Node> xmlNodes;
 
-    private List jspNodes;
+    private List<Node> jspNodes;
 
     public Request() {
     }
@@ -69,7 +70,7 @@ public class Request {
         return xmlNodes;
     }
 
-    public void setXmlNodes(List xmlNodes) {
+    public void setXmlNodes(List<Node> xmlNodes) {
         this.xmlNodes = xmlNodes;
     }
 
@@ -77,7 +78,7 @@ public class Request {
         return jspNodes;
     }
 
-    public void setJspNodes(List jspNodes) {
+    public void setJspNodes(List<Node> jspNodes) {
         this.jspNodes = jspNodes;
     }
 }

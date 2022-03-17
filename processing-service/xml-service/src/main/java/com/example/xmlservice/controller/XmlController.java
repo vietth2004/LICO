@@ -4,6 +4,7 @@ import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.dto.Request;
 import com.example.xmlservice.service.XmlService;
 import com.example.xmlservice.utils.Converter;
+import com.example.xmlservice.utils.communicator.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class XmlController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(jspNodes);
+        return ResponseEntity.ok(new Response(jspNodes));
     }
 
 }
