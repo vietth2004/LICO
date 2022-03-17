@@ -6,8 +6,8 @@ services:
     container_name: jcia-db
     image: "mysql:8.0.25"
     environment:
-      - MYSQL_USER=jcia_sqa
-      - MYSQL_ROOT_PASSWORD=P@$$W0R|)
+      - MYSQL_USER=thdtt
+      - MYSQL_ROOT_PASSWORD=Hihahiho09620@
       - MYSQL_PASSWORD={[(Hash123!@#ing)]}
       - MYSQL_MULTIPLE_DATABASE=micro_jcia_project, micro_jcia_user
     ports:
@@ -19,7 +19,7 @@ services:
     container_name: discovery-service
     image: discovery-service:latest
     build:
-      context: management-service/discovery-server
+      context: discovery-server
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
@@ -30,7 +30,7 @@ services:
     container_name: api-gateway
     image: api-gateway:latest
     build:
-      context: management-service/api-gateway
+      context: api-gateway
       dockerfile: Dockerfile
     ports:
       - "8005:8005"
@@ -47,7 +47,7 @@ services:
     container_name: utility-service
     image: utility-service:latest
     build:
-      context: processing-service/utility-service
+      context: utility-service
       dockerfile: Dockerfile
     ports:
       - "8001:8001"
@@ -64,7 +64,7 @@ services:
     container_name: user-service
     image: user-service:latest
     build:
-      context: backend-service/user-service
+      context: user-service
       dockerfile: Dockerfile
     environment:
       - EUREKA_SERVER=discovery-service
@@ -85,7 +85,7 @@ services:
     container_name: project-service
     image: project-service:latest
     build:
-      context: backend-service/project-service
+      context: project-service
       dockerfile: Dockerfile
     environment:
       - EUREKA_SERVER=discovery-service
@@ -106,7 +106,7 @@ services:
     container_name: parser-service
     image: parser-service:latest
     build:
-      context: backend-service/parser-service
+      context: parser-service
       dockerfile: Dockerfile
     ports:
       - "7001:7001"
@@ -123,7 +123,7 @@ services:
     container_name: java-service
     image: java-service:latest
     build:
-      context: processing-service/java-service
+      context: java-service
       dockerfile: Dockerfile
     ports:
       - "7002:7002"
@@ -140,7 +140,7 @@ services:
     container_name: spring-service
     image: spring-service:latest
     build:
-      context: processing-service/spring-service
+      context: spring-service
       dockerfile: Dockerfile
     ports:
       - "7003:7003"
@@ -157,7 +157,7 @@ services:
     container_name: jsf-service
     image: jsf-service:latest
     build:
-      context: processing-service/jsf-service
+      context: jsf-service
       dockerfile: Dockerfile
     ports:
       - "7004:7004"
@@ -170,45 +170,11 @@ services:
     networks:
       - jcia-network
 
-  struts-service:
-    container_name: struts-service
-    image: struts-service:latest
+  strut-service:
+    container_name: strut-service
+    image: strut-service:latest
     build:
-      context: processing-service/struts-service
-      dockerfile: Dockerfile
-    ports:
-      - "7007:7007"
-    environment:
-      - EUREKA_SERVER=discovery-service
-    depends_on:
-      - discovery-service
-    links:
-      - "discovery-service"
-    networks:
-      - jcia-network
-
-  jsp-service:
-    container_name: jsp-service
-    image: jsp-service:latest
-    build:
-      context: processing-service/jsp-service
-      dockerfile: Dockerfile
-    ports:
-      - "7006:7006"
-    environment:
-      - EUREKA_SERVER=discovery-service
-    depends_on:
-      - discovery-service
-    links:
-      - "discovery-service"
-    networks:
-      - jcia-network
-
-  xml-service:
-    container_name: xml-service
-    image: xml-service:latest
-    build:
-      context: processing-service/xml-service
+      context: strut-service
       dockerfile: Dockerfile
     ports:
       - "7005:7005"
@@ -225,7 +191,7 @@ services:
     container_name: cia-service
     image: cia-service:latest
     build:
-      context: processing-service/cia-service
+      context: cia-service
       dockerfile: Dockerfile
     ports:
       - "6001:6001"
@@ -242,7 +208,7 @@ services:
     container_name: version-compare
     image: version-compare:latest
     build:
-      context: processing-service/version-compare-service
+      context: version-compare-service
       dockerfile: Dockerfile
     ports:
       - "6002:6002"
@@ -259,7 +225,7 @@ services:
     container_name: file-service
     image: file-service:latest
     build:
-      context: backend-service/file-service
+      context: file-service
       dockerfile: Dockerfile
     ports:
       - "5001:5001"
@@ -276,7 +242,7 @@ services:
     container_name: git-service
     image: git-service:latest
     build:
-      context: backend-service/git-service
+      context: git-service
       dockerfile: Dockerfile
     ports:
       - "8004:8004"

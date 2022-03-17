@@ -14,7 +14,7 @@ public class DependencyCountTable implements Serializable {
     public DependencyCountTable() {
     }
 
-    public DependencyCountTable(mrmathami.cia.java.jdt.project.tree.dependency.DependencyCountTable dependencyCountTable) {
+    public DependencyCountTable(mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable dependencyCountTable) {
         this.USE = dependencyCountTable.getCount(JavaDependency.USE);
         this.MEMBER = dependencyCountTable.getCount(JavaDependency.MEMBER);
         this.INHERITANCE = dependencyCountTable.getCount(JavaDependency.INHERITANCE);

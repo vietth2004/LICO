@@ -4,12 +4,12 @@ package com.example.parserservice.ast.node;
 import com.example.parserservice.ast.annotation.JavaAnnotation;
 import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.type.JavaType;
-import com.example.parserservice.ast.utility.Utility;
-import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.project.tree.node.InterfaceNode;
-import mrmathami.cia.java.jdt.project.tree.node.MethodNode;
-import mrmathami.cia.java.jdt.project.tree.node.RootNode;
-import mrmathami.cia.java.jdt.project.tree.node.attribute.AbstractAnnotatedNode;
+import com.example.parserservice.ast.utility.Converter;
+import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
+import mrmathami.cia.java.jdt.tree.node.MethodNode;
+import mrmathami.cia.java.jdt.tree.node.RootNode;
+import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 
 import java.io.Serializable;
@@ -47,8 +47,8 @@ public class JavaNode extends Node implements Serializable {
 
     public JavaNode(AbstractNode abstractNode, Boolean nodes) {
         super(abstractNode);
-        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
-        this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+        this.dependencyFrom = Converter.convertMap(abstractNode.getDependencyFrom());
+        this.dependencyTo = Converter.convertMap(abstractNode.getDependencyTo());
         this.parent = abstractNode.getParent().getId();
         this.children = this.returnChildren(abstractNode, nodes);
         this.setupProperties(abstractNode);
@@ -56,9 +56,9 @@ public class JavaNode extends Node implements Serializable {
 
     public JavaNode(RootNode rootNode) {
         super(rootNode);
-        this.children = Utility.convertAbstractNode(rootNode.getChildren());
-        this.dependencyFrom = Utility.convertMap(rootNode.getDependencyFrom());
-        this.dependencyTo = Utility.convertMap(rootNode.getDependencyTo());
+        this.children = Converter.convertAbstractNode(rootNode.getChildren());
+        this.dependencyFrom = Converter.convertMap(rootNode.getDependencyFrom());
+        this.dependencyTo = Converter.convertMap(rootNode.getDependencyTo());
     }
 
     public List<Pair> getDependencyFrom() {
@@ -135,27 +135,27 @@ public class JavaNode extends Node implements Serializable {
 
     private void setupProperties (AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
-            this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
+            this.parameters = Converter.convertParameters(((MethodNode) abstractNode).getParameters());
         }
 
         if (abstractNode instanceof AbstractAnnotatedNode) {
-            this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
+            this.annotates = Converter.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
         }
 
         if (abstractNode instanceof JavaModifiedNode) {
-            this.modifiers = Utility.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
+            this.modifiers = Converter.convertModifiers(((JavaModifiedNode) abstractNode).getModifierSet());
         }
 
         if (abstractNode instanceof InterfaceNode) {
-            this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
+            this.extendInterfaces = Converter.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
         }
     }
 
     private List returnChildren(AbstractNode abstractNode, Boolean nodes) {
         if (nodes == true) {
-            return Utility.convertAbstractNode(abstractNode.getChildren());
+            return Converter.convertAbstractNode(abstractNode.getChildren());
         } else {
-            return Utility.convertChildren(abstractNode.getChildren());
+            return Converter.convertChildren(abstractNode.getChildren());
         }
     }
 }

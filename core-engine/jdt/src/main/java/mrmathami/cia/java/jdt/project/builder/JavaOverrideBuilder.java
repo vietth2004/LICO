@@ -19,13 +19,13 @@
 package mrmathami.cia.java.jdt.project.builder;
 
 import mrmathami.annotations.Nonnull;
-import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
-import mrmathami.cia.java.jdt.project.tree.node.ClassNode;
-import mrmathami.cia.java.jdt.project.tree.node.EnumNode;
-import mrmathami.cia.java.jdt.project.tree.node.InterfaceNode;
-import mrmathami.cia.java.jdt.project.tree.node.MethodNode;
-import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
-import mrmathami.cia.java.jdt.project.tree.type.ReferenceType;
+import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.tree.node.ClassNode;
+import mrmathami.cia.java.jdt.tree.node.EnumNode;
+import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
+import mrmathami.cia.java.jdt.tree.node.MethodNode;
+import mrmathami.cia.java.jdt.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.tree.type.ReferenceType;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;

@@ -1,6 +1,6 @@
 package com.example.springservice.ast.node;
 
-import mrmathami.cia.java.jdt.project.tree.node.AbstractNode;
+import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 
 public class Node {
     private String entityClass = new String();

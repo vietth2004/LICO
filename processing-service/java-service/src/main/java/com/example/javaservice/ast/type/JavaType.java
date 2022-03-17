@@ -6,10 +6,10 @@ import com.example.javaservice.ast.annotation.JavaAnnotation;
 import com.example.javaservice.ast.node.Node;
 import com.example.javaservice.ast.utility.Utility;
 
-import mrmathami.cia.java.jdt.project.tree.type.AbstractType;
-import mrmathami.cia.java.jdt.project.tree.type.ReferenceType;
-import mrmathami.cia.java.jdt.project.tree.type.SimpleType;
-import mrmathami.cia.java.jdt.project.tree.type.SyntheticType;
+import mrmathami.cia.java.jdt.tree.type.AbstractType;
+import mrmathami.cia.java.jdt.tree.type.ReferenceType;
+import mrmathami.cia.java.jdt.tree.type.SimpleType;
+import mrmathami.cia.java.jdt.tree.type.SyntheticType;
 
 public class JavaType {
     private String entityClass = new String();

@@ -13,9 +13,6 @@
 
 # Intellij
 *.iml
-core-engine/.idea
-core-engine/build
-core-engine/repository
 
 # Netbeans, Eclipse. VSCode
 .classpath
@@ -39,10 +36,37 @@ storage
 *.log
 /logs
 /logs/
+api-gateway/logs/
+cia-service/logs/
+discovery-server/logs/
+file-service/logs/
+git-service/logs/
+java-service/logs/
+jsf-service/logs/
+parser-service/logs/
+project-service/logs/
+spring-service/logs/
+strut-service/logs/
+utility-service/logs/
+version-compare-service/logs/
 
 #config file with db props
-backend-service/user-service/src/main/resources/application.properties
-backend-service/project-service/src/main/resources/application.properties
+user-service/src/main/resources/application.properties
+project-service/src/main/resources/application.properties
+logs/api-gateway.log
+logs/cia-service.log
+logs/discovery-server.log
+logs/file-service.log
+logs/git-service.log
+logs/java-service.log
+logs/jsf-service.log
+logs/parser-service.log
+logs/project-service.log
+logs/spring-service.log
+logs/strut-service.log
+logs/utility-service.log
+logs/compare-service.log
+*.log
 
 # Build folders
 /target
