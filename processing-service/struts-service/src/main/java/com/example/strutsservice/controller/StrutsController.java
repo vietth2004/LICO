@@ -17,7 +17,7 @@ public class StrutsController {
     @Autowired
     private StrutsService strutsService;
 
-    @PostMapping("/dependency")
+    @PostMapping("/dependency/struts")
     public Response getStrutsDependency(@RequestBody Request request) {
         return strutsService.getDependency(request);
     }

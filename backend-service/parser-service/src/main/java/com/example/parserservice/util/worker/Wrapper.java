@@ -29,6 +29,10 @@ public class Wrapper {
             dependencies.addAll(frameworkDependencies);
         }
 
+        if(type.equals("STRUTS")){
+            dependencies.addAll(frameworkDependencies);
+        }
+
         return dependencies;
     }
 
