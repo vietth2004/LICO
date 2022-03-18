@@ -60,6 +60,7 @@ public class Wrapper {
         totalNodes = wrapJspNode(request.getJspNodes(), totalNodes, jspNodes);
         System.out.println("Total Nodes: " + totalNodes);
         totalNodes = wrapPropNode(request.getPropertiesNodes(), totalNodes);
+        System.out.println("Total Nodes: " + totalNodes);
 
 
         Request tmpRequest = new Request(
