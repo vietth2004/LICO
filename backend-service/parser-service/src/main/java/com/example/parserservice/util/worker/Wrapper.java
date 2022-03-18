@@ -3,6 +3,8 @@ package com.example.parserservice.util.worker;
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Node;
+import com.example.parserservice.dom.Properties.PropertiesFileNode;
+import com.example.parserservice.dom.Properties.PropertiesNode;
 import com.example.parserservice.model.parser.Request;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class Wrapper {
 
         totalNodes = wrapXmlNode(request.getXmlNodes(), totalNodes, xmlNodes);
         totalNodes = wrapJspNode(request.getJspNodes(), totalNodes, jspNodes);
+        wrapPropNode(request.getPropertiesNodes(), totalNodes);
 
         Request tmpRequest = new Request(
                 request.getRootNode()
@@ -79,4 +82,16 @@ public class Wrapper {
         }
         return totalNodes;
     }
+
+    public static void wrapPropNode(List nodes, int totalNodes) {
+        for(Object propNode : nodes) {
+            if(propNode instanceof PropertiesFileNode) {
+                ((PropertiesFileNode) propNode).setId(++totalNodes);
+                for(PropertiesNode prop : ((PropertiesFileNode) propNode).getProperties()) {
+                    prop.setId(++totalNodes);
+                }
+            }
+        }
+    }
+
 }

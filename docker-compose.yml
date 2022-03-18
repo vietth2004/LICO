@@ -70,7 +70,7 @@ services:
       - EUREKA_SERVER=discovery-service
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-jcia-db:3306/micro_jcia_user?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=Hihahiho09620@
+      - SPRING_DATASOURCE_PASSWORD=1qazXSW@
     ports:
       - "8002:8002"
     depends_on:
@@ -91,7 +91,7 @@ services:
       - EUREKA_SERVER=discovery-service
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-jcia-db:3306/micro_jcia_project?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=Hihahiho09620@
+      - SPRING_DATASOURCE_PASSWORD=1qazXSW@
     ports:
       - "8003:8003"
     depends_on:
