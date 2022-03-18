@@ -122,7 +122,7 @@ public class XmlTagNode extends Node {
                 ", domNode=" + domNode +
                 ", attributes=" + listAttr +
                 ", content='" + content + '\'' +
-                ", children='" + getChildren() + '\'' +
+                ", children='" + getNodeChildren() + '\'' +
                 '}';
     }
 }

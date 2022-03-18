@@ -77,9 +77,15 @@ public class XmlServiceImpl implements XmlService {
         CompletableFuture dep1 = CompletableFuture.supplyAsync(() -> analyzeDependencyBetweenBeans(javaNode));
         CompletableFuture dep2 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromBeanToView(javaNode, xmlNodes));
         CompletableFuture dep3 = CompletableFuture.supplyAsync(() -> analyzeDependencyFromControllerToView(javaNode, xmlNodes));
+
         dependencies.addAll((Collection<? extends Dependency>) dep1.get());
+        System.out.println("dep1: " + dependencies.size());
         dependencies.addAll((Collection<? extends Dependency>) dep2.get());
+        System.out.println("dep2: " + dependencies.size());
         dependencies.addAll((Collection<? extends Dependency>) dep3.get());
+        System.out.println("dep3: " + dependencies.size());
+
+        System.out.println();
         return dependencies;
     }
 

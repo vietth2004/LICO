@@ -2,6 +2,8 @@ package com.example.parserservice.util.worker;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.constant.HostIPConstants;
+import com.example.parserservice.dom.Properties.PropertiesFileNode;
+import com.example.parserservice.dom.Properties.PropertiesNode;
 import com.example.parserservice.model.FrameworkRequest;
 import com.example.parserservice.model.cia.CiaRequest;
 import com.example.parserservice.model.cia.CiaResponse;

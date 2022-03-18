@@ -1,9 +1,5 @@
 package com.example.parserservice.model;
 
-import com.example.parserservice.ast.node.JavaNode;
-import com.example.parserservice.dom.Node;
-import com.example.parserservice.dom.Properties.PropertiesFileNode;
-
 import java.util.List;
 
 public class FrameworkRequest {
@@ -14,7 +10,7 @@ public class FrameworkRequest {
 
     private List jspNodes;
 
-    private List propertiesFileNodes;
+    private List propertiesNodes;
 
     private String path;
 
@@ -49,7 +45,7 @@ public class FrameworkRequest {
         this.javaNodes = javaNodes;
         this.xmlNodes = xmlNodes;
         this.jspNodes = jspNodes;
-        this.propertiesFileNodes = propertiesFileNodes;
+        this.propertiesNodes = propertiesFileNodes;
     }
 
     public List getJavaNodes() {
@@ -76,12 +72,12 @@ public class FrameworkRequest {
         this.jspNodes = jspNodes;
     }
 
-    public List getPropertiesFileNodes() {
-        return propertiesFileNodes;
+    public List getPropertiesNodes() {
+        return propertiesNodes;
     }
 
-    public void setPropertiesFileNodes(List propertiesFileNodes) {
-        this.propertiesFileNodes = propertiesFileNodes;
+    public void setPropertiesNodes(List propertiesNodes) {
+        this.propertiesNodes = propertiesNodes;
     }
 
     public String getPath() {

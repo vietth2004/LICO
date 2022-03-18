@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -120,6 +121,7 @@ public class ParserServiceImpl implements ParserService{
         ResponseEntity<Request> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, Request.class);
         ResponseEntity<Request> jspRequest = restTemplate.postForEntity(jspServerUrl, path, Request.class);
         ResponseEntity<Request> propRequest = restTemplate.postForEntity(propServerUrl, path, Request.class);
+
 
         Request request = new Request(
                 javaRequest.getBody().getRootNode()

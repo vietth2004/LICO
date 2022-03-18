@@ -4,6 +4,7 @@ import com.example.jsfservice.ast.dependency.Dependency;
 import com.example.jsfservice.ast.node.JavaNode;
 import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.dom.Properties.PropertiesFileNode;
+import com.example.jsfservice.dom.Xml.XmlTagNode;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Request implements Serializable {
 
     private List<JavaNode> javaNodes;
 
-    private List<Node> xmlNodes;
+    private List xmlNodes;
 
     private List<Node> jspNodes;
 
@@ -34,8 +35,8 @@ public class Request implements Serializable {
     public Request(JavaNode rootNode,
                    List<Dependency> allDependencies,
                    List javaNodes,
-                   List<Node> xmlNodes,
-                   List<Node> jspNodes) {
+                   List xmlNodes,
+                   List jspNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -43,7 +44,7 @@ public class Request implements Serializable {
         this.jspNodes = jspNodes;
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List<Node> xmlNodes, List<Node> jspNodes, String path) {
+    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List xmlNodes, List jspNodes, String path) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -52,7 +53,7 @@ public class Request implements Serializable {
         this.path = path;
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List<Node> xmlNodes, List<Node> jspNodes, List<PropertiesFileNode> propertiesNodes, String path) {
+    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List xmlNodes, List jspNodes, List propertiesNodes, String path) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -94,11 +95,11 @@ public class Request implements Serializable {
         this.xmlNodes = xmlNodes;
     }
 
-    public List<Node> getJspNodes() {
+    public List getJspNodes() {
         return jspNodes;
     }
 
-    public void setJspNodes(List<Node> jspNodes) {
+    public void setJspNodes(List jspNodes) {
         this.jspNodes = jspNodes;
     }
 

@@ -43,7 +43,7 @@ public class ChangedNodeAnalyzer implements Callable {
         }
         changedNodes.forEach(node -> {
             node.setStatus(CompareStatus.CHANGED);
-            node.setChildren(new ArrayList<>());
+            node.setNodeChildren(new ArrayList<>());
         });
         return changedNodes;
     }

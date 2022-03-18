@@ -14,14 +14,18 @@ public class Wrapper {
 
     public static List<Dependency> wrapDependency (List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
 
-        for(Dependency dependency : frameworkDependencies) {
-            for(Dependency base : dependencies) {
-                if(Checker.isDependency(base,  dependency)) {
-                    if(type.equals("SPRING")){
+        if(type.equals("SPRING")){
+            for(Dependency dependency : frameworkDependencies) {
+                for(Dependency base : dependencies) {
+                    if(Checker.isDependency(base,  dependency)) {
                         base.getType().setSPRING(dependency.getType().getSPRING());
                     }
                 }
             }
+        }
+
+        if(type.equals("JSF")) {
+            dependencies.addAll(frameworkDependencies);
         }
 
         return dependencies;

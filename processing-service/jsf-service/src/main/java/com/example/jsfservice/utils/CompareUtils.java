@@ -28,8 +28,8 @@ public class CompareUtils {
         nodes.forEach(node -> {
             int id = node.getId();
             node.setId(id -= javaTotalNodesId);
-            if(node.getChildren().size() > 0) {
-                reCalculateXmlNodesId(javaTotalNodesId, node.getChildren());
+            if(node.getNodeChildren().size() > 0) {
+                reCalculateXmlNodesId(javaTotalNodesId, node.getNodeChildren());
             }
         });
     }
@@ -39,7 +39,7 @@ public class CompareUtils {
             if(node.getId() == id)
                 return node;
             else
-                searchById(node.getChildren(), id);
+                searchById(node.getNodeChildren(), id);
         }
         return null;
     }
@@ -50,7 +50,7 @@ public class CompareUtils {
             if(node.getFullyQualifiedName().equals(query))
                 result.add(node);
             else
-                result.addAll(searchByFullyQualifiedName(node.getChildren(), query));
+                result.addAll(searchByFullyQualifiedName(node.getNodeChildren(), query));
         }
         return result;
     }

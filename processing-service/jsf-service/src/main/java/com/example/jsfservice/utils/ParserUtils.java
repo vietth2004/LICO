@@ -32,8 +32,8 @@ public class ParserUtils {
         nodes.forEach(node -> {
             int id = node.getId();
             node.setId(id += javaTotalNodesId);
-            if(node.getChildren().size() > 0) {
-                reCalculateXmlNodesId(javaTotalNodesId, node.getChildren());
+            if(node.getNodeChildren().size() > 0) {
+                reCalculateXmlNodesId(javaTotalNodesId, node.getNodeChildren());
             }
         });
     }
@@ -205,8 +205,8 @@ public class ParserUtils {
     public static List<Node> getChildrenLevel1XmlFileNode(List<Node> xmlFileNodes) {
         List<Node> nodes = new ArrayList<>();
         for(Node node : xmlFileNodes) {
-            if(node instanceof XmlFileNode) {
-                nodes.addAll(node.getChildren());
+            if(node instanceof Node) {
+                nodes.addAll(node.getNodeChildren());
             }
         }
         return nodes;

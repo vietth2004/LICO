@@ -102,7 +102,7 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
                 }
             }
         }
-        root.setChildren(children);
+        root.setNodeChildren(children);
 
         return root;
     }

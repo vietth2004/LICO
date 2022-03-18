@@ -43,7 +43,7 @@ public class UnchangedNodeAnalyzer implements Callable {
         }
         unchangedNodes.forEach(node -> {
             node.setStatus(CompareStatus.UNCHANGED);
-            node.setChildren(new ArrayList<>());
+            node.setNodeChildren(new ArrayList<>());
         });
         return unchangedNodes;
     }

@@ -35,7 +35,7 @@ public class AddedNodeAnalyzer implements Callable {
         }
         addedNodes.forEach(node -> {
             node.setStatus(CompareStatus.ADDED);
-            node.setChildren(new ArrayList<>());
+            node.setNodeChildren(new ArrayList<>());
         });
         return addedNodes;
     }

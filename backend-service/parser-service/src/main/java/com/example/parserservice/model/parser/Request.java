@@ -16,11 +16,11 @@ public class Request implements Serializable {
 
     private List javaNodes;
 
-    private List<Node> xmlNodes;
+    private List xmlNodes;
 
-    private List<Node> jspNodes;
+    private List jspNodes;
 
-    private List<PropertiesFileNode> propertiesNodes;
+    private List propertiesNodes;
 
     private String path;
 
@@ -34,8 +34,8 @@ public class Request implements Serializable {
     public Request(JavaNode rootNode,
                    List<Dependency> allDependencies,
                    List javaNodes,
-                   List<Node> xmlNodes,
-                   List<Node> jspNodes) {
+                   List xmlNodes,
+                   List jspNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -43,7 +43,7 @@ public class Request implements Serializable {
         this.jspNodes = jspNodes;
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List<Node> xmlNodes, List<Node> jspNodes, String path) {
+    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List xmlNodes, List jspNodes, String path) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -52,7 +52,7 @@ public class Request implements Serializable {
         this.path = path;
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List<Node> xmlNodes, List<Node> jspNodes, List<PropertiesFileNode> propertiesNodes, String path) {
+    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List xmlNodes, List jspNodes, List propertiesNodes, String path) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -86,19 +86,19 @@ public class Request implements Serializable {
         this.javaNodes = javaNodes;
     }
 
-    public List<Node> getXmlNodes() {
+    public List getXmlNodes() {
         return xmlNodes;
     }
 
-    public void setXmlNodes(List<Node> xmlNodes) {
+    public void setXmlNodes(List xmlNodes) {
         this.xmlNodes = xmlNodes;
     }
 
-    public List<Node> getJspNodes() {
+    public List getJspNodes() {
         return jspNodes;
     }
 
-    public void setJspNodes(List<Node> jspNodes) {
+    public void setJspNodes(List jspNodes) {
         this.jspNodes = jspNodes;
     }
 
@@ -110,11 +110,11 @@ public class Request implements Serializable {
         this.path = path;
     }
 
-    public List<PropertiesFileNode> getPropertiesNodes() {
+    public List getPropertiesNodes() {
         return propertiesNodes;
     }
 
-    public void setPropertiesNodes(List<PropertiesFileNode> propertiesNodes) {
+    public void setPropertiesNodes(List propertiesNodes) {
         this.propertiesNodes = propertiesNodes;
     }
 }

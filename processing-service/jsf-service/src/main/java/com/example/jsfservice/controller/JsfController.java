@@ -15,6 +15,7 @@ import com.example.jsfservice.service.PropertiesService;
 import com.example.jsfservice.service.XmlService;
 import com.example.jsfservice.utils.JavaUtils;
 import com.example.jsfservice.utils.ParserUtils;
+import com.example.jsfservice.utils.worker.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,10 @@ public class JsfController {
         long before = System.nanoTime();
         logger.info("Run into API: /dependency");
         logger.info("Analyzing dependency...");
+
+        List<Node> xmlNodes = Converter.convertMapToList(request.getXmlNodes());
+
+
         dependencies.addAll(xmlService.analyzeDependency(request.getJavaNodes(), request.getXmlNodes()));
         dependencies.addAll(propService.analyzeDependencies(request.getXmlNodes(), request.getPropertiesNodes()));
         long after = System.nanoTime();
