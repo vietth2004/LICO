@@ -21,7 +21,7 @@ public class NodeHelper {
     public static Node replaceNode(Node oldNode, Node newNode) {
         Node parent = oldNode.getParent();
         if (parent == null) return oldNode;
-        List<Node> children = parent.getChildren();
+        List<Node> children = parent.getNodeChildren();
         int pos = children.indexOf(oldNode);
         children.set(pos, newNode);
         return newNode;

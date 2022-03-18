@@ -7,6 +7,7 @@ import com.example.jsfservice.utils.JciaData;
 import com.example.jsfservice.utils.Type.ComponentType;
 import com.example.jsfservice.utils.Type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
 import java.io.Serializable;

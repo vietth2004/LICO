@@ -57,13 +57,13 @@ public class XmlFileNodeDecorator extends XmlFileNode {
     }
 
     @Override
-    public List<Node> getChildren() {
-        return xmlFileNode.getChildren();
+    public List<Node> getNodeChildren() {
+        return xmlFileNode.getNodeChildren();
     }
 
     @Override
-    public void setChildren(List<Node> children) {
-        xmlFileNode.setChildren(children);
+    public void setNodeChildren(List<Node> nodeChildren) {
+        xmlFileNode.setNodeChildren(nodeChildren);
     }
 
     @Override

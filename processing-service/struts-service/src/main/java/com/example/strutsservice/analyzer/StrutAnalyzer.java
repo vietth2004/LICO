@@ -7,5 +7,6 @@ import com.example.strutsservice.dom.Node;
 import java.util.List;
 
 public interface StrutAnalyzer {
-    List<Dependency> analyze(List<JavaNode> javaNodes, List<Node> strutsNodes);
+    List<Dependency> analyze(List<JavaNode> javaNodes, List<Node> jspNodes, List<Node> xmlNodes);
+
 }

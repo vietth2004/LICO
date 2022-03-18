@@ -225,13 +225,15 @@ public class ParserUtils {
             /**
              * analyze injected bean in node's attributes
              */
-            for(String value : ((XmlTagNode) node).getAttributes().values())  {
-                Matcher matcher = pattern.matcher(value);
-                if(matcher.matches()){
-                    XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
-                    beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9\\-.\\[\\]]", ""));
-                    beanInjectionNode.setValue(node);
-                    nodes.add(beanInjectionNode);
+            if(((XmlTagNode) node).getAttributes() != null){
+                for(String value : ((XmlTagNode) node).getAttributes().values())  {
+                    Matcher matcher = pattern.matcher(value);
+                    if(matcher.matches()){
+                        XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
+                        beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9\\-.\\[\\]]", ""));
+                        beanInjectionNode.setValue(node);
+                        nodes.add(beanInjectionNode);
+                    }
                 }
             }
 
@@ -263,7 +265,7 @@ public class ParserUtils {
     public static Set<JsfBeanNode> filterBeanFromFacesConfig(Node tagNode, List<JavaNode> nodes) {
         Set<JsfBeanNode> jsfBeanNodes = new HashSet<>();
 
-        if(tagNode instanceof XmlTagNode) {
+        if(tagNode instanceof XmlTagNode && ((XmlTagNode) tagNode).getTagName() != null) {
             if(((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
                 JsfBeanNode beanNode = new JsfBeanNode();
                 if(prepareBeanNodeValue(tagNode, nodes) != null) {
@@ -289,7 +291,7 @@ public class ParserUtils {
     public static Set<PropsBeanNode> filterPropBeanFromFacesConfig(Node tagNode, List<PropertiesFileNode> propsNode) {
         Set<PropsBeanNode> propBeanNodes = new HashSet<>();
 
-        if(tagNode instanceof XmlTagNode) {
+        if(tagNode instanceof XmlTagNode && ((XmlTagNode) tagNode).getTagName() != null) {
             if(((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
                 PropsBeanNode beanNode = new PropsBeanNode();
                 beanNode.setBeanName(prepareBeanNodeName(tagNode));

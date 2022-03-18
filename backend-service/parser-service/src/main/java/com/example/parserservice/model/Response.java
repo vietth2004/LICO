@@ -25,7 +25,7 @@ public class Response {
 
     private String address = null;
 
-    private List<com.example.parserservice.dom.Node> xmlNodes;
+    private List xmlNodes;
 
     public Response() {
     }
@@ -61,7 +61,7 @@ public class Response {
             , List allNodes
             , List<Dependency> allDependencies
             , String address
-            , List<com.example.parserservice.dom.Node> xmlNodes) {
+            , List xmlNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = allNodes;
@@ -75,7 +75,7 @@ public class Response {
             , List allNodes
             , List<Dependency> allDependencies
             , String address
-            , List<com.example.parserservice.dom.Node> xmlNodes
+            , List xmlNodes
             , List jspNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
@@ -92,7 +92,7 @@ public class Response {
             , List nodesWeight
             , Integer totalNodes
             , String address
-            , List<com.example.parserservice.dom.Node> xmlNodes) {
+            , List xmlNodes) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = allNodes;

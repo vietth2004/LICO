@@ -6,6 +6,7 @@ import com.example.parserservice.dom.Node;
 import com.example.parserservice.dom.Properties.PropertiesFileNode;
 import com.example.parserservice.dom.Properties.PropertiesNode;
 import com.example.parserservice.model.parser.Request;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,27 +50,32 @@ public class Wrapper {
         List<Node> xmlNodes = new ArrayList<>();
         List<Node> jspNodes = new ArrayList<>();
 
+        System.out.println("Total Nodes: " + totalNodes);
         totalNodes = wrapXmlNode(request.getXmlNodes(), totalNodes, xmlNodes);
+        System.out.println("Total Nodes: " + totalNodes);
         totalNodes = wrapJspNode(request.getJspNodes(), totalNodes, jspNodes);
+        System.out.println("Total Nodes: " + totalNodes);
         wrapPropNode(request.getPropertiesNodes(), totalNodes);
 
         Request tmpRequest = new Request(
                 request.getRootNode()
                 , request.getAllDependencies()
                 , request.getJavaNodes()
-                , request.getXmlNodes()
-                , request.getJspNodes());
+                , xmlNodes
+                , jspNodes);
 
         return tmpRequest;
     }
 
     public static int wrapXmlNode(List nodes, int totalNodes, List<Node> xmlNodes) {
+        ObjectMapper mapper = new ObjectMapper();
+
         for(Object xmlNode : nodes) {
             if(xmlNode instanceof Node) {
                 ((Node) xmlNode).setId(++totalNodes);
                 xmlNodes.add((Node) xmlNode);
 
-                totalNodes = wrapXmlNode(((Node) xmlNode).getChildren(), totalNodes, xmlNodes);
+                totalNodes = wrapJspNode(((Node) xmlNode).getChildren(), totalNodes, xmlNodes);
             }
         }
         return totalNodes;

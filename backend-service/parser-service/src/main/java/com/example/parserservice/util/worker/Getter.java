@@ -63,8 +63,8 @@ public class Getter {
         JavaNode javaNode = request.getRootNode();
         List javaNodes = request.getJavaNodes();
         List<Dependency> dependencies = request.getAllDependencies();
-        List<Node> xmlNodes = request.getXmlNodes();
-        List<Node> jspNodes = request.getJspNodes();
+        List xmlNodes = request.getXmlNodes();
+        List jspNodes = request.getJspNodes();
         List propNodes = request.getPropertiesNodes();
 
         for (String parser : parserList) {

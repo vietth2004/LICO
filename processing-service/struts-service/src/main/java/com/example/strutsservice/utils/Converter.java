@@ -28,7 +28,7 @@ public class Converter {
         node.setQualifiedName(strutsNode.getName());
         node.setUniqueName(strutsNode.getName());
 
-        for(com.example.strutsservice.dom.Node tempNode : strutsNode.getChildren()) {
+        for(com.example.strutsservice.dom.Node tempNode : strutsNode.getNodeChildren()) {
             node.addChildren(convertStrutsNodeToNode(tempNode));
         }
 

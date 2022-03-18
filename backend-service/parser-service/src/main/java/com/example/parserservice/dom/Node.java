@@ -1,12 +1,12 @@
 package com.example.parserservice.dom;
 
+import com.example.parserservice.dom.Xml.XmlTagNode;
 import com.example.parserservice.util.exception.JciaIgnore;
 import com.example.parserservice.util.helper.NodeHelper;
 import com.example.parserservice.util.JciaData;
 import com.example.parserservice.util.type.ComponentType;
 import com.example.parserservice.util.type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
 import java.io.Serializable;
@@ -28,7 +28,9 @@ public class Node implements Serializable {
     @JciaIgnore
     protected Node parent;
     @JciaIgnore
-    protected List<Node> children;
+    protected List<Node> nodeChildren;
+
+    private List<XmlTagNode> children;
 
     //@JciaIgnore
     protected Set<ComponentType> componentTypes;
@@ -41,7 +43,7 @@ public class Node implements Serializable {
 
     public Node() {
         this.id = JciaData.getInstance().generateNodeId();
-        children = new ArrayList<>();
+        nodeChildren = new ArrayList<>();
 //        dependencies = new ArrayList<>();
         componentTypes = new HashSet<>();
     }
@@ -75,12 +77,12 @@ public class Node implements Serializable {
         this.parent = parent;
     }
 
-    public List<Node> getChildren() {
-        return children;
+    public List<Node> getNodeChildren() {
+        return nodeChildren;
     }
 
-    public void setChildren(List<Node> children) {
-        this.children = children;
+    public void setNodeChildren(List<Node> nodeChildren) {
+        this.nodeChildren = nodeChildren;
     }
 
     public String getEntityClass() {
@@ -93,11 +95,11 @@ public class Node implements Serializable {
 
     public void addChild(Node child) {
         if (child != null)
-            this.children.add(child);
+            this.nodeChildren.add(child);
     }
 
     public void addChildren(List<Node> children) {
-        this.children.addAll(children);
+        this.nodeChildren.addAll(children);
     }
 
     public String getName() {
@@ -170,6 +172,14 @@ public class Node implements Serializable {
                 tiers.add(t);
         }
         return tiers;
+    }
+
+    public List<XmlTagNode> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<XmlTagNode> children) {
+        this.children = children;
     }
 
     public String getFullyQualifiedName() {
@@ -256,12 +266,12 @@ public class Node implements Serializable {
         if (root == null) {
             return null;
         } else {
-            while (root.getChildren().size() == 1) {
-                for (Node child : root.getChildren())
+            while (root.getNodeChildren().size() == 1) {
+                for (Node child : root.getNodeChildren())
                     if (child.getAbsolutePath().endsWith(File.separator + "src")) {
                         return child;
                     }
-                root = root.getChildren().get(0);
+                root = root.getNodeChildren().get(0);
             }
             return root;
         }
@@ -289,7 +299,7 @@ public class Node implements Serializable {
 
     private List<Node> doGetAllChildren(Node rootNode) {
         List<Node> allChildren = new ArrayList<>();
-        for (Node child : rootNode.getChildren()) {
+        for (Node child : rootNode.getNodeChildren()) {
             allChildren.add(child);
             allChildren.addAll(doGetAllChildren(child));
         }
@@ -327,7 +337,7 @@ public class Node implements Serializable {
         node.setLeft(count);
         count++;
 
-        for (Node child : node.getChildren()) {
+        for (Node child : node.getNodeChildren()) {
             count = dfs(child, count);
         }
 

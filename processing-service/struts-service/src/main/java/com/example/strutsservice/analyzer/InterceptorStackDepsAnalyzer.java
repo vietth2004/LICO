@@ -10,7 +10,7 @@ import java.util.List;
 public class InterceptorStackDepsAnalyzer implements StrutAnalyzer{
 
     @Override
-    public List<Dependency> analyze(List<JavaNode> javaNodes, List<Node> strutsNodes) {
+    public List<Dependency> analyze(List<JavaNode> javaNodes, List<Node> strutsNodes, List<Node> xmlNodes) {
         List<Dependency> strutInterceptorStackDeps = new ArrayList<>();
 
         for(Node node : strutsNodes) {

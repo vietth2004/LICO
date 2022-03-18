@@ -1,28 +1,25 @@
-package com.example.parserservice.model.parser;
+package com.example.strutsservice.utils.communicator;
 
-import com.example.parserservice.ast.dependency.Dependency;
-import com.example.parserservice.ast.node.JavaNode;
-import com.example.parserservice.dom.Jsp.JspTagNode;
-import com.example.parserservice.dom.Node;
-import com.example.parserservice.dom.Properties.PropertiesFileNode;
-import com.example.parserservice.dom.Xml.XmlTagNode;
+import com.example.strutsservice.ast.dependency.Dependency;
+import com.example.strutsservice.ast.node.JavaNode;
+import com.example.strutsservice.dom.Node;
+import com.example.strutsservice.dom.Properties.PropertiesFileNode;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class Request implements Serializable {
+public class Request {
 
     private JavaNode rootNode;
 
     private List<Dependency> allDependencies;
 
-    private List javaNodes;
+    private List<JavaNode> javaNodes;
 
-    private List<Node> xmlNodes;
+    private List xmlNodes;
 
-    private List<Node> jspNodes;
+    private List jspNodes;
 
-    private List propertiesNodes;
+    private List<PropertiesFileNode> propertiesNodes;
 
     private String path;
 
@@ -80,11 +77,11 @@ public class Request implements Serializable {
         this.allDependencies = allDependencies;
     }
 
-    public List getJavaNodes() {
+    public List<JavaNode> getJavaNodes() {
         return javaNodes;
     }
 
-    public void setJavaNodes(List javaNodes) {
+    public void setJavaNodes(List<JavaNode> javaNodes) {
         this.javaNodes = javaNodes;
     }
 
@@ -112,11 +109,12 @@ public class Request implements Serializable {
         this.path = path;
     }
 
-    public List getPropertiesNodes() {
+    public List<PropertiesFileNode> getPropertiesNodes() {
         return propertiesNodes;
     }
 
-    public void setPropertiesNodes(List propertiesNodes) {
+    public void setPropertiesNodes(List<PropertiesFileNode> propertiesNodes) {
         this.propertiesNodes = propertiesNodes;
     }
+
 }
