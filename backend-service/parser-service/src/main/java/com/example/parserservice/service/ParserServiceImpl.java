@@ -65,6 +65,8 @@ public class ParserServiceImpl implements ParserService{
             e.printStackTrace();
         }
 
+        Wrapper.wrapXmlAndJspNode(request);
+
         return Getter.getResponse(parserList, request, filePath.getPath());
     }
 
@@ -96,7 +98,7 @@ public class ParserServiceImpl implements ParserService{
             e.printStackTrace();
         }
 
-
+        Wrapper.wrapXmlAndJspNode(request);
 
         return Getter.getResponse(parserList, request, path.getPath());
     }
@@ -130,8 +132,6 @@ public class ParserServiceImpl implements ParserService{
                 , propRequest.getBody().getPropertiesNodes()
                 , path.getPath()
                 );
-
-        Wrapper.wrapXmlAndJspNode(request);
 
         return request;
     }

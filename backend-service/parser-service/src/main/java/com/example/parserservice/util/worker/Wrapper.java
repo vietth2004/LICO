@@ -59,7 +59,8 @@ public class Wrapper {
         System.out.println("Total Nodes: " + totalNodes);
         totalNodes = wrapJspNode(request.getJspNodes(), totalNodes, jspNodes);
         System.out.println("Total Nodes: " + totalNodes);
-        wrapPropNode(request.getPropertiesNodes(), totalNodes);
+        totalNodes = wrapPropNode(request.getPropertiesNodes(), totalNodes);
+
 
         Request tmpRequest = new Request(
                 request.getRootNode()
@@ -97,7 +98,7 @@ public class Wrapper {
         return totalNodes;
     }
 
-    public static void wrapPropNode(List nodes, int totalNodes) {
+    public static int wrapPropNode(List nodes, int totalNodes) {
         for(Object propNode : nodes) {
             if(propNode instanceof PropertiesFileNode) {
                 ((PropertiesFileNode) propNode).setId(++totalNodes);
@@ -106,6 +107,7 @@ public class Wrapper {
                 }
             }
         }
+        return totalNodes;
     }
 
 }
