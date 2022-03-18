@@ -14,7 +14,7 @@ public class Wrapper {
 
         for(Dependency dependency : frameworkDependencies) {
             for(Dependency base : dependencies) {
-                if(Checker.isDependency(base, dependency)) {
+                if(Checker.isDependency(base,  dependency)) {
                     if(type.equals("SPRING")){
                         base.getType().setSPRING(dependency.getType().getSPRING());
                     }

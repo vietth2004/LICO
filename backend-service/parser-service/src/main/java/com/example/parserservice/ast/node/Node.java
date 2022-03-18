@@ -2,7 +2,9 @@ package com.example.parserservice.ast.node;
 
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable {
     private String entityClass = new String();
     private String idClass = new String();
     private Integer id;

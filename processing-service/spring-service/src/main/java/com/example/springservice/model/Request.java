@@ -14,7 +14,7 @@ public class Request {
 
     private List<Dependency> allDependencies;
 
-    private List javaNodes;
+    private List<com.example.springservice.ast.node.JavaNode> javaNodes;
 
     private List<Node> xmlNodes;
 
@@ -83,11 +83,11 @@ public class Request {
         this.allDependencies = allDependencies;
     }
 
-    public List getJavaNodes() {
+    public List<com.example.springservice.ast.node.JavaNode> getJavaNodes() {
         return javaNodes;
     }
 
-    public void setJavaNodes(List javaNodes) {
+    public void setJavaNodes(List<com.example.springservice.ast.node.JavaNode> javaNodes) {
         this.javaNodes = javaNodes;
     }
 

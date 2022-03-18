@@ -96,6 +96,9 @@ public class ParserServiceImpl implements ParserService{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        Wrapper.wrapXmlAndJspNode(request);
+
         return Getter.getResponse(parserList, request, path.getPath());
     }
 

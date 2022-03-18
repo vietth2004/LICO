@@ -1,6 +1,8 @@
 package com.example.parserservice.ast.dependency;
 
-public class Dependency {
+import java.io.Serializable;
+
+public class Dependency implements Serializable {
 
     private Integer callerNode;
 
