@@ -17,46 +17,65 @@ public class ActionDependencyAnalyzer implements StrutAnalyzer{
 
         for(Node xmlNode : xmlNodes) {
             if(xmlNode != null){
-                findStruts(javaNodes, xmlNode, strutActionDeps);
+                findStruts(javaNodes, xmlNode, strutActionDeps, jspNodes);
             }
         }
 
         return strutActionDeps;
     }
 
-    public void findStruts(List<JavaNode> javaNodes, Node xmlNode, List<Dependency> strutActionDeps){
+    public void findStruts(List<JavaNode> javaNodes, Node xmlNode, List<Dependency> strutActionDeps, List<Node> jspNodes){
         for(XmlTagNode xmlTagNode : xmlNode.getChildren()) {
             if(xmlTagNode.getTagName().equals("struts")){
-                findPackage(javaNodes, xmlTagNode, strutActionDeps);
+                findPackage(javaNodes, xmlTagNode, strutActionDeps, jspNodes);
             }
         }
     }
 
-    public void findPackage(List<JavaNode> javaNodes, XmlTagNode xmlNode, List<Dependency> strutActionDeps) {
+    public void findPackage(List<JavaNode> javaNodes, XmlTagNode xmlNode, List<Dependency> strutActionDeps, List<Node> jspNodes) {
         for(XmlTagNode xmlTagNode : xmlNode.getChildren()) {
             if(xmlTagNode.getTagName().equals("package")) {
-                findAction(javaNodes, xmlTagNode, strutActionDeps);
+                findAction(javaNodes, xmlTagNode, strutActionDeps, jspNodes);
             }
 
         }
     }
 
-    public void findAction(List<JavaNode> javaNodes, XmlTagNode xmlNode, List<Dependency> strutActionDeps) {
+    public void findAction(List<JavaNode> javaNodes, XmlTagNode xmlNode, List<Dependency> strutActionDeps, List<Node> jspNodes) {
         for(XmlTagNode xmlTagNode : xmlNode.getChildren()) {
 
             if(xmlTagNode.getTagName().equals("action")) {
-                findDependency(javaNodes, xmlTagNode, strutActionDeps);
+                findJavaActionDependency(javaNodes, xmlTagNode, strutActionDeps);
+                findResult(xmlTagNode, strutActionDeps, jspNodes);
             }
 
         }
     }
 
-    public void findDependency(List<JavaNode> javaNodes, XmlTagNode xmlNode, List<Dependency> strutActionDeps) {
+    public void findJavaActionDependency(List<JavaNode> javaNodes, XmlTagNode xmlNode, List<Dependency> strutActionDeps) {
         String javaNodeQualifiedName = xmlNode.getAttributes().get("class");
 
         for(JavaNode javaNode : javaNodes) {
             if(javaNode.getQualifiedName().equals(javaNodeQualifiedName)) {
-                strutActionDeps.add(new Dependency(javaNode.getId(), xmlNode.getId(), new DependencyCountTable(0,0,0,0,0,1)));
+                strutActionDeps.add(new Dependency(xmlNode.getId(), javaNode.getId(), new DependencyCountTable(0,0,0,0,0,1)));
+            }
+        }
+    }
+
+    public void findResult(XmlTagNode xmlNode, List<Dependency> strutActionDeps, List<Node> jspNodes) {
+        for(XmlTagNode xmlTagNode : xmlNode.getChildren()) {
+            if(xmlTagNode.getTagName().equals("result")) {
+                findJspResultDependency(xmlTagNode, strutActionDeps, jspNodes);
+            }
+        }
+    }
+
+    public void findJspResultDependency(XmlTagNode xmlNode, List<Dependency> strutActionDeps, List<Node> jspNodes) {
+        String jspNode = xmlNode.getContent();
+
+        for(Node node : jspNodes) {
+            if(node.getName().equals(jspNode)) {
+                strutActionDeps.add(new Dependency(xmlNode.getId(), node.getId(), new DependencyCountTable(0,0,0,0,0,1)));
             }
         }
     }
