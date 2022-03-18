@@ -63,6 +63,10 @@ public class PropertiesServiceImpl implements PropertiesService{
     @Override
     public List<Dependency> analyzeDependencies(List<Node> xmlNodes, List<PropertiesFileNode> propertiesFileNodes) {
 
+        if(propertiesFileNodes == null) {
+            return new ArrayList<>();
+        }
+
         List<Dependency> dependencies = new ArrayList<>();
         List<PropsBeanNode> beanNodes = new ArrayList<>();
 

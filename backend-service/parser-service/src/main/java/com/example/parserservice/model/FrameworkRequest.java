@@ -1,5 +1,6 @@
 package com.example.parserservice.model;
 
+import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Node;
 import com.example.parserservice.dom.Properties.PropertiesFileNode;
 
@@ -9,22 +10,42 @@ public class FrameworkRequest {
 
     private List javaNodes;
 
-    private List<Node> xmlNodes;
+    private List xmlNodes;
 
-    private List<Node> jspNodes;
+    private List jspNodes;
 
-    private List<PropertiesFileNode> propertiesFileNodes;
+    private List propertiesFileNodes;
+
+    private String path;
 
     public FrameworkRequest() {
     }
 
-    public FrameworkRequest(List javaNodes, List<Node> xmlNodes, List<Node> jspNodes) {
+    public FrameworkRequest(List javaNodes) {
+        this.javaNodes = javaNodes;
+    }
+
+//    public FrameworkRequest(List xmlNodes) {
+//        this.xmlNodes = xmlNodes;
+//    }
+
+//    public FrameworkRequest(List jspNodes) {
+//        this.jspNodes = jspNodes;
+//    }
+
+
+    public FrameworkRequest(List xmlNodes, List jspNodes) {
+        this.xmlNodes = xmlNodes;
+        this.jspNodes = jspNodes;
+    }
+
+    public FrameworkRequest(List javaNodes, List xmlNodes, List jspNodes) {
         this.javaNodes = javaNodes;
         this.xmlNodes = xmlNodes;
         this.jspNodes = jspNodes;
     }
 
-    public FrameworkRequest(List javaNodes, List<Node> xmlNodes, List<Node> jspNodes, List<PropertiesFileNode> propertiesFileNodes) {
+    public FrameworkRequest(List javaNodes, List xmlNodes, List jspNodes, List propertiesFileNodes) {
         this.javaNodes = javaNodes;
         this.xmlNodes = xmlNodes;
         this.jspNodes = jspNodes;
@@ -39,27 +60,35 @@ public class FrameworkRequest {
         this.javaNodes = javaNodes;
     }
 
-    public List<Node> getXmlNodes() {
+    public List getXmlNodes() {
         return xmlNodes;
     }
 
-    public void setXmlNodes(List<Node> xmlNodes) {
+    public void setXmlNodes(List xmlNodes) {
         this.xmlNodes = xmlNodes;
     }
 
-    public List<Node> getJspNodes() {
+    public List getJspNodes() {
         return jspNodes;
     }
 
-    public void setJspNodes(List<Node> jspNodes) {
+    public void setJspNodes(List jspNodes) {
         this.jspNodes = jspNodes;
     }
 
-    public List<PropertiesFileNode> getPropertiesFileNodes() {
+    public List getPropertiesFileNodes() {
         return propertiesFileNodes;
     }
 
-    public void setPropertiesFileNodes(List<PropertiesFileNode> propertiesFileNodes) {
+    public void setPropertiesFileNodes(List propertiesFileNodes) {
         this.propertiesFileNodes = propertiesFileNodes;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -49,17 +49,17 @@ public class Requester {
         }
 
         if(parser.equals("struts-parser")) {
-            Request struts = restTemplate.postForObject(
+            DependencyResponse struts = restTemplate.postForObject(
                     "http://localhost:7007/api/struts-service/dependency/struts", //struts-service
                     new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes()),
-                    Request.class);
+                    DependencyResponse.class);
 
             dependencies.addAll(struts.getAllDependencies());
         }
 
         if(parser.equals("jsf-parser")) {
             DependencyResponse jsf = restTemplate.postForObject(
-                    "http://localhost:7004/api/jsf-service/dependency/jsf", //jsf-service
+                    "http://localhost:7004/api/jsf-service/dependency/jsf/new", //jsf-service
                     new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes(), request.getPropertiesNodes()),
                     DependencyResponse.class);
 

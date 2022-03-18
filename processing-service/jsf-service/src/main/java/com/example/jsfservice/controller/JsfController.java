@@ -1,12 +1,12 @@
 package com.example.jsfservice.controller;
 
 import com.example.jsfservice.ast.dependency.Dependency;
-import com.example.jsfservice.ast.node.JavaNode;
 import com.example.jsfservice.compare.CompareService;
 import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.dom.Properties.PropertiesFileNode;
+import com.example.jsfservice.dto.DependencyResponse;
 import com.example.jsfservice.dto.Request;
-import com.example.jsfservice.dto.Response;
+import com.example.jsfservice.dto.XmlResponse;
 import com.example.jsfservice.dto.compare.CompareRequest;
 import com.example.jsfservice.dto.compare.CompareResponse;
 import com.example.jsfservice.dto.java.JavaResponse;
@@ -56,7 +56,7 @@ public class JsfController {
      * @throws IOException
      */
     @PostMapping("/pathParse")
-    public Response parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException, ExecutionException, InterruptedException {
+    public XmlResponse parseProjectByPath(@RequestBody Request folderPath, @RequestParam int javaNode) throws IOException, ExecutionException, InterruptedException {
         long before = System.nanoTime();
         logger.info("Run into API: /pathParse");
         logger.info("Start building xml tree...");
@@ -71,7 +71,7 @@ public class JsfController {
         this.propFileNodes.addAll(propFileNodes);
         logger.info("Recalculating xmlNode id by javaNode id...");
         ParserUtils.reCalculateXmlNodesId(javaNode, this.xmlNodes);
-        return new Response(xmlNodes);
+        return new XmlResponse(xmlNodes);
     }
 
     /**
@@ -85,7 +85,7 @@ public class JsfController {
         long before = System.nanoTime();
         logger.info("Run into API: /dependency");
         logger.info("Analyzing dependency...");
-        List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(request.getPath());
+//        List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(request.getPath());
         dependencies.addAll(xmlService.analyzeDependency(request.getJavaNodes(), request.getXmlNodes()));
         dependencies.addAll(propService.analyzeDependencies(request.getXmlNodes(), request.getPropertiesNodes()));
         long after = System.nanoTime();
@@ -129,6 +129,21 @@ public class JsfController {
         logger.info("Done comparing tree...");
         logger.info("Comparing tree done in " + (after - before)/1000000 + " ms!");
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/dependency/jsf/new")
+    public DependencyResponse newAnalyzeDependency(@RequestBody com.example.jsfservice.dto.parser.Request request) throws ExecutionException, InterruptedException, IOException {
+        List<Dependency> dependencies = new ArrayList<>();
+        long before = System.nanoTime();
+        logger.info("Run into API: /dependency");
+        logger.info("Analyzing dependency...");
+        dependencies.addAll(xmlService.analyzeDependency(request.getJavaNodes(), request.getXmlNodes()));
+        dependencies.addAll(propService.analyzeDependencies(request.getXmlNodes(), request.getPropertiesNodes()));
+        long after = System.nanoTime();
+        logger.info("Done analyzing dependency...");
+        logger.info("Number of dependencies: " + dependencies.size());
+        logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
+        return new DependencyResponse(dependencies);
     }
 
 }

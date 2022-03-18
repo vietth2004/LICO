@@ -1,20 +1,18 @@
 package com.example.jsfservice.dto;
 
-import com.example.jsfservice.dom.Node;
+import com.example.jsfservice.ast.dependency.Dependency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Response {
+public class DependencyResponse {
 
-    private List<Node> allXmlNodes = new ArrayList<>();
-
+    List<Dependency> allDependencies;
 }

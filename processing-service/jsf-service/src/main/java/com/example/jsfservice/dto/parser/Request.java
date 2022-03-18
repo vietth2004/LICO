@@ -14,7 +14,7 @@ public class Request implements Serializable {
 
     private List<Dependency> allDependencies;
 
-    private List javaNodes;
+    private List<JavaNode> javaNodes;
 
     private List<Node> xmlNodes;
 
@@ -78,11 +78,11 @@ public class Request implements Serializable {
         this.allDependencies = allDependencies;
     }
 
-    public List getJavaNodes() {
+    public List<JavaNode> getJavaNodes() {
         return javaNodes;
     }
 
-    public void setJavaNodes(List javaNodes) {
+    public void setJavaNodes(List<JavaNode> javaNodes) {
         this.javaNodes = javaNodes;
     }
 
