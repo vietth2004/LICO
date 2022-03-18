@@ -6,13 +6,12 @@ import com.example.parserservice.model.FrameworkRequest;
 import com.example.parserservice.model.cia.CiaRequest;
 import com.example.parserservice.model.cia.CiaResponse;
 import com.example.parserservice.model.parser.Request;
-import com.example.parserservice.model.spring.SpringResponse;
+import com.example.parserservice.model.spring.DependencyResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -41,10 +40,10 @@ public class Requester {
 
         if(parser.equals("spring-parser")) {
 
-            SpringResponse springs = restTemplate.postForObject(
+            DependencyResponse springs = restTemplate.postForObject(
                     "http://localhost:7003/api/spring-service/dependency/spring" //spring-service
                     , new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes())
-                    , SpringResponse.class);
+                    , DependencyResponse.class);
 
             dependencies.addAll(springs.getAllDependencies());
         }
@@ -59,10 +58,10 @@ public class Requester {
         }
 
         if(parser.equals("jsf-parser")) {
-            Request jsf = restTemplate.postForObject(
+            DependencyResponse jsf = restTemplate.postForObject(
                     "http://localhost:7004/api/jsf-service/dependency/jsf", //jsf-service
-                    request,
-                    Request.class);
+                    new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes(), request.getPropertiesNodes()),
+                    DependencyResponse.class);
 
             dependencies.addAll(jsf.getAllDependencies());
         }

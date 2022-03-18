@@ -6,6 +6,7 @@ import com.example.parserservice.util.JciaData;
 import com.example.parserservice.util.type.ComponentType;
 import com.example.parserservice.util.type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
 import java.io.Serializable;

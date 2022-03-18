@@ -87,7 +87,7 @@ public class JsfController {
         logger.info("Analyzing dependency...");
         List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(request.getPath());
         dependencies.addAll(xmlService.analyzeDependency(request.getJavaNodes(), request.getXmlNodes()));
-        dependencies.addAll(propService.analyzeDependencies(xmlNodes, propFileNodes));
+        dependencies.addAll(propService.analyzeDependencies(request.getXmlNodes(), request.getPropertiesNodes()));
         long after = System.nanoTime();
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());

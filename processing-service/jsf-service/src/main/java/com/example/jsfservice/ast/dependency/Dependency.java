@@ -1,12 +1,17 @@
 package com.example.jsfservice.ast.dependency;
 
-public class Dependency {
+import java.io.Serializable;
+
+public class Dependency implements Serializable {
 
     private Integer callerNode;
 
     private Integer calleeNode;
 
     private DependencyCountTable type;
+
+    public Dependency() {
+    }
 
     public Dependency(Integer callerNode, Integer calleeNode) {
         this.callerNode = callerNode;

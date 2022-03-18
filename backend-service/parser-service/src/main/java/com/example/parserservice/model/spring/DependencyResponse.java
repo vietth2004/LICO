@@ -4,14 +4,14 @@ import com.example.parserservice.ast.dependency.Dependency;
 
 import java.util.List;
 
-public class SpringResponse {
+public class DependencyResponse {
 
     private List<Dependency> allDependencies;
 
-    public SpringResponse() {
+    public DependencyResponse() {
     }
 
-    public SpringResponse(List allDependencies) {
+    public DependencyResponse(List allDependencies) {
         this.allDependencies = allDependencies;
     }
 
