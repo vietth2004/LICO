@@ -3,8 +3,8 @@ package com.example.parserservice.util.worker;
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.node.JavaNode;
+import com.example.parserservice.dom.Node;
 import com.example.parserservice.model.Response;
-import com.example.parserservice.model.jsf.JSFResponse;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.model.parser.Resource;
 
@@ -63,16 +63,17 @@ public class Getter {
         JavaNode javaNode = request.getRootNode();
         List javaNodes = request.getJavaNodes();
         List<Dependency> dependencies = request.getAllDependencies();
-        List xmlNodes = request.getXmlNodes();
-        List jspNodes = request.getJspNodes();
+        List<Node> xmlNodes = request.getXmlNodes();
+        List<Node> jspNodes = request.getJspNodes();
 
-
-        Request frameworkRequest = new Request(javaNode, javaNodes, dependencies, xmlNodes, jspNodes);
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "SPRING");
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "JSF");
-                dependencies = Wrapper.wrapDependency(dependencies, Requester.getDependencies(parser, frameworkRequest), "STRUTS");
+                List<Dependency> dependencyList = Requester.getDependencies(parser, request);
+                if (dependencyList.size() > 0) {
+                    dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "SPRING");
+                    dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "JSF");
+                    dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "STRUTS");
+                }
             }
         }
 

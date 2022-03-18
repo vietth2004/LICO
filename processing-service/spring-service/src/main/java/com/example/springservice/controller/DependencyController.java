@@ -1,5 +1,6 @@
 package com.example.springservice.controller;
 
+import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.dependency.Dependency;
 import com.example.springservice.dependency.DependencyService;
 import com.example.springservice.model.Request;
@@ -24,12 +25,14 @@ public class DependencyController {
     }
 
     @PostMapping("/dependency/spring/response")
-    public List<Dependency> getAllSpringDependencies(@RequestBody Request request) {
-        return dependencyService.getAllDependency(request.getJavaNodes());
+    public List<Dependency> getAllSpringDependencies(@RequestBody List<JavaNode> request) {
+        return dependencyService.getAllDependency(request);
     }
 
     @PostMapping("/dependency/spring")
     public Response returnResponse(@RequestBody Request request) {
         return new Response(dependencyService.getAllDependency(request.getJavaNodes()));
     }
+
+
 }
