@@ -28,12 +28,8 @@ public class StrutsServiceImpl implements StrutsService{
         List<Node> xmlNodes = request.getXmlNodes();
         List<Node> jspNodes = request.getJspNodes();
 
-        // Java - Action Dependency
+        // Java - Action - Result Dependency
         strutAnalyzer = new ActionDependencyAnalyzer();
-        dependencies.addAll(strutAnalyzer.analyze(javaNodes, jspNodes, xmlNodes));
-
-        // Action - Result Dependecy
-        strutAnalyzer = new ResultDepsAnalyzer();
         dependencies.addAll(strutAnalyzer.analyze(javaNodes, jspNodes, xmlNodes));
 
         return new Response(dependencies);
