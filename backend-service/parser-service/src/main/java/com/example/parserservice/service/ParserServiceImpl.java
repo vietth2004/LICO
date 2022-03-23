@@ -9,6 +9,7 @@ import com.example.parserservice.util.JwtUtils;
 import com.example.parserservice.util.worker.Getter;
 import com.example.parserservice.util.worker.Requester;
 import com.example.parserservice.util.worker.Wrapper;
+import com.example.parserservice.util.worker.Writer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -66,8 +67,11 @@ public class ParserServiceImpl implements ParserService{
         }
 
         Wrapper.wrapXmlAndJspNode(request);
+        Response response = Getter.getResponse(parserList, request, filePath.getPath());
 
-        return Getter.getResponse(parserList, request, filePath.getPath());
+        Writer.write(filePath, response, project);
+
+        return response;
     }
 
     @Override
