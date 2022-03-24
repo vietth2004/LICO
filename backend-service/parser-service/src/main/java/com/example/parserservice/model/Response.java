@@ -11,7 +11,7 @@ public class Response {
 
     private JavaNode rootNode;
 
-    private List<Dependency> allDependencies;
+    private List<Dependency> dependencies;
 
     private List javaNodes;
 
@@ -43,14 +43,14 @@ public class Response {
 
     public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
     }
 
     public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies, String address) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
         this.address = address;
@@ -63,7 +63,7 @@ public class Response {
             , String address
             , List xmlNodes) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
         this.address = address;
@@ -78,7 +78,7 @@ public class Response {
             , List xmlNodes
             , List jspNodes) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
         this.address = address;
@@ -94,7 +94,7 @@ public class Response {
             , String address
             , List xmlNodes) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.nodesWeight = nodesWeight;
         this.totalNodes = totalNodes;
@@ -102,8 +102,8 @@ public class Response {
         this.xmlNodes = xmlNodes;
     }
 
-    public List<Dependency> getAllDependencies() {
-        return allDependencies;
+    public List<Dependency> getDependencies() {
+        return dependencies;
     }
 
     public List getJavaNodes() {
@@ -120,19 +120,19 @@ public class Response {
 
     public Response(JavaNode rootNode, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
     }
 
     public Response(JavaNode rootNode, List<Dependency> allDependencies, List allNodes) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.totalNodes = allNodes.size();
     }
 
     public Response(JavaNode rootNode, List<Dependency> allDependencies, List allNodes, List nodesWeight) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.nodesWeight = nodesWeight;
         this.totalNodes = allNodes.size();
@@ -148,7 +148,7 @@ public class Response {
                     String address,
                     List<Node> xmlNodes) {
         this.rootNode = rootNode;
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.javaNodes = javaNodes;
         this.nodesWeight = nodesWeight;
         this.jspNodes = jspNodes;
@@ -170,8 +170,8 @@ public class Response {
 //        return allDependencies;
 //    }
 
-    public void setAllDependencies(List<Dependency> allDependencies) {
-        this.allDependencies = allDependencies;
+    public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
     }
 
 //    public List getAllNodes() {
