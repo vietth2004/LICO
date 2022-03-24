@@ -10,6 +10,8 @@ public class Dependency implements Serializable {
 
     private DependencyCountTable type;
 
+    private Integer weight = 0;
+
     public Dependency() {
     }
 
@@ -46,5 +48,13 @@ public class Dependency implements Serializable {
 
     public void setType(DependencyCountTable type) {
         this.type = type;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 }

@@ -24,8 +24,16 @@ public class CiaServiceImpl implements CiaService{
         }
 
         for(Dependency dependency : dependencies) {
-            Integer nodeId = dependency.getCallerNode();
-            nodes.put(nodeId, nodes.getOrDefault(nodeId, 0) + Utility.calculateWeight(dependency.getType()));
+            Integer calleeNodeId = dependency.getCalleeNode();
+            nodes.put(calleeNodeId, nodes.getOrDefault(calleeNodeId, 0) + Utility.calculateWeight(dependency.getType()));
+        }
+
+        for(Dependency dependency : dependencies) {
+            if(dependency.getType().getMEMBER().equals(1)) {
+                Integer calleeNodeId = dependency.getCalleeNode();
+                Integer callerNodeId = dependency.getCallerNode();
+                nodes.put(callerNodeId, nodes.getOrDefault(callerNodeId, 0) + nodes.getOrDefault(calleeNodeId, 0));
+            }
         }
 
         return Utility.convertMapToNodes(nodes);

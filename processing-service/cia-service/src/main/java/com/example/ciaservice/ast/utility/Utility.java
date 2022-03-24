@@ -19,6 +19,8 @@ public class Utility {
                 + dependencyCountTable.getOVERRIDE()
                 + dependencyCountTable.getSPRING()
                 + dependencyCountTable.getUSE()
+                + dependencyCountTable.getJSF()
+                + dependencyCountTable.getSTRUTS()
                 ;
         return weight;
     }

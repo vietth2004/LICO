@@ -104,7 +104,11 @@ public class ParserServiceImpl implements ParserService{
 
         Wrapper.wrapXmlAndJspNode(request);
 
-        return Getter.getResponse(parserList, request, path.getPath());
+        Response response = Getter.getResponse(parserList, request, path.getPath());
+
+        Writer.write(path, response, "-res");
+
+        return response;
     }
 
     public JSFResponse buildJsf(Path path) {

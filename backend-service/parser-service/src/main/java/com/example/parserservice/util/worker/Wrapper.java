@@ -18,7 +18,7 @@ public class Wrapper {
         if(type.equals("SPRING")){
             for(Dependency dependency : frameworkDependencies) {
                 for(Dependency base : dependencies) {
-                    if(Checker.isDependency(base,  dependency)) {
+                    if(Checker.isDependency(base, dependency)) {
                         base.getType().setSPRING(dependency.getType().getSPRING());
                     }
                 }
@@ -48,6 +48,10 @@ public class Wrapper {
         }
     }
 
+    public static void wrapAllNode(JavaNode javaNode, List<Dependency> dependencies, List<Node> xmlNode, List<Node> jspNode) {
+
+    }
+
     public static Request wrapXmlAndJspNode(Request request) {
         int totalNodes = request.getJavaNodes().size();
 
@@ -74,8 +78,6 @@ public class Wrapper {
     }
 
     public static int wrapXmlNode(List nodes, int totalNodes, List<Node> xmlNodes) {
-        ObjectMapper mapper = new ObjectMapper();
-
         for(Object xmlNode : nodes) {
             if(xmlNode instanceof Node) {
                 ((Node) xmlNode).setId(++totalNodes);

@@ -38,6 +38,8 @@ public class JavaNode extends Node implements Serializable {
 
     private transient String path = null;
 
+    private transient Integer weight = 0;
+
     public JavaNode() {
     }
 
@@ -157,5 +159,13 @@ public class JavaNode extends Node implements Serializable {
         } else {
             return Converter.convertChildren(abstractNode.getChildren());
         }
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 }
