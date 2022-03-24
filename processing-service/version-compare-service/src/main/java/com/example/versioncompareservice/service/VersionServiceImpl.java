@@ -4,6 +4,7 @@ import com.example.versioncompareservice.ast.node.JavaNode;
 import com.example.versioncompareservice.ast.utility.Utility;
 import com.example.versioncompareservice.model.Response;
 import com.example.versioncompareservice.model.Version;
+import com.example.versioncompareservice.utils.Getter;
 import com.example.versioncompareservice.utils.JwtUtils;
 import com.example.versioncompareservice.utils.Utils;
 import com.netflix.discovery.shared.Pair;
@@ -108,7 +109,7 @@ public class VersionServiceImpl implements VersionService{
         //Bind to Tree Node
         applyCompare(rootNode, changedNodes, addedNodes, removedNodes, unchangedNodes, snapshotComparison);
 
-        return new Response(changedNodes, deletedNodes, addedNodes, rootNode);
+        return new Response(changedNodes, deletedNodes, addedNodes, Getter.getDependency(rootNode), rootNode);
     }
 
     @Override
