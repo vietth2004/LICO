@@ -7,6 +7,8 @@ import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.ast.node.Node;
 import com.example.springservice.ast.type.JavaType;
 import com.example.springservice.resource.Resource;
+import com.example.springservice.utils.Getter;
+import com.example.springservice.utils.Searcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,30 +25,51 @@ public class DependencyServiceImpl implements DependencyService{
         return dependencies;
     }
 
-    private List<Dependency> getSpringDependency(List<JavaNode> springJavaNodeList, List<JavaNode> javaNodeList) {
+    private List<Dependency> getSpringDependency(List<JavaNode> springJavaNodes, List<JavaNode> javaNodeList) {
         List<Dependency> dependencies = new ArrayList<>();
-        List<JavaNode> springControllerJavaNodeList = new ArrayList<>();
-        List<JavaNode> springServiceJavaNodeList = new ArrayList<>();
-        List<JavaNode> springRepositoryJavaNodeList = new ArrayList<>();
+        List<JavaNode> springControllerJavaNodes = new ArrayList<>();
+        List<JavaNode> springServiceJavaNodes = new ArrayList<>();
+        List<JavaNode> springRepositoryJavaNodes = new ArrayList<>();
 
         // Gather each Spring Java class
-        for(JavaNode javaNode : springJavaNodeList) {
+        for(JavaNode javaNode : springJavaNodes) {
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_CONTROLLER_SIMPLE_NAME)) {
-                springControllerJavaNodeList.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
+                springControllerJavaNodes.add(javaNode);
+                springControllerJavaNodes.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
             }
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_SERVICE_SIMPLE_NAME)) {
-                springServiceJavaNodeList.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
+                springControllerJavaNodes.add(javaNode);
+                springServiceJavaNodes.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
+                List<Integer> tempNodes = Searcher.searchJavaNode(Getter.getInheritanceNode(javaNode.getDependencyTo()), javaNodeList).getChildren();
+                springServiceJavaNodes.addAll(getSpringChildren(tempNodes, javaNodeList));
             }
             if(containSpringAnnotations(javaNode, Resource.SPRING_MVC_REPOSITORY_SIMPLE_NAME)
                     || isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
-                springRepositoryJavaNodeList.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
+                springControllerJavaNodes.add(javaNode);
+                springRepositoryJavaNodes.addAll(getSpringChildren(javaNode.getChildren(), javaNodeList));
             }
         }
 
+        for (JavaNode javaNode : springControllerJavaNodes) {
+            System.out.println(javaNode.getQualifiedName());
+        }
+
+        System.out.println();
+
+        for (JavaNode javaNode : springServiceJavaNodes) {
+            System.out.println(javaNode.getQualifiedName());
+        }
+
+        System.out.println();
+
+        for (JavaNode javaNode : springRepositoryJavaNodes) {
+            System.out.println(javaNode.getQualifiedName());
+        }
+
         //Add all dependencies
-        dependencies.addAll(getControllerServiceDependency(springControllerJavaNodeList, springServiceJavaNodeList));
-        dependencies.addAll(getServiceRepositoryDependency(springServiceJavaNodeList, springRepositoryJavaNodeList));
-        dependencies.addAll(getControllerRepositoryDependency(springControllerJavaNodeList, springRepositoryJavaNodeList));
+        dependencies.addAll(getControllerServiceDependency(springControllerJavaNodes, springServiceJavaNodes));
+        dependencies.addAll(getServiceRepositoryDependency(springServiceJavaNodes, springRepositoryJavaNodes));
+        dependencies.addAll(getControllerRepositoryDependency(springControllerJavaNodes, springRepositoryJavaNodes));
 
         return dependencies;
     }
@@ -81,6 +104,7 @@ public class DependencyServiceImpl implements DependencyService{
         for(JavaAnnotation javaAnnotation : javaNode.getAnnotates()) {
             for(String condition : conditionState) {
                 if(javaAnnotation.getName().contains(condition)) {
+//                    System.out.println(javaNode.getQualifiedName());
                     return true;
                 }
             }
@@ -94,6 +118,7 @@ public class DependencyServiceImpl implements DependencyService{
             for(JavaType extendInterface : javaNode.getExtendInterfaces()) {
                 for(String interfaceName : interfaceList) {
                     if(extendInterface.getDescribe().contains(interfaceName)){
+//                        System.out.println(javaNode.getQualifiedName());
                         return true;
                     }
                 }
@@ -122,7 +147,7 @@ public class DependencyServiceImpl implements DependencyService{
             for (Pair dependenceNode : callerNode.getDependencyTo()) {
                 Node node = dependenceNode.getNode();
                 for (JavaNode calleeNode : springCalleeJavaNodeList) {
-                    if (node.getId().equals(calleeNode.getId())) {
+                    if (node.getId().equals(calleeNode.getId()) && dependenceNode.getDependency().getMEMBER().equals(0)) {
                         dependencies.add(new Dependency(
                                 callerNode.getId(),
                                 calleeNode.getId(),
