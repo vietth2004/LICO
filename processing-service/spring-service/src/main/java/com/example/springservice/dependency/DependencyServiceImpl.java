@@ -14,7 +14,9 @@ import com.example.springservice.utils.Searcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DependencyServiceImpl implements DependencyService{
@@ -30,9 +32,9 @@ public class DependencyServiceImpl implements DependencyService{
 
     private List<Dependency> getSpringDependency(List<JavaNode> springJavaNodes, List<JavaNode> javaNodes, List<Node> xmlTagNodes) {
         List<Dependency> dependencies = new ArrayList<>();
-        List<JavaNode> springControllerJavaNodes = new ArrayList<>();
-        List<JavaNode> springServiceJavaNodes = new ArrayList<>();
-        List<JavaNode> springRepositoryJavaNodes = new ArrayList<>();
+        HashSet<JavaNode> springControllerJavaNodes = new HashSet<>();
+        HashSet<JavaNode> springServiceJavaNodes = new HashSet<>();
+        HashSet<JavaNode> springRepositoryJavaNodes = new HashSet<>();
 
         // Gather each Spring Java class
         for(JavaNode javaNode : springJavaNodes) {
@@ -48,9 +50,7 @@ public class DependencyServiceImpl implements DependencyService{
             }
         }
 
-        for(Node xmlNode : xmlTagNodes) {
-
-        }
+//        print(springControllerJavaNodes,springServiceJavaNodes, springRepositoryJavaNodes);
 
         //Add all dependencies
         dependencies.addAll(Analyzer.getControllerServiceDependency(springControllerJavaNodes, springServiceJavaNodes));

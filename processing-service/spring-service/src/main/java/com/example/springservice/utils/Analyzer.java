@@ -11,20 +11,21 @@ import com.example.springservice.dom.Xml.XmlTagNode;
 import com.example.springservice.resource.Resource;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Analyzer {
 
 
-    public static List<Dependency> getControllerServiceDependency(List<JavaNode> springControllerJavaNodeList, List<JavaNode> springServiceJavaNodeList) {
+    public static List<Dependency> getControllerServiceDependency(HashSet<JavaNode> springControllerJavaNodeList, HashSet<JavaNode> springServiceJavaNodeList) {
         return getDependencies(springControllerJavaNodeList, springServiceJavaNodeList);
     }
 
-    public static List<Dependency> getServiceRepositoryDependency(List<JavaNode> springServiceJavaNodeList, List<JavaNode> springRepositoryJavaNodeList) {
+    public static List<Dependency> getServiceRepositoryDependency(HashSet<JavaNode> springServiceJavaNodeList, HashSet<JavaNode> springRepositoryJavaNodeList) {
         return getDependencies(springServiceJavaNodeList, springRepositoryJavaNodeList);
     }
 
-    public static List<Dependency> getControllerRepositoryDependency(List<JavaNode> springControllerJavaNodeList, List<JavaNode> springRepositoryJavaNodeList) {
+    public static List<Dependency> getControllerRepositoryDependency(HashSet<JavaNode> springControllerJavaNodeList, HashSet<JavaNode> springRepositoryJavaNodeList) {
         return getDependencies(springControllerJavaNodeList, springRepositoryJavaNodeList);
     }
 
@@ -86,26 +87,33 @@ public class Analyzer {
     }
 
 
-    public static List<Dependency> getDependencies(List<JavaNode> springCallerJavaNodes, List<JavaNode> springCalleeJavaNodes) {
+    public static List<Dependency> getDependencies(HashSet<JavaNode> springCallerJavaNodes, HashSet<JavaNode> springCalleeJavaNodes) {
         List<Dependency> dependencies = new ArrayList<>();
 
         for (JavaNode callerNode : springCallerJavaNodes) {
-            for (Pair dependenceNode : callerNode.getDependencyTo()) {
-                Node node = dependenceNode.getNode();
-                for (JavaNode calleeNode : springCalleeJavaNodes) {
-                    if (node.getId().equals(calleeNode.getId()) && dependenceNode.getDependency().getMEMBER().equals(0)) {
-                        System.out.println(callerNode.getQualifiedName());
-                        System.out.println(calleeNode.getQualifiedName());
-                        System.out.println();
 
+            for (Pair dependenceNode : callerNode.getDependencyTo()) {
+
+                Node node = dependenceNode.getNode();
+                System.out.println("CallerNode: " + callerNode.getId());
+                System.out.println("CalleeNode from Caller: " + node.getId());
+                System.out.println();
+
+                for (JavaNode calleeNode : springCalleeJavaNodes) {
+                    System.out.println("SetNode: " + calleeNode.getId());
+                    if (node.getId().equals(calleeNode.getId()) && dependenceNode.getDependency().getMEMBER().equals(0)) {
                         dependencies.add(new Dependency(
                                 callerNode.getId(),
                                 calleeNode.getId(),
                                 new DependencyCountTable(0,0,0,0,0, 1)));
                     }
                 }
+                System.out.println();
             }
+
+            System.out.println();
         }
+
         return dependencies;
     }
 

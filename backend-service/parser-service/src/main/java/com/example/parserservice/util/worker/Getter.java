@@ -69,7 +69,9 @@ public class Getter {
 
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
+
                 List<Dependency> dependencyList = Requester.getDependencies(parser, request);
+
                 if (dependencyList.size() > 0) {
                     if(parser.equals("spring-parser")){
                         dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "SPRING");
