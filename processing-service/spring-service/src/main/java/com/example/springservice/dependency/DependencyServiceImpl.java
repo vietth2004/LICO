@@ -19,16 +19,16 @@ import java.util.List;
 @Service
 public class DependencyServiceImpl implements DependencyService{
 
-    public List<Dependency> getAllDependency(List<JavaNode> javaNodes, List<XmlTagNode> xmlTagNodes) {
+    public List<Dependency> getAllDependency(List<JavaNode> javaNodes, List<Node> xmlTagNodes) {
         List<JavaNode> springJavaNodes = Analyzer.convertSpringJavaNodes(javaNodes);
-        List<XmlTagNode> springXmlNodes = Analyzer.convertSpringXmlNodes(xmlTagNodes);
+        List<Node> springXmlNodes = Analyzer.convertSpringXmlNodes(xmlTagNodes);
         List<Dependency> dependencies = new ArrayList<>();
         dependencies.addAll(getSpringDependency(springJavaNodes, javaNodes, springXmlNodes));
 
         return dependencies;
     }
 
-    private List<Dependency> getSpringDependency(List<JavaNode> springJavaNodes, List<JavaNode> javaNodes, List<XmlTagNode> xmlTagNodes) {
+    private List<Dependency> getSpringDependency(List<JavaNode> springJavaNodes, List<JavaNode> javaNodes, List<Node> xmlTagNodes) {
         List<Dependency> dependencies = new ArrayList<>();
         List<JavaNode> springControllerJavaNodes = new ArrayList<>();
         List<JavaNode> springServiceJavaNodes = new ArrayList<>();
@@ -46,6 +46,10 @@ public class DependencyServiceImpl implements DependencyService{
                     || Analyzer.isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
                 springRepositoryJavaNodes.addAll(Analyzer.gatherDaoNode(javaNodes, javaNode));
             }
+        }
+
+        for(Node xmlNode : xmlTagNodes) {
+
         }
 
         //Add all dependencies

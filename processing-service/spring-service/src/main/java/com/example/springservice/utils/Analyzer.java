@@ -42,8 +42,8 @@ public class Analyzer {
         return springJavaNodes;
     }
 
-    public static List<XmlTagNode> convertSpringXmlNodes(List<XmlTagNode> xmlTagNodes) {
-        List<XmlTagNode> springXmlNodes = new ArrayList<>();
+    public static List<com.example.springservice.dom.Node> convertSpringXmlNodes(List<com.example.springservice.dom.Node> xmlTagNodes) {
+        List<com.example.springservice.dom.Node> springXmlNodes = new ArrayList<>();
 
         return springXmlNodes;
     }
