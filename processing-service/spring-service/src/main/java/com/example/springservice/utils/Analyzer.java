@@ -7,6 +7,7 @@ import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.ast.node.Node;
 import com.example.springservice.ast.type.JavaType;
 import com.example.springservice.dependency.Dependency;
+import com.example.springservice.dom.Xml.XmlTagNode;
 import com.example.springservice.resource.Resource;
 
 import java.util.ArrayList;
@@ -27,18 +28,24 @@ public class Analyzer {
         return getDependencies(springControllerJavaNodeList, springRepositoryJavaNodeList);
     }
 
-    public static List<JavaNode> convertSpringNodes(List<JavaNode> javaNodeList) {
+    public static List<JavaNode> convertSpringJavaNodes(List<JavaNode> javaNodes) {
 
-        List<JavaNode> springJavaNodeList = new ArrayList<>();
-        for (JavaNode javaNode : javaNodeList) {
+        List<JavaNode> springJavaNodes = new ArrayList<>();
+        for (JavaNode javaNode : javaNodes) {
             if(containSpringAnnotations(javaNode, Resource.SPRING_ANNOTATION_SIMPLE_NAME)) {
-                springJavaNodeList.add(javaNode);
+                springJavaNodes.add(javaNode);
             }
             if(isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
-                springJavaNodeList.add(javaNode);
+                springJavaNodes.add(javaNode);
             }
         }
-        return springJavaNodeList;
+        return springJavaNodes;
+    }
+
+    public static List<XmlTagNode> convertSpringXmlNodes(List<XmlTagNode> xmlTagNodes) {
+        List<XmlTagNode> springXmlNodes = new ArrayList<>();
+
+        return springXmlNodes;
     }
 
     public static Boolean containSpringAnnotations(JavaNode javaNode, List<String> conditionState) {
@@ -66,10 +73,10 @@ public class Analyzer {
         return false;
     }
 
-    public static List<JavaNode> getSpringChildren (List<Integer> childNodes, List<JavaNode> javaNodeList) {
+    public static List<JavaNode> getSpringChildren (List<Integer> childNodes, List<JavaNode> javaNodes) {
         List springNodes = new ArrayList();
 
-        for (JavaNode javaNode : javaNodeList) {
+        for (JavaNode javaNode : javaNodes) {
             if (childNodes.contains(javaNode.getId())) {
                 springNodes.add(javaNode);
             }
@@ -79,13 +86,13 @@ public class Analyzer {
     }
 
 
-    public static List<Dependency> getDependencies(List<JavaNode> springCallerJavaNodeList, List<JavaNode> springCalleeJavaNodeList) {
+    public static List<Dependency> getDependencies(List<JavaNode> springCallerJavaNodes, List<JavaNode> springCalleeJavaNodes) {
         List<Dependency> dependencies = new ArrayList<>();
 
-        for (JavaNode callerNode : springCallerJavaNodeList) {
+        for (JavaNode callerNode : springCallerJavaNodes) {
             for (Pair dependenceNode : callerNode.getDependencyTo()) {
                 Node node = dependenceNode.getNode();
-                for (JavaNode calleeNode : springCalleeJavaNodeList) {
+                for (JavaNode calleeNode : springCalleeJavaNodes) {
                     if (node.getId().equals(calleeNode.getId()) && dependenceNode.getDependency().getMEMBER().equals(0)) {
                         System.out.println(callerNode.getQualifiedName());
                         System.out.println(calleeNode.getQualifiedName());
@@ -102,20 +109,20 @@ public class Analyzer {
         return dependencies;
     }
 
-    public static List<JavaNode> gatherControllerNode (List<JavaNode> javaNodeList, JavaNode javaNode) {
-        List<JavaNode> javaNodes = new ArrayList<>();
-        javaNodes.add(javaNode);
-        javaNodes.addAll(Analyzer.getSpringChildren(javaNode.getChildren(), javaNodeList));
-        return javaNodes;
+    public static List<JavaNode> gatherControllerNode (List<JavaNode> javaNodes, JavaNode javaNode) {
+        List<JavaNode> javaControllerNodes = new ArrayList<>();
+        javaControllerNodes.add(javaNode);
+        javaControllerNodes.addAll(Analyzer.getSpringChildren(javaNode.getChildren(), javaNodes));
+        return javaControllerNodes;
     }
 
-    public static List<JavaNode> gatherDaoNode(List<JavaNode> javaNodeList, JavaNode javaNode) {
-        List<JavaNode> javaNodes = new ArrayList<>();
-        javaNodes.add(javaNode);
-        javaNodes.addAll(Analyzer.getSpringChildren(javaNode.getChildren(), javaNodeList));
-        List<Integer> tempNodes = Searcher.searchJavaNode(Getter.getInheritanceNode(javaNode.getDependencyTo()), javaNodeList).getChildren();
-        javaNodes.addAll(Analyzer.getSpringChildren(tempNodes, javaNodeList));
-        return javaNodes;
+    public static List<JavaNode> gatherDaoNode(List<JavaNode> javaNodes, JavaNode javaNode) {
+        List<JavaNode> javaDaoNodes = new ArrayList<>();
+        javaDaoNodes.add(javaNode);
+        javaDaoNodes.addAll(Analyzer.getSpringChildren(javaNode.getChildren(), javaNodes));
+        List<Integer> tempNodes = Searcher.searchJavaNode(Getter.getInheritanceNode(javaNode.getDependencyTo()), javaNodes).getChildren();
+        javaDaoNodes.addAll(Analyzer.getSpringChildren(tempNodes, javaNodes));
+        return javaDaoNodes;
     }
 
 }
