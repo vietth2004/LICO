@@ -101,7 +101,7 @@ public class VersionServiceImpl implements VersionService{
         //Node initialization
         List<JavaNode> changedNodes = new ArrayList<>();
         List<JavaNode> addedNodes = new ArrayList<>();
-        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "removed");
+        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted");
         List<Pair<Integer, JavaNode>> removedNodes = new ArrayList<>();
         List<JavaNode> unchangedNodes = new ArrayList<>();
         JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
@@ -164,7 +164,7 @@ public class VersionServiceImpl implements VersionService{
 //            System.out.println(javaNode.getUniqueName());
 //            System.out.println("Parent: " + javaNode.getParent().getUniqueName() + ": " + javaNode.getParent().getId());
 //            System.out.println();
-            deletedNodes.add(new Pair<>(javaNode.getParent().getId(), new JavaNode(javaNode, "deleted")));
+            deletedNodes.add(new Pair<>(javaNode.getParent().getId() + projectSize, new JavaNode(javaNode, "deleted")));
         }
 
         //bind changed nodes and added nodes to nodes tree
