@@ -10,7 +10,7 @@ public class Request {
 
     private List<JavaNode> javaNodes;
 
-    private List<Dependency> allDependencies = new ArrayList<>();
+    private List<Dependency> dependencies = new ArrayList<>();
 
     private Integer totalNodes;
 
@@ -20,16 +20,16 @@ public class Request {
     }
 
     public Request(List<Dependency> allDependencies, Integer totalNodes) {
-        this.allDependencies = allDependencies;
+        this.dependencies = allDependencies;
         this.totalNodes = totalNodes;
     }
 
-    public List<Dependency> getAllDependencies() {
-        return allDependencies;
+    public List<Dependency> getDependencies() {
+        return dependencies;
     }
 
-    public void setAllDependencies(List<Dependency> allDependencies) {
-        this.allDependencies = allDependencies;
+    public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
     }
 
     public Integer getTotalNodes() {

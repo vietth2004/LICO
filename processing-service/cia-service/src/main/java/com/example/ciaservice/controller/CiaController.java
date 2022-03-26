@@ -22,11 +22,11 @@ public class CiaController {
 
     @PostMapping("/calculate")
     public Response calculateNodeWeight(@RequestBody Request request) {
-        return ciaService.calculate(request.getAllDependencies(), request.getTotalNodes());
+        return ciaService.calculate(request.getDependencies(), request.getTotalNodes());
     }
 
     @PostMapping("/impact")
     public Response findImpact(@RequestBody Request request) {
-        return ciaService.findImpact(request.getJavaNodes(), request.getAllDependencies(), request.getTotalNodes(), request.getChangedNodes());
+        return ciaService.findImpact(request.getJavaNodes(), request.getDependencies(), request.getTotalNodes(), request.getChangedNodes());
     }
 }
