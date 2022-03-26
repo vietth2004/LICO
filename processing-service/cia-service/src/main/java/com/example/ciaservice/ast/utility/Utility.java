@@ -8,6 +8,7 @@ import com.example.ciaservice.model.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Utility {
 
@@ -30,6 +31,16 @@ public class Utility {
 
         for(Integer id : nodes.keySet()) {
             nodeList.add(new Node(id, nodes.get(id)));
+        }
+
+        return new Response(nodeList);
+    }
+
+    public static Response convertSetToNodes(Set<Node> nodes) {
+        List<Node> nodeList = new ArrayList<>();
+
+        for(Node node : nodes) {
+            nodeList.add(node);
         }
 
         return new Response(nodeList);

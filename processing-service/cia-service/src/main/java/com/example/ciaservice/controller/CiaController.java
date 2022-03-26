@@ -24,4 +24,9 @@ public class CiaController {
     public Response calculateNodeWeight(@RequestBody Request request) {
         return ciaService.calculate(request.getAllDependencies(), request.getTotalNodes());
     }
+
+    @PostMapping("/impact")
+    public Response findImpact(@RequestBody Request request) {
+        return ciaService.findImpact(request.getJavaNodes(), request.getAllDependencies(), request.getTotalNodes(), request.getChangedNodes());
+    }
 }
