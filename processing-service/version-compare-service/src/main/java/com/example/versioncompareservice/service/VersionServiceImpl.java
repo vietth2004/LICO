@@ -99,9 +99,10 @@ public class VersionServiceImpl implements VersionService{
                 "compare", projectSnapshotB, projectSnapshotA, DEPENDENCY_IMPACT_TABLE);
 
         //Node initialization
+        int projectSize = snapshotComparison.getPreviousSnapshot().getRootNode().getAllNodes().size();
         List<JavaNode> changedNodes = new ArrayList<>();
         List<JavaNode> addedNodes = new ArrayList<>();
-        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted");
+        List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted", projectSize);
         List<Pair<Integer, JavaNode>> removedNodes = new ArrayList<>();
         List<JavaNode> unchangedNodes = new ArrayList<>();
         JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
