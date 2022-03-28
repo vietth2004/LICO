@@ -45,7 +45,7 @@ public class JavaServiceImpl implements JavaService{
         final JavaProjectSnapshot projectSnapshot = ProjectBuilder.createProjectSnapshot("before",
                 DEPENDENCY_WEIGHT_TABLE, inputSources, Set.of(new JavaBuildParameter(List.of(), true)));
 
-        Utility.findDependency(projectSnapshot.getRootNode().getChildren().get(0));
+
 
         return projectSnapshot.getRootNode();
     }
