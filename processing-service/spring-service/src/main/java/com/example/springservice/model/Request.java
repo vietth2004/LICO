@@ -2,8 +2,8 @@ package com.example.springservice.model;
 
 
 import com.example.springservice.ast.node.JavaNode;
-import com.example.springservice.ast.node.Node;
 import com.example.springservice.dependency.Dependency;
+import com.example.springservice.dom.Node;
 import com.example.springservice.dom.Properties.PropertiesFileNode;
 
 import java.util.List;

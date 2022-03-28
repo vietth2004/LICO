@@ -4,7 +4,6 @@ import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.dependency.Dependency;
 import com.example.springservice.dependency.DependencyService;
 import com.example.springservice.dom.Node;
-import com.example.springservice.dom.Xml.XmlTagNode;
 import com.example.springservice.model.Request;
 import com.example.springservice.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +28,16 @@ public class DependencyController {
 
     @PostMapping("/dependency/spring/response")
     public List<Dependency> getAllSpringDependencies(@RequestBody List<JavaNode> request) {
-        return dependencyService.getAllDependency(request, new ArrayList<Node>());
+        return dependencyService.getDependencies(request, new ArrayList<Node>());
     }
 
     @PostMapping("/dependency/spring")
     public Response returnResponse(@RequestBody Request request) {
-        return new Response(dependencyService.getAllDependency(request.getJavaNodes(), request.getXmlNodes()));
+        return new Response(dependencyService.getDependencies(request.getJavaNodes(), request.getXmlNodes()));
     }
 
-
+    @PostMapping("/dependency/spring/new")
+    public Response returnResponseWithXml(@RequestBody Request request) {
+        return new Response(dependencyService.getDependencies(request.getJavaNodes(), request.getXmlNodes()));
+    }
 }

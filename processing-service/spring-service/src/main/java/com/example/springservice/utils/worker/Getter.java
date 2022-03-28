@@ -1,9 +1,10 @@
-package com.example.springservice.utils;
+package com.example.springservice.utils.worker;
 
 import com.example.springservice.ast.dependency.Pair;
 import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.dependency.Dependency;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Getter {
@@ -18,5 +19,18 @@ public class Getter {
         }
 
         return id;
+    }
+
+
+    public static List<JavaNode> getSpringChildren (List<Integer> childNodes, List<JavaNode> javaNodes) {
+        List springNodes = new ArrayList();
+
+        for (JavaNode javaNode : javaNodes) {
+            if (childNodes.contains(javaNode.getId())) {
+                springNodes.add(javaNode);
+            }
+        }
+
+        return springNodes;
     }
 }

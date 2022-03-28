@@ -16,8 +16,8 @@ public class NodeSearch {
     public static List<Node> searchNode(Node n, ICondition condition, String relativePath) {
         List<Node> listNode = new ArrayList<>();
 
-        if (n != null && n.getChildren() != null) {
-            for (Node child : n.getChildren()) {
+        if (n != null && n.getChildrenNodes() != null) {
+            for (Node child : n.getChildrenNodes()) {
                 if (condition.isSatisfiable(child)) {
                     relativePath = FileHelper.normalizePath(relativePath);
                     String absolutePath = child.getAbsolutePath();
@@ -35,8 +35,8 @@ public class NodeSearch {
 
     public static List<Node> searchNode(Node n, ICondition condition) {
         List<Node> listNode = new ArrayList<>();
-        if (n != null && n.getChildren() != null)
-            for (Node child : n.getChildren()) {
+        if (n != null && n.getChildrenNodes() != null)
+            for (Node child : n.getChildrenNodes()) {
                 if (condition.isSatisfiable(child))
                     listNode.add(child);
 
@@ -48,7 +48,7 @@ public class NodeSearch {
     public static List<Node> searchNode(Node rootNode, String relativePath) {
         List<Node> listNode = new ArrayList<>();
         if (rootNode != null) {
-            for (Node child : rootNode.getChildren()) {
+            for (Node child : rootNode.getChildrenNodes()) {
                 relativePath = FileHelper.normalizePath(relativePath);
                 String absolutePath = child.getAbsolutePath();
                 if (absolutePath != null && absolutePath.endsWith(relativePath)) {
@@ -101,8 +101,8 @@ public class NodeSearch {
             return rootNode;
         }
 
-        for (int i = rootNode.getChildren().size() - 1; i >= 0; i--) {
-            Node child = rootNode.getChildren().get(i);
+        for (int i = rootNode.getChildrenNodes().size() - 1; i >= 0; i--) {
+            Node child = rootNode.getChildrenNodes().get(i);
             if (child.getId() <= nodeId) {
                 Node res = searchById(child, nodeId);
                 if (res != null) return res;

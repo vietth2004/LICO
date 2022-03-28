@@ -2,12 +2,11 @@ package com.example.springservice.dependency;
 
 import com.example.springservice.ast.node.JavaNode;
 import com.example.springservice.dom.Node;
-import com.example.springservice.dom.Xml.XmlTagNode;
 
 import java.util.List;
 
 public interface DependencyService {
 
-    public List<Dependency> getAllDependency(List<JavaNode> javaNodeList, List<Node> xmlTagNodes);
+    List<Dependency> getDependencies(List<JavaNode> javaNodeList, List<Node> xmlTagNodes);
 
 }
