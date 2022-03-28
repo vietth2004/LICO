@@ -15,7 +15,7 @@ public class Checker {
                     dependencies.setDependency(new DependencyCountTable(1,0,0,0,0));
                 }
             }
-        } else {
+        } else if (!javaNode.getEntityClass().equals("JavaClassNode")) {
             for(Pair dependencies : javaNode.getDependencyFrom()) {
                 if(dependencies.getNode().getEntityClass().equals("JavaInterfaceNode")
                         && dependencies.getDependency().getINHERITANCE() > 0) {
