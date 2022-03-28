@@ -6,7 +6,6 @@ import com.example.parserservice.dom.Node;
 import com.example.parserservice.dom.Properties.PropertiesFileNode;
 import com.example.parserservice.dom.Properties.PropertiesNode;
 import com.example.parserservice.model.parser.Request;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
