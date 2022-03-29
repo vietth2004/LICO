@@ -30,6 +30,7 @@ public class Getter {
         JavaNode javaNode = Searcher.findJavaNode(javaNodes, dependency.getNode().getId());
         Node node = Searcher.findNode(nodes, dependency.getNode().getId());
         if(!affectedNodes.contains(node)){
+            System.out.println(node.getId());
             affectedNodes.add(Searcher.findNode(nodes, dependency.getNode().getId()));
             affectedNodes.addAll(gatherImpactFromDependencies(nodes, javaNodes, totalNodes, javaNode, affectedNodes));
         }
