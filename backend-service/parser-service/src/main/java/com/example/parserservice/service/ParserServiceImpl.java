@@ -6,10 +6,7 @@ import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.util.JwtUtils;
-import com.example.parserservice.util.worker.Getter;
-import com.example.parserservice.util.worker.Requester;
-import com.example.parserservice.util.worker.Wrapper;
-import com.example.parserservice.util.worker.Writer;
+import com.example.parserservice.util.worker.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +67,8 @@ public class ParserServiceImpl implements ParserService{
 
         Writer.write(filePath, response, project);
 
+        response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
+
         return response;
     }
 
@@ -106,6 +105,8 @@ public class ParserServiceImpl implements ParserService{
         Response response = Getter.getResponse(parserList, request, path.getPath());
 
         Writer.write(path, response, "-res");
+
+        response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
 
         return response;
     }

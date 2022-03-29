@@ -1,6 +1,7 @@
 package com.example.parserservice.model;
 
 import com.example.parserservice.ast.dependency.Dependency;
+import com.example.parserservice.ast.dependency.OrientedDependency;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Node;
 
@@ -12,6 +13,8 @@ public class Response {
     private JavaNode rootNode;
 
     private List<Dependency> dependencies;
+
+    private List<OrientedDependency> orientedDependencies;
 
     private List javaNodes;
 
@@ -102,22 +105,6 @@ public class Response {
         this.xmlNodes = xmlNodes;
     }
 
-    public List<Dependency> getDependencies() {
-        return dependencies;
-    }
-
-    public List getJavaNodes() {
-        return javaNodes;
-    }
-
-    public List<com.example.parserservice.dom.Node> getXmlNodes() {
-        return xmlNodes;
-    }
-
-    public void setXmlNodes(List<com.example.parserservice.dom.Node> xmlNodes) {
-        this.xmlNodes = xmlNodes;
-    }
-
     public Response(JavaNode rootNode, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
         this.dependencies = allDependencies;
@@ -166,17 +153,25 @@ public class Response {
         this.rootNode = rootNode;
     }
 
-//    public List getAllDependencies() {
-//        return allDependencies;
-//    }
-
     public void setDependencies(List<Dependency> dependencies) {
         this.dependencies = dependencies;
     }
 
-//    public List getAllNodes() {
-//        return allNodes;
-//    }
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
+
+    public List getJavaNodes() {
+        return javaNodes;
+    }
+
+    public List getXmlNodes() {
+        return xmlNodes;
+    }
+
+    public void setXmlNodes(List xmlNodes) {
+        this.xmlNodes = xmlNodes;
+    }
 
     public void setJavaNodes(List javaNodes) {
         this.javaNodes = javaNodes;
@@ -220,5 +215,13 @@ public class Response {
 
     public void setPropertiesNodes(List propertiesNodes) {
         this.propertiesNodes = propertiesNodes;
+    }
+
+    public List<OrientedDependency> getOrientedDependencies() {
+        return orientedDependencies;
+    }
+
+    public void setOrientedDependencies(List<OrientedDependency> orientedDependencies) {
+        this.orientedDependencies = orientedDependencies;
     }
 }
