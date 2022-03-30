@@ -1,12 +1,12 @@
-package com.example.ciaservice.model;
+package com.example.versioncompareservice.model;
 
-import com.example.ciaservice.ast.Dependency;
-import com.example.ciaservice.ast.JavaNode;
+import com.example.versioncompareservice.ast.dependency.Dependency;
+import com.example.versioncompareservice.ast.node.JavaNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Request {
+public class CiaRequest {
 
     private List<JavaNode> javaNodes;
 
@@ -16,12 +16,19 @@ public class Request {
 
     private List<Integer> changedNodes;
 
-    public Request() {
+    public CiaRequest() {
     }
 
-    public Request(List<Dependency> allDependencies, Integer totalNodes) {
+    public CiaRequest(List<Dependency> allDependencies, Integer totalNodes) {
         this.dependencies = allDependencies;
         this.totalNodes = totalNodes;
+    }
+
+    public CiaRequest(List<JavaNode> javaNodes, List<Dependency> dependencies, Integer totalNodes, List<Integer> changedNodes) {
+        this.javaNodes = javaNodes;
+        this.dependencies = dependencies;
+        this.totalNodes = totalNodes;
+        this.changedNodes = changedNodes;
     }
 
     public List<Dependency> getDependencies() {

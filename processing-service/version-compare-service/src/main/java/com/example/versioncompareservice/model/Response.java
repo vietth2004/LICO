@@ -3,6 +3,7 @@ package com.example.versioncompareservice.model;
 import com.example.versioncompareservice.ast.node.JavaNode;
 
 import java.util.List;
+import java.util.Set;
 
 public class Response {
 
@@ -11,6 +12,10 @@ public class Response {
     private List deletedNodes;
 
     private List addedNodes;
+
+    private List dependencies;
+
+    private Set impactedNodes;
 
     private JavaNode rootNode;
 
@@ -27,6 +32,23 @@ public class Response {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
+        this.rootNode = rootNode;
+    }
+
+    public Response(List changedNodes, List deletedNodes, List addedNodes, List dependencies, JavaNode rootNode) {
+        this.changedNodes = changedNodes;
+        this.deletedNodes = deletedNodes;
+        this.addedNodes = addedNodes;
+        this.dependencies = dependencies;
+        this.rootNode = rootNode;
+    }
+
+    public Response(List changedNodes, List deletedNodes, List addedNodes, List dependencies, Set impactedNodes, JavaNode rootNode) {
+        this.changedNodes = changedNodes;
+        this.deletedNodes = deletedNodes;
+        this.addedNodes = addedNodes;
+        this.dependencies = dependencies;
+        this.impactedNodes = impactedNodes;
         this.rootNode = rootNode;
     }
 
@@ -60,5 +82,21 @@ public class Response {
 
     public void setRootNode(JavaNode rootNode) {
         this.rootNode = rootNode;
+    }
+
+    public List getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(List dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    public Set getImpactedNodes() {
+        return impactedNodes;
+    }
+
+    public void setImpactedNodes(Set impactedNodes) {
+        this.impactedNodes = impactedNodes;
     }
 }

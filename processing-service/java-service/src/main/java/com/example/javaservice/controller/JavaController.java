@@ -12,6 +12,7 @@ import com.example.javaservice.model.Request;
 import com.example.javaservice.model.Response;
 import com.example.javaservice.service.JavaService;
 
+import com.example.javaservice.utility.Checker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,6 +76,7 @@ public class JavaController {
         RootNode javaRoot = (RootNode) javaService.parseProjectWithFile(file);
         String path = "./project/" + "anonymous/" + file.getName() + ".project";
         JavaNode node = new JavaNode(javaRoot, path);
+        Checker.changeDependencyType(node);
         List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
         return new Response(node, nodeList);
     }
@@ -83,8 +85,9 @@ public class JavaController {
     public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot, path.getPath());
-        List<JavaNode> nodeList = Utility.convertToAllNodes(javaRoot.getAllNodes());
-        nodeList.forEach(
+        Checker.changeDependencyType(node);
+        List<JavaNode> nodes = Utility.convertToAllNodes(javaRoot.getAllNodes());
+        nodes.forEach(
                 elem -> {
                     JavaNode tmp = Utility.search(node, elem.getId());
                     if(tmp.getAnnotatesWithValue() == null) {
@@ -94,7 +97,7 @@ public class JavaController {
                     }
                 }
         );
-        return new Response(node, nodeList);
+        return new Response(node, nodes);
     }
     
 }

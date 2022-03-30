@@ -1,5 +1,6 @@
 package com.example.springservice.dom;
 
+import com.example.springservice.dom.Xml.XmlTagNode;
 import com.example.springservice.utils.Exception.JciaIgnore;
 import com.example.springservice.utils.Helper.NodeHelper;
 import com.example.springservice.utils.JciaData;
@@ -12,10 +13,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.MINIMAL_CLASS,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "json_type")
+//@JsonTypeInfo(
+//        use = JsonTypeInfo.Id.MINIMAL_CLASS,
+//        include = JsonTypeInfo.As.PROPERTY,
+//        property = "json_type")
 public class Node implements Serializable {
     private static final long serialVersionUID = -1411216676620846129L;
     protected int id;
@@ -28,8 +29,10 @@ public class Node implements Serializable {
     @JciaIgnore
     protected Node parent;
     @JciaIgnore
-    protected List<Node> children;
+    protected List<Node> childrenNodes;
 
+
+    protected List<XmlTagNode> children;
     //@JciaIgnore
     protected Set<ComponentType> componentTypes;
 
@@ -41,7 +44,7 @@ public class Node implements Serializable {
 
     public Node() {
         this.id = JciaData.getInstance().generateNodeId();
-        children = new ArrayList<>();
+        childrenNodes = new ArrayList<>();
 //        dependencies = new ArrayList<>();
         componentTypes = new HashSet<>();
     }
@@ -75,12 +78,12 @@ public class Node implements Serializable {
         this.parent = parent;
     }
 
-    public List<Node> getChildren() {
-        return children;
+    public List<Node> getChildrenNodes() {
+        return childrenNodes;
     }
 
-    public void setChildren(List<Node> children) {
-        this.children = children;
+    public void setChildrenNodes(List<Node> childrenNodes) {
+        this.childrenNodes = childrenNodes;
     }
 
     public String getEntityClass() {
@@ -93,11 +96,11 @@ public class Node implements Serializable {
 
     public void addChild(Node child) {
         if (child != null)
-            this.children.add(child);
+            this.childrenNodes.add(child);
     }
 
     public void addChildren(List<Node> children) {
-        this.children.addAll(children);
+        this.childrenNodes.addAll(children);
     }
 
     public String getName() {
@@ -125,7 +128,15 @@ public class Node implements Serializable {
         return id;
     }
 
-//    public List<Dependency> getDependencies() {
+    public List<XmlTagNode> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<XmlTagNode> children) {
+        this.children = children;
+    }
+
+    //    public List<Dependency> getDependencies() {
 //        return dependencies;
 //    }
 //
@@ -171,6 +182,8 @@ public class Node implements Serializable {
         }
         return tiers;
     }
+
+
 
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
@@ -256,12 +269,12 @@ public class Node implements Serializable {
         if (root == null) {
             return null;
         } else {
-            while (root.getChildren().size() == 1) {
-                for (Node child : root.getChildren())
+            while (root.getChildrenNodes().size() == 1) {
+                for (Node child : root.getChildrenNodes())
                     if (child.getAbsolutePath().endsWith(File.separator + "src")) {
                         return child;
                     }
-                root = root.getChildren().get(0);
+                root = root.getChildrenNodes().get(0);
             }
             return root;
         }
@@ -289,7 +302,7 @@ public class Node implements Serializable {
 
     private List<Node> doGetAllChildren(Node rootNode) {
         List<Node> allChildren = new ArrayList<>();
-        for (Node child : rootNode.getChildren()) {
+        for (Node child : rootNode.getChildrenNodes()) {
             allChildren.add(child);
             allChildren.addAll(doGetAllChildren(child));
         }
@@ -327,7 +340,7 @@ public class Node implements Serializable {
         node.setLeft(count);
         count++;
 
-        for (Node child : node.getChildren()) {
+        for (Node child : node.getChildrenNodes()) {
             count = dfs(child, count);
         }
 

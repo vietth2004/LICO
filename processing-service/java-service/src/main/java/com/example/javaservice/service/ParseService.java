@@ -34,7 +34,7 @@ public class ParseService {
         if(abstractNode.getEntityClass().equals("JavaClassNode")) {
             for(Object obj : cu.types()) {
                 if(obj instanceof TypeDeclaration) {
-                    System.out.println(((TypeDeclaration) obj).getName());
+//                    System.out.println(((TypeDeclaration) obj).getName());
                     javaAnnotationList.addAll(visitModifier(((TypeDeclaration) obj).modifiers()));
                 }
             }
@@ -44,14 +44,14 @@ public class ParseService {
             int nodePos = abstractNode.getId() - abstractNode.getParent().getId() - 1;
             int id = nodePos - behindInitNode(nodePos, pos);
 
-            System.out.println("Id: " + id);
+//            System.out.println("Id: " + id);
 
 //            System.out.println();
 
             TypeDeclaration typeDeclaration = (TypeDeclaration) cu.types().get(0);
             MethodDeclaration methodDeclaration = (MethodDeclaration) typeDeclaration.bodyDeclarations().get(id);
 
-            System.out.println("Method Node: " + typeDeclaration.getName());
+//            System.out.println("Method Node: " + typeDeclaration.getName());
 
             javaAnnotationList.addAll(visitModifier(methodDeclaration.modifiers()));
         }
@@ -60,12 +60,12 @@ public class ParseService {
             int nodePos = abstractNode.getId() - abstractNode.getParent().getId() - 1;
             int id = nodePos - behindInitNode(nodePos, pos);
 
-            System.out.println("Id: " + id);
+//            System.out.println("Id: " + id);
 
             TypeDeclaration typeDeclaration = (TypeDeclaration) cu.types().get(0);
             FieldDeclaration fieldDeclaration = (FieldDeclaration) typeDeclaration.bodyDeclarations().get(id);
 
-            System.out.println("Field Node: " + typeDeclaration.getName());
+//            System.out.println("Field Node: " + typeDeclaration.getName());
 
             javaAnnotationList.addAll(visitModifier(fieldDeclaration.modifiers()));
         }

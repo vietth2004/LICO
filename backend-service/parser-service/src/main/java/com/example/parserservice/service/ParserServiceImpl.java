@@ -6,9 +6,7 @@ import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.util.JwtUtils;
-import com.example.parserservice.util.worker.Getter;
-import com.example.parserservice.util.worker.Requester;
-import com.example.parserservice.util.worker.Wrapper;
+import com.example.parserservice.util.worker.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -65,7 +62,14 @@ public class ParserServiceImpl implements ParserService{
             e.printStackTrace();
         }
 
-        return Getter.getResponse(parserList, request, filePath.getPath());
+        Wrapper.wrapXmlAndJspNode(request);
+        Response response = Getter.getResponse(parserList, request, filePath.getPath());
+
+        Writer.write(filePath, response, project);
+
+        response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
+
+        return response;
     }
 
     @Override
@@ -96,9 +100,15 @@ public class ParserServiceImpl implements ParserService{
             e.printStackTrace();
         }
 
+        Wrapper.wrapXmlAndJspNode(request);
 
+        Response response = Getter.getResponse(parserList, request, path.getPath());
 
-        return Getter.getResponse(parserList, request, path.getPath());
+        Writer.write(path, response, "-res");
+
+        response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
+
+        return response;
     }
 
     public JSFResponse buildJsf(Path path) {
@@ -130,8 +140,6 @@ public class ParserServiceImpl implements ParserService{
                 , propRequest.getBody().getPropertiesNodes()
                 , path.getPath()
                 );
-
-        Wrapper.wrapXmlAndJspNode(request);
 
         return request;
     }

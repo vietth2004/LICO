@@ -69,11 +69,21 @@ public class Getter {
 
         for (String parser : parserList) {
             if(Resource.PARSER.contains(parser)) {
+
                 List<Dependency> dependencyList = Requester.getDependencies(parser, request);
+
                 if (dependencyList.size() > 0) {
-                    dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "SPRING");
-                    dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "JSF");
-                    dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "STRUTS");
+                    if(parser.equals("spring-parser")){
+                        dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "SPRING");
+                    }
+
+                    if(parser.equals("jsf-parser")){
+                        dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "JSF");
+                    }
+
+                    if(parser.equals("struts-parser")){
+                        dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "STRUTS");
+                    }
                 }
             }
         }

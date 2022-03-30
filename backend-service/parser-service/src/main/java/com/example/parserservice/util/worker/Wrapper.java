@@ -6,7 +6,6 @@ import com.example.parserservice.dom.Node;
 import com.example.parserservice.dom.Properties.PropertiesFileNode;
 import com.example.parserservice.dom.Properties.PropertiesNode;
 import com.example.parserservice.model.parser.Request;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +15,14 @@ public class Wrapper {
     public static List<Dependency> wrapDependency (List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
 
         if(type.equals("SPRING")){
-            for(Dependency dependency : frameworkDependencies) {
-                for(Dependency base : dependencies) {
-                    if(Checker.isDependency(base,  dependency)) {
-                        base.getType().setSPRING(dependency.getType().getSPRING());
-                    }
-                }
-            }
+            dependencies.addAll(frameworkDependencies);
         }
 
         if(type.equals("JSF")) {
+            dependencies.addAll(frameworkDependencies);
+        }
+
+        if(type.equals("STRUTS")){
             dependencies.addAll(frameworkDependencies);
         }
 
@@ -44,6 +41,10 @@ public class Wrapper {
         }
     }
 
+    public static void wrapAllNode(JavaNode javaNode, List<Dependency> dependencies, List<Node> xmlNode, List<Node> jspNode) {
+
+    }
+
     public static Request wrapXmlAndJspNode(Request request) {
         int totalNodes = request.getJavaNodes().size();
 
@@ -55,7 +56,9 @@ public class Wrapper {
         System.out.println("Total Nodes: " + totalNodes);
         totalNodes = wrapJspNode(request.getJspNodes(), totalNodes, jspNodes);
         System.out.println("Total Nodes: " + totalNodes);
-        wrapPropNode(request.getPropertiesNodes(), totalNodes);
+        totalNodes = wrapPropNode(request.getPropertiesNodes(), totalNodes);
+        System.out.println("Total Nodes: " + totalNodes);
+
 
         Request tmpRequest = new Request(
                 request.getRootNode()
@@ -68,8 +71,6 @@ public class Wrapper {
     }
 
     public static int wrapXmlNode(List nodes, int totalNodes, List<Node> xmlNodes) {
-        ObjectMapper mapper = new ObjectMapper();
-
         for(Object xmlNode : nodes) {
             if(xmlNode instanceof Node) {
                 ((Node) xmlNode).setId(++totalNodes);
@@ -93,7 +94,7 @@ public class Wrapper {
         return totalNodes;
     }
 
-    public static void wrapPropNode(List nodes, int totalNodes) {
+    public static int wrapPropNode(List nodes, int totalNodes) {
         for(Object propNode : nodes) {
             if(propNode instanceof PropertiesFileNode) {
                 ((PropertiesFileNode) propNode).setId(++totalNodes);
@@ -102,6 +103,7 @@ public class Wrapper {
                 }
             }
         }
+        return totalNodes;
     }
 
 }

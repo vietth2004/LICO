@@ -22,7 +22,7 @@ public class Request implements Serializable {
 
     private List<Node> jspNodes;
 
-    private List propertiesNodes;
+    private List<PropertiesFileNode> propertiesNodes;
 
     private String path;
 
@@ -112,11 +112,11 @@ public class Request implements Serializable {
         this.path = path;
     }
 
-    public List getPropertiesNodes() {
+    public List<PropertiesFileNode> getPropertiesNodes() {
         return propertiesNodes;
     }
 
-    public void setPropertiesNodes(List propertiesNodes) {
+    public void setPropertiesNodes(List<PropertiesFileNode> propertiesNodes) {
         this.propertiesNodes = propertiesNodes;
     }
 }

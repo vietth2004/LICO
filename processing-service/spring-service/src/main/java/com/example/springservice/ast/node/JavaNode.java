@@ -22,6 +22,8 @@ public class JavaNode extends Node {
     @Nonnull
     private transient List<Integer> children = new ArrayList<>();
 
+    private transient Integer parent;
+
     private transient List<JavaAnnotation> annotates = new ArrayList<>();
 
     private transient List<JavaType> extendInterfaces = new ArrayList<>();
@@ -83,5 +85,13 @@ public class JavaNode extends Node {
         if(abstractNode instanceof InterfaceNode) {
             this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
         }
+    }
+
+    public Integer getParent() {
+        return parent;
+    }
+
+    public void setParent(Integer parent) {
+        this.parent = parent;
     }
 }

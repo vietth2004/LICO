@@ -1,7 +1,7 @@
 package com.example.ciaservice.ast;
 
 public class Node {
-    private Integer node;
+    private Integer id;
 
     private Integer weight;
 
@@ -9,16 +9,16 @@ public class Node {
     }
 
     public Node(Integer node, Integer weight) {
-        this.node = node;
+        this.id = node;
         this.weight = weight;
     }
 
-    public Integer getNode() {
-        return node;
+    public Integer getId() {
+        return id;
     }
 
-    public void setNode(Integer node) {
-        this.node = node;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getWeight() {

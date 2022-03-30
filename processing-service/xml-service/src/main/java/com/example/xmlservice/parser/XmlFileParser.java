@@ -76,6 +76,7 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
             //log for client
             logger.error("Encountered error when parse xml file");
         }
+
         return null;
     }
 
