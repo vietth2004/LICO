@@ -12,7 +12,7 @@ public class Getter {
     public static Set<Node> gatherImpactFromDependencies(List<Node> nodes, List<JavaNode> javaNodes, Integer totalNodes, JavaNode changedNode, Set<Node> affectedNodes) {
 
         for(Pair dependency : changedNode.getDependencyFrom()) {
-            if(dependency.getDependency().getMEMBER() < 1) {
+            if(dependency.getDependency().getMEMBER() > -1) {
                 gatherImpact(nodes, javaNodes, totalNodes, affectedNodes, dependency);
             }
         }
@@ -26,7 +26,11 @@ public class Getter {
         return affectedNodes;
     }
 
-    private static void gatherImpact(List<Node> nodes, List<JavaNode> javaNodes, Integer totalNodes, Set<Node> affectedNodes, Pair dependency) {
+    private static void gatherImpact(List<Node> nodes,
+                                     List<JavaNode> javaNodes,
+                                     Integer totalNodes,
+                                     Set<Node> affectedNodes,
+                                     Pair dependency) {
         JavaNode javaNode = Searcher.findJavaNode(javaNodes, dependency.getNode().getId());
         Node node = Searcher.findNode(nodes, dependency.getNode().getId());
         if(!affectedNodes.contains(node)){
@@ -34,5 +38,13 @@ public class Getter {
             affectedNodes.add(Searcher.findNode(nodes, dependency.getNode().getId()));
             affectedNodes.addAll(gatherImpactFromDependencies(nodes, javaNodes, totalNodes, javaNode, affectedNodes));
         }
+    }
+
+    private static void gatherFather(List<Node> nodes,
+                                     List<JavaNode> javaNodes,
+                                     Integer totalNodes,
+                                     Set<Node> affectedNodes,
+                                     Pair dependency) {
+
     }
 }
