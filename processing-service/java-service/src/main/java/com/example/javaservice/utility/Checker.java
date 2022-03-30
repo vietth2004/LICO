@@ -12,14 +12,16 @@ public class Checker {
                 if(dependencies.getDependency().getINHERITANCE() > 0 &&
                         !(dependencies.getNode().getEntityClass().equals("JavaClassNode") ||
                                 dependencies.getNode().getEntityClass().equals("JavaInterfaceNode"))) {
+                    System.out.println(javaNode.getQualifiedName());
                     dependencies.setDependency(new DependencyCountTable(1,0,0,0,0));
                 }
             }
         } else {
-            for(Pair dependencies : javaNode.getDependencyFrom()) {
+            for(Pair dependencies : javaNode.getDependencyTo()) {
                 if(dependencies.getNode().getEntityClass().equals("JavaInterfaceNode")
                         && dependencies.getDependency().getINHERITANCE() > 0 &&
                         !javaNode.getEntityClass().equals("JavaClassNode")) {
+                    System.out.println(javaNode.getQualifiedName());
                     dependencies.setDependency(new DependencyCountTable(1,0,0,0,0));
                 }
             }
