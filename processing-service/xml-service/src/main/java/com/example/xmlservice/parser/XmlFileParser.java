@@ -92,8 +92,9 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
                     XmlTagNode newChildNode = createNewTagNode(child, root);
 
                     // Set path for childNode
-                    String path = root.getAbsolutePath() + File.separator + newChildNode.getTagName() +
-                            ":" + newChildNode.getLineNumber() + ":" + newChildNode.getColumnNumber();
+//                    String path = root.getAbsolutePath() + File.separator + newChildNode.getTagName() +
+//                            ":" + newChildNode.getLineNumber() + ":" + newChildNode.getColumnNumber();
+                    String path = root.getAbsolutePath();
                     newChildNode.setAbsolutePath(path);
 
                     // Set parent
