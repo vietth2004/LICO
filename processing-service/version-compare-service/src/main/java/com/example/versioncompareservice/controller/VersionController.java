@@ -33,7 +33,6 @@ public class VersionController {
         return versionService.getCompare(files, user, project);
     }
 
-
     @PostMapping("/byPath")
     public Response versionCompareByPath(@RequestBody Version path,
                                          @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)

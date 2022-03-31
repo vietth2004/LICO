@@ -9,9 +9,15 @@ public class Response {
 
     private List changedNodes;
 
+    private List xmlChangedNodes;
+
     private List deletedNodes;
 
+    private List xmlDeletedNodes;
+
     private List addedNodes;
+
+    private List xmlAddedNodes;
 
     private List dependencies;
 
@@ -22,34 +28,47 @@ public class Response {
     public Response() {
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
+        this.xmlChangedNodes = xmlChangedNodes;
+        this.xmlDeletedNodes = xmlDeletedNodes;
+        this.xmlAddedNodes = xmlAddedNodes;
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes, JavaNode rootNode) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, JavaNode rootNode) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
         this.rootNode = rootNode;
+        this.xmlChangedNodes = xmlChangedNodes;
+        this.xmlDeletedNodes = xmlDeletedNodes;
+        this.xmlAddedNodes = xmlAddedNodes;
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes, List dependencies, JavaNode rootNode) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, List dependencies, JavaNode rootNode) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
         this.dependencies = dependencies;
         this.rootNode = rootNode;
+        this.xmlChangedNodes = xmlChangedNodes;
+        this.xmlDeletedNodes = xmlDeletedNodes;
+        this.xmlAddedNodes = xmlAddedNodes;
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes, List dependencies, Set impactedNodes, JavaNode rootNode) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, List dependencies, Set impactedNodes, JavaNode rootNode) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
         this.dependencies = dependencies;
         this.impactedNodes = impactedNodes;
         this.rootNode = rootNode;
+        this.xmlChangedNodes = xmlChangedNodes;
+        this.xmlDeletedNodes = xmlDeletedNodes;
+        this.xmlAddedNodes = xmlAddedNodes;
+
     }
 
     public List getChangedNodes() {
