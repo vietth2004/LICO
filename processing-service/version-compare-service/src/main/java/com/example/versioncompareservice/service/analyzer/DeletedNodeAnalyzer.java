@@ -35,6 +35,7 @@ public class DeletedNodeAnalyzer implements Callable {
         }
         deletedNodes.forEach(node -> {
             node.setStatus(CompareStatus.DELETED);
+            node.setId(node.getId() * -1);
             node.setNodeChildren(new ArrayList<>());
         });
         return deletedNodes;
