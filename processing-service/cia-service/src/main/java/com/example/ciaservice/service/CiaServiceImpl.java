@@ -51,7 +51,7 @@ public class CiaServiceImpl implements CiaService{
 
         for(Integer javaNode : changedNodes) {
             JavaNode changedNode = Searcher.findJavaNode(javaNodes, javaNode);
-            Getter.gatherImpactFromDependencies(nodes, javaNodes, totalNodes, changedNode, affectedNodes, 2);
+            Getter.gatherImpactFromDependencies(nodes, javaNodes, totalNodes, changedNode, affectedNodes, 3);
         }
 
         Response response = Utility.convertSetToNodes(affectedNodes);
