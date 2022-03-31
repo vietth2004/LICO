@@ -8,6 +8,11 @@ public class Version {
     public Version() {
     }
 
+    public Version(String oldVersion, String newVersion) {
+        this.oldVersion = oldVersion;
+        this.newVersion = newVersion;
+    }
+
     public String getOldVersion() {
         return oldVersion;
     }

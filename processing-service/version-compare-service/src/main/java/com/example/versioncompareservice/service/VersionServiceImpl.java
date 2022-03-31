@@ -76,6 +76,21 @@ public class VersionServiceImpl implements VersionService{
         return getCompare(version);
     }
 
+    public Response getCompare (MultipartFile file, String user, String project, String oldPath) throws JavaCiaException, IOException {
+        String userPath = user;
+        Version version = new Version();
+
+        if(!userPath.equals("anonymous")){
+            userPath = jwtUtils.extractUsername(user);
+        }
+
+        String newVersion = fileStorageService.storeFile(file, userPath, project);
+        version.setNewVersion("./project/" + userPath + "/" + project + "/" + newVersion + ".project");
+        version.setOldVersion(oldPath);
+
+        return getCompare(version);
+    };
+
     @Override
     public Response getCompare(Version files) throws JavaCiaException, IOException {
 

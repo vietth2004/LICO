@@ -27,7 +27,8 @@ public class VersionController {
     @PostMapping("/byFile")
     public Response versionCompareByFile(@RequestBody List<MultipartFile> files,
                                          @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project,
-                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user) throws JavaCiaException, IOException {
+                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)
+            throws JavaCiaException, IOException {
         System.out.println(project);
         return versionService.getCompare(files, user, project);
     }
@@ -35,13 +36,24 @@ public class VersionController {
 
     @PostMapping("/byPath")
     public Response versionCompareByPath(@RequestBody Version path,
-                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user) throws JavaCiaException, IOException {
+                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)
+            throws JavaCiaException, IOException {
         return versionService.getCompare(path);
+    }
+
+    @PostMapping("/newVersion")
+    public Response newVersionCompare(@RequestBody MultipartFile file,
+                                      @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
+                                      @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project,
+                                      @RequestParam(name="oldPath") String oldPath) throws JavaCiaException, IOException {
+        return versionService.getCompare(file, user, project, oldPath);
     }
 
     @PostMapping("/hello")
     public String versionCompareByPath() throws JavaCiaException, IOException {
         return "hello";
     }
+
+
 
 }

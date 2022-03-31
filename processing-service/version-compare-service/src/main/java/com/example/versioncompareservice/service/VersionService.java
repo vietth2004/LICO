@@ -16,4 +16,6 @@ public interface VersionService {
     Response getCompare (Version files) throws JavaCiaException, IOException;
 
     Response getCompare (List<MultipartFile> files, String user, String project) throws JavaCiaException, IOException;
+
+    Response getCompare (MultipartFile file, String user, String project, String oldPath) throws JavaCiaException, IOException;
 }
