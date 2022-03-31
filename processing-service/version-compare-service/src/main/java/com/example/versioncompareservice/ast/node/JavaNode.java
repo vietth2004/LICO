@@ -33,25 +33,25 @@ public class JavaNode extends Node implements Serializable {
 
     private transient List extendInterfaces = null;
 
+    private transient String path;
+
+    private transient Integer parent;
+
     private String status = "unchanged";
 
     public JavaNode() {
     }
 
-    public JavaNode(AbstractNode abstractNode, Boolean status) {
+    public JavaNode(AbstractNode abstractNode, Boolean status, String path) {
         super(abstractNode);
         this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
         this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-        this.children = this.returnChildren(abstractNode, status, true);
+        this.children = this.returnChildren(abstractNode, status, true, path);
         this.setupProperties(abstractNode);
     }
 
     public JavaNode(AbstractNode abstractNode, Boolean status, Boolean getDependency) {
         super(abstractNode);
-//        if(getDependency){
-//            this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
-//            this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
-//        }
         this.children = this.returnChildren(abstractNode, status, getDependency);
         this.setupProperties(abstractNode);
         this.setDependency(abstractNode, getDependency);
@@ -76,10 +76,19 @@ public class JavaNode extends Node implements Serializable {
         this.status = status;
 
         if(status.equals("deleted")) {
-//            this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
-//            this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
             this.children = this.returnChildren((AbstractNode) javaNode, true, false);
         }
+    }
+
+    public JavaNode(AbstractNode abstractNode, Boolean nodes, Integer parent, String path) {
+        super(abstractNode);
+
+        this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
+        this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
+        this.parent = parent;
+        this.children = this.returnChildren(abstractNode, nodes, true, path);
+        this.path = path;
+        this.setupProperties(abstractNode);
     }
 
 
@@ -151,6 +160,22 @@ public class JavaNode extends Node implements Serializable {
         this.children.add(javaNode);
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public Integer getParent() {
+        return parent;
+    }
+
+    public void setParent(Integer parent) {
+        this.parent = parent;
+    }
+
     private void setupProperties (AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
@@ -179,6 +204,14 @@ public class JavaNode extends Node implements Serializable {
     private List returnChildren(AbstractNode abstractNode, Boolean nodes, Boolean getDependency) {
         if (nodes == true) {
             return Utility.convertAbstractNode(abstractNode.getChildren(), getDependency);
+        } else {
+            return Utility.convertChildren(abstractNode.getChildren());
+        }
+    }
+
+    private List returnChildren(AbstractNode abstractNode, Boolean nodes, Boolean getDependency, String path) {
+        if (nodes == true) {
+            return Utility.convertAbstractNode(abstractNode.getChildren(), getDependency, path);
         } else {
             return Utility.convertChildren(abstractNode.getChildren());
         }

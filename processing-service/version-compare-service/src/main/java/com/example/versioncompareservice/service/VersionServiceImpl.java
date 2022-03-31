@@ -121,7 +121,11 @@ public class VersionServiceImpl implements VersionService{
         List<JavaNode> deletedNodes = Utility.convertJavaNodeSet(snapshotComparison.getRemovedNodes(), "deleted", projectSize);
         List<Pair<Integer, JavaNode>> removedNodes = new ArrayList<>();
         List<JavaNode> unchangedNodes = new ArrayList<>();
-        JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
+        String path = files.getNewVersion();
+
+        JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(),
+                true,
+                path);
 
         //Bind to Tree Node
         Wrapper.applyCompare(rootNode, changedNodes, addedNodes, removedNodes, unchangedNodes, snapshotComparison);

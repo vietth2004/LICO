@@ -27,12 +27,12 @@ public class Utility {
         }
     }
 
-    public static List<JavaNode> convertJavaNodeList (List nodeList) {
+    public static List<JavaNode> convertJavaNodeList (List nodeList, String path) {
         List<JavaNode> nodes = new ArrayList<>();
 
         for(Object javaNode : nodeList) {
             if(javaNode instanceof mrmathami.cia.java.tree.node.JavaNode) {
-                nodes.add(new JavaNode((AbstractNode) javaNode, true));
+                nodes.add(new JavaNode((AbstractNode) javaNode, true, path));
             }
         }
 
@@ -61,24 +61,36 @@ public class Utility {
         return nodes;
     }
 
-//    public static List<JavaNode> convertJavaNodePairSet (
-//            Set<mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode>> nodeList,
-//            String status) {
-//
-//        List<JavaNode> nodes = new ArrayList<>();
-//
-//        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode : nodeList) {
-//            nodes.add(new JavaNode(javaNode.getA(), status));
-//        }
-//
-//        return nodes;
-//    }
-
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList, boolean getDependency) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
+
             javaNodeList.add(new JavaNode(node, true, getDependency));
+        }
+
+        return javaNodeList;
+    }
+
+    public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList, boolean getDependency, String rootPath) {
+        List<JavaNode> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            Integer parent = node.getParent().getId();
+            String path = rootPath;
+            if(node.getEntityClass().equals("JavaClassNode") || node.getEntityClass().equals("JavaInterfaceNode")) {
+                path = rootPath + "/" + node.getSourceFile().getRelativePath().toString();
+            }
+            javaNodeList.add(new JavaNode(node, true, parent, path));
+        }
+
+        return javaNodeList;
+    }
+
+    @Nonnull
+    public static List<JavaNode> convertToAllNodes(List<AbstractNode> abstractNodeList, String path) {
+        List<JavaNode> javaNodeList = new ArrayList<>();
+        for(AbstractNode node : abstractNodeList) {
+            javaNodeList.add(new JavaNode(node, false, path));
         }
 
         return javaNodeList;
@@ -88,7 +100,7 @@ public class Utility {
     public static List<JavaNode> convertToAllNodes(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();
         for(AbstractNode node : abstractNodeList) {
-            javaNodeList.add(new JavaNode(node, false));
+            javaNodeList.add(new JavaNode(node, false, ""));
         }
 
         return javaNodeList;
