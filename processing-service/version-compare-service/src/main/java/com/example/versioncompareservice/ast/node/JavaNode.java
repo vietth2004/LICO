@@ -80,6 +80,21 @@ public class JavaNode extends Node implements Serializable {
         }
     }
 
+    public JavaNode(mrmathami.cia.java.tree.node.JavaNode javaNode, String status, String path) {
+        super(javaNode);
+        this.setupProperties((AbstractNode) javaNode);
+        this.status = status;
+
+        if(javaNode.getEntityClass().equals("JavaClassNode") || javaNode.getEntityClass().equals("JavaInterfaceNode"))
+        {
+            this.path = path + "/" + javaNode.getSourceFile().getRelativePath();
+        }
+
+        if(status.equals("deleted")) {
+            this.children = this.returnChildren((AbstractNode) javaNode, true, false, path);
+        }
+    }
+
     public JavaNode(AbstractNode abstractNode, Boolean nodes, Integer parent, String path) {
         super(abstractNode);
 

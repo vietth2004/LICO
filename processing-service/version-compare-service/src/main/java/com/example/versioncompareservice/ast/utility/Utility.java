@@ -61,6 +61,18 @@ public class Utility {
         return nodes;
     }
 
+    public static List<JavaNode> convertJavaNodeSet (Set<mrmathami.cia.java.tree.node.JavaNode> nodeList, String status, int bindId, String path) {
+        List<JavaNode> nodes = new ArrayList<>();
+
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : nodeList) {
+            JavaNode temp = new JavaNode(javaNode, status, path);
+            temp.setId(bindId + temp.getId());
+            nodes.add(temp);
+        }
+
+        return nodes;
+    }
+
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList, boolean getDependency) {
         List<JavaNode> javaNodeList = new ArrayList<>();

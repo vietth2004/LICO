@@ -1,6 +1,7 @@
 package com.example.versioncompareservice.utils;
 
 import com.example.versioncompareservice.ast.node.JavaNode;
+import com.example.versioncompareservice.model.Version;
 import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.node.JavaMethodNode;
@@ -11,11 +12,12 @@ import java.util.List;
 public class Wrapper {
 
     public static void applyCompare(JavaNode rootNode,
-                             List<JavaNode> changedNodes,
-                             List<JavaNode> addedNodes,
-                             List<Pair<Integer, JavaNode>> deletedNodes,
-                             List<JavaNode> unchangedNodes,
-                             JavaProjectSnapshotComparison snapshotComparison) {
+                                    List<JavaNode> changedNodes,
+                                    List<JavaNode> addedNodes,
+                                    List<Pair<Integer, JavaNode>> deletedNodes,
+                                    List<JavaNode> unchangedNodes,
+                                    JavaProjectSnapshotComparison snapshotComparison,
+                                    Version version) {
         int projectSize = snapshotComparison.getPreviousSnapshot().getRootNode().getAllNodes().size();
         List<Pair<Integer, Integer>> changedNodesBind = new ArrayList<>();
 
@@ -26,28 +28,28 @@ public class Wrapper {
                 String oldNode = ((JavaMethodNode) javaNode.getA()).getReturnType().getDescription();
                 String newNode = ((JavaMethodNode) javaNode.getB()).getReturnType().getDescription();
                 if(!oldNode.equals(newNode)) {
-                    changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
+                    changedNodes.add(new JavaNode(javaNode.getA(), "changed", version.getNewVersion()));
                 }
             } else {
-                unchangedNodes.add(new JavaNode(javaNode.getA(), "unchanged"));
+                unchangedNodes.add(new JavaNode(javaNode.getA(), "unchanged", version.getNewVersion()));
             }
         }
 
         //add changed nodes
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getChangedNodes()) {
-            changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
+            changedNodes.add(new JavaNode(javaNode.getA(), "changed", version.getNewVersion()));
             changedNodesBind.add(new Pair<>(javaNode.getA().getId(), javaNode.getB().getId()));
         }
 
         //add added nodes
         for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
-            addedNodes.add(new JavaNode(javaNode, "added"));
+            addedNodes.add(new JavaNode(javaNode, "added", version.getNewVersion()));
         }
 
         //add removed nodes
         for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
-            deletedNodes.add(new Pair<>(javaNode.getParent().getId(), new JavaNode(javaNode, "deleted")));
+            deletedNodes.add(new Pair<>(javaNode.getParent().getId(), new JavaNode(javaNode, "deleted", version.getOldVersion())));
         }
 
         //bind changed nodes and added nodes to nodes tree
