@@ -66,7 +66,7 @@ public class Utility {
 
         for(mrmathami.cia.java.tree.node.JavaNode javaNode : nodeList) {
             JavaNode temp = new JavaNode(javaNode, status, path);
-            temp.setId(bindId + temp.getId());
+            temp.setId(temp.getId()*(-1));
             nodes.add(temp);
         }
 

@@ -92,7 +92,7 @@ public class Wrapper {
     }
 
     public static void bindId(JavaNode addedNode, int bindId) {
-        addedNode.setId(bindId + addedNode.getId());
+        addedNode.setId(addedNode.getId()*(-1));
         addedNode.setStatus("deleted");
 
         for(Object childNode : addedNode.getChildren()) {
