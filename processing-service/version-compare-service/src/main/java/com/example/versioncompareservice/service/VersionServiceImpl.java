@@ -4,9 +4,13 @@ import com.example.versioncompareservice.ast.dependency.Dependency;
 import com.example.versioncompareservice.ast.node.JavaNode;
 import com.example.versioncompareservice.ast.node.NodeWeight;
 import com.example.versioncompareservice.ast.utility.Utility;
-import com.example.versioncompareservice.model.Request;
+import com.example.versioncompareservice.dom.Node;
 import com.example.versioncompareservice.model.Response;
 import com.example.versioncompareservice.model.Version;
+import com.example.versioncompareservice.service.analyzer.AddedNodeAnalyzer;
+import com.example.versioncompareservice.service.analyzer.ChangedNodeAnalyzer;
+import com.example.versioncompareservice.service.analyzer.DeletedNodeAnalyzer;
+import com.example.versioncompareservice.service.analyzer.UnchangedNodeAnalyzer;
 import com.example.versioncompareservice.utils.*;
 import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.JavaCiaException;
@@ -18,19 +22,25 @@ import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
-import mrmathami.cia.java.tree.node.JavaMethodNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 public class VersionServiceImpl implements VersionService{
+
+    @Autowired
+    CompareUtils compareUtils;
+
+    private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     final FileStorageService fileStorageService;
 
@@ -136,8 +146,36 @@ public class VersionServiceImpl implements VersionService{
         Set<NodeWeight> nodeWeights = Requester.getImpactedNodes(javaNodes, changedNodes, dependencies);
         nodeWeights.addAll(Requester.getImpactedNodes(javaNodes, addedNodes, dependencies));
 
+        /**
+         * Compare xml nodes
+         */
+        com.example.versioncompareservice.utils.communicator.Response oldXml = Requester.getXmlNodes(files.getOldVersion());
+        com.example.versioncompareservice.utils.communicator.Response newXml = Requester.getXmlNodes(files.getNewVersion());
 
-        return new Response(changedNodes, deletedNodes, addedNodes, dependencies, nodeWeights, rootNode);
+        Future<List<Node>> addedNodeFuture, deletedNodesFuture;
+        Future<Set<Node>> changedNodesFuture, unchangedNodesFuture;
+        addedNodeFuture = THREAD_POOL.submit(new AddedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
+        deletedNodesFuture = THREAD_POOL.submit(new DeletedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
+        changedNodesFuture = THREAD_POOL.submit(new ChangedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
+//        unchangedNodesFuture = THREAD_POOL.submit(new UnchangedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
+
+        List xmlAddedNodes = new ArrayList<>();
+        List xmlDeletedNodes = new ArrayList<>();
+        Set xmlChangedNodes = new HashSet<>();
+//        Set xmlUnchangedNodes = new HashSet<>();
+
+        try {
+            xmlAddedNodes = addedNodeFuture.get();
+            xmlDeletedNodes = deletedNodesFuture.get();
+            xmlChangedNodes = changedNodesFuture.get();
+//            xmlUnchangedNodes = unchangedNodesFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return new Response(changedNodes, deletedNodes, addedNodes, List.of(xmlChangedNodes), xmlDeletedNodes, xmlAddedNodes, dependencies, nodeWeights, rootNode);
     }
 
     @Override
