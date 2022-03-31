@@ -157,18 +157,15 @@ public class VersionServiceImpl implements VersionService{
         addedNodeFuture = THREAD_POOL.submit(new AddedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
         deletedNodesFuture = THREAD_POOL.submit(new DeletedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
         changedNodesFuture = THREAD_POOL.submit(new ChangedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
-//        unchangedNodesFuture = THREAD_POOL.submit(new UnchangedNodeAnalyzer(oldXml.getXmlNodes(), newXml.getXmlNodes()));
 
         List xmlAddedNodes = new ArrayList<>();
         List xmlDeletedNodes = new ArrayList<>();
         Set xmlChangedNodes = new HashSet<>();
-//        Set xmlUnchangedNodes = new HashSet<>();
 
         try {
             xmlAddedNodes = addedNodeFuture.get();
             xmlDeletedNodes = deletedNodesFuture.get();
             xmlChangedNodes = changedNodesFuture.get();
-//            xmlUnchangedNodes = unchangedNodesFuture.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
