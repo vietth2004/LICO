@@ -132,7 +132,7 @@ public class Analyzer {
 
     public static List<Dependency> getDependencies(HashSet<JavaNode> springCallerJavaNodes, HashSet<JavaNode> springCalleeJavaNodes) {
         List<Dependency> dependencies = new ArrayList<>();
-
+        int count = 0;
         for (JavaNode callerNode : springCallerJavaNodes) {
 
             for (Pair dependenceNode : callerNode.getDependencyTo()) {
@@ -144,6 +144,7 @@ public class Analyzer {
                                 calleeNode.getId(),
                                 new DependencyCountTable(0,0,0,0,0, 1)));
                     }
+                    count++;
                 }
             }
         }

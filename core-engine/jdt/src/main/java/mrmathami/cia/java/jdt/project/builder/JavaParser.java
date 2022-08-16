@@ -18,9 +18,11 @@
 
 package mrmathami.cia.java.jdt.project.builder;
 
+import com.sun.jdi.Method;
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.JavaCiaException;
+import mrmathami.cia.java.jdt.project.Project;
 import mrmathami.cia.java.jdt.project.SourceFile;
 import mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
@@ -29,6 +31,15 @@ import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.node.JavaRootNode;
 import mrmathami.utils.Triple;
+import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.dom.AST;
@@ -63,9 +74,8 @@ final class JavaParser {
 
 	@Nonnull
 	static JavaRootNode parse(@Nonnull String[] sourcePathArray, @Nonnull String[] sourceEncodingArray,
-			@Nonnull String[] classPathArray, @Nonnull Map<String, SourceFile> sourceNameMap, boolean recoveryEnabled)
+			@Nonnull String[] classPathArray,  @Nonnull Map<String, SourceFile> sourceNameMap, boolean recoveryEnabled)
 			throws JavaCiaException {
-
 		final ASTParser astParser = ASTParser.newParser(AST.JLS15);
 		final Map<String, String> options = JavaCore.getOptions();
 		JavaCore.setComplianceOptions(JavaCore.VERSION_15, options);
@@ -73,7 +83,16 @@ final class JavaParser {
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
 		astParser.setResolveBindings(true);
 		astParser.setBindingsRecovery(recoveryEnabled);
-		astParser.setEnvironment(classPathArray, null, null, true);
+		astParser.setIgnoreMethodBodies(true);
+		String[] classPath = {"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.base.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.controls.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.fxml.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.graphics.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.media.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.swing.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.web.jar",
+		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx-swt.jar"};
+		astParser.setEnvironment(classPath, classPathArray, new String[] {"UTF-8"}, true);
 
 		options.put(DefaultCodeFormatterConstants.FORMATTER_LINE_SPLIT, "65536");
 
@@ -86,9 +105,7 @@ final class JavaParser {
 
 		final JavaNodeBuilder nodes = new JavaNodeBuilder(sourceNameMap, parser, rootNode, bindingNodeMap,
 				codeFormatter, recoveryEnabled);
-
 		astParser.createASTs(sourcePathArray, sourceEncodingArray, EMPTY, nodes, null);
-
 		nodes.postprocessing();
 
 		return parser.postProcessing();

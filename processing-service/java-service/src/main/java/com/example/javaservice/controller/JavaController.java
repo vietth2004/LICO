@@ -83,6 +83,7 @@ public class JavaController {
 
     @PostMapping("/pathParse")
     public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
+//        System.out.println(path.getPath());
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
         JavaNode node = new JavaNode(javaRoot, path.getPath());
         Checker.changeDependencyType(node);

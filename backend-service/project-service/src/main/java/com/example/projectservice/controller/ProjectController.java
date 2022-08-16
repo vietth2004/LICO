@@ -7,11 +7,13 @@ import com.example.projectservice.version.Version;
 import com.example.projectservice.version.VersionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
+import java.util.HashMap;
 import java.util.Objects;
 
 @RestController
@@ -28,11 +30,10 @@ public class ProjectController {
     }
 
     @GetMapping("/project/get")
-    public Page<Project> getAllProjectByUser(@RequestParam(name = "user") String user,
+    public Page<Project> getAllProjectByUser(@RequestParam(name = "user", required = false) String user,
                                              @RequestParam(name = "name", required = false) String name,
                                              @RequestParam(name = "id", required = false) String id,
             Pageable pageable){
-
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
             if (Objects.nonNull(user)) {
@@ -53,9 +54,24 @@ public class ProjectController {
 
     @PostMapping("/project/save")
     public ResponseEntity<?> saveProject(@RequestBody Project project){
-        Project tmpProject = new Project(project.getId(), project.getName(), project.getUser());
 
         //save project
+        int count = 0;
+        for (Project project1: projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))) {
+            int index = project1.getName().lastIndexOf("(");
+            int index1 = project1.getName().lastIndexOf(")");
+            if (index != -1) {
+                String copyProj = project1.getName().substring(0, index - 1);
+                if (copyProj.equals(project.getName())) {
+                    String s = project1.getName().substring(index+1, index1);
+                    Integer integer = Integer.parseInt(s);
+                    count = integer + 1;
+                    break;
+                }
+            }
+        }
+        project.setName(project.getName() + " (" + count + ")");
+        Project tmpProject = new Project(project.getId(), project.getName(), project.getUser());
         projectRepository.save(tmpProject);
 
         //save version
@@ -70,7 +86,7 @@ public class ProjectController {
     public Page<Version> getAllVersionInProjectByUser(@RequestParam(name = "name", required = false) String name,
                                                       @RequestParam(name = "pid") Integer id,
                                                       Pageable pageable){
-
+        System.out.println("1111");
         Page<Version> versionPage = versionRepository.findAll((Specification<Version>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
             if (Objects.nonNull(name)) {
@@ -88,6 +104,9 @@ public class ProjectController {
 
     @PostMapping("/version/save")
     public ResponseEntity<?> saveVersion(@RequestBody Version version){
+        for (Version version1: versionRepository.findAll()) {
+            System.out.println(version1.getName() + " " + version1.getUploadDate());
+        }
         versionRepository.save(version);
         return ResponseEntity.ok(new AuthenticationResponse("Success!", version.getId()));
     }

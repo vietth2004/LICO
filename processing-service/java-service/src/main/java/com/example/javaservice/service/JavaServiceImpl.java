@@ -41,12 +41,8 @@ public class JavaServiceImpl implements JavaService{
         final Path inputPath = Path.of(path);
         final BuildInputSources inputSources = new BuildInputSources(inputPath);
         Utils.getFileList(inputSources.createModule("core", inputPath), inputPath);
-
         final JavaProjectSnapshot projectSnapshot = ProjectBuilder.createProjectSnapshot("before",
                 DEPENDENCY_WEIGHT_TABLE, inputSources, Set.of(new JavaBuildParameter(List.of(), true)));
-
-
-
         return projectSnapshot.getRootNode();
     }
 

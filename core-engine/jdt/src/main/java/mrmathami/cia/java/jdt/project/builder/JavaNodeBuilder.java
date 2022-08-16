@@ -38,38 +38,7 @@ import mrmathami.cia.java.tree.JavaModifier;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.utils.Pair;
 import mrmathami.utils.Triple;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ConstructorInvocation;
-import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
-import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.FileASTRequestor;
-import org.eclipse.jdt.core.dom.IAnnotationBinding;
-import org.eclipse.jdt.core.dom.IBinding;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.IPackageBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.Initializer;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
-import org.eclipse.jdt.core.dom.SuperMethodInvocation;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclaration;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -394,7 +363,6 @@ final class JavaNodeBuilder extends FileASTRequestor {
 	private void parseClassTypeDeclaration(@Nonnull AbstractNode parentNode,
 			@Nonnull TypeDeclaration typeDeclaration) throws JavaCiaException {
 		assert !typeDeclaration.isInterface() : "Expected a class TypeDeclaration.";
-
 		final ITypeBinding typeBinding = typeDeclaration.resolveBinding();
 		if (typeBinding == null) throw new JavaCiaException("Cannot resolve binding on class declaration!");
 
@@ -578,7 +546,7 @@ final class JavaNodeBuilder extends FileASTRequestor {
 				: binaryName.contains(".")
 				? binaryName.substring(binaryName.lastIndexOf('.')).replace('.', '$')
 				: binaryName;
-
+		System.out.println(className);
 		final ClassNode classNode = parentNode.addChild(new ClassNode(sourceFile, parentNode, className, binaryName));
 		parser.createDependencyToNode(parentNode, classNode, JavaDependency.MEMBER);
 
@@ -716,6 +684,7 @@ final class JavaNodeBuilder extends FileASTRequestor {
 				methodBinding.getName(), methodBinding.isConstructor(), parameterJavaTypes));
 		parser.createDependencyToNode(parentNode, methodNode, JavaDependency.MEMBER);
 
+
 		// create parameter proper types
 		for (final ITypeBinding parameterTypeBinding : parameterTypeBindings) {
 			types.processUnprocessedType(parameterTypeBinding, methodNode);
@@ -747,8 +716,11 @@ final class JavaNodeBuilder extends FileASTRequestor {
 
 		// put delayed method body
 		final Block methodDeclarationBody = methodDeclaration.getBody();
+//		System.out.println(methodDeclarationBody.statements());
 		if (methodDeclarationBody != null) {
 			methodNode.setBodyBlock(format(methodDeclarationBody.toString(), CodeFormatter.K_STATEMENTS));
+//			System.out.println(methodDeclarationBody.statements());
+//			System.out.println("==========================================");
 			walkDeclaration(methodDeclarationBody, methodNode, methodNode);
 		}
 
@@ -763,7 +735,6 @@ final class JavaNodeBuilder extends FileASTRequestor {
 	private void walkDeclaration(@Nonnull ASTNode astNode, @Nonnull AbstractNode parentNode,
 			@Nonnull AbstractNode dependencyNode) throws JavaCiaException {
 		delayedDependencyWalkers.add(Pair.immutableOf(astNode, dependencyNode));
-
 		final JavaCiaException[] exceptionProxy = new JavaCiaException[]{null};
 		astNode.accept(new ASTVisitor() {
 
@@ -793,7 +764,9 @@ final class JavaNodeBuilder extends FileASTRequestor {
 			}
 
 		});
-		if (exceptionProxy[0] != null) throw exceptionProxy[0];
+		if (exceptionProxy[0] != null) {
+			throw exceptionProxy[0];
+		}
 	}
 
 	private void walkDependency(@Nonnull ASTNode astNode, @Nonnull AbstractNode javaNode) throws JavaCiaException {
