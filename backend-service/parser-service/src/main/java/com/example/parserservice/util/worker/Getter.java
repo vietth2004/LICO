@@ -20,8 +20,8 @@ public class Getter {
         int count = 0;
         HashMap<Integer, DependencyCountTable> idNode = new HashMap<>();
         for (Dependency dependency : dependencies) {
-            if (javaNode.getId().equals(dependency.getCalleeNode())) {
-                idNode.put(javaNode.getId(), dependency.getType());
+            if (javaNode.getId().equals(dependency.getCallerNode())) {
+                idNode.put(dependency.getCalleeNode(), dependency.getType());
             }
         }
         for (Pair pair : nodeDependency) {
@@ -49,7 +49,7 @@ public class Getter {
         HashMap<Integer, DependencyCountTable> idNode = new HashMap<>();
         for (Dependency dependency : dependencies) {
             if (javaNode.getId().equals(dependency.getCalleeNode())) {
-                idNode.put(javaNode.getId(), dependency.getType());
+                idNode.put(dependency.getCallerNode(), dependency.getType());
             }
         }
         for (Pair pair : nodeDependency) {
@@ -117,12 +117,7 @@ public class Getter {
                 }
             }
         }
-        long start3 = System.currentTimeMillis();
         Wrapper.wrapRootNode(javaNode, dependencies);
-        long end3 = System.currentTimeMillis();
-        System.out.println("===========================TIME 3 ===========================");
-        System.out.println(end3 - start3);
-        System.out.println("==============================================================");
         List nodes = Requester.getNodesWeight(dependencies, javaNodes.size());
 
         return

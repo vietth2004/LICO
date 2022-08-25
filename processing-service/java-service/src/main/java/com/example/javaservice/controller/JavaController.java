@@ -2,7 +2,9 @@ package com.example.javaservice.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 //import com.example.javaservice.javacia.java.JavaCiaException;
 import com.example.javaservice.ast.node.JavaNode;
@@ -85,12 +87,15 @@ public class JavaController {
     public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
 //        System.out.println(path.getPath());
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
+
         JavaNode node = new JavaNode(javaRoot, path.getPath());
         Checker.changeDependencyType(node);
         List<JavaNode> nodes = Utility.convertToAllNodes(javaRoot.getAllNodes());
+        AtomicInteger count = new AtomicInteger();
         nodes.forEach(
                 elem -> {
                     JavaNode tmp = Utility.search(node, elem.getId());
+                    count.getAndIncrement();
                     if(tmp.getAnnotatesWithValue() == null) {
                         elem.setAnnotatesWithValue(new ArrayList());
                     } else {
@@ -98,6 +103,7 @@ public class JavaController {
                     }
                 }
         );
+
         return new Response(node, nodes);
     }
     

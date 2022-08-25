@@ -91,18 +91,31 @@ public class Utility {
 
     @Nonnull
     public static JavaNode search(JavaNode root, int searchId) {
-        if (root.getId() == searchId) {
-            return root;
-        } else {
-            for (Object child : root.getChildren()) {
-                if(child instanceof JavaNode) {
-                        JavaNode node = search((JavaNode) child, searchId);
-                        if (node != null) {
-                            return node;
-                    }
+        Stack<JavaNode> javaNodeStack = new Stack<>();
+        javaNodeStack.push(root);
+        while (!javaNodeStack.isEmpty()) {
+            JavaNode javaNode = javaNodeStack.pop();
+            if (javaNode.getId() == searchId) {
+                return javaNode;
+            }
+            for (Object child : javaNode.getChildren()) {
+                if (child instanceof JavaNode) {
+                    javaNodeStack.push((JavaNode) child);
                 }
             }
         }
+//        if (root.getId() == searchId) {
+//            return root;
+//        } else {
+//            for (Object child : root.getChildren()) {
+//                if(child instanceof JavaNode) {
+//                        JavaNode node = search((JavaNode) child, searchId);
+//                        if (node != null) {
+//                            return node;
+//                    }
+//                }
+//            }
+//        }
         return null;
     }
 

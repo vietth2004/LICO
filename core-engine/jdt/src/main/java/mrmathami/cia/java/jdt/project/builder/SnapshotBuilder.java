@@ -94,7 +94,6 @@ public final class SnapshotBuilder {
 			@Nonnull Set<SnapshotBuildParameter> parameters) throws JavaCiaException {
 
 		final Map<String, SourceFile> sourceFileMap = createJavaSourceFileMap(inputSources);
-
 		final JavaBuildParameter javaParameter = getParameter(parameters, JavaBuildParameter.class);
 		final List<Path> classPaths = javaParameter != null ? javaParameter.getClassPaths() : List.of();
 		final boolean recoveryEnabled = javaParameter == null || javaParameter.isRecoveryEnabled();
@@ -109,6 +108,7 @@ public final class SnapshotBuilder {
 
 		final JavaRootNode rootNode = JavaParser.parse(sourcePathArray, sourceEncodingArray, classPathArray,
 				sourceFileMap, recoveryEnabled);
+		long end3 = System.currentTimeMillis();
 
 		final double[] dependencyWeights = new double[JavaDependency.VALUE_LIST.size()];
 		for (final JavaDependency type : JavaDependency.VALUE_LIST) {
