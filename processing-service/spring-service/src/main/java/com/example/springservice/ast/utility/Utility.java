@@ -27,7 +27,7 @@ public class Utility {
             }
         }
 
-        System.out.println();
+//        System.out.println();
     }
 
     @Nonnull

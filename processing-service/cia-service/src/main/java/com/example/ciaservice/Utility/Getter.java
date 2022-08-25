@@ -16,7 +16,7 @@ public class Getter {
                                                          Set<Node> affectedNodes,
                                                          Integer depth) {
 //        System.out.println(depth);
-        System.out.println();
+//        System.out.println();
 
         if(depth > 0) {
 

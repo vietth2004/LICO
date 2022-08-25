@@ -56,14 +56,13 @@ public class ProjectService {
             if(fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
-
             new File("./project/" + user + "/" + project).mkdirs();
 
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(user + "/" + project + "/" + fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             System.out.println(filePath + " " + folderPath);
-            javaUnzipFile(filePath, folderPath);
+//            javaUnzipFile(filePath, folderPath);
             return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);

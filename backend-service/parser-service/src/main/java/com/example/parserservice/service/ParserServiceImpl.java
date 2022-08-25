@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.http.HttpClient;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 @Service
 @Slf4j
@@ -49,6 +49,7 @@ public class ParserServiceImpl implements ParserService{
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
         }
+
         String fileName = projectService.storeFile(file, userPath, project);
 
         Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
@@ -61,7 +62,6 @@ public class ParserServiceImpl implements ParserService{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
         Wrapper.wrapXmlAndJspNode(request);
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
 
@@ -124,12 +124,10 @@ public class ParserServiceImpl implements ParserService{
         String xmlServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/xml-service/pathParse/old"; //xml-service
         String jspServerUrl = "http://" + ipConstants.getJspServiceIp() + ":7005/api/jsp-service/pathParse/old"; //jsp-service
         String propServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/prop-service/pathParse/old"; //xml-service
-
         ResponseEntity<Request> javaRequest = restTemplate.postForEntity(javaServerUrl, path, Request.class);
         ResponseEntity<Request> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, Request.class);
         ResponseEntity<Request> jspRequest = restTemplate.postForEntity(jspServerUrl, path, Request.class);
         ResponseEntity<Request> propRequest = restTemplate.postForEntity(propServerUrl, path, Request.class);
-
 
         Request request = new Request(
                 javaRequest.getBody().getRootNode()

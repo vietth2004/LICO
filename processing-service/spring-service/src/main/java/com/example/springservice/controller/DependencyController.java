@@ -28,16 +28,28 @@ public class DependencyController {
 
     @PostMapping("/dependency/spring/response")
     public List<Dependency> getAllSpringDependencies(@RequestBody List<JavaNode> request) {
-        return dependencyService.getDependencies(request, new ArrayList<Node>());
+        long start = System.currentTimeMillis();
+        List<Dependency> dependencyList = dependencyService.getDependencies(request, new ArrayList<Node>());
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+        return dependencyList;
     }
 
     @PostMapping("/dependency/spring")
     public Response returnResponse(@RequestBody Request request) {
-        return new Response(dependencyService.getDependencies(request.getJavaNodes(), request.getXmlNodes()));
+        long start = System.currentTimeMillis();
+        List<Dependency> dependencyList = dependencyService.getDependencies(request.getJavaNodes(), request.getXmlNodes());
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+        return new Response(dependencyList);
     }
 
     @PostMapping("/dependency/spring/new")
     public Response returnResponseWithXml(@RequestBody Request request) {
-        return new Response(dependencyService.getDependencies(request.getJavaNodes(), request.getXmlNodes()));
+        long start = System.currentTimeMillis();
+        List<Dependency> dependencyList = dependencyService.getDependencies(request.getJavaNodes(), request.getXmlNodes());
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+        return new Response(dependencyList);
     }
 }

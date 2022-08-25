@@ -546,7 +546,7 @@ final class JavaNodeBuilder extends FileASTRequestor {
 				: binaryName.contains(".")
 				? binaryName.substring(binaryName.lastIndexOf('.')).replace('.', '$')
 				: binaryName;
-		System.out.println(className);
+//		System.out.println(className);
 		final ClassNode classNode = parentNode.addChild(new ClassNode(sourceFile, parentNode, className, binaryName));
 		parser.createDependencyToNode(parentNode, classNode, JavaDependency.MEMBER);
 

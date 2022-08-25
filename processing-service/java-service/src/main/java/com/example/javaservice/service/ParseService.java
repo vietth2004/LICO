@@ -70,7 +70,7 @@ public class ParseService {
             javaAnnotationList.addAll(visitModifier(fieldDeclaration.modifiers()));
         }
 
-        System.out.println();
+//        System.out.println();
 
         return javaAnnotationList;
     }

@@ -43,7 +43,8 @@ public class JavaServiceImpl implements JavaService{
         Utils.getFileList(inputSources.createModule("core", inputPath), inputPath);
         final JavaProjectSnapshot projectSnapshot = ProjectBuilder.createProjectSnapshot("before",
                 DEPENDENCY_WEIGHT_TABLE, inputSources, Set.of(new JavaBuildParameter(List.of(), true)));
-        return projectSnapshot.getRootNode();
+        JavaRootNode javaRootNode = projectSnapshot.getRootNode();
+        return javaRootNode;
     }
 
     public JavaRootNode parseProjectWithFile(MultipartFile file) throws JavaCiaException, IOException {

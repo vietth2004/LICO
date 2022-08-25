@@ -107,7 +107,6 @@ final class JavaParser {
 				codeFormatter, recoveryEnabled);
 		astParser.createASTs(sourcePathArray, sourceEncodingArray, EMPTY, nodes, null);
 		nodes.postprocessing();
-
 		return parser.postProcessing();
 	}
 

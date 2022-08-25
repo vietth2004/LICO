@@ -85,7 +85,7 @@ public class XmlServiceImpl implements XmlService {
         dependencies.addAll((Collection<? extends Dependency>) dep3.get());
         System.out.println("dep3: " + dependencies.size());
 
-        System.out.println();
+//        System.out.println();
         return dependencies;
     }
 

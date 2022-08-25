@@ -1,6 +1,7 @@
 package com.example.parserservice.util.worker;
 
 import com.example.parserservice.ast.dependency.Dependency;
+import com.example.parserservice.ast.dependency.DependencyCountTable;
 import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Node;
@@ -9,35 +10,64 @@ import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.model.parser.Resource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Getter {
 
     public static List<Pair> getDependencyTo(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
         List<Pair> dependenciesTempList = new ArrayList<>();
+        int count = 0;
+        HashMap<Integer, DependencyCountTable> idNode = new HashMap<>();
+        for (Dependency dependency : dependencies) {
+            if (javaNode.getId().equals(dependency.getCalleeNode())) {
+                idNode.put(javaNode.getId(), dependency.getType());
+            }
+        }
         for (Pair pair : nodeDependency) {
-            for(Dependency dependency : dependencies) {
-                if(javaNode.getId().equals(dependency.getCallerNode())
-                        && pair.getNode().getId().equals(dependency.getCalleeNode())) {
-                    pair.setDependency(dependency.getType());
-                }
+            if (idNode.containsKey(pair.getNode().getId())) {
+                pair.setDependency(idNode.get(pair.getNode().getId()));
             }
             dependenciesTempList.add(pair);
         }
+//        for (Pair pair : nodeDependency) {
+//            for(Dependency dependency : dependencies) {
+//                if(javaNode.getId().equals(dependency.getCallerNode())
+//                        && pair.getNode().getId().equals(dependency.getCalleeNode())) {
+//                    pair.setDependency(dependency.getType());
+//                }
+//                count++;
+//            }
+//            dependenciesTempList.add(pair);
+//        }
         return dependenciesTempList;
     }
 
     public static List<Pair> getDependencyFrom(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
         List<Pair> dependenciesTempList = new ArrayList<>();
+        int count = 0;
+        HashMap<Integer, DependencyCountTable> idNode = new HashMap<>();
+        for (Dependency dependency : dependencies) {
+            if (javaNode.getId().equals(dependency.getCalleeNode())) {
+                idNode.put(javaNode.getId(), dependency.getType());
+            }
+        }
         for (Pair pair : nodeDependency) {
-            for(Dependency dependency : dependencies) {
-                if(javaNode.getId().equals(dependency.getCalleeNode())
-                        && pair.getNode().getId().equals(dependency.getCallerNode())) {
-                    pair.setDependency(dependency.getType());
-                }
+            if (idNode.containsKey(pair.getNode().getId())) {
+                pair.setDependency(idNode.get(pair.getNode().getId()));
             }
             dependenciesTempList.add(pair);
         }
+//        for (Pair pair : nodeDependency) {
+//            for(Dependency dependency : dependencies) {
+//                if(javaNode.getId().equals(dependency.getCalleeNode())
+//                        && pair.getNode().getId().equals(dependency.getCallerNode())) {
+//                    pair.setDependency(dependency.getType());
+//                }
+//                count++;
+//            }
+//            dependenciesTempList.add(pair);
+//        }
         return dependenciesTempList;
     }
 
@@ -87,9 +117,12 @@ public class Getter {
                 }
             }
         }
-
+        long start3 = System.currentTimeMillis();
         Wrapper.wrapRootNode(javaNode, dependencies);
-
+        long end3 = System.currentTimeMillis();
+        System.out.println("===========================TIME 3 ===========================");
+        System.out.println(end3 - start3);
+        System.out.println("==============================================================");
         List nodes = Requester.getNodesWeight(dependencies, javaNodes.size());
 
         return

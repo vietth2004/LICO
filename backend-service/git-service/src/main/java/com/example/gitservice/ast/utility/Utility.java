@@ -20,11 +20,11 @@ public class Utility {
 
     public static void printList (List list) {
 
-        for(Object obj : list) {
-            if(obj instanceof JavaNode) {
-                System.out.println(((JavaNode) obj).getQualifiedName());
-            }
-        }
+//        for(Object obj : list) {
+//            if(obj instanceof JavaNode) {
+////                System.out.println(((JavaNode) obj).getQualifiedName());
+//            }
+//        }
     }
 
     public static List<JavaNode> convertJavaNodeList (List nodeList) {

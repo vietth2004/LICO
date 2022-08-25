@@ -54,7 +54,7 @@ public class ProjectService {
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println(filePath + " " + folderPath);
+//            System.out.println(filePath + " " + folderPath);
             javaUnzipFile(filePath, folderPath);
 
             return fileName;

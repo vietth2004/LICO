@@ -69,7 +69,6 @@ public class Analyzer {
 
     public static List<Dependency> getXmlJavaDependency(List<JavaNode> javaNodes, List<com.example.springservice.dom.Node> xmlNodes) {
         Set<Dependency> dependencies = new HashSet<>();
-
         for(com.example.springservice.dom.Node xmlNode : xmlNodes) {
             for(XmlTagNode xmlTagNode : xmlNode.getChildren()) {
                 dependencies.addAll(findSpringXmlNodes(javaNodes, xmlTagNode, xmlNodes, dependencies));
@@ -132,7 +131,6 @@ public class Analyzer {
 
     public static List<Dependency> getDependencies(HashSet<JavaNode> springCallerJavaNodes, HashSet<JavaNode> springCalleeJavaNodes) {
         List<Dependency> dependencies = new ArrayList<>();
-        int count = 0;
         for (JavaNode callerNode : springCallerJavaNodes) {
 
             for (Pair dependenceNode : callerNode.getDependencyTo()) {
@@ -144,11 +142,10 @@ public class Analyzer {
                                 calleeNode.getId(),
                                 new DependencyCountTable(0,0,0,0,0, 1)));
                     }
-                    count++;
+
                 }
             }
         }
-
         return dependencies;
     }
 
@@ -174,25 +171,25 @@ public class Analyzer {
                               List<JavaNode> springServiceJavaNodes,
                               List<JavaNode> springRepositoryJavaNodes) {
 
-        System.out.println();
+//        System.out.println();
 
         for (JavaNode javaNode : springControllerJavaNodes) {
             System.out.println(javaNode.getQualifiedName());
         }
 
-        System.out.println();
+//        System.out.println();
 
         for (JavaNode javaNode : springServiceJavaNodes) {
             System.out.println(javaNode.getQualifiedName());
         }
 
-        System.out.println();
+//        System.out.println();
 
         for (JavaNode javaNode : springRepositoryJavaNodes) {
             System.out.println(javaNode.getQualifiedName());
         }
 
-        System.out.println();
+//        System.out.println();
     }
 
 }
