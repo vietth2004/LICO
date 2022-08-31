@@ -63,6 +63,7 @@ public class CloneController {
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(Constants.DOT_GIT, "");
+        System.out.println(token);
         try {
             String path = gitService.cloneRepo(url, repoName, user, token);
             if(analysis == false)
@@ -105,6 +106,7 @@ public class CloneController {
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(Constants.DOT_GIT, "");
+        System.out.println(token);
         try {
             String path = gitService.cloneRepoByBranchName(url, repoName, branch, user, token);
             if(analysis == false)
@@ -147,6 +149,8 @@ public class CloneController {
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(Constants.DOT_GIT, "");
+        System.out.println(commit);
+        System.out.println(token);
         try {
             String path = gitService.cloneRepoByCommit(url, repoName, commit, user, token);
             if(analysis == false)
@@ -190,6 +194,7 @@ public class CloneController {
                 .collect(Collectors.toList())
                 .get(0)
                 .replace(Constants.DOT_GIT, "");
+        System.out.println(token);
         try {
             Clone2RepoResponse res = gitService.clone2RepoByBranch(url, repoName, branch1, branch2, user, token);
             if(compare == false)
@@ -239,6 +244,7 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false) boolean compare
     ) {
+        System.out.println(token);
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))

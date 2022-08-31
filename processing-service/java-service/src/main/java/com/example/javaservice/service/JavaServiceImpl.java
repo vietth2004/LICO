@@ -48,6 +48,7 @@ public class JavaServiceImpl implements JavaService{
     }
 
     public JavaRootNode parseProjectWithFile(MultipartFile file) throws JavaCiaException, IOException {
+        System.out.println("1231414");
         String fileName = projectService.storeFile(file);
         String path = "./project/" + "anonymous/" + fileName + ".project";
         return parseProject(path);

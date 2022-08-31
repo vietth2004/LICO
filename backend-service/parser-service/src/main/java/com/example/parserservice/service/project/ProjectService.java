@@ -62,7 +62,7 @@ public class ProjectService {
             Path targetLocation = this.fileStorageLocation.resolve(user + "/" + project + "/" + fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             System.out.println(filePath + " " + folderPath);
-//            javaUnzipFile(filePath, folderPath);
+            javaUnzipFile(filePath, folderPath);
             return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);

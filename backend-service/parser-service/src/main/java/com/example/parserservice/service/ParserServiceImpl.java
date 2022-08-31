@@ -90,10 +90,12 @@ public class ParserServiceImpl implements ParserService{
         /**
          * Submit parser task to future (multithreading)
          */
+        System.out.println(path);
         CompletableFuture<Request> reqFuture = CompletableFuture.supplyAsync(() -> buildProject(path));
         Request request = null;
         try {
             request = reqFuture.get();
+            System.out.println(request);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

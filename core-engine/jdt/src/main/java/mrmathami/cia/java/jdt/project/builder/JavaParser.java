@@ -92,7 +92,8 @@ final class JavaParser {
 		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.swing.jar",
 		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx.web.jar",
 		"C:\\Program Files\\javafx-sdk-18.0.2\\lib\\javafx-swt.jar"};
-		astParser.setEnvironment(classPath, classPathArray, new String[] {"UTF-8"}, true);
+
+		astParser.setEnvironment(classPath, classPathArray, null, true);
 
 		options.put(DefaultCodeFormatterConstants.FORMATTER_LINE_SPLIT, "65536");
 

@@ -124,6 +124,7 @@ public class GitService {
 
     public String cloneRepoByCommit(String url, String repoName, String commitSha, String username, String pat) throws IOException {
         String pathToSaved = "./project/" + username + "/" + repoName + "-" + commitSha;
+        System.out.println(pathToSaved);
         logger.info("Cloning repository {} with commit {}", repoName, commitSha);
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
@@ -132,16 +133,25 @@ public class GitService {
                 return pathToSaved;
             }
         }
-        CloneCommand cloneCommand = Git.cloneRepository()
-                .setURI(url)
-                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
-                .setDirectory(new File(pathToSaved));
-
+        System.out.println(url);
+//        username = "ducduongn";
+//        System.out.println(username + " " + pat);
+//        CloneCommand cloneCommand = Git.cloneRepository()
+//                .setURI(url)
+//                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+//                .setDirectory(new File(pathToSaved));
+        System.out.println("11111111111111111111111111111111");
         Git clonedRepo = null;
         try {
-            clonedRepo = cloneCommand.call();
+            clonedRepo = Git.cloneRepository()
+                    .setURI(url)
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, pat))
+                    .setDirectory(new File(pathToSaved))
+                    .call();
+            System.out.println("66666666666666666666666666666666666");
         } catch (GitAPIException e) {
-            cloneCommand.getRepository().close();
+//            cloneCommand.getRepository().close();
+            clonedRepo.getRepository().close();
             try {
                 clonedRepo.gc().call();
             } catch (GitAPIException ex) {
@@ -156,7 +166,7 @@ public class GitService {
         try {
             ref = checkoutCommand.call();
         } catch (GitAPIException e) {
-            cloneCommand.getRepository().close();
+            clonedRepo.getRepository().close();
             try {
                 clonedRepo.gc().call();
             } catch (GitAPIException ex) {
@@ -167,6 +177,7 @@ public class GitService {
         clonedRepo.getRepository().close();
         logger.info("Done cloning repository {} with commit {}", repoName, commitSha);
         Executors.newCachedThreadPool().execute(new ZipFolderThread(pathToSaved, pathToSaved + ".zip"));
+        System.out.println("0000000000000000000000000000000000");
         return pathToSaved;
 
     }
