@@ -3,9 +3,16 @@ package com.example.parserservice.controller;
 import com.example.parserservice.model.Path;
 import com.example.parserservice.model.Response;
 import com.example.parserservice.service.ParserService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,9 +37,24 @@ public class ParserController {
     }
 
     @PostMapping("/parse/path")
-    public Response parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList,
-                                                  @RequestBody Path path) throws IOException {
-        System.out.println("111111111111111111111111111111");
-        return parserService.build(parserList, path);
+    public ResponseEntity<Object> parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList,
+                                                                    @RequestBody Path path) throws IOException {
+        String checkJson = ".json";
+        if(!path.getPath().contains(checkJson)) {
+            parserService.build(parserList, path);
+            path.setPath(path.getPath() + "/tmp-prj.json");
+        }
+        JSONParser jsonParser = new JSONParser();
+        FileReader file = new FileReader(path.getPath());
+        Object analysisFile;
+        try {
+            Object obj = jsonParser.parse(file);
+            analysisFile =  obj;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity.ok(analysisFile);
+//        return parserService.build(parserList, path);
     }
 }

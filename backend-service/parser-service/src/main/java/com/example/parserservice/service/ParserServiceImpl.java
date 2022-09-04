@@ -64,10 +64,8 @@ public class ParserServiceImpl implements ParserService{
         }
         Wrapper.wrapXmlAndJspNode(request);
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
-
-        Writer.write(filePath, response, project);
-
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
+        Writer.write(filePath, response, "tmp-prj");
 
         return response;
     }
@@ -106,9 +104,10 @@ public class ParserServiceImpl implements ParserService{
 
         Response response = Getter.getResponse(parserList, request, path.getPath());
 
-        Writer.write(path, response, "-res");
-
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
+
+        Writer.write(path, response, "tmp-prj");
+
 
         return response;
     }
@@ -130,7 +129,6 @@ public class ParserServiceImpl implements ParserService{
         ResponseEntity<Request> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, Request.class);
         ResponseEntity<Request> jspRequest = restTemplate.postForEntity(jspServerUrl, path, Request.class);
         ResponseEntity<Request> propRequest = restTemplate.postForEntity(propServerUrl, path, Request.class);
-
         Request request = new Request(
                 javaRequest.getBody().getRootNode()
                 , javaRequest.getBody().getAllDependencies()

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "project",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "user"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public class Project extends NamedEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.EAGER)

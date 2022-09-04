@@ -56,26 +56,27 @@ public class ProjectController {
     public ResponseEntity<?> saveProject(@RequestBody Project project){
 
         //save project
-        int count = 0;
-        for (Project project1: projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))) {
-            int index = project1.getName().lastIndexOf("(");
-            int index1 = project1.getName().lastIndexOf(")");
-            if (index != -1) {
-                String copyProj = project1.getName().substring(0, index - 1);
-                if (copyProj.equals(project.getName())) {
-                    String s = project1.getName().substring(index+1, index1);
-                    Integer integer = Integer.parseInt(s);
-                    count = integer + 1;
-                    break;
-                }
-            }
-        }
-        project.setName(project.getName() + " (" + count + ")");
+//        int count = 0;
+//        for (Project project1: projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))) {
+//            int index = project1.getName().lastIndexOf("(");
+//            int index1 = project1.getName().lastIndexOf(")");
+//            if (index != -1) {
+//                String copyProj = project1.getName().substring(0, index - 1);
+//                if (copyProj.equals(project.getName())) {
+//                    String s = project1.getName().substring(index+1, index1);
+//                    Integer integer = Integer.parseInt(s);
+//                    count = integer + 1;
+//                    break;
+//                }
+//            }
+//        }
+//        project.setName(project.getName() + " (" + count + ")");
         Project tmpProject = new Project(project.getId(), project.getName(), project.getUser());
         projectRepository.save(tmpProject);
 
         //save version
         for(Version version : project.getVersionList()) {
+            System.out.println(projectRepository.getById(tmpProject.getId()));
             version.setProject(projectRepository.getById(tmpProject.getId()));
             versionRepository.save(version);
         }
@@ -105,7 +106,7 @@ public class ProjectController {
     @PostMapping("/version/save")
     public ResponseEntity<?> saveVersion(@RequestBody Version version){
         for (Version version1: versionRepository.findAll()) {
-            System.out.println(version1.getName() + " " + version1.getUploadDate());
+            System.out.println(version1.getName() + " " + version1.getProject());
         }
         versionRepository.save(version);
         return ResponseEntity.ok(new AuthenticationResponse("Success!", version.getId()));

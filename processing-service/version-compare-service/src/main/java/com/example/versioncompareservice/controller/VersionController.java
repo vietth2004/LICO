@@ -37,6 +37,8 @@ public class VersionController {
     public Response versionCompareByPath(@RequestBody Version path,
                                          @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)
             throws JavaCiaException, IOException {
+        System.out.println(path.getNewVersion());
+        System.out.println(path.getOldVersion());
         return versionService.getCompare(path);
     }
 

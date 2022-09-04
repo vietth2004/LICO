@@ -1,6 +1,7 @@
 package com.example.parserservice.model.parser;
 
 import com.example.parserservice.ast.dependency.Dependency;
+import com.example.parserservice.ast.dependency.OrientedDependency;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Jsp.JspTagNode;
 import com.example.parserservice.dom.Node;
@@ -24,6 +25,7 @@ public class Request implements Serializable {
 
     private List<PropertiesFileNode> propertiesNodes;
 
+
     private String path;
 
     public Request() {
@@ -45,7 +47,12 @@ public class Request implements Serializable {
         this.jspNodes = jspNodes;
     }
 
-    public Request(JavaNode rootNode, List<Dependency> allDependencies, List javaNodes, List xmlNodes, List jspNodes, String path) {
+    public Request(JavaNode rootNode
+                    , List<Dependency> allDependencies
+                    , List javaNodes
+                    , List xmlNodes
+                    , List jspNodes
+                    , String path) {
         this.rootNode = rootNode;
         this.allDependencies = allDependencies;
         this.javaNodes = javaNodes;
@@ -119,4 +126,5 @@ public class Request implements Serializable {
     public void setPropertiesNodes(List<PropertiesFileNode> propertiesNodes) {
         this.propertiesNodes = propertiesNodes;
     }
+
 }

@@ -2,6 +2,7 @@ package com.example.parserservice.util.worker;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.dependency.DependencyCountTable;
+import com.example.parserservice.ast.dependency.OrientedDependency;
 import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.node.JavaNode;
 import com.example.parserservice.dom.Node;

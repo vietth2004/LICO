@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "version",
-uniqueConstraints = @UniqueConstraint(columnNames = {"name", "pid"}))
+uniqueConstraints = @UniqueConstraint(columnNames = {"id"}))
 public class Version extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

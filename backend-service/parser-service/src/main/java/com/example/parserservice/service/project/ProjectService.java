@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -98,14 +95,15 @@ public class ProjectService {
 
     public String javaUnzipFile(String Filepath, String DestinationFolderPath) {
         try {
-            String fileZip = Filepath;
             File destDir = new File(DestinationFolderPath);
-            byte[] buffer = new byte[1024];
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
-            ZipEntry zipEntry = zis.getNextEntry();
-            while (zipEntry != null) {
+            FileInputStream fin = new FileInputStream(Filepath);
+            BufferedInputStream bin = new BufferedInputStream(fin);
+            ZipInputStream zis = new ZipInputStream(bin);
+            ZipEntry zipEntry = null;
+            int count = 0;
+            while ((zipEntry = zis.getNextEntry()) != null) {
                 // ...
-                while (zipEntry != null) {
+                count++;
                     File newFile = newFile(destDir, zipEntry);
                     if (zipEntry.isDirectory()) {
                         if (!newFile.isDirectory() && !newFile.mkdirs()) {
@@ -120,22 +118,25 @@ public class ProjectService {
 
                         // write file content
                         FileOutputStream fos = new FileOutputStream(newFile);
-                        int len;
-                        while ((len = zis.read(buffer)) > 0) {
-                            fos.write(buffer, 0, len);
+                        BufferedOutputStream bufout = new BufferedOutputStream(fos);
+                        byte[] buffer = new byte[1024];
+                        int len = 0;
+                        while ((len = zis.read(buffer)) != -1) {
+                            bufout.write(buffer, 0, len);
                         }
+                        zis.closeEntry();
+                        bufout.close();
                         fos.close();
                     }
-                    zipEntry = zis.getNextEntry();
-                }
             }
-            zis.closeEntry();
+            System.out.println(count);
             zis.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return DestinationFolderPath;
     }
+
 
     public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
         File destFile = new File(destinationDir, zipEntry.getName());

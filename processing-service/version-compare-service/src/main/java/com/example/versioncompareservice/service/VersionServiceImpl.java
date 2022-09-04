@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -171,8 +172,10 @@ public class VersionServiceImpl implements VersionService{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-        return new Response(changedNodes, deletedNodes, addedNodes, List.of(xmlChangedNodes), xmlDeletedNodes, xmlAddedNodes, dependencies, nodeWeights, rootNode);
+        System.out.println(path);
+        com.example.versioncompareservice.model.Path filePath = new com.example.versioncompareservice.model.Path(path);
+        Response response = new Response(changedNodes, deletedNodes, addedNodes, List.of(xmlChangedNodes), xmlDeletedNodes, xmlAddedNodes, dependencies, nodeWeights, rootNode);
+        return response;
     }
 
     @Override
