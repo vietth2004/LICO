@@ -47,6 +47,7 @@ public class VersionController {
                                       @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
                                       @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project,
                                       @RequestParam(name="oldPath") String oldPath) throws JavaCiaException, IOException {
+        System.out.println(project);
         return versionService.getCompare(file, user, project, oldPath);
     }
 

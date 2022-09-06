@@ -112,6 +112,7 @@ public class VersionServiceImpl implements VersionService{
 
         //New version path
         final Path inputPathB = Path.of(files.getNewVersion());
+        System.out.println(files.getNewVersion());
         final BuildInputSources inputSourcesB = new BuildInputSources(inputPathB);
         Utils.getFileList(inputSourcesB.createModule("core", inputPathB), inputPathB);
 
