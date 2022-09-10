@@ -84,14 +84,14 @@ final class JavaParser {
 		astParser.setResolveBindings(true);
 		astParser.setBindingsRecovery(recoveryEnabled);
 		astParser.setIgnoreMethodBodies(true);
-		String[] classPath = {".lib/javafx.base.jar",
-		".lib/javafx.controls.jar",
-		".lib/javafx.fxml.jar",
-		".lib/javafx.graphics.jar",
-		".lib/javafx.media.jar",
-		".lib/javafx.swing.jar",
-		".lib/javafx.web.jar",
-		".lib/javafx-swt.jar"};
+		String[] classPath = {"./lib/javafx.base.jar",
+		"./lib/javafx.controls.jar",
+		"./lib/javafx.fxml.jar",
+		"./lib/javafx.graphics.jar",
+		"./lib/javafx.media.jar",
+		"./lib/javafx.swing.jar",
+		"./lib/javafx.web.jar",
+		"./lib/javafx-swt.jar"};
 
 		astParser.setEnvironment(classPath, classPathArray, null, true);
 
