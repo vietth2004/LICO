@@ -94,7 +94,6 @@ public class VersionServiceImpl implements VersionService{
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
         }
-
         String newVersion = fileStorageService.storeFile(file, userPath, project);
         version.setNewVersion("./project/" + userPath + "/" + project + "/" + newVersion + ".project");
         version.setOldVersion(oldPath);
@@ -118,10 +117,10 @@ public class VersionServiceImpl implements VersionService{
 
         //Compare two version
         final JavaProjectSnapshot projectSnapshotA = ProjectBuilder.createProjectSnapshot("JSON-java-before",
-                DEPENDENCY_WEIGHT_TABLE, inputSourcesA, Set.of(new JavaBuildParameter(List.of(), true)));
+                DEPENDENCY_WEIGHT_TABLE, inputSourcesA, Set.of(new JavaBuildParameter(List.of(), false)));
 
         final JavaProjectSnapshot projectSnapshotB = ProjectBuilder.createProjectSnapshot("JSON-java-after",
-                DEPENDENCY_WEIGHT_TABLE, inputSourcesB, Set.of(new JavaBuildParameter(List.of(), true)));
+                DEPENDENCY_WEIGHT_TABLE, inputSourcesB, Set.of(new JavaBuildParameter(List.of(), false)));
 
         JavaProjectSnapshotComparison snapshotComparison = ProjectBuilder.createProjectSnapshotComparison(
                 "compare", projectSnapshotB, projectSnapshotA, DEPENDENCY_IMPACT_TABLE);
@@ -183,6 +182,5 @@ public class VersionServiceImpl implements VersionService{
     public Response getCompare(List<MultipartFile> files) throws JavaCiaException, IOException {
         return null;
     }
-
 
 }

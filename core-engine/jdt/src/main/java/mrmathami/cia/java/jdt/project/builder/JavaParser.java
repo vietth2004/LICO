@@ -83,7 +83,7 @@ final class JavaParser {
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
 		astParser.setResolveBindings(true);
 		astParser.setBindingsRecovery(recoveryEnabled);
-		astParser.setIgnoreMethodBodies(true);
+//		astParser.setIgnoreMethodBodies(true);
 		String[] classPath = {"./lib/javafx.base.jar",
 		"./lib/javafx.controls.jar",
 		"./lib/javafx.fxml.jar",
