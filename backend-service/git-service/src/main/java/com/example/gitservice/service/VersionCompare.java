@@ -14,6 +14,7 @@ import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.node.JavaMethodNode;
+import mrmathami.cia.java.tree.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -68,7 +69,10 @@ public class VersionCompare {
 
         JavaNode rootNode = new JavaNode((AbstractNode) projectSnapshotB.getRootNode(), true);
 
+        // Bind version compare node to tree node
         applyCompare(rootNode, changedNodes, addedNodes, removedNodes, unchangedNodes, snapshotComparison);
+
+        //Find imapct
 
 //        rootNode = Utils.convertNode(rootNode, changedNodes, addedNodes);
 
@@ -88,7 +92,7 @@ public class VersionCompare {
         for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getUnchangedNodes()) {
             if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
-                if(!((JavaMethodNode) javaNode.getA()).getReturnType().equals(((JavaMethodNode) javaNode.getB()).getReturnType())) {
+                if(!((JavaMethodNode) javaNode.getA()).getReturnType().getDescription().equals(((JavaMethodNode) javaNode.getB()).getReturnType().getDescription())) {
                     changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
                 }
             } else {
