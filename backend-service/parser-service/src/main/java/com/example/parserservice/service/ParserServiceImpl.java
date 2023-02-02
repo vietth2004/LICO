@@ -49,7 +49,7 @@ public class ParserServiceImpl implements ParserService{
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
         }
-
+        long start = System.currentTimeMillis();
         String fileName = projectService.storeFile(file, userPath, project);
 
         Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
@@ -66,7 +66,6 @@ public class ParserServiceImpl implements ParserService{
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
         Writer.write(filePath, response, "tmp-prj");
-
         return response;
     }
 

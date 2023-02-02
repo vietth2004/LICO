@@ -32,10 +32,22 @@ public class ParserController {
                                                   @RequestBody MultipartFile file,
                                                   @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
                                                   @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
-        System.out.println("1111111111111111111111");
-        return parserService.build(parserList, file, user, project);
+
+        long start = System.currentTimeMillis();
+        long memoryBefore = getUsedMemory();
+        Response response = parserService.build(parserList, file, user, project);
+        long end = System.currentTimeMillis();
+        long memoryAfter = getUsedMemory();
+        System.out.println("Total time is " + (end-start));
+        System.out.println("Total memory is " + (memoryAfter-memoryBefore));
+
+        return response;
     }
 
+    private long getUsedMemory()
+    {
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    }
     @PostMapping("/parse/path")
     public ResponseEntity<Object> parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList,
                                                                     @RequestBody Path path) throws IOException {

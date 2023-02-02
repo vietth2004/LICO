@@ -87,11 +87,14 @@ public class JavaController {
     public Response parseProjectByPath(@RequestBody Request path) throws JavaCiaException, IOException{
 //        System.out.println(path.getPath());
         RootNode javaRoot = (RootNode) javaService.parseProject(path.getPath());
-
+        long count_bind_java_node_start = System.currentTimeMillis();
         JavaNode node = new JavaNode(javaRoot, path.getPath());
+        long count_bind_java_node_end = System.currentTimeMillis();
+        System.out.println("Total time bind node " + (count_bind_java_node_end - count_bind_java_node_start));
         Checker.changeDependencyType(node);
         List<JavaNode> nodes = Utility.convertToAllNodes(javaRoot.getAllNodes());
         AtomicInteger count = new AtomicInteger();
+        long count_bind_annotate_node_start = System.currentTimeMillis();
         nodes.forEach(
                 elem -> {
                     JavaNode tmp = Utility.search(node, elem.getId());
@@ -103,7 +106,8 @@ public class JavaController {
                     }
                 }
         );
-
+        long count_bind_annotate_node_end = System.currentTimeMillis();
+        System.out.println("Total time bind annotate " + (count_bind_annotate_node_end - count_bind_annotate_node_start));
         return new Response(node, nodes);
     }
     
