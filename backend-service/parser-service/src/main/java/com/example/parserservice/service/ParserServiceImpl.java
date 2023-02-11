@@ -49,10 +49,10 @@ public class ParserServiceImpl implements ParserService{
         if(!userPath.equals("anonymous")){
             userPath = jwtUtils.extractUsername(user);
         }
-        long start = System.currentTimeMillis();
         String fileName = projectService.storeFile(file, userPath, project);
 
         Path filePath = new Path("./project/" + userPath + "/" + project + "/" + fileName + ".project");
+        long start = System.currentTimeMillis();
         CompletableFuture<Request> reqFuture = CompletableFuture.supplyAsync(() -> buildProject(filePath));
         Request request = null;
         try {
@@ -62,6 +62,8 @@ public class ParserServiceImpl implements ParserService{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        long end = System.currentTimeMillis();
+        System.out.println("Total time build:" + (start-end));
         Wrapper.wrapXmlAndJspNode(request);
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
