@@ -28,8 +28,8 @@ public class Version extends NamedEntity {
     public Version() {
     }
 
-    public Version(Integer id, String name, String path) {
-        super(id, name);
+    public Version(Integer id, String name, String type, String path) {
+        super(id, name, type);
         this.path = path;
     }
 
