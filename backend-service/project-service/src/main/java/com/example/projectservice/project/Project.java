@@ -24,13 +24,13 @@ public class Project extends NamedEntity {
     public Project() {
     }
 
-    public Project(Integer id, String name, String user) {
-        super(id, name);
+    public Project(Integer id, String name, String type, String user) {
+        super(id, name, type);
         this.user = user;
     }
 
-    public Project(Integer id, String name, List<Version> versionList, Boolean gitProject, String user) {
-        super(id, name);
+    public Project(Integer id, String name, String type, List<Version> versionList, Boolean gitProject, String user) {
+        super(id, name, type);
         this.versionList = versionList;
         this.gitProject = gitProject;
         this.user = user;
