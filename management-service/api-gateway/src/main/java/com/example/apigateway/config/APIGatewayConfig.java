@@ -42,6 +42,8 @@ public class APIGatewayConfig {
                         .uri("http://localhost:7004/"))
                 .route("strut-service", rt -> rt.path("/api/strut-service/**")
                         .uri("http://localhost:7005/"))
+                .route("csharp-service", rt -> rt.path("/api/csharp-service/**")
+                        .uri("http://localhost:7020/"))
                 .build();
 
     }

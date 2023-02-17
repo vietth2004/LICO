@@ -32,7 +32,7 @@ public class ProjectController {
     @GetMapping("/project/get")
     public Page<Project> getAllProjectByUser(@RequestParam(name = "user", required = false) String user,
                                              @RequestParam(name = "name", required = false) String name,
-                                             @RequestParam(name = "type", required = false) String type,
+                                             @RequestParam(name = "language", required = false) String language,
                                              @RequestParam(name = "id", required = false) String id,
             Pageable pageable){
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
@@ -46,8 +46,8 @@ public class ProjectController {
             if (Objects.nonNull(id)) {
                 p = cb.and(p, cb.equal(root.get("id"), id));
             }
-            if (Objects.nonNull(type)){
-                p = cb.and(p, cb.equal(root.get("type"), type));
+            if (Objects.nonNull(language)){
+                p = cb.and(p, cb.equal(root.get("language"), language));
             }
             cq.orderBy(cb.desc(root.get("name")), cb.asc(root.get("id")));
             return p;
@@ -75,7 +75,7 @@ public class ProjectController {
 //            }
 //        }
 //        project.setName(project.getName() + " (" + count + ")");
-        Project tmpProject = new Project(project.getId(), project.getName(), project.getType(), project.getUser());
+        Project tmpProject = new Project(project.getId(), project.getName(), project.getLanguage(), project.getUser());
         projectRepository.save(tmpProject);
 
         //save version

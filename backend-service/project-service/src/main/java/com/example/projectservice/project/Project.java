@@ -21,19 +21,24 @@ public class Project extends NamedEntity {
     @Column(name = "user")
     private String user;
 
+    @Column(name="language")
+    private String language;
+
     public Project() {
     }
 
-    public Project(Integer id, String name, String type, String user) {
-        super(id, name, type);
+    public Project(Integer id, String name, String language, String user) {
+        super(id, name);
         this.user = user;
+        this.language = language;
     }
 
-    public Project(Integer id, String name, String type, List<Version> versionList, Boolean gitProject, String user) {
-        super(id, name, type);
+    public Project(Integer id, String name, String language, List<Version> versionList, Boolean gitProject, String user) {
+        super(id, name);
         this.versionList = versionList;
         this.gitProject = gitProject;
         this.user = user;
+        this.language = language;
     }
 
     public List<Version> getVersionList() {
@@ -58,5 +63,13 @@ public class Project extends NamedEntity {
 
     public void setGitProject(Boolean gitProject) {
         this.gitProject = gitProject;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
