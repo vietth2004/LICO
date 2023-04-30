@@ -63,4 +63,7 @@ public class HostIPConstants {
     public String getStrutServiceIp() {
         return eurekaClient.getApplication(STRUT_SERVICE).getInstances().get(0).getIPAddr();
     }
+    public String getUnitTestingIP(){
+        return  eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
+    }
 }

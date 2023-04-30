@@ -71,4 +71,7 @@ public class HostIPConstants {
     public String getJspServiceIp() {
         return eurekaClient.getApplication(JSP_SERVICE).getInstances().get(0).getIPAddr();
     }
+    public String getUnitTestingIP(){
+        return  eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
+    }
 }

@@ -44,6 +44,8 @@ public class APIGatewayConfig {
                         .uri("http://localhost:7005/"))
                 .route("csharp-service", rt -> rt.path("/api/csharp-service/**")
                         .uri("http://localhost:7020/"))
+                .route("unit-testing-service", rt -> rt.path("/api/unit-testing-service/**")
+                        .uri("http://localhost:8006/"))
                 .build();
 
     }
