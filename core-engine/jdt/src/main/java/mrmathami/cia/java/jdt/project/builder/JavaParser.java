@@ -18,11 +18,9 @@
 
 package mrmathami.cia.java.jdt.project.builder;
 
-import com.sun.jdi.Method;
 import mrmathami.annotations.Nonnull;
 import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.JavaCiaException;
-import mrmathami.cia.java.jdt.project.Project;
 import mrmathami.cia.java.jdt.project.SourceFile;
 import mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
@@ -31,15 +29,6 @@ import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.tree.dependency.JavaDependency;
 import mrmathami.cia.java.tree.node.JavaRootNode;
 import mrmathami.utils.Triple;
-import org.eclipse.core.internal.resources.File;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.dom.AST;
@@ -48,12 +37,7 @@ import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 final class JavaParser {
 

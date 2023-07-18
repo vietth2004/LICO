@@ -255,6 +255,23 @@ services:
     networks:
       - jcia-network
 
+  unit-testing:
+    container_name: unit-testing
+    image: unit-testing:latest
+    build:
+      context: processing-service/unitTesting
+      dockerfile: Dockerfile
+    ports:
+      - "8006:8006"
+    environment:
+      - EUREKA_SERVER=discovery-service
+    depends_on:
+      - discovery-service
+    links:
+      - "discovery-service"
+    networks:
+      - jcia-network
+
   file-service:
     container_name: file-service
     image: file-service:latest

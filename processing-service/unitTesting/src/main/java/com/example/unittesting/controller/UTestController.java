@@ -1,96 +1,70 @@
 package com.example.unittesting.controller;
 
-import core.algorithms.FindAllPath;
-import core.cfg.CfgBlock;
-import core.cfg.CfgEndBlockNode;
-import core.cfg.CfgNode;
-import core.dataStructure.Path;
-import core.parser.ASTHelper;
-import core.parser.ProjectParser;
-import core.utils.Utils;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
+import com.example.unittesting.Sevice.UTestService;
+import com.example.unittesting.model.Request;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/api/unit-testing-service/")
+@RequestMapping("/api/unit-testing-service")
 public class UTestController {
-    private static long totalUsedMem = 0;
-    private static long tickCount = 0;
-    @GetMapping
-    public String getTest() throws IOException {
-        StringBuilder rt = new StringBuilder();
-        String path = "core-engine/cfg/data/child/CFG4J_Test.java";
-        rt.append("Start parsing..."+"\\\n");
-        ArrayList<ASTNode> funcAstNodeList = ProjectParser.parseFile(path);
+   private final UTestService utestService;
 
-        rt.append("count = " + funcAstNodeList.size() + "\n");
-
-        for (ASTNode func : funcAstNodeList) {
-            if (((MethodDeclaration)func).getName().getIdentifier().equals("testIf"))
-            {
-
-                Timer T = new Timer(true);
-
-                TimerTask memoryTask = new TimerTask(){
-                    @Override
-                    public void run(){
-                        totalUsedMem += (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
-//                        System.out.println("totalUsedMem = " + totalUsedMem);
-                        tickCount += 1;
-//                        System.out.println("tickCount = " + tickCount);
-                        //callback.accept(totalUsedMem);
-                    }
-                };
-
-                T.scheduleAtFixedRate(memoryTask, 0, 1); //0 delay and 5 ms tick
-
-                LocalDateTime beforeTime = LocalDateTime.now();
-
-
-                Block functionBlock = Utils.getFunctionBlock(func);
-
-                CfgNode cfgBeginCfgNode = new CfgNode();
-                cfgBeginCfgNode.setIsBeginCfgNode(true);
-
-                CfgEndBlockNode cfgEndCfgNode = new CfgEndBlockNode();
-                cfgEndCfgNode.setIsEndCfgNode(true);
-
-                CfgNode block = new CfgBlock();
-                block.setAst(functionBlock);
-
-                block.setBeforeStatementNode(cfgBeginCfgNode);
-                block.setAfterStatementNode(cfgEndCfgNode);
-
-                FindAllPath paths = new FindAllPath(ASTHelper.generateCFGFromASTBlockNode(block));
-
-                for(Path pathI : paths.getPaths()) {
-                    rt.append(pathI + "\n");
-                }
-
-                LocalDateTime afterTime = LocalDateTime.now();
-                Duration duration = Duration.between(beforeTime, afterTime);
-                float diff = Math.abs((float) duration.toMillis());
-                T.cancel();
-            }
-        }
-        return "Hello World";
+    public UTestController(UTestService utestService) {
+        this.utestService = utestService;
     }
-    @RequestMapping("/is-running")
-    public String running(){
+
+
+    @GetMapping("/is-running")
+    public String running() {
         return "Hi there, I am still alive";
     }
 
+//   @PostMapping("/unit-testing/source-code")
+//    public ResponseEntity<Response> NodeByPath (@RequestBody Request request) throws IOException {
+//        //String path = "project\\anonymous\\tmp-prj\\hiiii-v1.0.zip.project";
+//       File file = new File(request.getPath());
+//       if (!file.exists()) {
+//           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//       }
+//      return utestService.build(file.getAbsolutePath());
+//    }
+@PostMapping("/unit-testing/source-code")
+public ResponseEntity<Object> NodeByPath (@RequestBody Request request) throws IOException {
+    File file = new File(request.getPath());
+    String path = file.getAbsolutePath();
+
+    String checkJson = ".json";
+    if (!path.contains(checkJson)) {
+        utestService.build(path);
+        path += "\\tmp-prjt.json";
+    }
+
+    JSONParser jsonParser = new JSONParser();
+    FileReader fileReader = new FileReader(path);
+    Object analysisFile;
+    try {
+        Object obj = jsonParser.parse(fileReader);
+        analysisFile = obj;
+    } catch (ParseException e) {
+        throw new RuntimeException(e);
+    }
+
+    return ResponseEntity.ok(analysisFile);
+}
+
+//    @GetMapping("/unit-testing/source-code")
+//    public ResponseEntity<Response> NodeByPath () throws IOException {
+//        String path = "project\\anonymous\\tmp-prj\\Spring-Petclinic-master-v1.0.zip.project";
+//        return utestService.build(path);
+//    }
 }

@@ -1,15 +1,15 @@
 package com.example.unittesting.model;
 
 public class Request {
-    private String path = new String();
 
+
+    private String path;
     public Request() {
-
     }
-
     public Request(String path) {
         this.path = path;
     }
+
 
     public String getPath() {
         return path;

@@ -1,7 +1,3 @@
-#FROM ubuntu:latest
-#LABEL authors="Do Trang"
-#
-#ENTRYPOINT ["top", "-b"]
 FROM adoptopenjdk/openjdk11:alpine-jre
 COPY target/*.jar app.jar
 ENV JAVA_OPTS=""
