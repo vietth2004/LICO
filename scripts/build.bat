@@ -17,4 +17,4 @@ call mvn -T 1C clean install compile package -f ..\management-service\api-gatewa
 call mvn -T 1C clean install compile package -f ..\processing-service\struts-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\jsp-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\xml-service\pom.xml -DskipTests
-call mvn -T 1C clean install compile package -f ../processing-service/unitTesting/pom.xml -DskipTests
+call mvn -T 1C clean install compile package -f ..\processing-service\unitTesting\pom.xml -DskipTests

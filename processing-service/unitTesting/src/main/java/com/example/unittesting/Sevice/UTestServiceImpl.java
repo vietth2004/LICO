@@ -13,10 +13,10 @@ import java.io.IOException;
 
 public class UTestServiceImpl implements UTestService {
     @Override
-    public ResponseEntity<Response> build(String path) throws IOException {
+    public ResponseEntity<Object> build(String path) throws IOException {
         Response response = new Response();
         response = Getter.getResponse(path);
         Writer.write(path, response, "tmp-prjt");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

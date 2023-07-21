@@ -5,6 +5,7 @@ import com.example.unittesting.model.Request;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,42 +30,52 @@ public class UTestController {
         return "Hi there, I am still alive";
     }
 
-//   @PostMapping("/unit-testing/source-code")
-//    public ResponseEntity<Response> NodeByPath (@RequestBody Request request) throws IOException {
-//        //String path = "project\\anonymous\\tmp-prj\\hiiii-v1.0.zip.project";
-//       File file = new File(request.getPath());
-//       if (!file.exists()) {
-//           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//       }
-//      return utestService.build(file.getAbsolutePath());
-//    }
-@PostMapping("/unit-testing/source-code")
-public ResponseEntity<Object> NodeByPath (@RequestBody Request request) throws IOException {
-    File file = new File(request.getPath());
-    String path = file.getAbsolutePath();
+    @GetMapping(value = "/view-tree/{nameProject:.+}")
+    public ResponseEntity<Object> NodeTree(@PathVariable String nameProject) {
 
-    String checkJson = ".json";
-    if (!path.contains(checkJson)) {
-        utestService.build(path);
-        path += "\\tmp-prjt.json";
+        try {
+            File file = new File(".\\project\\anonymous\\tmp-prj\\" + nameProject + "\\tmp-prjt.json");
+            if (!file.exists()) {
+                // Xử lý khi tệp không tồn tại
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            } else {
+                JSONParser jsonParser = new JSONParser();
+                FileReader fileReader = new FileReader(file.getAbsolutePath());
+                Object analysisFile;
+                try {
+                    Object obj = jsonParser.parse(fileReader);
+                    analysisFile = obj;
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                // Trả về kết quả phân tích từ tệp JSON
+                return ResponseEntity.ok(analysisFile);
+            }
+        } catch (IOException e) {
+            // Xử lý ngoại lệ và trả về phản hồi lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
+        }
+    }
+    @PostMapping("/source-code")
+    public ResponseEntity<Object> NodeByPath (@RequestBody Request request) throws IOException {
+        try {
+            File file = new File(request.getPath());
+            String path = file.getAbsolutePath();
+            if (!file.exists()) {
+                // Xử lý khi tệp không tồn tại
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            } else {
+                path += "\\tmp-prjt.json";
+                Object result = utestService.build(file.getAbsolutePath());
+                return ResponseEntity.ok(result);
+            }
+        } catch (IOException e) {
+            // Xử lý ngoại lệ và trả về phản hồi lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
+        }
+
     }
 
-    JSONParser jsonParser = new JSONParser();
-    FileReader fileReader = new FileReader(path);
-    Object analysisFile;
-    try {
-        Object obj = jsonParser.parse(fileReader);
-        analysisFile = obj;
-    } catch (ParseException e) {
-        throw new RuntimeException(e);
-    }
-
-    return ResponseEntity.ok(analysisFile);
-}
-
-//    @GetMapping("/unit-testing/source-code")
-//    public ResponseEntity<Response> NodeByPath () throws IOException {
-//        String path = "project\\anonymous\\tmp-prj\\Spring-Petclinic-master-v1.0.zip.project";
-//        return utestService.build(path);
-//    }
 }
