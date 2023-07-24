@@ -1,6 +1,7 @@
 call mvn -T 1C clean install compile package -f ..\core-engine\utils\pom.xml
 call mvn -T 1C clean install compile package -f ..\core-engine\core\pom.xml
 call mvn -T 1C clean install compile package -f ..\core-engine\jdt\pom.xml
+call mvn -T 1C clean install compile package -f ..\core-engine\cfg\pom.xml
 call mvn -T 1C clean install compile package -f ..\management-service\discovery-server\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\cia-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\backend-service\file-service\pom.xml -DskipTests

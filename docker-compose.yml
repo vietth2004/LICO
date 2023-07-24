@@ -256,8 +256,8 @@ services:
       - jcia-network
 
   unit-testing:
-    container_name: unit-testing
-    image: unit-testing:latest
+    container_name: unitTesting
+    image: unitTesting:latest
     build:
       context: processing-service/unitTesting
       dockerfile: Dockerfile

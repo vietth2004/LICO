@@ -34,10 +34,10 @@ public class UTestController {
     public ResponseEntity<Object> NodeTree(@PathVariable String nameProject) {
 
         try {
-            File file = new File(".\\project\\anonymous\\tmp-prj\\" + nameProject + "\\tmp-prjt.json");
+            File file = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
             if (!file.exists()) {
                 // Xử lý khi tệp không tồn tại
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Đường dẫn không tồn tại!");
             } else {
                 JSONParser jsonParser = new JSONParser();
                 FileReader fileReader = new FileReader(file.getAbsolutePath());
