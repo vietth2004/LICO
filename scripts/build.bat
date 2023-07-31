@@ -17,5 +17,5 @@ call mvn -T 1C clean install compile package -f ..\processing-service\jsf-servic
 call mvn -T 1C clean install compile package -f ..\management-service\api-gateway\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\struts-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\jsp-service\pom.xml -DskipTests
-call mvn -T 1C clean install compile package -f ..\processing-service\xml-service\pom.xml -DskipTests
+call mvn -T 1C clean install compile package -f ..\processing-service\xml-service\pom.xml -DskipTestsgit
 call mvn -T 1C clean install compile package -f ..\processing-service\unitTesting\pom.xml -DskipTests
