@@ -1,17 +1,21 @@
 package com.example.unittesting.controller;
 
 import com.example.unittesting.Sevice.UTestService;
+import com.example.unittesting.Sevice.project.ProjectService;
 import com.example.unittesting.model.Request;
+import com.example.unittesting.util.JwtUtils;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 
 @SpringBootApplication
@@ -20,14 +24,29 @@ import java.io.IOException;
 public class UTestController {
    private final UTestService utestService;
 
-    public UTestController(UTestService utestService) {
+    public UTestController(UTestService utestService, ProjectService projectService, JwtUtils jwtUtils) {
         this.utestService = utestService;
+
     }
 
 
     @GetMapping("/is-running")
     public String running() {
         return "Hi there, I am still alive";
+    }
+    @PostMapping("/process")
+    public ResponseEntity<Object> Process(@RequestParam(name="parser") List<String> parserList,
+                                              @RequestBody MultipartFile file,
+                                              @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
+                                              @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
+        if (file != null) {
+            String path = utestService.buildProject(parserList, file, user, project);
+
+            Object result = utestService.build(path);
+            path += "\\tmp-prjt.json";
+            return ResponseEntity.status(HttpStatus.OK).body("Success");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi xảy ra trong quá trình xử lý yêu cầu: ");
     }
 
     @GetMapping(value = "/view-tree/{nameProject:.+}")
