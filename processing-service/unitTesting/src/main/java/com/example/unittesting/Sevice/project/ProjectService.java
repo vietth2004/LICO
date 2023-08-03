@@ -43,8 +43,8 @@ public class ProjectService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         // Init file path
-        String filePath = "./project/" + user + "/" + project +  "/" + fileName;
-        String folderPath = "./project/" + user + "/" + project +  "/" + fileName + ".project";
+        String filePath = "project/" + user + "/" + project +  "/" + fileName;
+        String folderPath = "project/" + user + "/" + project +  "/" + fileName + ".project";
 //        String folderPath = "D:\\" + fileName;  "anonymous/" +
 
         try {
@@ -52,7 +52,7 @@ public class ProjectService {
             if(fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
-            new File("./project/" + user + "/" + project).mkdirs();
+            new File("project/" + user + "/" + project).mkdirs();
 
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(user + "/" + project + "/" + fileName);
