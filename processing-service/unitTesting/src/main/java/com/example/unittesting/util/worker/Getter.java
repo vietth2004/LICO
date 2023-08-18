@@ -1,13 +1,14 @@
 package com.example.unittesting.util.worker;
 
 import com.example.unittesting.Node.JavaNode;
+import com.example.unittesting.Node.Parameter;
 import com.example.unittesting.Node.MethodNode;
 import com.example.unittesting.Node.Node;
 import com.example.unittesting.model.Response;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,12 +16,13 @@ import java.util.List;
 
 public class Getter {
     private static int idCounter = 1;
-
+    private static final String[] IGNORED_DIRS = {".git", "resources", ".ide", ".mvn" , "target"};
     public static Response getResponse(String path) {
         setIdCounter(1);
         File mainDir = new File(path);
         if (mainDir.isDirectory()) {
-            Node rootNode = createNodeFromDirectory(mainDir);
+            File[] files = mainDir.listFiles();
+            Node rootNode = createNodeFromDirectory(files[0]);
             return new Response(rootNode);
         }
         // Xử lý logic cho trường hợp mainDir không phải là thư mục
@@ -29,6 +31,9 @@ public class Getter {
     }
 
     private static Node createNodeFromDirectory(File directory) {
+        if (shouldIgnoreDir(directory.getName())) {
+            return null; // Bỏ qua các thư mục không cần phân tích
+        }
         Node node = new Node(getNextId(), directory.getName(), "Package", new ArrayList<>(), directory.getAbsolutePath());
         List<Node> children = new ArrayList<>();
 
@@ -57,18 +62,18 @@ public class Getter {
 
 
     private static Node createNodeFromFile(File file) {
-            String fileName = file.getName();
-            String fileExtension = getFileExtension(fileName);
-            Node node = new Node(getNextId(), fileName, null, new ArrayList<>(), file.getAbsolutePath());
-            JavaNode javaNode = createJavaNodeFromFile(file);
-            if (javaNode != null) {
-                List<Node> children = new ArrayList<>();
-                children.add(javaNode);
-                node.setEntityClass("JavaNode");
-                node.setChildren(children);
-            }
+        String fileName = file.getName();
+        String fileExtension = getFileExtension(fileName);
+        Node node = new Node(getNextId(), fileName, null, new ArrayList<>(), file.getAbsolutePath());
+        JavaNode javaNode = createJavaNodeFromFile(file);
+        if (javaNode != null) {
+            List<Node> children = new ArrayList<>();
+            children.add(javaNode);
+            node.setEntityClass("JavaNode");
+            node.setChildren(children);
+        }
 
-            return node;
+        return node;
     }
     private static JavaNode createJavaNodeFromFile(File file) {
         try {
@@ -78,19 +83,30 @@ public class Getter {
 
             for (MethodDeclaration methodDeclaration : methodDeclarations) {
                 String methodName = methodDeclaration.getSignature().asString();
-                List<String> parameters = new ArrayList<>();
-                for (Parameter parameter : methodDeclaration.getParameters()) {
-                    parameters.add(parameter.getType().asString());
+                List<Parameter> parameters = new ArrayList<>();
+                for (com.github.javaparser.ast.body.Parameter parameter : methodDeclaration.getParameters()) {
+                    parameters.add(new Parameter(parameter.getNameAsString(), parameter.getType().asString()));
                 }
-                String name = compilationUnit.getPackageDeclaration().map(pkg -> pkg.getName().asString()).orElse("") +
-                        "." + file.getName().replaceFirst("[.][^.]+$", "") + ".";
-                String qualifiedName = name + methodDeclaration.getNameAsString();
-                String uniqueName = name + methodDeclaration.getSignature().asString();
+                String returnType = methodDeclaration.getType().asString();
+                parameters.add(new Parameter("return", returnType));
+                String packageName = compilationUnit.getPackageDeclaration().map(pkg -> pkg.getName().asString()).orElse("");
+                String className = file.getName().replaceFirst("[.][^.]+$", "");
+                String qualifiedName = packageName + "." + className + "." + methodDeclaration.getNameAsString();
+                String uniqueName = packageName + "." + className + "." + methodDeclaration.getSignature().asString();
 
                 int methodNodeId = getNextId();
                 StringBuilder content = new StringBuilder(methodDeclaration.toString());
 
-                MethodNode methodNode = new MethodNode(methodNodeId, methodName, new ArrayList<>(), file.getAbsolutePath(), qualifiedName, uniqueName, parameters.toArray(new String[0]), content);
+                MethodNode methodNode = new MethodNode(
+                        methodNodeId,
+                        methodName,
+                        new ArrayList<>(),
+                        file.getAbsolutePath(),
+                        qualifiedName,
+                        uniqueName,
+                        (ArrayList<Parameter>) parameters,
+                        content
+                );
                 methodNodes.add(methodNode);
             }
 
@@ -106,6 +122,8 @@ public class Getter {
         }
         return null;
     }
+
+
 
 
     private static String getFileExtension(String fileName) {
@@ -137,5 +155,13 @@ public class Getter {
 
     public static void setIdCounter(int idCounter) {
         Getter.idCounter = idCounter;
+    }
+    private static boolean shouldIgnoreDir(String dirName) {
+        for (String ignoredDir : IGNORED_DIRS) {
+            if (dirName.equalsIgnoreCase(ignoredDir)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
