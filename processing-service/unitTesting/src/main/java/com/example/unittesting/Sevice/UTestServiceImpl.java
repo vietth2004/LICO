@@ -8,7 +8,12 @@ import com.example.unittesting.model.Response;
 import com.example.unittesting.util.JwtUtils;
 import com.example.unittesting.util.worker.Getter;
 import com.example.unittesting.util.worker.Writer;
+import com.example.unittesting.util.worker.findNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import org.joda.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,8 +60,34 @@ public class UTestServiceImpl implements UTestService {
     @Override
     public ResponseEntity<Object> saveDataTest(InfoMethod requestMethod) {
         try{
-            String methodName = requestMethod.getSimpleName();
             int idmethod = requestMethod.getId();
+            // Lưu chuỗi JSON vào tệp tin
+            String path = requestMethod.getPath();
+            int zipProjectIndex = path.indexOf(".zip.project");
+            String targetDirectoryName = path.substring(0, zipProjectIndex + ".zip.project".length());
+            String outputFolderPath = targetDirectoryName + File.separator;
+            File jsonFile = new File(outputFolderPath +"/tmp-prjt.json");
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode data = objectMapper.readTree(jsonFile);
+            JsonNode nodeWithId = findNode.getNodeById(idmethod, data.get("rootNode"));
+            String simpleName = nodeWithId.get("simpleName").asText();
+            //System.out.println(simpleName);
+            String entityClass = nodeWithId.get("entityClass").asText();
+            String qualifiedName = nodeWithId.get("qualifiedName").asText();
+            String uniqueName = nodeWithId.get("uniqueName").asText();
+            int openingParenthesisIndex = simpleName.indexOf("(");
+            String name = simpleName.substring(0, openingParenthesisIndex).trim();
+
+            StringBuilder content = new StringBuilder();
+            CompilationUnit compilationUnit = StaticJavaParser.parse(new File(path));
+            List<com.github.javaparser.ast.body.MethodDeclaration> methodDeclarations = compilationUnit.findAll(MethodDeclaration.class);
+            for (MethodDeclaration methodDeclaration : methodDeclarations) {
+                String methodname = methodDeclaration.getSignature().asString();
+                //System.out.println(methodName);
+                if(methodname.equals(simpleName)){
+                    content = new StringBuilder(methodDeclaration.toString());
+                }
+            }
             List<Parameter> parameters = new ArrayList<>();
             List<LinkedHashMap<String, String>> parameterMaps = requestMethod.getParameters();
 
@@ -76,18 +107,20 @@ public class UTestServiceImpl implements UTestService {
             parameterTypes.deleteCharAt(parameterTypes.length() - 1); // Xóa dấu "_" cuối cùng
 
             int testId = testIdCounter++;
-            String nameTest = methodName +idmethod + "_" + parameterTypes.toString() +"_"+testId;
+            String nameTest = name +idmethod + "_" + parameterTypes.toString() +"_"+testId;
             LocalDateTime localDateTime = new LocalDateTime();
             String currentTime = localDateTime.toString();
-            DataTest dataTest = new DataTest(nameTest, testId, "not implemented", requestMethod, currentTime, new ArrayList<>());
-            ObjectMapper objectMapper = new ObjectMapper();
+
+            requestMethod.setSimpleName(name);
+            requestMethod.setQualifiedName(qualifiedName);
+            requestMethod.setUniqueName(uniqueName);
+            requestMethod.setEntityClass(entityClass);
+            requestMethod.setContent(content);
+            DataTest dataTest = new DataTest(nameTest, testId, "not executed", requestMethod, currentTime, new ArrayList<>());
             String json = objectMapper.writeValueAsString(dataTest);
 
             // Lưu chuỗi JSON vào tệp tin
-            String path = requestMethod.getPath();
-            int zipProjectIndex = path.indexOf(".zip.project");
-            String targetDirectoryName = path.substring(0, zipProjectIndex + ".zip.project".length());
-            String outputFolderPath = targetDirectoryName + File.separator;
+
 
             File outputFolder = new File(outputFolderPath);
             if (!outputFolder.exists()) {
