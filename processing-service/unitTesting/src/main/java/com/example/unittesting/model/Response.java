@@ -1,6 +1,6 @@
 package com.example.unittesting.model;
 
-import com.example.unittesting.Node.Node;
+import com.example.unittesting.ast.Node.Node;
 
 public class Response {
     private Node rootNode;

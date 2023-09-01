@@ -1,9 +1,8 @@
 package com.example.unittesting.util.worker;
 
-import com.example.unittesting.Node.JavaNode;
-import com.example.unittesting.Node.Parameter;
-import com.example.unittesting.Node.MethodNode;
-import com.example.unittesting.Node.Node;
+import com.example.unittesting.ast.Node.MethodNode;
+import com.example.unittesting.ast.Node.Node;
+import com.example.unittesting.ast.Node.Parameter;
 import com.example.unittesting.model.Response;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -34,7 +33,7 @@ public class Getter {
         if (shouldIgnoreDir(directory.getName())) {
             return null; // Bỏ qua các thư mục không cần phân tích
         }
-        Node node = new Node(getNextId(), directory.getName(), "Package", new ArrayList<>(), directory.getAbsolutePath());
+        Node node = new Node(getNextId(), directory.getName(), "JavaPackageNode", new ArrayList<>(), directory.getAbsolutePath());
         List<Node> children = new ArrayList<>();
 
         File[] files = directory.listFiles();
@@ -63,19 +62,15 @@ public class Getter {
 
     private static Node createNodeFromFile(File file) {
         String fileName = file.getName();
-        String fileExtension = getFileExtension(fileName);
         Node node = new Node(getNextId(), fileName, null, new ArrayList<>(), file.getAbsolutePath());
-        JavaNode javaNode = createJavaNodeFromFile(file);
-        if (javaNode != null) {
-            List<Node> children = new ArrayList<>();
-            children.add(javaNode);
+        List<MethodNode> methodNodes = createJavaNodeFromFile(file);
+        if (!methodNodes.isEmpty()) {
+            node.setChildren(methodNodes);
             node.setEntityClass("JavaNode");
-            node.setChildren(children);
         }
-
         return node;
     }
-    private static JavaNode createJavaNodeFromFile(File file) {
+    private static List<MethodNode> createJavaNodeFromFile(File file) {
         try {
             CompilationUnit compilationUnit = StaticJavaParser.parse(file);
             List<MethodDeclaration> methodDeclarations = compilationUnit.findAll(MethodDeclaration.class);
@@ -83,19 +78,19 @@ public class Getter {
 
             for (MethodDeclaration methodDeclaration : methodDeclarations) {
                 String methodName = methodDeclaration.getSignature().asString();
-                List<Parameter> parameters = new ArrayList<>();
-                for (com.github.javaparser.ast.body.Parameter parameter : methodDeclaration.getParameters()) {
-                    parameters.add(new Parameter(parameter.getNameAsString(), parameter.getType().asString()));
-                }
-                String returnType = methodDeclaration.getType().asString();
-                parameters.add(new Parameter("return", returnType));
+//              List<Parameter> parameters = new ArrayList<>();
+//                for (com.github.javaparser.ast.body.Parameter parameter : methodDeclaration.getParameters()) {
+//                    parameters.add(new Parameter(parameter.getNameAsString(), parameter.getType().asString()));
+//                }
+//              String returnType = methodDeclaration.getType().asString();
+//              parameters.add(new Parameter("return", returnType));
                 String packageName = compilationUnit.getPackageDeclaration().map(pkg -> pkg.getName().asString()).orElse("");
                 String className = file.getName().replaceFirst("[.][^.]+$", "");
                 String qualifiedName = packageName + "." + className + "." + methodDeclaration.getNameAsString();
                 String uniqueName = packageName + "." + className + "." + methodDeclaration.getSignature().asString();
 
                 int methodNodeId = getNextId();
-                StringBuilder content = new StringBuilder(methodDeclaration.toString());
+//                StringBuilder content = new StringBuilder(methodDeclaration.toString());
 
                 MethodNode methodNode = new MethodNode(
                         methodNodeId,
@@ -103,21 +98,12 @@ public class Getter {
                         new ArrayList<>(),
                         file.getAbsolutePath(),
                         qualifiedName,
-                        uniqueName,
-                        (ArrayList<Parameter>) parameters,
-                        content
+                        uniqueName
                 );
                 methodNodes.add(methodNode);
             }
-
-            if (!methodNodes.isEmpty()) {
-                JavaNode javaNode = new JavaNode(getNextId(), file.getName(), "JavaNode", new ArrayList<>(), file.getAbsolutePath());
-                javaNode.setChildren(methodNodes);
-                return javaNode;
-            }
+            return  methodNodes;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;

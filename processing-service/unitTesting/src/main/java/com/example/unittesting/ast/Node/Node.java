@@ -1,4 +1,4 @@
-package com.example.unittesting.Node;
+package com.example.unittesting.ast.Node;
 
 import java.io.Serializable;
 import java.util.ArrayList;

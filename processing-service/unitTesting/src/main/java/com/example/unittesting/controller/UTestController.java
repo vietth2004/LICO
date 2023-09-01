@@ -1,10 +1,17 @@
 package com.example.unittesting.controller;
 
 import com.example.unittesting.Sevice.UTestService;
+import com.example.unittesting.ast.Node.Parameter;
+import com.example.unittesting.model.DataTest;
 import com.example.unittesting.model.Request;
+import com.example.unittesting.model.InfoMethod;
 import com.example.unittesting.util.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import org.joda.time.LocalDateTime;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,8 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -24,6 +34,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/unit-testing-service")
 public class UTestController {
+    private static int testIdCounter = 1;
     private final UTestService utestService;
 
     public UTestController(UTestService utestService) {
@@ -110,7 +121,7 @@ public class UTestController {
 
     }
     @GetMapping(value = "/read")
-    public ResponseEntity<Object> getNodeById(@RequestParam int targetId, @RequestParam String nameProject) {
+    public ResponseEntity<Object> getInfoMethod(@RequestParam int targetId, @RequestParam String nameProject) {
         try {
             File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
             if (!jsonFile.exists()) {
@@ -120,25 +131,81 @@ public class UTestController {
                 try {
                     JsonNode data = objectMapper.readTree(jsonFile);
                     JsonNode nodeWithId = findNode.getNodeById(targetId, data.get("rootNode"));
-                    if (nodeWithId != null) {
-                        String content = findNode.getNodeContentById(targetId, nodeWithId);
-                        if (!content.isEmpty()) {
-                            return ResponseEntity.ok(content);
-                        } else {
-                            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Node with id not found.");
+                    if (nodeWithId.get("entityClass").asText().equals("JavaMethodNode")) {
+                        System.out.println(nodeWithId + "\n");
+                        String simpleName = nodeWithId.get("simpleName").asText();
+                        //System.out.println(simpleName);
+                        String entityClass = nodeWithId.get("entityClass").asText();
+                        String pathMethod = nodeWithId.get("path").asText();
+                        List<String> children = new ArrayList<>();
+                        JsonNode childrenNode = nodeWithId.get("children");
+                        if (childrenNode.isArray()) {
+                            for (JsonNode childNode : childrenNode) {
+                                children.add(childNode.asText());
+                            }
                         }
+                        String qualifiedName = nodeWithId.get("qualifiedName").asText();
+                        String uniqueName = nodeWithId.get("uniqueName").asText();
+                        int openingParenthesisIndex = simpleName.indexOf("(");
+                        String name = simpleName.substring(0, openingParenthesisIndex).trim();
+
+                        StringBuilder content = new StringBuilder();
+                        List<Parameter> parameters = new ArrayList<>();
+                        CompilationUnit compilationUnit = StaticJavaParser.parse(new File(pathMethod));
+                        List<com.github.javaparser.ast.body.MethodDeclaration> methodDeclarations = compilationUnit.findAll(MethodDeclaration.class);
+                        for (MethodDeclaration methodDeclaration : methodDeclarations) {
+                            String methodName = methodDeclaration.getSignature().asString();
+                            //System.out.println(methodName);
+                            if(methodName.equals(simpleName)){
+                                content = new StringBuilder(methodDeclaration.toString());
+                                for (com.github.javaparser.ast.body.Parameter parameter : methodDeclaration.getParameters()) {
+                                    parameters.add(new Parameter(parameter.getNameAsString(), parameter.getType().asString()));
+                                }
+                                  String returnType = methodDeclaration.getType().asString();
+                                  parameters.add(new Parameter("return", returnType));
+                            }
+                        }
+
+                        InfoMethod infoMethod = new InfoMethod(
+                                targetId,
+                                name,
+                                children,
+                                pathMethod,
+                                qualifiedName,
+                                content,
+                                parameters
+                        );
+                            return ResponseEntity.ok(infoMethod);
                     } else {
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Node with id not found.");
+                        System.out.println("Node with id not JavaMethodNode.\n");
+                        return ResponseEntity.ok(nodeWithId);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    System.out.println("Error reading JSON file.\n");
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file.");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
         }
-
     }
+
+    @PostMapping(value = "/expect")
+    public ResponseEntity<Object> setExpectValue(@RequestBody InfoMethod requestMethod){
+        if (requestMethod != null) {
+            try {
+                ResponseEntity<Object> response = utestService.saveDataTest(requestMethod);
+                return response;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
+            }
+        } else {
+            return ResponseEntity.badRequest().body("Request body is empty.");
+        }
+    }
+
 }
