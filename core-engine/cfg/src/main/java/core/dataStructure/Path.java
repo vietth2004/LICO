@@ -1,50 +1,50 @@
 package core.dataStructure;
 
-import core.cfg.CfgNode;
+import core.ast.additionalNodes.Node;
+import core.cfg.*;
 
 public class Path {
-    private class Node {
-        CfgNode data;
-        Node next;
 
-        public Node() {}
+    private Node currentFirst;
 
-        public Node(CfgNode data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-
-    private Node beginNode;
-
-    private Node currentNode;
+    private Node currentLast;
 
     public boolean isEmpty() {
-        return beginNode == null;
+        return currentFirst == null;
     }
 
-    public void addNextNode(CfgNode data) {
-        Node previousNode = currentNode;
-        currentNode = new Node(data);
-        if(isEmpty()) beginNode = currentNode;
-        else previousNode.next = currentNode;
+    public void addLast(CfgNode data) {
+        Node lastNode = currentLast;
+        currentLast = new Node(data);
+        if (isEmpty()) currentFirst = currentLast;
+        else lastNode.setNext(currentLast);
+    }
+
+    public void addFirst(CfgNode data) {
+        Node newNode = new Node(data);
+        newNode.setNext(currentFirst);
+        currentFirst = newNode;
     }
 
     @Override
     public String toString() {
-        String p = "===============\n";
-        Node tmpNode = beginNode;
-        while(tmpNode != null) {
-            p += tmpNode.data.toString();
-            p += "\n";
-            tmpNode = tmpNode.next;
+        StringBuilder p = new StringBuilder("===============\n");
+        Node tmpNode = currentFirst;
+        while (tmpNode != null) {
+            p.append(tmpNode.getData().toString());
+            p.append("\n");
+            tmpNode = tmpNode.getNext();
         }
-        p += "===============";
-        return p;
+        p.append("===============");
+        return p.toString();
     }
 
-    public CfgNode getBeginNode() {
-        return beginNode.data;
+    public Node getCurrentFirst() {
+        return currentFirst;
     }
 
+    public Node getCurrentLast() {
+        return currentLast;
+    }
 }
+

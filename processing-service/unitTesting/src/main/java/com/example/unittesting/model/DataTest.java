@@ -1,8 +1,4 @@
 package com.example.unittesting.model;
-
-
-import org.joda.time.LocalDateTime;
-
 import java.util.Date;
 import java.util.List;
 

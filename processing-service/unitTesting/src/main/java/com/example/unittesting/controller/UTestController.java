@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import org.joda.time.LocalDateTime;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -100,26 +99,26 @@ public class UTestController {
                     .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
         }
     }
-    @PostMapping("/source-code")
-    public ResponseEntity<Object> NodeByPath (@RequestBody Request request) throws IOException {
-        try {
-            File file = new File(request.getPath());
-            String path = file.getAbsolutePath();
-            if (!file.exists()) {
-                // Xử lý khi tệp không tồn tại
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            } else {
-                path += "\\tmp-prjt.json";
-                Object result = utestService.build(file.getAbsolutePath());
-                return ResponseEntity.ok(result);
-            }
-        } catch (IOException e) {
-            // Xử lý ngoại lệ và trả về phản hồi lỗi
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
-        }
-
-    }
+//    @PostMapping("/source-code")
+//    public ResponseEntity<Object> NodeByPath (@RequestBody Request request) throws IOException {
+//        try {
+//            File file = new File(request.getPath());
+//            String path = file.getAbsolutePath();
+//            if (!file.exists()) {
+//                // Xử lý khi tệp không tồn tại
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//            } else {
+//                path += "\\tmp-prjt.json";
+//                Object result = utestService.build(file.getAbsolutePath());
+//                return ResponseEntity.ok(result);
+//            }
+//        } catch (IOException e) {
+//            // Xử lý ngoại lệ và trả về phản hồi lỗi
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
+//        }
+//
+//    }
     @GetMapping(value = "/read")
     public ResponseEntity<Object> getInfoMethod(@RequestParam int targetId, @RequestParam String nameProject) {
         try {
@@ -206,6 +205,10 @@ public class UTestController {
         } else {
             return ResponseEntity.badRequest().body("Request body is empty.");
         }
+    }
+    @GetMapping(value = "/unit")
+    public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject) throws IOException {
+        return ResponseEntity.ok(utestService.getRunFullConcolic(targetId, nameProject));
     }
 
 }

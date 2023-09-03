@@ -34,7 +34,7 @@ public class Utils {
         return root;
     }
 
-    public static List<ASTNode> getChildren(org.eclipse.jdt.core.dom.ASTNode node) {
+    public static List<ASTNode> getChildren(ASTNode node) {
         List<ASTNode> children = new ArrayList<>();
         if (node instanceof MethodDeclaration) {
             Block block = ((MethodDeclaration) node).getBody();
@@ -77,7 +77,7 @@ public class Utils {
     }
 
 
-    public static Block getFunctionBlock(org.eclipse.jdt.core.dom.ASTNode node) {
+    public static Block getFunctionBlock(ASTNode node) {
 
         if (node instanceof MethodDeclaration) {
             Block block = ((MethodDeclaration) node).getBody();

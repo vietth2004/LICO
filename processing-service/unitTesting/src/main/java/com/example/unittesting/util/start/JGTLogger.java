@@ -1,3 +1,5 @@
+package com.example.unittesting.util.start;
+
 import java.util.logging.Logger;
 
 public class JGTLogger extends Logger {

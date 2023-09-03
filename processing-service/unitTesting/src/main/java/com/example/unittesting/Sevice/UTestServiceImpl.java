@@ -6,6 +6,7 @@ import com.example.unittesting.model.DataTest;
 import com.example.unittesting.model.InfoMethod;
 import com.example.unittesting.model.Response;
 import com.example.unittesting.util.JwtUtils;
+import com.example.unittesting.util.start.AppStart;
 import com.example.unittesting.util.worker.Getter;
 import com.example.unittesting.util.worker.Writer;
 import com.example.unittesting.util.worker.findNode;
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import org.joda.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,21 +23,23 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 
 public class UTestServiceImpl implements UTestService {
     private static int testIdCounter = 1;
     final ProjectService projectService;
+    final AppStart appStart;
+
 
     final JwtUtils jwtUtils;
 
-    public UTestServiceImpl(ProjectService projectService, JwtUtils jwtUtils) {
+    public UTestServiceImpl(ProjectService projectService, JwtUtils jwtUtils, AppStart appStart) {
         this.projectService = projectService;
         this.jwtUtils = jwtUtils;
+        this.appStart = appStart;
     }
 
     @Override
@@ -47,6 +49,7 @@ public class UTestServiceImpl implements UTestService {
         Writer.write(path, response, "tmp-prjt");
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @Override
     public String buildProject(List<String> parser, MultipartFile file, String user, String project) throws IOException{
         String userPath = user;
         if (!userPath.equals("anonymous")) {
@@ -56,7 +59,6 @@ public class UTestServiceImpl implements UTestService {
         String fileName = projectService.storeFile(file, userPath, project);
         return fileName;
     }
-
     @Override
     public ResponseEntity<Object> saveDataTest(InfoMethod requestMethod) {
         try{
@@ -108,7 +110,7 @@ public class UTestServiceImpl implements UTestService {
 
             int testId = testIdCounter++;
             String nameTest = name +idmethod + "_" + parameterTypes.toString() +"_"+testId;
-            LocalDateTime localDateTime = new LocalDateTime();
+            LocalDateTime localDateTime = LocalDateTime.now();
             String currentTime = localDateTime.toString();
 
             requestMethod.setSimpleName(name);
@@ -138,6 +140,44 @@ public class UTestServiceImpl implements UTestService {
         } catch (Exception e) {
             e.printStackTrace();
             // Xử lý lỗi nếu cần
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> getRunFullConcolic(int targetId, String nameProject) throws IOException {
+        try {
+            File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
+            if (!jsonFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Đường dẫn không tồn tại!");
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    JsonNode data = objectMapper.readTree(jsonFile);
+                    JsonNode nodeWithId = findNode.getNodeById(targetId, data.get("rootNode"));
+                    if (nodeWithId.get("entityClass").asText().equals("JavaMethodNode")) {
+                        System.out.println(nodeWithId + "\n");
+                        String simpleName = nodeWithId.get("simpleName").asText();
+                        String pathMethod = nodeWithId.get("path").asText();
+                        int openingParenthesisIndex = simpleName.indexOf("(");
+                        String name = simpleName.substring(0, openingParenthesisIndex).trim();
+                        File file = new File(pathMethod);
+                        String className = file.getName();
+                        StringBuilder result = appStart.runFullConcolic(pathMethod,name, className);
+                        return ResponseEntity.ok(result);
+                    } else {
+                        System.out.println("Node with id not JavaMethodNode.\n");
+                        return ResponseEntity.ok(nodeWithId);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Error reading JSON file.\n");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
         }
     }
