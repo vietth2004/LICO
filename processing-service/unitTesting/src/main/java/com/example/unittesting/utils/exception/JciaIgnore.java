@@ -1,4 +1,4 @@
-package com.example.unittesting.util.exception;
+package com.example.unittesting.utils.exception;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package com.example.unittesting.util;
+package com.example.unittesting.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

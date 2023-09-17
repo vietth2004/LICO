@@ -1,4 +1,4 @@
-package com.example.unittesting.util.worker;
+package com.example.unittesting.utils.worker;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

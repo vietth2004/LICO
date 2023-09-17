@@ -19,7 +19,9 @@ public final class MarkedPath {
         return !isFalseCondition;
     }
 
-    public static void markPathToCFG(CfgNode rootNode) {
+    public static List<String> markPathToCFG(CfgNode rootNode) {
+        List<String> coveredStatements = new ArrayList<>();
+
         int i = 0;
         while (rootNode != null && i < markedStatements.size()) {
             // Kiểm tra những CfgNode không có content
@@ -32,9 +34,10 @@ public final class MarkedPath {
             MarkedStatement markedStatement = markedStatements.get(i);
             if (rootNode.getContent().equals(markedStatement.getStatement())) {
                 rootNode.setMarked(true);
+                coveredStatements.add(rootNode.getContent());
             } else {
                 reset();
-                return;
+                return coveredStatements;
             }
 
             if (rootNode instanceof CfgBoolExprNode) {
@@ -61,6 +64,17 @@ public final class MarkedPath {
             }
         }
         reset();
+        return coveredStatements;
+    }
+
+    public static List<String> getMarkedStatementsStringList() {
+        List<String> result = new ArrayList<>();
+
+        for(MarkedStatement markedStatement : markedStatements) {
+            result.add(markedStatement.getStatement());
+        }
+
+        return result;
     }
 
     public static CfgNode findUncoveredNode(CfgNode rootNode, CfgNode duplicateNode) {

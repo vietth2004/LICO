@@ -2,7 +2,7 @@ package com.example.unittesting.Sevice.project;
 
 import com.example.unittesting.Sevice.project.config.FileStorageProperties;
 import com.example.unittesting.Sevice.project.exception.FileStorageException;
-import com.example.unittesting.util.JwtUtils;
+import com.example.unittesting.utils.JwtUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;

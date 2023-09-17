@@ -1,5 +1,4 @@
 package com.example.unittesting.model;
-import java.util.Date;
 import java.util.List;
 
 public class DataTest {
@@ -8,15 +7,15 @@ public class DataTest {
     private String status;
     private InfoMethod infoMethod;
     private String creationDate;
-    private List paramOuputs;
+    private String output;
 
-    public DataTest(String nameTest, int idMethod, String status, InfoMethod infoMethod, String creationDate, List paramOuputs) {
+    public DataTest(String nameTest, int idMethod, String status, InfoMethod infoMethod, String creationDate, String output) {
         NameTest = nameTest;
         IdMethod = idMethod;
         this.status = status;
         this.infoMethod = infoMethod;
         this.creationDate = creationDate;
-        this.paramOuputs = paramOuputs;
+        this.output = output;
     }
 
     public String getNameTest() {
@@ -59,11 +58,11 @@ public class DataTest {
         this.creationDate = creationDate;
     }
 
-    public List getParamOuputs() {
-        return paramOuputs;
+    public String getOutput() {
+        return output;
     }
 
-    public void setParamOuputs(List paramOuputs) {
-        this.paramOuputs = paramOuputs;
+    public void setOutput(String output) {
+        this.output = output;
     }
 }

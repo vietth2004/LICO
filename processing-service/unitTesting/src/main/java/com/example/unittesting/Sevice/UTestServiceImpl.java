@@ -5,11 +5,12 @@ import com.example.unittesting.ast.Node.Parameter;
 import com.example.unittesting.model.DataTest;
 import com.example.unittesting.model.InfoMethod;
 import com.example.unittesting.model.Response;
-import com.example.unittesting.util.JwtUtils;
-import com.example.unittesting.util.start.AppStart;
-import com.example.unittesting.util.worker.Getter;
-import com.example.unittesting.util.worker.Writer;
-import com.example.unittesting.util.worker.findNode;
+import com.example.unittesting.model.result.Concolic.ConcolicTestResult;
+import com.example.unittesting.utils.JwtUtils;
+import com.example.unittesting.utils.testing.ConcolicTesting;
+import com.example.unittesting.utils.worker.Getter;
+import com.example.unittesting.utils.worker.Writer;
+import com.example.unittesting.utils.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
@@ -31,15 +32,12 @@ import java.util.*;
 public class UTestServiceImpl implements UTestService {
     private static int testIdCounter = 1;
     final ProjectService projectService;
-    final AppStart appStart;
-
 
     final JwtUtils jwtUtils;
 
-    public UTestServiceImpl(ProjectService projectService, JwtUtils jwtUtils, AppStart appStart) {
+    public UTestServiceImpl(ProjectService projectService, JwtUtils jwtUtils, ConcolicTesting appStart) {
         this.projectService = projectService;
         this.jwtUtils = jwtUtils;
-        this.appStart = appStart;
     }
 
     @Override
@@ -118,7 +116,7 @@ public class UTestServiceImpl implements UTestService {
             requestMethod.setUniqueName(uniqueName);
             requestMethod.setEntityClass(entityClass);
             requestMethod.setContent(content);
-            DataTest dataTest = new DataTest(nameTest, testId, "not executed", requestMethod, currentTime, new ArrayList<>());
+            DataTest dataTest = new DataTest(nameTest, testId, "not executed", requestMethod, currentTime, "");
             String json = objectMapper.writeValueAsString(dataTest);
 
             // Lưu chuỗi JSON vào tệp tin
@@ -163,7 +161,7 @@ public class UTestServiceImpl implements UTestService {
                         String name = simpleName.substring(0, openingParenthesisIndex).trim();
                         File file = new File(pathMethod);
                         String className = file.getName();
-                        StringBuilder result = appStart.runFullConcolic(pathMethod,name, className);
+                        ConcolicTestResult result = ConcolicTesting.runFullConcolic(pathMethod, name, className);
                         return ResponseEntity.ok(result);
                     } else {
                         System.out.println("Node with id not JavaMethodNode.\n");

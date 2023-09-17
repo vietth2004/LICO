@@ -2,10 +2,8 @@ package com.example.unittesting.controller;
 
 import com.example.unittesting.Sevice.UTestService;
 import com.example.unittesting.ast.Node.Parameter;
-import com.example.unittesting.model.DataTest;
-import com.example.unittesting.model.Request;
 import com.example.unittesting.model.InfoMethod;
-import com.example.unittesting.util.worker.findNode;
+import com.example.unittesting.utils.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
@@ -21,11 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 

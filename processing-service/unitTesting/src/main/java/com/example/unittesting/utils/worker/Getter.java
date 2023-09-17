@@ -1,8 +1,7 @@
-package com.example.unittesting.util.worker;
+package com.example.unittesting.utils.worker;
 
 import com.example.unittesting.ast.Node.MethodNode;
 import com.example.unittesting.ast.Node.Node;
-import com.example.unittesting.ast.Node.Parameter;
 import com.example.unittesting.model.Response;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;

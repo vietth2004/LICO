@@ -1,4 +1,4 @@
-package com.example.unittesting.util.exception;
+package com.example.unittesting.utils.exception;
 
 import com.github.javaparser.ParseProblemException;
 import org.springframework.http.HttpStatus;

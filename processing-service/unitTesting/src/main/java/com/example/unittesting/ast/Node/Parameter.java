@@ -3,7 +3,7 @@ package com.example.unittesting.ast.Node;
 public class Parameter {
     private String nameParameter;
     private String describe;
-    public String value;
+    private String value;
 
     public Parameter(String nameParameter, String describe) {
         this.nameParameter = nameParameter;

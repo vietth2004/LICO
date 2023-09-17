@@ -1,4 +1,4 @@
-package com.example.unittesting.util.worker;
+package com.example.unittesting.utils.worker;
 
 import com.example.unittesting.model.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;

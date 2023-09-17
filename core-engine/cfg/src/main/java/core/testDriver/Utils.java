@@ -2,8 +2,12 @@ package core.testDriver;
 
 import org.eclipse.jdt.core.dom.*;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public final class Utils {
@@ -35,6 +39,23 @@ public final class Utils {
         }
 
         return types;
+    }
+
+    public static List<String> getParameterNames(List<ASTNode> parameters) {
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < parameters.size(); i++) {
+            ASTNode param = parameters.get(i);
+            if (param instanceof SingleVariableDeclaration) {
+                SingleVariableDeclaration declaration = (SingleVariableDeclaration) param;
+                names.add(declaration.getName().getIdentifier());
+            } else if (param instanceof VariableDeclarationFragment) {
+                VariableDeclarationFragment declaration = (VariableDeclarationFragment) param;
+                names.add(declaration.getName().getIdentifier());
+            } else {
+                throw new RuntimeException("Unsupported parameter: " + param.getClass());
+            }
+        }
+        return names;
     }
 
     /**
@@ -165,7 +186,8 @@ public final class Utils {
         Random random = new Random();
 
         if ("int".equals(className)) {
-            return random.nextInt();
+//            return random.nextInt();
+            return 8;
         } else if ("boolean".equals(className)) {
             return random.nextInt() % 2 == 0;
         } else if ("byte".equals(className)) {
@@ -173,85 +195,96 @@ public final class Utils {
         } else if ("short".equals(className)) {
             return (short) ((Math.random() * (32767 - (-32768)) + (-32768)));
         } else if ("char".equals(className)) {
-            return (char) random.nextInt();
+//            return (char) random.nextInt();
+            return 'X';
         } else if ("long".equals(className)) {
-            return random.nextLong();
+//            return random.nextLong();
+            return 16;
         } else if ("float".equals(className)) {
-            return random.nextFloat();
+//            return random.nextFloat();
+            return 8.0;
         } else if ("double".equals(className)) {
-            return random.nextDouble();
+//            return random.nextDouble();
+            return 8.0;
         } else if ("void".equals(className)) {
             return null;
         }
         throw new RuntimeException("Unsupported type: " + className);
     }
 
-    public static void createCloneMethod(MethodDeclaration method) {
+    public static void createCloneMethod(MethodDeclaration method, CompilationUnit compilationUnit) {
         StringBuilder cloneMethod = new StringBuilder();
-        cloneMethod.append("package data;\n");
+        cloneMethod.append(compilationUnit.getPackage());
+        for(ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
+            cloneMethod.append(iImport);
+        }
         cloneMethod.append("import static core.dataStructure.MarkedPath.markOneStatement;\n");
         cloneMethod.append("public class CloneFile {\n");
         cloneMethod.append("public static ").append(method.getReturnType2()).append(" ").append(method.getName()).append("(");
         List<ASTNode> parameters = method.parameters();
         for (int i = 0; i < parameters.size(); i++) {
             cloneMethod.append(parameters.get(i));
-            if(i != parameters.size() - 1) cloneMethod.append(", ");
+            if (i != parameters.size() - 1) cloneMethod.append(", ");
         }
         cloneMethod.append(")\n");
-//        cloneMethod.append(") {\n");
-//
-//
-//        cloneMethod.append("}\n");
 
         cloneMethod.append(generateCodeForBlock(method.getBody()));
 
         cloneMethod.append("}");
 
         writeDataToFile(cloneMethod.toString());
+
+        reCompileClonedFile();
     }
 
-    private static String generateCodeForOneStatement(ASTNode statement) {
-        if(statement == null) {
+    private static void reCompileClonedFile() {
+        // Re-compile cloned file
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        int compilationResult = compiler.run(null, null, null, "core-engine\\cfg\\src\\main\\java\\data\\CloneFile.java");
+        if (compilationResult == 0) {
+            System.out.println("Compilation is successful.");
+        } else {
+            System.out.println("Compilation failed.");
+        }
+
+        // Move .class file of clone file to target folder
+        String sourceFilePath = "core-engine\\cfg\\src\\main\\java\\data\\CloneFile.class";
+        String destinationDirectoryPath = "core-engine\\cfg\\target\\classes\\data\\";
+        try {
+            File sourceFile = new File(sourceFilePath);
+            File destinationDirectory = new File(destinationDirectoryPath);
+
+            if (sourceFile.exists()) {
+                if (destinationDirectory.exists() && destinationDirectory.isDirectory()) {
+
+                    // Move file
+                    java.nio.file.Path sourcePath = sourceFile.toPath();
+                    java.nio.file.Path destinationPath = new File(destinationDirectory, sourceFile.getName()).toPath();
+                    Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private static String generateCodeForOneStatement(ASTNode statement, String markMethodSeparator) {
+        if (statement == null) {
             return "";
         }
 
         if (statement instanceof Block) {
             return generateCodeForBlock((Block) statement);
-        } else if(statement instanceof IfStatement) {
+        } else if (statement instanceof IfStatement) {
             return generateCodeForIfStatement((IfStatement) statement);
+        } else if (statement instanceof ForStatement) {
+            return generateCodeForForStatement((ForStatement) statement);
+        } else if (statement instanceof WhileStatement) {
+            return generateCodeForWhileStatement((WhileStatement) statement);
+        } else if (statement instanceof DoStatement) {
+            return generateCodeForDoStatement((DoStatement) statement);
         } else {
-            StringBuilder result = new StringBuilder();
-
-            String stringStatement = statement.toString();
-            StringBuilder newStatement = new StringBuilder();
-            for(int i = 0; i < stringStatement.length(); i++) {
-//                if (stringStatement.charAt(i) == '\n') {
-//                    stringStatement = stringStatement.substring(0, i -1) + "\\n";
-//                    if (i != stringStatement.length() - 1) {
-//                        stringStatement += stringStatement.substring(i + 1, stringStatement.length() - 1);
-//                    }
-//                }
-                char charAt = stringStatement.charAt(i);
-
-                if (charAt == '\n') {
-                    newStatement.append("\\n");
-                    continue;
-                } else if (charAt == '"') {
-                    newStatement.append("\\").append('"');
-                    continue;
-                } else if (i != stringStatement.length() - 1 && charAt == '\\' && stringStatement.charAt(i + 1) == 'n') {
-                    newStatement.append("\" + \"").append("\\n").append("\" + \"");
-                    i++;
-                    continue;
-                }
-
-                newStatement.append(charAt);
-            }
-
-            result.append("markOneStatement(\"").append(newStatement).append("\", false, false);\n");
-            result.append(statement);
-
-            return result.toString();
+            return generateCodeForNormalStatement(statement, markMethodSeparator);
         }
 
     }
@@ -261,8 +294,8 @@ public final class Utils {
         List<ASTNode> statements = block.statements();
 
         result.append("{\n");
-        for(int i = 0; i < statements.size(); i++) {
-            result.append(generateCodeForOneStatement(statements.get(i)));
+        for (int i = 0; i < statements.size(); i++) {
+            result.append(generateCodeForOneStatement(statements.get(i), ";"));
         }
         result.append("}\n");
 
@@ -272,24 +305,144 @@ public final class Utils {
     private static String generateCodeForIfStatement(IfStatement ifStatement) {
         StringBuilder result = new StringBuilder();
 
-        result.append("if (").append(generateCondition(ifStatement.getExpression())).append(")\n");
-        result.append(generateCodeForOneStatement(ifStatement.getThenStatement()));
+        result.append("if (").append(generateCodeForCondition(ifStatement.getExpression())).append(")\n");
+        result.append(generateCodeForOneStatement(ifStatement.getThenStatement(), ";"));
 
-        String elseCode = generateCodeForOneStatement(ifStatement.getElseStatement());
-        if(!elseCode.equals("")) {
+        String elseCode = generateCodeForOneStatement(ifStatement.getElseStatement(), ";");
+        if (!elseCode.equals("")) {
             result.append("else ").append(elseCode);
         }
 
         return result.toString();
     }
 
-    private static String generateCondition(Expression condition) {
+    private static String generateCodeForForStatement(ForStatement forStatement) {
         StringBuilder result = new StringBuilder();
 
-        result.append("((").append(condition).append(") && markOneStatement(\"").append(condition).append("\", true, false))");
-        result.append(" || markOneStatement(\"").append(condition).append("\", false, true)");
+        // Initializers
+        List<ASTNode> initializers = forStatement.initializers();
+        for (ASTNode initializer : initializers) {
+            result.append(generateCodeForMarkMethod(initializer, ";"));
+        }
+        result.append("for (");
+        for (int i = 0; i < initializers.size(); i++) {
+            result.append(initializers.get(i));
+            if (i != initializers.size() - 1) result.append(", ");
+        }
+
+        // Condition
+        result.append("; ");
+        result.append(generateCodeForCondition(forStatement.getExpression()));
+
+        // Updaters
+        result.append("; ");
+        List<ASTNode> updaters = forStatement.updaters();
+        for (int i = 0; i < updaters.size(); i++) {
+            result.append(generateCodeForOneStatement(updaters.get(i), ","));
+            if (i != updaters.size() - 1) result.append(", ");
+        }
+
+        // Body
+        result.append(") ");
+        result.append(generateCodeForOneStatement(forStatement.getBody(), ";"));
 
         return result.toString();
+    }
+
+    private static String generateCodeForWhileStatement(WhileStatement whileStatement) {
+        StringBuilder result = new StringBuilder();
+
+        // Condition
+        result.append("while (");
+        result.append(generateCodeForCondition(whileStatement.getExpression()));
+        result.append(") ");
+
+        result.append(generateCodeForOneStatement(whileStatement.getBody(), ";"));
+
+        return result.toString();
+    }
+
+    private static String generateCodeForDoStatement(DoStatement doStatement) {
+        StringBuilder result = new StringBuilder();
+
+        // Do body
+        result.append("do ");
+        result.append(generateCodeForOneStatement(doStatement.getBody(), ";"));
+
+        // Condition
+        result.append("while (");
+        result.append(generateCodeForCondition(doStatement.getExpression()));
+        result.append(");\n");
+
+        return result.toString();
+    }
+
+    private static String generateCodeForNormalStatement(ASTNode statement, String markMethodSeparator) {
+        StringBuilder result = new StringBuilder();
+
+        result.append(generateCodeForMarkMethod(statement, markMethodSeparator));
+        result.append(statement);
+
+        return result.toString();
+    }
+
+    private static String generateCodeForMarkMethod(ASTNode statement, String markMethodSeparator) {
+        StringBuilder result = new StringBuilder();
+
+        String stringStatement = statement.toString();
+        StringBuilder newStatement = new StringBuilder();
+
+        // Rewrite Statement for mark method
+        for (int i = 0; i < stringStatement.length(); i++) {
+            char charAt = stringStatement.charAt(i);
+
+            if (charAt == '\n') {
+                newStatement.append("\\n");
+                continue;
+            } else if (charAt == '"') {
+                newStatement.append("\\").append('"');
+                continue;
+            } else if (i != stringStatement.length() - 1 && charAt == '\\' && stringStatement.charAt(i + 1) == 'n') {
+                newStatement.append("\" + \"").append("\\n").append("\" + \"");
+                i++;
+                continue;
+            }
+
+            newStatement.append(charAt);
+        }
+
+        result.append("markOneStatement(\"").append(newStatement).append("\", false, false)").append(markMethodSeparator).append("\n");
+
+        return result.toString();
+    }
+
+    private static String generateCodeForCondition(Expression condition) {
+        StringBuilder result = new StringBuilder();
+
+        if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
+            InfixExpression infixCondition = (InfixExpression) condition;
+
+            result.append("(").append(generateCodeForCondition(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
+            result.append(generateCodeForCondition(infixCondition.getRightOperand())).append(")");
+
+            List<ASTNode> extendedOperands = infixCondition.extendedOperands();
+            for (ASTNode operand : extendedOperands) {
+                result.append(" ").append(infixCondition.getOperator()).append(" ");
+                result.append("(").append(generateCodeForCondition((Expression) operand)).append(")");
+            }
+        } else {
+            result.append("((").append(condition).append(") && markOneStatement(\"").append(condition).append("\", true, false))");
+            result.append(" || markOneStatement(\"").append(condition).append("\", false, true)");
+        }
+
+        return result.toString();
+    }
+
+    private static boolean isSeparableOperator(InfixExpression.Operator operator) {
+        return operator.equals(InfixExpression.Operator.CONDITIONAL_OR) ||
+                operator.equals(InfixExpression.Operator.OR) ||
+                operator.equals(InfixExpression.Operator.CONDITIONAL_AND) ||
+                operator.equals(InfixExpression.Operator.AND);
     }
 
     private static void writeDataToFile(String data) {
