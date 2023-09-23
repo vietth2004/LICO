@@ -232,7 +232,7 @@ public final class Utils {
 
         cloneMethod.append("}");
 
-        writeDataToFile(cloneMethod.toString());
+        writeDataToFile(cloneMethod.toString(), "core-engine/cfg/src/main/java/data/CloneFile.java");
 
         reCompileClonedFile();
     }
@@ -306,11 +306,14 @@ public final class Utils {
         StringBuilder result = new StringBuilder();
 
         result.append("if (").append(generateCodeForCondition(ifStatement.getExpression())).append(")\n");
+        result.append("{\n");
         result.append(generateCodeForOneStatement(ifStatement.getThenStatement(), ";"));
+        result.append("}\n");
+
 
         String elseCode = generateCodeForOneStatement(ifStatement.getElseStatement(), ";");
         if (!elseCode.equals("")) {
-            result.append("else ").append(elseCode);
+            result.append("else {\n").append(elseCode).append("}\n");
         }
 
         return result.toString();
@@ -343,8 +346,9 @@ public final class Utils {
         }
 
         // Body
-        result.append(") ");
+        result.append(") {\n");
         result.append(generateCodeForOneStatement(forStatement.getBody(), ";"));
+        result.append("}\n");
 
         return result.toString();
     }
@@ -355,9 +359,10 @@ public final class Utils {
         // Condition
         result.append("while (");
         result.append(generateCodeForCondition(whileStatement.getExpression()));
-        result.append(") ");
+        result.append(") {\n");
 
         result.append(generateCodeForOneStatement(whileStatement.getBody(), ";"));
+        result.append("}\n");
 
         return result.toString();
     }
@@ -366,8 +371,9 @@ public final class Utils {
         StringBuilder result = new StringBuilder();
 
         // Do body
-        result.append("do ");
+        result.append("do {");
         result.append(generateCodeForOneStatement(doStatement.getBody(), ";"));
+        result.append("}\n");
 
         // Condition
         result.append("while (");
@@ -445,9 +451,9 @@ public final class Utils {
                 operator.equals(InfixExpression.Operator.AND);
     }
 
-    private static void writeDataToFile(String data) {
+    public static void writeDataToFile(String data, String path) {
         try {
-            FileWriter writer = new FileWriter("core-engine/cfg/src/main/java/data/CloneFile.java");
+            FileWriter writer = new FileWriter(path);
             writer.write(data + "\n");
             writer.close();
         } catch (IOException e) {

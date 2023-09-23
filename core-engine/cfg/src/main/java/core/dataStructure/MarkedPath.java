@@ -84,11 +84,7 @@ public final class MarkedPath {
         if (rootNode instanceof CfgBoolExprNode) {
             CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
 
-            // Check for duplicateNode. Nếu có node trùng lặp tức là đã duyệt qua 1 vòng của loop đấy và k thấy node chưa mark nên return null.
-            if(boolExprNode != duplicateNode) duplicateNode = boolExprNode;
-            else {
-                return null;
-            }
+
 
             if (!boolExprNode.isTrueMarked()) {
                 return boolExprNode.getTrueNode();
@@ -97,16 +93,52 @@ public final class MarkedPath {
                 return boolExprNode.getFalseNode();
             }
 
-            CfgNode tmpUncoveredNode = findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
-            if(tmpUncoveredNode == null) {
+            if(boolExprNode != duplicateNode) {
+                duplicateNode = boolExprNode;
                 return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
-            } else {
-                return tmpUncoveredNode;
+            }
+            else {
+                return findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
             }
         }
 
-        return findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
+        CfgNode cfgNode =  findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
+        return cfgNode;
     }
+
+//    public static CfgNode findUncoveredNode(CfgNode rootNode, CfgNode duplicateNode) {
+//        if (rootNode == null || !rootNode.isMarked()) {
+//            return rootNode;
+//        }
+//        if (rootNode instanceof CfgBoolExprNode) {
+//            CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
+//
+//            // Check for duplicateNode. Nếu có node trùng lặp tức là đã duyệt qua 1 vòng của loop đấy và k thấy node chưa mark nên return null.
+//            if(boolExprNode != duplicateNode) duplicateNode = boolExprNode;
+//            else {
+//                return null;
+//            }
+//
+//            if (!boolExprNode.isTrueMarked()) {
+//                return boolExprNode.getTrueNode();
+//            }
+//            if (!boolExprNode.isFalseMarked()) {
+//                return boolExprNode.getFalseNode();
+//            }
+//
+//            CfgNode falseBranchUncoveredNode = findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
+//            CfgNode trueBranchUncoveredNode = findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
+////            if(tmpUncoveredNode == null) {
+////                return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
+////            } else {
+////                return tmpUncoveredNode;
+////            }
+//            return falseBranchUncoveredNode == null ? trueBranchUncoveredNode : falseBranchUncoveredNode;
+//        }
+//
+//        CfgNode cfgNode =  findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
+//        return cfgNode;
+//    }
 
     private static void reset() {
         markedStatements = new ArrayList<>();
