@@ -36,6 +36,7 @@ public class ConcolicTesting {
     private ConcolicTesting(){}
 
     public static ConcolicTestResult runFullConcolic(String path, String methodName, String className) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+        System.out.println(path);
         ConcolicTestResult testResult = new ConcolicTestResult();
         StringBuilder report = new StringBuilder();
 
