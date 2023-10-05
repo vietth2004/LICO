@@ -199,10 +199,6 @@ public class ASTHelper {
 
     }
 
-    //Trong TH beforeNode là câu lệnh điều kiện boolean CfgBoolExprNode thì thenOrElse sẽ xác định ta gắn
-    //câu lệnh mới vào afterNode hay falseNode của beforeNode
-    //Hàm trả ra là Nút tương ứng với câu lệnh đầu tiên và một danh sách tương ứng với câu lệnh cuối cùng của
-    // khối lệnh mà đứng trước nút End của khối
     public static CfgNode generateCFGForOneStatement(ASTNode statement, CfgNode beforeNode, CfgNode afterNode) {
         CfgNode currentNode;
 
@@ -470,7 +466,6 @@ public class ASTHelper {
         Statement thenAST = ifStatement.getThenStatement();
         Statement elseAST = ifStatement.getElseStatement();
 
-        // tmpEndNode xử lí vấn đề liên quan đến độ phủ điều kiện con của các câu lệnh "Và" ('&&', '&')
         CfgEndBlockNode tmpEndNode = new CfgEndBlockNode();
 
         CfgBoolExprNode ifCondition = generateConditionCfg(ifConditionAST, cfgEndBoolNode, thenAST, beforeNode, tmpEndNode);
@@ -485,10 +480,9 @@ public class ASTHelper {
         return ifCondition;
     }
 
-    // tmpEndNode xử lí vấn đề liên quan đến độ phủ điều kiện con của các câu lệnh "Và" ('&&', '&')
     public static CfgBoolExprNode generateConditionCfg(Expression condition, CfgEndBlockNode endBoolNode, Statement thenStatement, CfgNode beforeNode, CfgEndBlockNode tmpEndNode) {
 
-        if (condition instanceof InfixExpression && isOrOperator(((InfixExpression) condition).getOperator())) { // điều kiện có chứa dấu "Hoặc"
+        if (condition instanceof InfixExpression && isOrOperator(((InfixExpression) condition).getOperator())) {
             InfixExpression infixExpression = (InfixExpression) condition;
             Expression leftOperand = infixExpression.getLeftOperand();
             Expression rightOperand = infixExpression.getRightOperand();
@@ -517,7 +511,7 @@ public class ASTHelper {
 
             return currentCondition;
 
-        } else if (condition instanceof InfixExpression && isAndOperator(((InfixExpression) condition).getOperator())) { // điều kiện có chứa dấu "Và"
+        } else if (condition instanceof InfixExpression && isAndOperator(((InfixExpression) condition).getOperator())) {
             InfixExpression infixExpression = (InfixExpression) condition;
             Expression leftOperand = infixExpression.getLeftOperand();
             Expression rightOperand = infixExpression.getRightOperand();

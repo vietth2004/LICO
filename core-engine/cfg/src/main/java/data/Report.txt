@@ -1,0 +1,33 @@
+Parse toàn b? các hàm trong class c?n ki?m th? thành 1 danh sách ASTNode
+Duy?t danh sách ASTNode ?? tìm hàm c?n ki?m th?
+CONCOLIC TEST REPORT
+Hàm th?c hi?n:
+public boolean isPerfectNumber(int number){
+  if (number <= 0) {
+    return false;
+  }
+  int sum=0;
+  for (int i=1; i < number; i++) {
+    if (number % i == 0) {
+      sum+=i;
+    }
+  }
+  return sum == number;
+}
+
+STEP 1: Clone hàm c?n ki?m th? vào m?t file java có th? ch?y ???c: core-engine\cfg\src\main\java\data\CloneFile.java
+STEP 2: Sinh cây CFG d?a trên hàm ???c truy?n vào
+STEP 3: Sinh d? li?u ng?u nhiên cho các parameter [int]: [8]
+STEP 4: Ch?y d? li?u ng?u nhiên ??y, l?u nh?ng câu l?nh ?ã ???c ch?y qua: [number <= 0, int sum=0;
+, int i=1, i < number, number % i == 0, sum+=i;
+, i++, i < number, number % i == 0, sum+=i;
+, i++, i < number, number % i == 0, i++, i < number, number % i == 0, sum+=i;
+, i++, i < number, number % i == 0, i++, i < number, number % i == 0, i++, i < number, number % i == 0, i++, i < number, return sum == number;
+]
+STEP 5: Tìm node ch?a ???c ph?: CFGNode{, content='return false;
+', isRootNode=false, isEndNode=false}
+STEP 6: Sinh ???ng thi hành t? node ch?a ???c ph? ??y
+STEP 7: Th?c thi t??ng tr?ng ???ng thi hành và sinh test data t??ng ?ng: [0]
+STEP 8: ?ánh d?u nh?ng câu l?nh (node) ?ã ch?y qua sau khi th?c hi?n ch?y hàm v?i d? li?u v?a ???c sinh: [number <= 0, return false;
+]
+STEP 9K?t thúc vi?c ki?m th?

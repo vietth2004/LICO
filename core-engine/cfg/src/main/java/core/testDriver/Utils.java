@@ -214,7 +214,7 @@ public final class Utils {
 
     public static void createCloneMethod(MethodDeclaration method, CompilationUnit compilationUnit) {
         StringBuilder cloneMethod = new StringBuilder();
-        cloneMethod.append("package data;");
+        cloneMethod.append("package data;\n");
         for(ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
             cloneMethod.append(iImport);
         }
