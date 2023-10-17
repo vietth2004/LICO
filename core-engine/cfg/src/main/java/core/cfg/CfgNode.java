@@ -1,6 +1,5 @@
 package core.cfg;
 
-import core.dataStructure.MarkedStatement;
 import core.parser.ASTHelper;
 import core.structureTree.structureNode.SFunctionNode;
 import core.utils.Utils;
