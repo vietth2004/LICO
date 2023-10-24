@@ -108,6 +108,11 @@
             <version>2.9.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>io.github.p-org.solvers</groupId>
+            <artifactId>z3</artifactId>
+            <version>4.8.14-v5</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

@@ -1,5 +1,6 @@
 package com.example.unittesting.utils.testing;
 
+import com.example.unittesting.model.coveredStatement.CoveredStatement;
 import com.example.unittesting.model.result.Concolic.ConcolicTestData;
 import com.example.unittesting.model.result.Concolic.ConcolicTestResult;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -9,6 +10,7 @@ import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedPath;
+import core.dataStructure.MarkedStatement;
 import core.dataStructure.Path;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
@@ -68,10 +70,13 @@ public class ConcolicTesting {
                 CfgNode block = new CfgBlockNode();
                 block.setAst(functionBlock);
 
+                int firstLine = compilationUnit.getLineNumber(functionBlock.getStartPosition());
+                block.setLineNumber(1);
+
                 block.setBeforeStatementNode(cfgBeginCfgNode);
                 block.setAfterStatementNode(cfgEndCfgNode);
 
-                ASTHelper.generateCFG(block);
+                ASTHelper.generateCFG(block, compilationUnit, firstLine);
                 CfgNode cfgNode = cfgBeginCfgNode;
                 report.append("STEP 2: Sinh cây CFG dựa trên hàm được truyền vào\n");
                 //===========================
@@ -84,7 +89,7 @@ public class ConcolicTesting {
 
                 Object[] evaluatedValues = createRandomTestData(parameterClasses);
                 method.invoke(parameterClasses, evaluatedValues);
-                List<String> pathStatements = MarkedPath.markPathToCFG(cfgNode);
+                List<CoveredStatement> pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgNode));
                 report.append("STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter ").append(Arrays.toString(parameterClasses)).append(": ");
                 report.append(Arrays.toString(evaluatedValues)).append("\n");
                 report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(pathStatements).append("\n");
@@ -113,7 +118,7 @@ public class ConcolicTesting {
                     report.append(Arrays.toString(evaluatedValues)).append("\n");
 
                     method.invoke(parameterClasses, evaluatedValues);
-                    pathStatements = MarkedPath.markPathToCFG(cfgNode);
+                    pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgNode));
 
                     report.append("STEP ").append(i++).append(": Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: ");
                     report.append(pathStatements).append("\n");
@@ -137,4 +142,6 @@ public class ConcolicTesting {
         }
         return testResult;
     }
+
+
 }

@@ -1,14 +1,16 @@
 package com.example.unittesting.model.result.Concolic;
 
+import com.example.unittesting.model.coveredStatement.CoveredStatement;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConcolicTestData {
 //    private String coverage = "0%";
-    private List<String> coveredStatements = new ArrayList<>();
+    private List<CoveredStatement> coveredStatements = new ArrayList<>();
     private List<ConcolicParameterData> parameterDataList = new ArrayList<>();
 
-    public ConcolicTestData(List<String> names, Class<?>[] types, Object[] values, List<String> coveredStatements) {
+    public ConcolicTestData(List<String> names, Class<?>[] types, Object[] values, List<CoveredStatement> coveredStatements) {
         if(names.size() != types.length || types.length != values.length) {
             throw new RuntimeException("Invalid");
         }
@@ -24,7 +26,7 @@ public class ConcolicTestData {
 //        this.coverage = coverage;
 //    }
 
-    public void addToCoveredStatements(String statement) {
+    public void addToCoveredStatements(CoveredStatement statement) {
         coveredStatements.add(statement);
     }
 
@@ -36,7 +38,7 @@ public class ConcolicTestData {
 //        return coverage;
 //    }
 
-    public List<String> getCoveredStatements() {
+    public List<CoveredStatement> getCoveredStatements() {
         return coveredStatements;
     }
 

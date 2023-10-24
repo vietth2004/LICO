@@ -19,8 +19,9 @@ public final class MarkedPath {
         return !isFalseCondition;
     }
 
-    public static List<String> markPathToCFG(CfgNode rootNode) {
-        List<String> coveredStatements = new ArrayList<>();
+    public static List<MarkedStatement> markPathToCFG(CfgNode rootNode) {
+//        List<CfgNode> coveredStatements = new ArrayList<>();
+        List<MarkedStatement> result = markedStatements;
 
         int i = 0;
         while (rootNode != null && i < markedStatements.size()) {
@@ -34,10 +35,12 @@ public final class MarkedPath {
             MarkedStatement markedStatement = markedStatements.get(i);
             if (rootNode.getContent().equals(markedStatement.getStatement())) {
                 rootNode.setMarked(true);
-                coveredStatements.add(rootNode.getContent());
+                markedStatement.setCfgNode(rootNode);
+//                coveredStatements.add(rootNode);
             } else {
                 reset();
-                return coveredStatements;
+                return result;
+//                return coveredStatements;
             }
 
             if (rootNode instanceof CfgBoolExprNode) {
@@ -63,8 +66,10 @@ public final class MarkedPath {
                 rootNode = rootNode.getAfterStatementNode();
             }
         }
+
         reset();
-        return coveredStatements;
+        return result;
+//        return coveredStatements;
     }
 
     public static List<String> getMarkedStatementsStringList() {

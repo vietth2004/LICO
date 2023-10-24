@@ -1,9 +1,13 @@
 package core.dataStructure;
 
+import core.cfg.CfgNode;
+
 public class MarkedStatement {
     private String statement;
     private boolean isTrueConditionalStatement;
     private boolean isFalseConditionalStatement;
+
+    private CfgNode cfgNode;
 
     public MarkedStatement(String statement, boolean isTrueConditionalStatement, boolean isFalseConditionalStatement) {
         this.statement = statement;
@@ -33,5 +37,13 @@ public class MarkedStatement {
 
     public boolean isFalseConditionalStatement() {
         return isFalseConditionalStatement;
+    }
+
+    public CfgNode getCfgNode() {
+        return cfgNode;
+    }
+
+    public void setCfgNode(CfgNode cfgNode) {
+        this.cfgNode = cfgNode;
     }
 }

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class UTestServiceImpl implements UTestService {
 
     final JwtUtils jwtUtils;
 
+    @Autowired
     public UTestServiceImpl(ProjectService projectService, JwtUtils jwtUtils, ConcolicTesting appStart) {
         this.projectService = projectService;
         this.jwtUtils = jwtUtils;
