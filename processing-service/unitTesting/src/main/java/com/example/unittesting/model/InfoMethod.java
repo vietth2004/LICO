@@ -15,14 +15,16 @@ public class InfoMethod extends MethodNode implements Serializable{
     private StringBuilder content;
 
     private List<Parameter>  parameters;
+    private ArrayList<Integer> numberOfSentences;
 
     public InfoMethod() {
     }
 
-    public InfoMethod(int id, String name, List children, String path, String qualifiedName, StringBuilder content, List  parameters) {
-        super(id, name, children, path, qualifiedName);
+    public InfoMethod(int id, String name, List children, String path, String qualifiedName,String uniqueName, StringBuilder content, List  parameters, ArrayList<Integer> numberOfSentences) {
+        super(id, name, (ArrayList<Object>) children, path, qualifiedName, uniqueName);
         this.content = content;
         this.parameters = parameters;
+        this.numberOfSentences = numberOfSentences;
     }
 
     public InfoMethod(int id, String name, ArrayList<Object> children, String path, String qualifiedName, String uniqueName, StringBuilder content) {
@@ -42,7 +44,15 @@ public class InfoMethod extends MethodNode implements Serializable{
         return parameters;
     }
 
-    public void setParameters(List parameters) {
+    public void setParameters(List<Parameter> parameters) {
         this.parameters = parameters;
+    }
+
+    public ArrayList<Integer> getNumberOfSentences() {
+        return numberOfSentences;
+    }
+
+    public void setNumberOfSentences(ArrayList<Integer> numberOfSentences) {
+        this.numberOfSentences = numberOfSentences;
     }
 }

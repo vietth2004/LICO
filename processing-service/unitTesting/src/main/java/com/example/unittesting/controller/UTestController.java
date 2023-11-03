@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import io.swagger.v3.oas.annotations.Operation;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,9 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +41,14 @@ public class UTestController {
         return "Hi there, I am still alive";
     }
     @PostMapping("/process")
+    @Operation(
+            summary = "This is API upload",
+            description = "The API upload project.zip to store the source code of the program you want to perform unit-testing",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "This is the request body description :"),
+            parameters = {@io.swagger.v3.oas.annotations.Parameter(name = "project", description = "The name save Project.", example = "abc-project"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "user", description = "The name user.", example = "abc-user"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "parser", description = "The list parser.")}
+    )
     public JsonNode process(@RequestParam(name = "parser") List<String> parserList,
                             @RequestBody MultipartFile file,
                             @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
@@ -115,6 +122,12 @@ public class UTestController {
 //
 //    }
     @GetMapping(value = "/read")
+    @Operation(
+            summary = "Đây là API gọi đến một method",
+            description = "API trả về các thông tin chi tiết của một method class",
+            parameters = {@io.swagger.v3.oas.annotations.Parameter(name = "targetId", description = "Id của hàm mà người dùng muốn lấy thông tin chi tiết", example = "15"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "nameProject", description = "Tên của Project chứa hàm người dùng muốn lấy thông tin", example = "test.zip.project")}
+    )
     public ResponseEntity<Object> getInfoMethod(@RequestParam int targetId, @RequestParam String nameProject) {
         try {
             File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
@@ -140,6 +153,7 @@ public class UTestController {
                         }
                         String qualifiedName = nodeWithId.get("qualifiedName").asText();
                         String uniqueName = nodeWithId.get("uniqueName").asText();
+                        ArrayList<Integer> numberOfSentences = new ArrayList<>();
                         int openingParenthesisIndex = simpleName.indexOf("(");
                         String name = simpleName.substring(0, openingParenthesisIndex).trim();
 
@@ -157,17 +171,25 @@ public class UTestController {
                                 }
                                   String returnType = methodDeclaration.getType().asString();
                                   parameters.add(new Parameter("return", returnType));
+                                int startLine = methodDeclaration.getBegin().get().line;
+                                int endLine = methodDeclaration.getEnd().get().line;
+                                int linesInMethod = endLine - startLine + 1;
+
+                                numberOfSentences.add(startLine);
+                                numberOfSentences.add(endLine);
+                                numberOfSentences.add(linesInMethod);
                             }
                         }
-
                         InfoMethod infoMethod = new InfoMethod(
                                 targetId,
                                 name,
                                 children,
                                 pathMethod,
                                 qualifiedName,
+                                uniqueName,
                                 content,
-                                parameters
+                                parameters,
+                                numberOfSentences
                         );
                             return ResponseEntity.ok(infoMethod);
                     } else {
@@ -188,6 +210,11 @@ public class UTestController {
     }
 
     @PostMapping(value = "/expect")
+    @Operation(
+            summary = "Đây là API để người dùng nhập expected inputs/outputs",
+            description = "API sẽ lưu lại những expected inputs/outputs mà người dùng nhập vào" +
+                    "với inputs đó chương trình thực hiện các test case cho ra độ phủ actual outputs"
+    )
     public ResponseEntity<Object> setExpectValue(@RequestBody InfoMethod requestMethod){
         if (requestMethod != null) {
             try {
@@ -202,6 +229,13 @@ public class UTestController {
         }
     }
     @GetMapping(value = "/unit")
+    @Operation(
+            summary = "This is API auto run full Concolic ",
+            description = "Đây là API có input (targetId, nameProject) gửi về backend và phân tích method có" +
+                    "id là targetId thuộc projecet có tên là nameProject và chạy tự động kiểm thử đơn vị",
+            parameters = {@io.swagger.v3.oas.annotations.Parameter(name = "targetId", description = "Id của hàm mà người dùng muốn lấy thông tin chi tiết", example = "15"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "nameProject", description = "Tên của Project chứa hàm người dùng muốn lấy thông tin", example = "test.zip.project")}
+    )
     public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject) throws IOException {
         return ResponseEntity.ok(utestService.getRunFullConcolic(targetId, nameProject));
     }
