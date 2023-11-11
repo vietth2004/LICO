@@ -66,4 +66,7 @@ public class HostIPConstants {
     public String getUnitTestingIP(){
         return  eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
     }
+    public String getUploadProjectServiceIP(){
+        return  eurekaClient.getApplication(UPLOAD_PROJECT_SERVICE).getInstances().get(0).getIPAddr();
+    }
 }

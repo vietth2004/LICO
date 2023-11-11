@@ -2,20 +2,42 @@ Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách AS
 Duyệt danh sách ASTNode để tìm hàm cần kiểm thử
 CONCOLIC TEST REPORT
 Hàm thực hiện:
-public static int abs(int x){
-  if (x < 0)   return -x;
- else   return x;
+public static double intPow(double number,int index){
+  double result=1;
+  if (index == 0)   return 1;
+ else   if (index < 0) {
+    for (int i=0; i < -index; i++) {
+      result*=number;
+    }
+    return 1 / result;
+  }
+ else {
+    for (int i=0; i < index; i++) {
+      result*=number;
+    }
+    return result;
+  }
 }
 
 STEP 1: Clone hàm cần kiểm thử vào một file java có thể chạy được: core-engine\cfg\src\main\java\data\CloneFile.java
 STEP 2: Sinh cây CFG dựa trên hàm được truyền vào
-STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter [int]: [8]
-STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 x < 0 false, 2 return x;
+STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter [double, int]: [8.0, 8]
+STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 double result=1;
+ , 2 index == 0 false, 3 index < 0 false, 9 int i=0 , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index true, 10 result*=number;
+ , 9 i++ , 9 i < index false, 12 return result;
  ]
-STEP 5: Tìm node chưa được phủ: CFGNode{, content='return -x;
+STEP 5: Tìm node chưa được phủ: CFGNode{, content='return 1;
 ', isRootNode=false, isEndNode=false}
 STEP 6: Sinh đường thi hành từ node chưa được phủ đấy
-STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [-1]
-STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 x < 0 true, 1 return -x;
+STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [1.0, 0]
+STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 double result=1;
+ , 2 index == 0 true, 2 return 1;
  ]
 STEP 9Kết thúc việc kiểm thử

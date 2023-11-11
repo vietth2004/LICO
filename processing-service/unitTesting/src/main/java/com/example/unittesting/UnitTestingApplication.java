@@ -1,6 +1,5 @@
 package com.example.unittesting;
 
-import com.example.unittesting.Sevice.project.config.FileStorageProperties;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
@@ -12,9 +11,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableConfigurationProperties({
-        FileStorageProperties.class
-})
+
 @OpenAPIDefinition(
         info = @Info(title = "Unit-Testing", version = "1.0.0"),
         servers = {@Server(url = "http://localhost:8006"), @Server(url = "http://locahost:8005/api/unit-testing-service")},
