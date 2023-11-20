@@ -3,6 +3,7 @@ package com.example.uploadprojectservice.Controller;
 import com.example.uploadprojectservice.Service.UploadService;
 import com.example.uploadprojectservice.ast.Node.Parameter;
 import com.example.uploadprojectservice.ast.data.InfoMethod;
+import com.example.uploadprojectservice.utils.cloneProjectUtils.CloneProject;
 import com.example.uploadprojectservice.utils.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,11 +50,23 @@ public class UploadController {
     public JsonNode process(@RequestParam(name = "parser") List<String> parserList,
                             @RequestBody MultipartFile file,
                             @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
-                            @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
+                            @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException, InterruptedException {
         if (file != null) {
             String path = uploadService.buildProject(parserList, file, user, project);
-
             Object result = uploadService.build(path);
+
+            String javaDirPath = CloneProject.getJavaDirPath(path);
+            if(javaDirPath.equals("")) throw new RuntimeException("Invalid project");
+
+            // Clone Project
+            CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\ClonedProject");
+
+            //rerun and rebuild
+            Process p = Runtime.getRuntime().exec("cmd /c start scripts\\cfgBuild.bat");
+            Thread.sleep(25000);
+            Runtime.getRuntime().exec("cmd /c start cfgRun.bat");
+            Thread.sleep(15000);
+
             path += "\\tmp-prjt.json";
             File jsonFile = new File(path);
 

@@ -1,7 +1,7 @@
-Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách ASTNode
-Duyệt danh sách ASTNode để tìm hàm cần kiểm thử
+Parse to�n b? c�c h�m trong class c?n ki?m th? th�nh 1 danh s�ch ASTNode
+Duy?t danh s�ch ASTNode ?? t�m h�m c?n ki?m th?
 CONCOLIC TEST REPORT
-Hàm thực hiện:
+H�m th?c hi?n:
 public static double intPow(double number,int index){
   double result=1;
   if (index == 0)   return 1;
@@ -19,10 +19,10 @@ public static double intPow(double number,int index){
   }
 }
 
-STEP 1: Clone hàm cần kiểm thử vào một file java có thể chạy được: core-engine\cfg\src\main\java\data\CloneFile.java
-STEP 2: Sinh cây CFG dựa trên hàm được truyền vào
-STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter [double, int]: [8.0, 8]
-STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 double result=1;
+STEP 1: Clone h�m c?n ki?m th? v�o m?t file java c� th? ch?y ???c: core-engine\cfg\src\main\java\data\CloneFile.java
+STEP 2: Sinh c�y CFG d?a tr�n h�m ???c truy?n v�o
+STEP 3: Sinh d? li?u ng?u nhi�n cho c�c parameter [double, int]: [8.0, 8]
+STEP 4: Ch?y d? li?u ng?u nhi�n ??y, l?u nh?ng c�u l?nh ?� ???c ch?y qua: [1 double result=1;
  , 2 index == 0 false, 3 index < 0 false, 9 int i=0 , 9 i < index true, 10 result*=number;
  , 9 i++ , 9 i < index true, 10 result*=number;
  , 9 i++ , 9 i < index true, 10 result*=number;
@@ -33,11 +33,11 @@ STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã �
  , 9 i++ , 9 i < index true, 10 result*=number;
  , 9 i++ , 9 i < index false, 12 return result;
  ]
-STEP 5: Tìm node chưa được phủ: CFGNode{, content='return 1;
+STEP 5: T�m node ch?a ???c ph?: CFGNode{, content='return 1;
 ', isRootNode=false, isEndNode=false}
-STEP 6: Sinh đường thi hành từ node chưa được phủ đấy
-STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [1.0, 0]
-STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 double result=1;
+STEP 6: Sinh ???ng thi h�nh t? node ch?a ???c ph? ??y
+STEP 7: Th?c thi t??ng tr?ng ???ng thi h�nh v� sinh test data t??ng ?ng: [1.0, 0]
+STEP 8: ?�nh d?u nh?ng c�u l?nh (node) ?� ch?y qua sau khi th?c hi?n ch?y h�m v?i d? li?u v?a ???c sinh: [1 double result=1;
  , 2 index == 0 true, 2 return 1;
  ]
-STEP 9Kết thúc việc kiểm thử
+STEP 9K?t th�c vi?c ki?m th?

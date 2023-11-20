@@ -38,6 +38,7 @@ public class UTestServiceImpl implements UTestService {
                         System.out.println(nodeWithId + "\n");
                         String simpleName = nodeWithId.get("simpleName").asText();
                         String pathMethod = nodeWithId.get("path").asText();
+                        System.out.println(pathMethod);
                         int openingParenthesisIndex = simpleName.indexOf("(");
                         String name = simpleName.substring(0, openingParenthesisIndex).trim();
                         File file = new File(pathMethod);

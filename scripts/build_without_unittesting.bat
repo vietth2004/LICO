@@ -1,7 +1,7 @@
 call mvn -T 1C clean install compile package -f ..\core-engine\utils\pom.xml
 call mvn -T 1C clean install compile package -f ..\core-engine\core\pom.xml
 call mvn -T 1C clean install compile package -f ..\core-engine\jdt\pom.xml
-call mvn -T 1C clean install compile package -f ..\core-engine\cfg\pom.xml
+@REM call mvn -T 1C clean install compile package -f ..\core-engine\cfg\pom.xml
 call mvn -T 1C clean install compile package -f ..\management-service\discovery-server\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\cia-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\backend-service\file-service\pom.xml -DskipTests
@@ -18,5 +18,5 @@ call mvn -T 1C clean install compile package -f ..\management-service\api-gatewa
 call mvn -T 1C clean install compile package -f ..\processing-service\struts-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\jsp-service\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\xml-service\pom.xml -DskipTestsgit
-call mvn -T 1C clean install compile package -f ..\processing-service\unitTesting\pom.xml -DskipTests
+@REM call mvn -T 1C clean install compile package -f ..\processing-service\unitTesting\pom.xml -DskipTests
 call mvn -T 1C clean install compile package -f ..\processing-service\upload-project-service\pom.xml -DskipTestsgit

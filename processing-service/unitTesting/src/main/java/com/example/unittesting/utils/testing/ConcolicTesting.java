@@ -38,13 +38,23 @@ public class ConcolicTesting {
     private ConcolicTesting(){}
 
     public static ConcolicTestResult runFullConcolic(String path, String methodName, String className) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
-        System.out.println(path);
         ConcolicTestResult testResult = new ConcolicTestResult();
         StringBuilder report = new StringBuilder();
+
+        System.out.println(path + " ," + methodName + " ," +  className);
 
         // Parse File
         ArrayList<ASTNode> funcAstNodeList = ProjectParser.parseFile(path);
         CompilationUnit compilationUnit = ProjectParser.parseFileToCompilationUnit(path);
+
+        // create fullyClonedClassName
+        className = className.replace(".java", "");
+        String packetName = "";
+        if(compilationUnit.getPackage() != null) {
+            packetName = compilationUnit.getPackage().getName() + ".";
+        }
+        String fullyClonedClassName = "data.clonedProject." + packetName + className;
+
         report.append("Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách ASTNode\n");
 
         report.append("Duyệt danh sách ASTNode để tìm hàm cần kiểm thử\n");
@@ -54,7 +64,7 @@ public class ConcolicTesting {
                 report.append("Hàm thực hiện:\n").append(func).append("\n");
 
                 // Clone a runnable java file
-                createCloneMethod((MethodDeclaration) func, compilationUnit);
+//                createCloneMethod((MethodDeclaration) func, compilationUnit);
                 report.append("STEP 1: Clone hàm cần kiểm thử vào một file java có thể chạy được: core-engine\\cfg\\src\\main\\java\\data\\CloneFile.java\n");
                 // =========================
 
@@ -85,7 +95,7 @@ public class ConcolicTesting {
                 List<ASTNode> parameters = ((MethodDeclaration) func).parameters();
                 Class<?>[] parameterClasses = getParameterClasses(parameters);
                 List<String> parameterNames = getParameterNames(parameters);
-                Method method = Class.forName("data.CloneFile").getDeclaredMethod(methodName, parameterClasses);
+                Method method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
 
                 Object[] evaluatedValues = createRandomTestData(parameterClasses);
                 method.invoke(parameterClasses, evaluatedValues);

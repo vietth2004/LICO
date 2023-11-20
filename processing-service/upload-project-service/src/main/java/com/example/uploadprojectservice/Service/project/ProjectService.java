@@ -42,7 +42,6 @@ public class ProjectService {
     public String storeFile(MultipartFile file, String user, String project) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
         // Init file path
         String filePath = "project/" + user + "/" + project +  "/" + fileName;
         String folderPath = "project/" + user + "/" + project +  "/" + fileName + ".project";
@@ -60,6 +59,7 @@ public class ProjectService {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             System.out.println(filePath + " " + folderPath);
             javaUnzipFile(filePath, folderPath);
+
             return folderPath;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
@@ -99,6 +99,9 @@ public class ProjectService {
             FileInputStream fin = new FileInputStream(Filepath);
             BufferedInputStream bin = new BufferedInputStream(fin);
             ZipInputStream zis = new ZipInputStream(bin);
+
+            String unzipDestinationFolder = zis.getNextEntry().getName();
+
             ZipEntry zipEntry = null;
             int count = 0;
             while ((zipEntry = zis.getNextEntry()) != null) {
@@ -131,10 +134,10 @@ public class ProjectService {
             }
             System.out.println(count);
             zis.close();
+            return unzipDestinationFolder;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        return DestinationFolderPath;
     }
 
 

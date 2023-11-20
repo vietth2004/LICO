@@ -46,12 +46,11 @@ public class UploadServiceImpl implements UploadService{
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @Override
-    public String buildProject(List<String> parser, MultipartFile file, String user, String project) throws IOException{
+    public String buildProject(List<String> parser, MultipartFile file, String user, String project) {
         String userPath = user;
         if (!userPath.equals("anonymous")) {
             userPath = jwtUtils.extractUsername(user);
         }
-        long storeStartTime = System.currentTimeMillis();
         String fileName = projectService.storeFile(file, userPath, project);
         return fileName;
     }

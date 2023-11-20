@@ -1,0 +1,1 @@
+start /B "Unit Test" java -XX:TieredStopAtLevel=1 -noverify -Dspring.output.ansi.enabled=always -Dcom.sun.management.jmxremote -Dspring.jmx.enabled=true -Dspring.liveBeansView.mbeanDomain -Dspring.application.admin.enabled=true -jar "./processing-service/unitTesting/target/unitTesting-0.0.1-SNAPSHOT.jar"

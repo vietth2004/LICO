@@ -1,45 +1,28 @@
 package data;
 import static core.dataStructure.MarkedPath.markOneStatement;
 public class CloneFile {
-public static double intPow(double number, int index)
+public static int fibonacci(int n)
 {
-markOneStatement("double result=1;\n", false, false);
-double result=1;
-if (((index == 0) && markOneStatement("index == 0", true, false)) || markOneStatement("index == 0", false, true))
+markOneStatement("int a=0, b=1, c, i;\n", false, false);
+int a=0, b=1, c, i;
+if (((n == 0) && markOneStatement("n == 0", true, false)) || markOneStatement("n == 0", false, true))
 {
-markOneStatement("return 1;\n", false, false);
-return 1;
+markOneStatement("return a;\n", false, false);
+return a;
 }
-else {
-if (((index < 0) && markOneStatement("index < 0", true, false)) || markOneStatement("index < 0", false, true))
-{
-{
-markOneStatement("int i=0", false, false);
-for (int i=0; ((i < -index) && markOneStatement("i < -index", true, false)) || markOneStatement("i < -index", false, true); markOneStatement("i++", false, false),
+markOneStatement("i=2", false, false);
+for (i=2; ((i <= n) && markOneStatement("i <= n", true, false)) || markOneStatement("i <= n", false, true); markOneStatement("i++", false, false),
 i++) {
 {
-markOneStatement("result*=number;\n", false, false);
-result*=number;
+markOneStatement("c=a + b;\n", false, false);
+c=a + b;
+markOneStatement("a=b;\n", false, false);
+a=b;
+markOneStatement("b=c;\n", false, false);
+b=c;
 }
 }
-markOneStatement("return 1 / result;\n", false, false);
-return 1 / result;
-}
-}
-else {
-{
-markOneStatement("int i=0", false, false);
-for (int i=0; ((i < index) && markOneStatement("i < index", true, false)) || markOneStatement("i < index", false, true); markOneStatement("i++", false, false),
-i++) {
-{
-markOneStatement("result*=number;\n", false, false);
-result*=number;
-}
-}
-markOneStatement("return result;\n", false, false);
-return result;
-}
-}
-}
+markOneStatement("return b;\n", false, false);
+return b;
 }
 }
