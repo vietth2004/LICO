@@ -2,6 +2,7 @@ package com.example.unittesting.controller;
 
 import com.example.unittesting.Sevice.UTestService;
 
+import com.example.unittesting.utils.testing.ConcolicTesting;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,10 +35,27 @@ public class UTestController {
             description = "Đây là API có input (targetId, nameProject) gửi về backend và phân tích method có" +
                     "id là targetId thuộc projecet có tên là nameProject và chạy tự động kiểm thử đơn vị",
             parameters = {@io.swagger.v3.oas.annotations.Parameter(name = "targetId", description = "Id của hàm mà người dùng muốn lấy thông tin chi tiết", example = "15"),
-                    @io.swagger.v3.oas.annotations.Parameter(name = "nameProject", description = "Tên của Project chứa hàm người dùng muốn lấy thông tin", example = "test.zip.project")}
+                    @io.swagger.v3.oas.annotations.Parameter(name = "nameProject", description = "Tên của Project chứa hàm người dùng muốn lấy thông tin", example = "test.zip.project"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "coverageType", description = "Loại độ phủ cần kiểm thử")}
     )
-    public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject) throws IOException {
-        return ResponseEntity.ok(utestService.getRunFullConcolic(targetId, nameProject));
+    public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
+        ConcolicTesting.Coverage coverage;
+
+        switch (coverageType) {
+            case "statement":
+                coverage = ConcolicTesting.Coverage.STATEMENT;
+                break;
+            case "branch":
+                coverage = ConcolicTesting.Coverage.BRANCH;
+                break;
+            case "path":
+                coverage = ConcolicTesting.Coverage.PATH;
+                break;
+            default:
+                throw new RuntimeException("Invalid coverage type");
+        }
+
+        return ResponseEntity.ok(utestService.getRunFullConcolic(targetId, nameProject, coverage));
     }
 
 }

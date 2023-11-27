@@ -9,8 +9,9 @@ public class ConcolicTestData {
 //    private String coverage = "0%";
     private List<CoveredStatement> coveredStatements = new ArrayList<>();
     private List<ConcolicParameterData> parameterDataList = new ArrayList<>();
+    private Object output;
 
-    public ConcolicTestData(List<String> names, Class<?>[] types, Object[] values, List<CoveredStatement> coveredStatements) {
+    public ConcolicTestData(List<String> names, Class<?>[] types, Object[] values, List<CoveredStatement> coveredStatements, Object output) {
         if(names.size() != types.length || types.length != values.length) {
             throw new RuntimeException("Invalid");
         }
@@ -20,6 +21,8 @@ public class ConcolicTestData {
         }
 
         this.coveredStatements = coveredStatements;
+
+        this.output = output;
     }
 
 //    public void setCoverage(String coverage) {
@@ -44,6 +47,10 @@ public class ConcolicTestData {
 
     public List<ConcolicParameterData> getParameterDataList() {
         return parameterDataList;
+    }
+
+    public Object getOutput() {
+        return output;
     }
 
     @Override

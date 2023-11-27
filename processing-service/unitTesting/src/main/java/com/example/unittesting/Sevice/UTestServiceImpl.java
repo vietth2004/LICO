@@ -9,7 +9,6 @@ import com.example.unittesting.utils.testing.ConcolicTesting;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ import java.io.IOException;
 
 public class UTestServiceImpl implements UTestService {
     @Override
-    public ResponseEntity<Object> getRunFullConcolic(int targetId, String nameProject) throws IOException {
+    public ResponseEntity<Object> getRunFullConcolic(int targetId, String nameProject, ConcolicTesting.Coverage coverage) throws IOException {
         try {
             File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
             if (!jsonFile.exists()) {
@@ -43,7 +42,7 @@ public class UTestServiceImpl implements UTestService {
                         String name = simpleName.substring(0, openingParenthesisIndex).trim();
                         File file = new File(pathMethod);
                         String className = file.getName();
-                        ConcolicTestResult result = ConcolicTesting.runFullConcolic(pathMethod, name, className);
+                        ConcolicTestResult result = ConcolicTesting.runFullConcolic(pathMethod, name, className, coverage);
                         return ResponseEntity.ok(result);
                     } else {
                         System.out.println("Node with id not JavaMethodNode.\n");

@@ -75,7 +75,7 @@ public final class MarkedPath {
     public static List<String> getMarkedStatementsStringList() {
         List<String> result = new ArrayList<>();
 
-        for(MarkedStatement markedStatement : markedStatements) {
+        for (MarkedStatement markedStatement : markedStatements) {
             result.add(markedStatement.getStatement());
         }
 
@@ -90,7 +90,6 @@ public final class MarkedPath {
             CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
 
 
-
             if (!boolExprNode.isTrueMarked()) {
                 return boolExprNode.getTrueNode();
             }
@@ -98,16 +97,15 @@ public final class MarkedPath {
                 return boolExprNode.getFalseNode();
             }
 
-            if(boolExprNode != duplicateNode) {
+            if (boolExprNode != duplicateNode) {
                 duplicateNode = boolExprNode;
                 return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
-            }
-            else {
+            } else {
                 return findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
             }
         }
 
-        CfgNode cfgNode =  findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
+        CfgNode cfgNode = findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
         return cfgNode;
     }
 
@@ -154,7 +152,46 @@ public final class MarkedPath {
         markedStatements.add(markedStatement);
     }
 
-    public static List<MarkedStatement> getMarkedStatements() {
-        return markedStatements;
+    public static CfgNode findUncoverStatement(CfgNode rootNode, CfgNode duplicateNode) {
+        if (rootNode == null || !rootNode.isMarked()) {
+            return rootNode;
+        }
+        if (rootNode instanceof CfgBoolExprNode) {
+            CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
+
+            if (boolExprNode != duplicateNode) {
+                duplicateNode = boolExprNode;
+                return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
+            } else {
+                return findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
+            }
+        }
+
+        return findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
+    }
+
+    public static CfgNode findUncoveredBranch(CfgNode rootNode, CfgNode duplicateNode) {
+        if (rootNode == null) {
+            return null;
+        }
+        if (rootNode instanceof CfgBoolExprNode) {
+            CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
+
+            if (!boolExprNode.isTrueMarked()) {
+                return boolExprNode.getTrueNode();
+            }
+            if (!boolExprNode.isFalseMarked()) {
+                return boolExprNode.getFalseNode();
+            }
+
+            if (boolExprNode != duplicateNode) {
+                duplicateNode = boolExprNode;
+                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
+            } else {
+                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
+            }
+        }
+
+        return findUncoveredBranch(rootNode.getAfterStatementNode(), duplicateNode);
     }
 }

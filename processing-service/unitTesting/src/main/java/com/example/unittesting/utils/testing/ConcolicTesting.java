@@ -4,12 +4,14 @@ import com.example.unittesting.model.coveredStatement.CoveredStatement;
 import com.example.unittesting.model.result.Concolic.ConcolicTestData;
 import com.example.unittesting.model.result.Concolic.ConcolicTestResult;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import core.algorithms.FindAllPath;
 import core.algorithms.FindPath;
 import core.algorithms.SymbolicExecution;
 import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedPath;
+import core.dataStructure.MarkedPathV2;
 import core.dataStructure.MarkedStatement;
 import core.dataStructure.Path;
 import core.parser.ASTHelper;
@@ -35,123 +37,175 @@ import static core.testDriver.Utils.*;
 @JsonAutoDetect
 @Component
 public class ConcolicTesting {
-    private ConcolicTesting(){}
 
-    public static ConcolicTestResult runFullConcolic(String path, String methodName, String className) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
-        ConcolicTestResult testResult = new ConcolicTestResult();
-        StringBuilder report = new StringBuilder();
+    public enum Coverage {
+        STATEMENT,
+        BRANCH,
+        PATH
+    }
 
-        System.out.println(path + " ," + methodName + " ," +  className);
+    private static StringBuilder report;
+    private static ConcolicTestResult testResult;
+    private static CompilationUnit compilationUnit;
+    private static String fullyClonedClassName;
+    private static ArrayList<ASTNode> funcAstNodeList;
+    private static CfgNode cfgBeginNode;
+    private static CfgEndBlockNode cfgEndNode;
+    private static List<ASTNode> parameters;
+    private static Class<?>[] parameterClasses;
+    private static List<String> parameterNames;
+    private static Method method;
+    private static ASTNode testFunc;
 
-        // Parse File
-        ArrayList<ASTNode> funcAstNodeList = ProjectParser.parseFile(path);
-        CompilationUnit compilationUnit = ProjectParser.parseFileToCompilationUnit(path);
+    private ConcolicTesting() {
+    }
 
-        // create fullyClonedClassName
-        className = className.replace(".java", "");
-        String packetName = "";
-        if(compilationUnit.getPackage() != null) {
-            packetName = compilationUnit.getPackage().getName() + ".";
-        }
-        String fullyClonedClassName = "data.clonedProject." + packetName + className;
+    public static ConcolicTestResult runFullConcolic(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
 
-        report.append("Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách ASTNode\n");
+        setup(path, className, methodName);
+        setupCfgTree();
+        setupParameters(methodName);
 
-        report.append("Duyệt danh sách ASTNode để tìm hàm cần kiểm thử\n");
-        for (ASTNode func : funcAstNodeList) {
-            if (((MethodDeclaration) func).getName().getIdentifier().equals(methodName)) {
-                report.append("CONCOLIC TEST REPORT\n");
-                report.append("Hàm thực hiện:\n").append(func).append("\n");
+        ConcolicTestResult testResult = testingWithStatementAndBranchCoverage(coverage);
 
-                // Clone a runnable java file
-//                createCloneMethod((MethodDeclaration) func, compilationUnit);
-                report.append("STEP 1: Clone hàm cần kiểm thử vào một file java có thể chạy được: core-engine\\cfg\\src\\main\\java\\data\\CloneFile.java\n");
-                // =========================
-
-                // Generate CFG
-                Block functionBlock = Utils.getFunctionBlock(func);
-
-                CfgNode cfgBeginCfgNode = new CfgNode();
-                cfgBeginCfgNode.setIsBeginCfgNode(true);
-
-                CfgEndBlockNode cfgEndCfgNode = new CfgEndBlockNode();
-                cfgEndCfgNode.setIsEndCfgNode(true);
-
-                CfgNode block = new CfgBlockNode();
-                block.setAst(functionBlock);
-
-                int firstLine = compilationUnit.getLineNumber(functionBlock.getStartPosition());
-                block.setLineNumber(1);
-
-                block.setBeforeStatementNode(cfgBeginCfgNode);
-                block.setAfterStatementNode(cfgEndCfgNode);
-
-                ASTHelper.generateCFG(block, compilationUnit, firstLine);
-                CfgNode cfgNode = cfgBeginCfgNode;
-                report.append("STEP 2: Sinh cây CFG dựa trên hàm được truyền vào\n");
-                //===========================
-
-                //=======================FULL CONCOLIC VERSION 1===========================
-                List<ASTNode> parameters = ((MethodDeclaration) func).parameters();
-                Class<?>[] parameterClasses = getParameterClasses(parameters);
-                List<String> parameterNames = getParameterNames(parameters);
-                Method method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
-
-                Object[] evaluatedValues = createRandomTestData(parameterClasses);
-                method.invoke(parameterClasses, evaluatedValues);
-                List<CoveredStatement> pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgNode));
-                report.append("STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter ").append(Arrays.toString(parameterClasses)).append(": ");
-                report.append(Arrays.toString(evaluatedValues)).append("\n");
-                report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(pathStatements).append("\n");
-
-                testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, pathStatements));
-
-                boolean isTestedSuccessfully = true;
-                int i = 5;
-
-                for (CfgNode uncoveredNode = MarkedPath.findUncoveredNode(cfgNode, null); uncoveredNode != null; ) {
-                    report.append("STEP ").append(i++).append(": Tìm node chưa được phủ: ").append(uncoveredNode).append("\n");
-
-                    Path newPath = (new FindPath(cfgNode, uncoveredNode, cfgEndCfgNode)).getPath();
-                    report.append("STEP ").append(i++).append(": Sinh đường thi hành từ node chưa được phủ đấy\n");
-
-                    SymbolicExecution solution = new SymbolicExecution(newPath, parameters);
-
-
-                    if(solution.getModel() == null) {
-                        isTestedSuccessfully = false;
-                        break;
-                    }
-
-                    evaluatedValues = getParameterValue(parameterClasses);
-                    report.append("STEP ").append(i++).append(": Thực thi tượng trưng đường thi hành và sinh test data tương ứng: ");
-                    report.append(Arrays.toString(evaluatedValues)).append("\n");
-
-                    method.invoke(parameterClasses, evaluatedValues);
-                    pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgNode));
-
-                    report.append("STEP ").append(i++).append(": Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: ");
-                    report.append(pathStatements).append("\n");
-
-                    testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, pathStatements));
-
-                    uncoveredNode = MarkedPath.findUncoveredNode(cfgNode, null);
-                    System.out.println("Uncovered Node: " + uncoveredNode);
-                }
-
-                report.append("STEP ").append(i).append("Kết thúc việc kiểm thử");
-
-                writeDataToFile(report.toString(), "core-engine/cfg/src/main/java/data/report.txt");
-
-                if(isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
-                else System.out.println("Test fail due to UNSATISFIABLE constraint");
-//                //========================================
-
-                break;
-            }
-        }
         return testResult;
     }
 
+    private static void testingWithPathCoverage(Class<?>[] parameterClasses) throws InvocationTargetException, IllegalAccessException {
+        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+        for (int i = 0; i < paths.size(); i++) {
+
+            SymbolicExecution execution = new SymbolicExecution(paths.get(i), parameters);
+
+            method.invoke(parameterClasses, getParameterValue(parameterClasses));
+            if (!MarkedPathV2.check(paths.get(i))) {
+                System.out.println("Path is not covered");
+            }
+        }
+    }
+
+    private static ConcolicTestResult testingWithStatementAndBranchCoverage(Coverage coverage) throws InvocationTargetException, IllegalAccessException {
+        Object[] evaluatedValues = createRandomTestData(parameterClasses);
+        Object output = method.invoke(parameterClasses, evaluatedValues);
+        List<CoveredStatement> pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgBeginNode));
+        report.append("STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter ").append(Arrays.toString(parameterClasses)).append(": ");
+        report.append(Arrays.toString(evaluatedValues)).append("\n");
+        report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(pathStatements).append("\n");
+
+        testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, pathStatements, output));
+
+        boolean isTestedSuccessfully = true;
+        int i = 5;
+
+        for (CfgNode uncoveredNode = findUncoverNode(cfgBeginNode, coverage); uncoveredNode != null; ) {
+            report.append("STEP ").append(i++).append(": Tìm node chưa được phủ: ").append(uncoveredNode).append("\n");
+
+            Path newPath = (new FindPath(cfgBeginNode, uncoveredNode, cfgEndNode)).getPath();
+            report.append("STEP ").append(i++).append(": Sinh đường thi hành từ node chưa được phủ đấy\n");
+
+            SymbolicExecution solution = new SymbolicExecution(newPath, parameters);
+
+
+            if (solution.getModel() == null) {
+                isTestedSuccessfully = false;
+                break;
+            }
+
+            evaluatedValues = getParameterValue(parameterClasses);
+            report.append("STEP ").append(i++).append(": Thực thi tượng trưng đường thi hành và sinh test data tương ứng: ");
+            report.append(Arrays.toString(evaluatedValues)).append("\n");
+
+            output = method.invoke(parameterClasses, evaluatedValues);
+            pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgBeginNode));
+
+            report.append("STEP ").append(i++).append(": Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: ");
+            report.append(pathStatements).append("\n");
+
+            testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, pathStatements, output));
+
+            uncoveredNode = findUncoverNode(cfgBeginNode, coverage);
+            System.out.println("Uncovered Node: " + uncoveredNode);
+        }
+
+        report.append("STEP ").append(i).append("Kết thúc việc kiểm thử");
+
+        writeDataToFile(report.toString(), "core-engine/cfg/src/main/java/data/report.txt");
+
+        if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
+        else System.out.println("Test fail due to UNSATISFIABLE constraint");
+
+        return testResult;
+    }
+
+    private static CfgNode findUncoverNode(CfgNode cfgNode, Coverage coverage) {
+        switch (coverage) {
+            case STATEMENT:
+                return MarkedPath.findUncoverStatement(cfgNode, null);
+            case BRANCH:
+                return MarkedPath.findUncoveredBranch(cfgNode, null);
+            default:
+                throw new RuntimeException("Invalid coverage type");
+        }
+    }
+
+    private static void setup(String path, String className, String methodName) throws IOException {
+        testResult = new ConcolicTestResult();
+        report = new StringBuilder();
+
+        // Parse File
+        report.append("Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách ASTNode\n");
+        funcAstNodeList = ProjectParser.parseFile(path);
+        compilationUnit = ProjectParser.parseFileToCompilationUnit(path);
+        setupFullyClonedClassName(className);
+        setUpTestFunc(methodName);
+    }
+
+    private static void setUpTestFunc(String methodName) {
+        report.append("Duyệt danh sách ASTNode để tìm hàm cần kiểm thử\n");
+        for (ASTNode func : funcAstNodeList) {
+            if (((MethodDeclaration) func).getName().getIdentifier().equals(methodName)) {
+                testFunc = func;
+            }
+        }
+        report.append("CONCOLIC TEST REPORT\n");
+        report.append("Hàm thực hiện:\n").append(testFunc).append("\n");
+    }
+
+    private static void setupParameters(String methodName) throws ClassNotFoundException, NoSuchMethodException {
+        parameters = ((MethodDeclaration) testFunc).parameters();
+        parameterClasses = getParameterClasses(parameters);
+        parameterNames = getParameterNames(parameters);
+        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
+    }
+
+    private static void setupFullyClonedClassName(String className) {
+        className = className.replace(".java", "");
+        String packetName = "";
+        if (compilationUnit.getPackage() != null) {
+            packetName = compilationUnit.getPackage().getName() + ".";
+        }
+        fullyClonedClassName = "data.clonedProject." + packetName + className;
+    }
+
+    private static void setupCfgTree() {
+        Block functionBlock = Utils.getFunctionBlock(testFunc);
+
+        cfgBeginNode = new CfgNode();
+        cfgBeginNode.setIsBeginCfgNode(true);
+
+        cfgEndNode = new CfgEndBlockNode();
+        cfgEndNode.setIsEndCfgNode(true);
+
+        CfgNode block = new CfgBlockNode();
+        block.setAst(functionBlock);
+
+        int firstLine = compilationUnit.getLineNumber(functionBlock.getStartPosition());
+        block.setLineNumber(1);
+
+        block.setBeforeStatementNode(cfgBeginNode);
+        block.setAfterStatementNode(cfgEndNode);
+
+        ASTHelper.generateCFG(block, compilationUnit, firstLine);
+    }
 
 }
