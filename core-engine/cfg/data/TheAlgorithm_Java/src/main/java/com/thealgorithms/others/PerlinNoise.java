@@ -10,19 +10,19 @@ import java.util.Scanner;
 public class PerlinNoise {
 
     /**
-     * @param width width of noise array
-     * @param height height of noise array
+     * @param width       width of noise array
+     * @param height      height of noise array
      * @param octaveCount numbers of layers used for blending noise
      * @param persistence value of impact each layer get while blending
-     * @param seed used for randomizer
+     * @param seed        used for randomizer
      * @return float array containing calculated "Perlin-Noise" values
      */
     static float[][] generatePerlinNoise(
-        int width,
-        int height,
-        int octaveCount,
-        float persistence,
-        long seed
+            int width,
+            int height,
+            int octaveCount,
+            float persistence,
+            long seed
     ) {
         final float[][] base = new float[width][height];
         final float[][] perlinNoise = new float[width][height];
@@ -39,7 +39,7 @@ public class PerlinNoise {
         // calculate octaves with different roughness
         for (int octave = 0; octave < octaveCount; octave++) {
             noiseLayers[octave] =
-                generatePerlinNoiseLayer(base, width, height, octave);
+                    generatePerlinNoiseLayer(base, width, height, octave);
         }
 
         float amplitude = 1f;
@@ -70,17 +70,17 @@ public class PerlinNoise {
     }
 
     /**
-     * @param base base random float array
-     * @param width width of noise array
+     * @param base   base random float array
+     * @param width  width of noise array
      * @param height height of noise array
      * @param octave current layer
      * @return float array containing calculated "Perlin-Noise-Layer" values
      */
     static float[][] generatePerlinNoiseLayer(
-        float[][] base,
-        int width,
-        int height,
-        int octave
+            float[][] base,
+            int width,
+            int height,
+            int octave
     ) {
         float[][] perlinNoiseLayer = new float[width][height];
 
@@ -102,21 +102,21 @@ public class PerlinNoise {
 
                 // blend top corners
                 float top = interpolate(
-                    base[x0][y0],
-                    base[x1][y0],
-                    horizintalBlend
+                        base[x0][y0],
+                        base[x1][y0],
+                        horizintalBlend
                 );
 
                 // blend bottom corners
                 float bottom = interpolate(
-                    base[x0][y1],
-                    base[x1][y1],
-                    horizintalBlend
+                        base[x0][y1],
+                        base[x1][y1],
+                        horizintalBlend
                 );
 
                 // blend top and bottom interpolation to get the final blend value for this cell
                 perlinNoiseLayer[x][y] =
-                    interpolate(top, bottom, verticalBlend);
+                        interpolate(top, bottom, verticalBlend);
             }
         }
 
@@ -124,10 +124,10 @@ public class PerlinNoise {
     }
 
     /**
-     * @param a value of point a
-     * @param b value of point b
+     * @param a     value of point a
+     * @param b     value of point b
      * @param alpha determine which value has more impact (closer to 0 -> a,
-     * closer to 1 -> b)
+     *              closer to 1 -> b)
      * @return interpolated value
      */
     static float interpolate(float a, float b, float alpha) {
@@ -164,7 +164,7 @@ public class PerlinNoise {
         charset = in.next();
 
         perlinNoise =
-            generatePerlinNoise(width, height, octaveCount, persistence, seed);
+                generatePerlinNoise(width, height, octaveCount, persistence, seed);
         final char[] chars = charset.toCharArray();
         final int length = chars.length;
         final float step = 1f / length;

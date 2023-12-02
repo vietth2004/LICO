@@ -40,7 +40,7 @@ public class OrientedDependency {
 
     public boolean contains(Integer id) {
 
-        if(this.callerNode.equals(id)) {
+        if (this.callerNode.equals(id)) {
             return true;
         }
 

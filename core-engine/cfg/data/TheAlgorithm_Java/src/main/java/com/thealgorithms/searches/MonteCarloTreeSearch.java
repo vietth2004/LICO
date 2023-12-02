@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * Monte Carlo Tree Search (MCTS) is a heuristic search algorithm used in
  * decition taking problems especially games.
- *
+ * <p>
  * See more: https://en.wikipedia.org/wiki/Monte_Carlo_tree_search,
  * https://www.baeldung.com/java-monte-carlo-tree-search
  */
@@ -23,7 +23,8 @@ public class MonteCarloTreeSearch {
         int score;
         int visitCount;
 
-        public Node() {}
+        public Node() {
+        }
 
         public Node(Node parent, boolean isPlayersTurn) {
             this.parent = parent;
@@ -78,8 +79,8 @@ public class MonteCarloTreeSearch {
         winnerNode = getWinnerNode(rootNode);
         printScores(rootNode);
         System.out.format(
-            "\nThe optimal node is: %02d\n",
-            rootNode.childNodes.indexOf(winnerNode) + 1
+                "\nThe optimal node is: %02d\n",
+                rootNode.childNodes.indexOf(winnerNode) + 1
         );
 
         return winnerNode;
@@ -93,7 +94,7 @@ public class MonteCarloTreeSearch {
 
     /**
      * Uses UCT to find a promising child node to be explored.
-     *
+     * <p>
      * UCT: Upper Confidence bounds applied to Trees.
      *
      * @param rootNode Root node of the tree.
@@ -121,12 +122,12 @@ public class MonteCarloTreeSearch {
                 }
 
                 uctTemp =
-                    ((double) childNode.score / childNode.visitCount) +
-                    1.41 *
-                    Math.sqrt(
-                        Math.log(promisingNode.visitCount) /
-                        (double) childNode.visitCount
-                    );
+                        ((double) childNode.score / childNode.visitCount) +
+                                1.41 *
+                                        Math.sqrt(
+                                                Math.log(promisingNode.visitCount) /
+                                                        (double) childNode.visitCount
+                                        );
 
                 if (uctTemp > uctIndex) {
                     uctIndex = uctTemp;
@@ -166,8 +167,8 @@ public class MonteCarloTreeSearch {
 
             // Add wining scores to bouth player and opponent depending on the turn.
             if (
-                (tempNode.isPlayersTurn && isPlayerWinner) ||
-                (!tempNode.isPlayersTurn && !isPlayerWinner)
+                    (tempNode.isPlayersTurn && isPlayerWinner) ||
+                            (!tempNode.isPlayersTurn && !isPlayerWinner)
             ) {
                 tempNode.score += WIN_SCORE;
             }
@@ -178,8 +179,8 @@ public class MonteCarloTreeSearch {
 
     public Node getWinnerNode(Node rootNode) {
         return Collections.max(
-            rootNode.childNodes,
-            Comparator.comparing(c -> c.score)
+                rootNode.childNodes,
+                Comparator.comparing(c -> c.score)
         );
     }
 
@@ -188,12 +189,12 @@ public class MonteCarloTreeSearch {
 
         for (int i = 0; i < rootNode.childNodes.size(); i++) {
             System.out.println(
-                String.format(
-                    "%02d\t%d\t\t%d",
-                    i + 1,
-                    rootNode.childNodes.get(i).score,
-                    rootNode.childNodes.get(i).visitCount
-                )
+                    String.format(
+                            "%02d\t%d\t\t%d",
+                            i + 1,
+                            rootNode.childNodes.get(i).score,
+                            rootNode.childNodes.get(i).visitCount
+                    )
             );
         }
     }

@@ -13,11 +13,13 @@ public class NodeHelper {
         }
         return node;
     }
+
     public static Node getFileNode(Node node) {
         if (node == null || node instanceof FileNode)
             return node;
         else return getFileNode(node.getParent());
     }
+
     public static Node replaceNode(Node oldNode, Node newNode) {
         Node parent = oldNode.getParent();
         if (parent == null) return oldNode;

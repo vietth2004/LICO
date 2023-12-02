@@ -11,7 +11,7 @@ public class InfixToPostfix {
     }
 
     public static String infix2PostFix(String infixExpression)
-        throws Exception {
+            throws Exception {
         if (!BalancedBrackets.isBalanced(infixExpression)) {
             throw new Exception("invalid expression");
         }
@@ -29,8 +29,8 @@ public class InfixToPostfix {
                 stack.pop();
             } else {
                 while (
-                    !stack.isEmpty() &&
-                    precedence(element) <= precedence(stack.peek())
+                        !stack.isEmpty() &&
+                                precedence(element) <= precedence(stack.peek())
                 ) {
                     output.append(stack.pop());
                 }

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -35,9 +34,11 @@ public class UploadController {
      */
     @Autowired
     private final UploadService uploadService;
-    public UploadController(UploadService uploadService){
+
+    public UploadController(UploadService uploadService) {
         this.uploadService = uploadService;
     }
+
     @PostMapping("/process")
     @Operation(
             summary = "This is API upload",
@@ -56,7 +57,7 @@ public class UploadController {
             Object result = uploadService.build(path);
 
             String javaDirPath = CloneProject.getJavaDirPath(path);
-            if(javaDirPath.equals("")) throw new RuntimeException("Invalid project");
+            if (javaDirPath.equals("")) throw new RuntimeException("Invalid project");
 
             // Clone Project
             CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\ClonedProject");
@@ -82,6 +83,7 @@ public class UploadController {
             throw new IllegalArgumentException("File is null");
         }
     }
+
     @GetMapping(value = "/view-tree")
     public ResponseEntity<Object> NodeTree(@RequestParam String nameProject) {
 
@@ -109,6 +111,7 @@ public class UploadController {
                     .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
         }
     }
+
     @GetMapping(value = "/read")
     @Operation(
             summary = "Đây là API gọi đến một method",
@@ -152,7 +155,7 @@ public class UploadController {
                         for (MethodDeclaration methodDeclaration : methodDeclarations) {
                             String methodName = methodDeclaration.getSignature().asString();
                             //System.out.println(methodName);
-                            if(methodName.equals(simpleName)){
+                            if (methodName.equals(simpleName)) {
                                 content = new StringBuilder(methodDeclaration.toString());
                                 for (com.github.javaparser.ast.body.Parameter parameter : methodDeclaration.getParameters()) {
                                     parameters.add(new Parameter(parameter.getNameAsString(), parameter.getType().asString()));
@@ -192,7 +195,7 @@ public class UploadController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
+            System.out.println("Error processing request. Exception: " + e.getMessage() + "\n");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
         }
     }
@@ -203,7 +206,7 @@ public class UploadController {
             description = "API sẽ lưu lại những expected inputs/outputs mà người dùng nhập vào" +
                     "với inputs đó chương trình thực hiện các test case cho ra độ phủ actual outputs"
     )
-    public ResponseEntity<Object> setExpectValue(@RequestBody InfoMethod requestMethod){
+    public ResponseEntity<Object> setExpectValue(@RequestBody InfoMethod requestMethod) {
         if (requestMethod != null) {
             try {
                 ResponseEntity<Object> response = uploadService.saveDataTest(requestMethod);

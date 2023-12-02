@@ -26,37 +26,38 @@ import mrmathami.cia.java.tree.node.JavaAnnotationNode;
 
 public final class AnnotationNode extends AbstractModifiedAnnotatedNode implements JavaAnnotationNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nullable private final String binaryName;
+    @Nullable
+    private final String binaryName;
 
-	public AnnotationNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, @Nullable String binaryName) {
-		super(sourceFile, parent, simpleName);
-		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
-				InterfaceNode.class, PackageNode.class, RootNode.class);
+    public AnnotationNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+                          @Nonnull String simpleName, @Nullable String binaryName) {
+        super(sourceFile, parent, simpleName);
+        checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
+                InterfaceNode.class, PackageNode.class, RootNode.class);
 
-		this.binaryName = binaryName;
-	}
+        this.binaryName = binaryName;
+    }
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nullable
-	@Override
-	public String getBinaryName() {
-		return binaryName;
-	}
+    @Nullable
+    @Override
+    public String getBinaryName() {
+        return binaryName;
+    }
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
-	//region Jsonify
+    //region Jsonify
 
-	@Override
-	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-		super.internalToReferenceJsonStart(builder);
-		builder.append(", \"binaryName\": \"").append(binaryName).append('"');
-	}
+    @Override
+    protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+        super.internalToReferenceJsonStart(builder);
+        builder.append(", \"binaryName\": \"").append(binaryName).append('"');
+    }
 
-	//endregion Jsonify
+    //endregion Jsonify
 
 }

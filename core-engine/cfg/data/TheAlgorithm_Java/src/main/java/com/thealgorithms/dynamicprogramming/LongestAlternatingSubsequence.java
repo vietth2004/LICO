@@ -61,12 +61,12 @@ public class LongestAlternatingSubsequence {
     }
 
     public static void main(String[] args) {
-        int arr[] = { 10, 22, 9, 33, 49, 50, 31, 60 };
+        int arr[] = {10, 22, 9, 33, 49, 50, 31, 60};
         int n = arr.length;
         System.out.println(
-            "Length of Longest " +
-            "alternating subsequence is " +
-            AlternatingLength(arr, n)
+                "Length of Longest " +
+                        "alternating subsequence is " +
+                        AlternatingLength(arr, n)
         );
     }
 }

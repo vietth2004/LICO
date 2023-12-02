@@ -7,6 +7,7 @@ package com.thealgorithms.datastructures.stacks;
 // e.g.'
 // ((a + b) + (c + d)) -> false
 // (a + b) + ((c + d)) -> true
+
 import java.util.*;
 
 public class DuplicateBrackets {

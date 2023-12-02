@@ -16,7 +16,7 @@ public class Intersection {
 
     public static List<Integer> intersection(int[] arr1, int[] arr2) {
         if (
-            arr1 == null || arr2 == null || arr1.length == 0 || arr2.length == 0
+                arr1 == null || arr2 == null || arr1.length == 0 || arr2.length == 0
         ) {
             return Collections.emptyList();
         }
@@ -34,5 +34,6 @@ public class Intersection {
         return res;
     }
 
-    private Intersection() {}
+    private Intersection() {
+    }
 }

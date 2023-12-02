@@ -48,18 +48,18 @@ public class FileStorageService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         // Init file path
-        String filePath = "./project/" + user + "/" + project +  "/" + fileName;
-        String folderPath = "./project/" + user + "/" + project +  "/" + fileName + ".project";
+        String filePath = "./project/" + user + "/" + project + "/" + fileName;
+        String folderPath = "./project/" + user + "/" + project + "/" + fileName + ".project";
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
+            if (fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
             new File("./project/" + user + "/" + project).mkdirs();
 
-            String zipFilePath = user + "/" + project +  "/" + fileName;
+            String zipFilePath = user + "/" + project + "/" + fileName;
 
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(zipFilePath);
@@ -76,7 +76,7 @@ public class FileStorageService {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()) {
+            if (resource.exists()) {
                 return resource;
             } else {
                 throw new MyFileNotFoundException("File not found " + fileName);
@@ -90,21 +90,21 @@ public class FileStorageService {
         try {
             ZipFile zipFile = new ZipFile(Filepath);
             List fileHeaders = zipFile.getFileHeaders();
-            for(int i=0;i<fileHeaders.size();i++) {
-                FileHeader fileHeader=(FileHeader) fileHeaders.get(i);
+            for (int i = 0; i < fileHeaders.size(); i++) {
+                FileHeader fileHeader = (FileHeader) fileHeaders.get(i);
                 String fileName = fileHeader.getFileName();
                 if (fileName.contains("\\")) {
-                    fileName=fileName.replace("\\","\\\\");
-                    String[] Folders=fileName.split("\\\\");
+                    fileName = fileName.replace("\\", "\\\\");
+                    String[] Folders = fileName.split("\\\\");
                     StringBuilder newFilepath = new StringBuilder();
                     newFilepath.append(DestinationFolderPath);
-                    for (int j=0;j<Folders.length-1;j++){
+                    for (int j = 0; j < Folders.length - 1; j++) {
                         newFilepath.append(File.separator);
                         newFilepath.append(Folders[j]);
                     }
-                    zipFile.extractFile(fileHeader, Folders[Folders.length-1], newFilepath.toString(), null);
-                }else {
-                    zipFile.extractFile(fileHeader,DestinationFolderPath);
+                    zipFile.extractFile(fileHeader, Folders[Folders.length - 1], newFilepath.toString(), null);
+                } else {
+                    zipFile.extractFile(fileHeader, DestinationFolderPath);
                 }
             }
         } catch (ZipException e) {

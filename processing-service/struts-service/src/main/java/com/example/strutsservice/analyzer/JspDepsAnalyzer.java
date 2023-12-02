@@ -7,13 +7,13 @@ import com.example.strutsservice.dom.Node;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JspDepsAnalyzer implements StrutAnalyzer{
+public class JspDepsAnalyzer implements StrutAnalyzer {
 
     @Override
     public List<Dependency> analyze(List<JavaNode> javaNodes, List<Node> strutsNodes, List<Node> xmlNodes) {
         List<Dependency> strutJspDeps = new ArrayList<>();
 
-        for(Node node : strutsNodes) {
+        for (Node node : strutsNodes) {
 
         }
 

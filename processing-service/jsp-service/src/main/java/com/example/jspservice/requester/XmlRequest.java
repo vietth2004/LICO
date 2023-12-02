@@ -24,14 +24,14 @@ public class XmlRequest {
         this.path = path;
     }
 
-    public List<Node> getXmlNode(String address){
+    public List<Node> getXmlNode(String address) {
 
         RestTemplate restTemplate = new RestTemplate();
         List<Node> xmlNodes = restTemplate.postForObject(
                 "http://localhost:7006/api/xml-service/pathParse/old" //xml-service
                 , new XmlRequest(address)
                 , List.class
-                );
+        );
 
         return xmlNodes;
 

@@ -29,29 +29,30 @@ import mrmathami.cia.java.tree.type.JavaType;
 import java.util.List;
 
 public interface JavaClassNode extends JavaNode,
-		JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode, JavaTypeNode {
+        JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode, JavaTypeNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaClassNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaClassNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nullable
-	JavaType getExtendsClass();
+    @Nullable
+    JavaType getExtendsClass();
 
-	@Nonnull
-	List<? extends JavaType> getImplementsInterfaces();
+    @Nonnull
+    List<? extends JavaType> getImplementsInterfaces();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

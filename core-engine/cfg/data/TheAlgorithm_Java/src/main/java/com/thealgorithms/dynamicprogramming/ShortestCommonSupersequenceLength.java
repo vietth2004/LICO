@@ -50,9 +50,9 @@ class ShortestSuperSequence {
         String Y = "GXTXAYB";
 
         System.out.println(
-            "Length of the shortest " +
-            "supersequence is " +
-            shortestSuperSequence(X, Y)
+                "Length of the shortest " +
+                        "supersequence is " +
+                        shortestSuperSequence(X, Y)
         );
     }
 }

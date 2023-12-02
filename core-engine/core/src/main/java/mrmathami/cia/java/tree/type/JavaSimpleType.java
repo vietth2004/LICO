@@ -23,21 +23,21 @@ import mrmathami.annotations.Nullable;
 
 public interface JavaSimpleType extends JavaType {
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return "JavaSimpleType";
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return "JavaSimpleType";
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nullable
-	JavaType getInnerType();
+    @Nullable
+    JavaType getInnerType();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

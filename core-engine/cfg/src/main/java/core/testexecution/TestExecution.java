@@ -31,7 +31,6 @@ public class TestExecution {
     private TestCoverage coverage;
 
 
-
     public TestExecution(List<TestCase> testCaseList, CfgNode rootCFG) {
         this.testCaseList = testCaseList;
         this.rootCFG = rootCFG;
@@ -88,7 +87,7 @@ public class TestExecution {
 
     public void execute() {
         for (TestCase testCase : testCaseList) {
-            FileNode  fileNode = SearchInSTree.getJavaFileNode(functionNode);
+            FileNode fileNode = SearchInSTree.getJavaFileNode(functionNode);
             String absolutePath = fileNode.getAbsolutePath();
             instrument = new Instrument(absolutePath, rootCFG, functionNode, testCase);
             try {
@@ -146,11 +145,11 @@ public class TestExecution {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Map<String, String> mapActualValue= new HashMap<>();
+                Map<String, String> mapActualValue = new HashMap<>();
                 for (String line : linesTestPath) {
                     int i = line.indexOf("=");
                     String name = line.substring(0, i);
-                    String actualValue = line.substring(i+1);
+                    String actualValue = line.substring(i + 1);
                     mapActualValue.put(name, actualValue);
                 }
                 actualValue.setMapActualValue(mapActualValue);
@@ -165,10 +164,10 @@ public class TestExecution {
 
     public void showCoverage() {
         if (coverage == null) return;
-        double cov = coverage.getPassNode()* 100.0 /coverage.getTotalNode();
+        double cov = coverage.getPassNode() * 100.0 / coverage.getTotalNode();
         StringBuilder info = new StringBuilder();
         info.append("Coverage of function ").append(getFunctionNode().getName()).append(": ").append(cov).append("%");
-        System.out.println( info);
+        System.out.println(info);
     }
 
 

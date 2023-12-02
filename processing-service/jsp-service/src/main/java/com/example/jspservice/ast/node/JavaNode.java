@@ -153,7 +153,7 @@ public class JavaNode extends Node implements Serializable {
         this.path = path;
     }
 
-    private void setupProperties (AbstractNode abstractNode) {
+    private void setupProperties(AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
         }

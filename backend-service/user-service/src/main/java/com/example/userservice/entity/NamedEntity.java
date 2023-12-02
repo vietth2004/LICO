@@ -8,7 +8,7 @@ import java.io.Serializable;
 public abstract class NamedEntity extends Entity implements Serializable {
 
 
-    @Column(name="name", unique = true)
+    @Column(name = "name", unique = true)
     private String name;
 
     public NamedEntity() {

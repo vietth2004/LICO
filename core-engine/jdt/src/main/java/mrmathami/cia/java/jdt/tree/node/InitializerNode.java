@@ -36,170 +36,174 @@ import java.util.Map;
 
 public final class InitializerNode extends AbstractNonRootNode implements JavaInitializerNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	private final boolean isStatic;
+    private final boolean isStatic;
 
-	@Nonnull private transient List<InitializerImpl> initializers = List.of();
-
-
-	public InitializerNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, boolean isStatic) {
-		super(sourceFile, parent, isStatic ? "<clinit>" : "<init>");
-		checkParent(parent, AnnotationNode.class, ClassNode.class, EnumNode.class, InterfaceNode.class);
-
-		this.isStatic = isStatic;
-	}
+    @Nonnull
+    private transient List<InitializerImpl> initializers = List.of();
 
 
-	//region Getter & Setter
+    public InitializerNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, boolean isStatic) {
+        super(sourceFile, parent, isStatic ? "<clinit>" : "<init>");
+        checkParent(parent, AnnotationNode.class, ClassNode.class, EnumNode.class, InterfaceNode.class);
 
-	@Override
-	public boolean isStatic() {
-		return isStatic;
-	}
-
-	@Nonnull
-	@Override
-	public List<InitializerImpl> getInitializers() {
-		return isFrozen() ? initializers : Collections.unmodifiableList(initializers);
-	}
-
-	public void setInitializers(@Nonnull List<InitializerImpl> initializers) {
-		assertNonFrozen();
-		this.initializers = initializers;
-	}
-
-	//endregion Getter & Setter
-
-	//region Serialization Helper
-
-	@Override
-	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-		if (super.internalFreeze(map)) return true;
-		this.initializers = List.copyOf(initializers);
-		return false;
-	}
-
-	private void writeObject(@Nonnull ObjectOutputStream outputStream)
-			throws IOException, UnsupportedOperationException {
-		assertFrozen();
-		outputStream.defaultWriteObject();
-		outputStream.writeObject(initializers);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void readObject(@Nonnull ObjectInputStream inputStream)
-			throws IOException, ClassNotFoundException, ClassCastException {
-		inputStream.defaultReadObject();
-		this.initializers = (List<InitializerImpl>) inputStream.readObject();
-	}
-
-	//endregion Serialization Helper
-
-	//region Jsonify
-
-	@Override
-	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-		super.internalToReferenceJsonStart(builder);
-		builder.append(", \"isStatic\": ").append(isStatic);
-	}
-
-	@Override
-	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		super.internalToJsonStart(builder, indentation);
-		if (!initializers.isEmpty()) {
-			builder.append(", \"initializers\": [");
-			internalArrayToJson(builder, indentation, true, initializers);
-			builder.append('\n').append(indentation).append(']');
-		}
-	}
-
-	//endregion Jsonify
-
-	public static abstract class InitializerImpl extends AbstractNonIdentifiedEntity implements Initializer {
-
-		private static final long serialVersionUID = -1L;
-
-	}
-
-	public static final class BlockInitializerImpl extends InitializerImpl implements BlockInitializer {
-
-		private static final long serialVersionUID = -1L;
-
-		@Nonnull private final String bodyBlock;
+        this.isStatic = isStatic;
+    }
 
 
-		public BlockInitializerImpl(@Nonnull String bodyBlock) {
-			this.bodyBlock = bodyBlock;
-		}
+    //region Getter & Setter
+
+    @Override
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    @Nonnull
+    @Override
+    public List<InitializerImpl> getInitializers() {
+        return isFrozen() ? initializers : Collections.unmodifiableList(initializers);
+    }
+
+    public void setInitializers(@Nonnull List<InitializerImpl> initializers) {
+        assertNonFrozen();
+        this.initializers = initializers;
+    }
+
+    //endregion Getter & Setter
+
+    //region Serialization Helper
+
+    @Override
+    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+        if (super.internalFreeze(map)) return true;
+        this.initializers = List.copyOf(initializers);
+        return false;
+    }
+
+    private void writeObject(@Nonnull ObjectOutputStream outputStream)
+            throws IOException, UnsupportedOperationException {
+        assertFrozen();
+        outputStream.defaultWriteObject();
+        outputStream.writeObject(initializers);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(@Nonnull ObjectInputStream inputStream)
+            throws IOException, ClassNotFoundException, ClassCastException {
+        inputStream.defaultReadObject();
+        this.initializers = (List<InitializerImpl>) inputStream.readObject();
+    }
+
+    //endregion Serialization Helper
+
+    //region Jsonify
+
+    @Override
+    protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+        super.internalToReferenceJsonStart(builder);
+        builder.append(", \"isStatic\": ").append(isStatic);
+    }
+
+    @Override
+    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        super.internalToJsonStart(builder, indentation);
+        if (!initializers.isEmpty()) {
+            builder.append(", \"initializers\": [");
+            internalArrayToJson(builder, indentation, true, initializers);
+            builder.append('\n').append(indentation).append(']');
+        }
+    }
+
+    //endregion Jsonify
+
+    public static abstract class InitializerImpl extends AbstractNonIdentifiedEntity implements Initializer {
+
+        private static final long serialVersionUID = -1L;
+
+    }
+
+    public static final class BlockInitializerImpl extends InitializerImpl implements BlockInitializer {
+
+        private static final long serialVersionUID = -1L;
+
+        @Nonnull
+        private final String bodyBlock;
 
 
-		//region Getter & Setter
-
-		@Nonnull
-		@Override
-		public String getBodyBlock() {
-			return bodyBlock;
-		}
-
-		//endregion Getter & Setter
-
-		//region Jsonify
-
-		@Override
-		protected void internalToJsonEnd(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-			super.internalToJsonEnd(builder, indentation);
-			builder.append(", \"bodyBlock\": \"");
-			internalEscapeString(builder, bodyBlock);
-			builder.append('"');
-		}
-
-		//endregion Jsonify
-	}
-
-	public static final class FieldInitializerImpl extends InitializerImpl implements FieldInitializer {
-
-		private static final long serialVersionUID = -1L;
-
-		@Nonnull private final FieldNode fieldNode;
-		@Nonnull private final String initialExpression;
+        public BlockInitializerImpl(@Nonnull String bodyBlock) {
+            this.bodyBlock = bodyBlock;
+        }
 
 
-		public FieldInitializerImpl(@Nonnull FieldNode fieldNode, @Nonnull String initialExpression) {
-			this.fieldNode = fieldNode;
-			this.initialExpression = initialExpression;
-		}
+        //region Getter & Setter
+
+        @Nonnull
+        @Override
+        public String getBodyBlock() {
+            return bodyBlock;
+        }
+
+        //endregion Getter & Setter
+
+        //region Jsonify
+
+        @Override
+        protected void internalToJsonEnd(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+            super.internalToJsonEnd(builder, indentation);
+            builder.append(", \"bodyBlock\": \"");
+            internalEscapeString(builder, bodyBlock);
+            builder.append('"');
+        }
+
+        //endregion Jsonify
+    }
+
+    public static final class FieldInitializerImpl extends InitializerImpl implements FieldInitializer {
+
+        private static final long serialVersionUID = -1L;
+
+        @Nonnull
+        private final FieldNode fieldNode;
+        @Nonnull
+        private final String initialExpression;
 
 
-		//region Getter & Setter
+        public FieldInitializerImpl(@Nonnull FieldNode fieldNode, @Nonnull String initialExpression) {
+            this.fieldNode = fieldNode;
+            this.initialExpression = initialExpression;
+        }
 
-		@Nonnull
-		@Override
-		public JavaFieldNode getFieldNode() {
-			return fieldNode;
-		}
 
-		@Nonnull
-		@Override
-		public String getInitialExpression() {
-			return initialExpression;
-		}
+        //region Getter & Setter
 
-		//endregion Getter & Setter
+        @Nonnull
+        @Override
+        public JavaFieldNode getFieldNode() {
+            return fieldNode;
+        }
 
-		//region Jsonify
+        @Nonnull
+        @Override
+        public String getInitialExpression() {
+            return initialExpression;
+        }
 
-		@Override
-		protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-			super.internalToJsonStart(builder, indentation);
-			builder.append(", \"fieldNode\": { ");
-			fieldNode.internalToReferenceJson(builder);
-			builder.append(" }, \"initialExpression\": \"");
-			internalEscapeString(builder, initialExpression);
-			builder.append('"');
-		}
+        //endregion Getter & Setter
 
-		//endregion Jsonify
-	}
+        //region Jsonify
+
+        @Override
+        protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+            super.internalToJsonStart(builder, indentation);
+            builder.append(", \"fieldNode\": { ");
+            fieldNode.internalToReferenceJson(builder);
+            builder.append(" }, \"initialExpression\": \"");
+            internalEscapeString(builder, initialExpression);
+            builder.append('"');
+        }
+
+        //endregion Jsonify
+    }
 
 }

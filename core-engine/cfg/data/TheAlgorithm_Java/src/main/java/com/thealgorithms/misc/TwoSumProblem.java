@@ -18,17 +18,17 @@ public class TwoSumProblem {
         }
         TwoSumProblem t = new TwoSumProblem();
         System.out.println(
-            "Brute Force Approach\n" +
-            Arrays.toString(t.BruteForce(arr, ts)) +
-            "\n"
+                "Brute Force Approach\n" +
+                        Arrays.toString(t.BruteForce(arr, ts)) +
+                        "\n"
         );
         System.out.println(
-            "Two Pointer Approach\n" +
-            Arrays.toString(t.TwoPointer(arr, ts)) +
-            "\n"
+                "Two Pointer Approach\n" +
+                        Arrays.toString(t.TwoPointer(arr, ts)) +
+                        "\n"
         );
         System.out.println(
-            "Hashmap Approach\n" + Arrays.toString(t.HashMap(arr, ts))
+                "Hashmap Approach\n" + Arrays.toString(t.HashMap(arr, ts))
         );
     }
 
@@ -57,23 +57,23 @@ public class TwoSumProblem {
             hm.put(i, nums[i]);
         }
         HashMap<Integer, Integer> temp = hm
-            .entrySet()
-            .stream()
-            .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
-            .collect(
-                Collectors.toMap(
-                    Map.Entry::getKey,
-                    Map.Entry::getValue,
-                    (e1, e2) -> e1,
-                    LinkedHashMap::new
-                )
-            );
+                .entrySet()
+                .stream()
+                .sorted((i1, i2) -> i1.getValue().compareTo(i2.getValue()))
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                Map.Entry::getValue,
+                                (e1, e2) -> e1,
+                                LinkedHashMap::new
+                        )
+                );
 
         int start = 0;
         int end = nums.length - 1;
         while (start < end) {
             int currSum = (Integer) temp.values().toArray()[start] +
-            (Integer) temp.values().toArray()[end];
+                    (Integer) temp.values().toArray()[end];
 
             if (currSum == target) {
                 ans[0] = (Integer) temp.keySet().toArray()[start];

@@ -26,7 +26,7 @@ public class JciaStrutsEmulator extends StrutsEmulator {
         return runtimeConfiguration.getActionConfigs();
     }
 
-    public Map<String,PackageConfig> getPackageConfigs() {
+    public Map<String, PackageConfig> getPackageConfigs() {
         return configuration.getPackageConfigs();
     }
 }

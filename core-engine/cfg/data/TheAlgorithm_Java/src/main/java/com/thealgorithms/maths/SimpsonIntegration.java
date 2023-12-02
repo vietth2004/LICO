@@ -26,7 +26,7 @@ public class SimpsonIntegration {
         // Check so that N is even
         if (N % 2 != 0) {
             System.out.println(
-                "N must be even number for Simpsons method. Aborted"
+                    "N must be even number for Simpsons method. Aborted"
             );
             System.exit(1);
         }

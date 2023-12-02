@@ -9,18 +9,18 @@ import java.util.Arrays;
 /**
  * Given an adjacency list of a graph adj of V no. of vertices having 0 based
  * index. Check whether the graph is bipartite or not.
- *
+ * <p>
  * Input : {{0, 1, 0, 1}, {1, 0, 1, 0}, {0, 1, 0, 1}, {1, 0, 1, 0}}
- *
+ * <p>
  * Output : YES
  */
 public class BipartiteGrapfDFS {
 
     private static boolean bipartite(
-        int V,
-        ArrayList<ArrayList<Integer>> adj,
-        int[] color,
-        int node
+            int V,
+            ArrayList<ArrayList<Integer>> adj,
+            int[] color,
+            int node
     ) {
         if (color[node] == -1) {
             color[node] = 1;
@@ -39,8 +39,8 @@ public class BipartiteGrapfDFS {
     }
 
     public static boolean isBipartite(
-        int V,
-        ArrayList<ArrayList<Integer>> adj
+            int V,
+            ArrayList<ArrayList<Integer>> adj
     ) {
         // Code here
         int[] color = new int[V + 1];
@@ -58,7 +58,7 @@ public class BipartiteGrapfDFS {
 
     public static void main(String[] args) throws IOException {
         BufferedReader read = new BufferedReader(
-            new InputStreamReader(System.in)
+                new InputStreamReader(System.in)
         );
         int t = Integer.parseInt(read.readLine().trim());
         while (t-- > 0) {

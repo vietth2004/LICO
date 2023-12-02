@@ -22,6 +22,7 @@ package com.thealgorithms.dynamicprogramming;
  *
  * @author SUBHAM SANGHAI
  */
+
 import java.util.Scanner;
 
 public class EditDistance {
@@ -77,12 +78,12 @@ public class EditDistance {
         // ans stores the final Edit Distance between the two strings
         int ans = minDistance(s1, s2);
         System.out.println(
-            "The minimum Edit Distance between \"" +
-            s1 +
-            "\" and \"" +
-            s2 +
-            "\" is " +
-            ans
+                "The minimum Edit Distance between \"" +
+                        s1 +
+                        "\" and \"" +
+                        s2 +
+                        "\" is " +
+                        ans
         );
         input.close();
     }
@@ -109,7 +110,7 @@ public class EditDistance {
         }
         if (s1.charAt(0) == s2.charAt(0)) {
             storage[m][n] =
-                editDistance(s1.substring(1), s2.substring(1), storage);
+                    editDistance(s1.substring(1), s2.substring(1), storage);
             return storage[m][n];
         } else {
             int op1 = editDistance(s1, s2.substring(1), storage);

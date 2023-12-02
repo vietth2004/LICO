@@ -3,7 +3,6 @@ package com.example.parserservice.util.worker;
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.dependency.OrientedDependency;
 import com.example.parserservice.ast.dependency.OrientedPair;
-import com.example.parserservice.ast.dependency.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +15,8 @@ public class Converter {
         Map<Integer, List<OrientedPair>> orientedDependencyMap = new HashMap<>();
 
 
-        for(Dependency dependency : dependencies) {
-            if(orientedDependencyMap.containsKey(dependency.getCallerNode())){
+        for (Dependency dependency : dependencies) {
+            if (orientedDependencyMap.containsKey(dependency.getCallerNode())) {
                 orientedDependencyMap
                         .get(dependency.getCallerNode())
                         .add(new OrientedPair(dependency.getCalleeNode(), dependency.getType()));
@@ -32,7 +31,7 @@ public class Converter {
 
         List<OrientedDependency> orientedDependencies = new ArrayList<>();
 
-        for(Integer id : orientedDependencyMap.keySet()) {
+        for (Integer id : orientedDependencyMap.keySet()) {
             orientedDependencies.add(new OrientedDependency(id, orientedDependencyMap.get(id)));
         }
 

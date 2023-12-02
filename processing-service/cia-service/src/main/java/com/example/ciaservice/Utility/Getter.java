@@ -18,18 +18,18 @@ public class Getter {
 //        System.out.println(depth);
 //        System.out.println();
 
-        if(depth > 0) {
+        if (depth > 0) {
 
-            for(Pair dependency : changedNode.getDependencyFrom()) {
-                if(dependency.getDependency().getMEMBER() > -1) {
+            for (Pair dependency : changedNode.getDependencyFrom()) {
+                if (dependency.getDependency().getMEMBER() > -1) {
                     System.out.println("Caused impact: " + changedNode.getId());
                     System.out.println("-> " + dependency.getNode().getId() + " - depth: " + depth);
                     gatherImpact(nodes, javaNodes, totalNodes, affectedNodes, dependency, depth - 1);
                 }
             }
 
-            for(Pair dependency : changedNode.getDependencyTo()) {
-                if(dependency.getDependency().getOVERRIDE() > 0) {
+            for (Pair dependency : changedNode.getDependencyTo()) {
+                if (dependency.getDependency().getOVERRIDE() > 0) {
                     System.out.println("Caused impact: " + changedNode.getId());
                     System.out.println("-> " + dependency.getNode().getId() + " - depth: " + depth);
                     gatherImpact(nodes, javaNodes, totalNodes, affectedNodes, dependency, depth - 1);
@@ -49,7 +49,7 @@ public class Getter {
         Integer nodeId = dependency.getNode().getId();
         JavaNode javaNode = Searcher.findJavaNode(javaNodes, nodeId);
         Node node = Searcher.findNode(nodes, nodeId);
-        if(!affectedNodes.contains(node) || depth > 0){
+        if (!affectedNodes.contains(node) || depth > 0) {
             affectedNodes.add(Searcher.findNode(nodes, dependency.getNode().getId()));
             affectedNodes.addAll(gatherImpactFromDependencies(nodes, javaNodes, totalNodes, javaNode, affectedNodes, depth));
         }

@@ -47,6 +47,7 @@ public class CloneController {
 
     /**
      * Clone repository
+     *
      * @return path where to save repo
      * @RequestParam(required = true) String url, @RequestParam(required = false, defaultValue = "") String pat
      */
@@ -56,7 +57,7 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "") String token,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false) boolean analysis,
-            @RequestParam(name="parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
+            @RequestParam(name = "parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))
@@ -66,7 +67,7 @@ public class CloneController {
         System.out.println(token);
         try {
             String path = gitService.cloneRepo(url, repoName, user, token);
-            if(analysis == false)
+            if (analysis == false)
                 return ResponseEntity.ok(new CloneRepoPath(path));
             else {
                 RestTemplate restTemplate = new RestTemplate();
@@ -90,6 +91,7 @@ public class CloneController {
 
     /**
      * Clone repo by branch
+     *
      * @return path where to save repo
      */
     @GetMapping("/repo/clone/byBranch")
@@ -99,7 +101,7 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "") String token,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false) boolean analysis,
-            @RequestParam(name="parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
+            @RequestParam(name = "parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))
@@ -109,7 +111,7 @@ public class CloneController {
         System.out.println(token);
         try {
             String path = gitService.cloneRepoByBranchName(url, repoName, branch, user, token);
-            if(analysis == false)
+            if (analysis == false)
                 return ResponseEntity.ok(new CloneRepoPath(path));
             else {
                 RestTemplate restTemplate = new RestTemplate();
@@ -133,6 +135,7 @@ public class CloneController {
 
     /**
      * Clone repo by commit
+     *
      * @return path where to save repo
      */
     @GetMapping("/repo/clone/byCommit")
@@ -142,7 +145,7 @@ public class CloneController {
             @RequestParam(required = false, defaultValue = "") String token,
             @RequestParam(required = false, defaultValue = "anonymous") String user,
             @RequestParam(required = false) boolean analysis,
-            @RequestParam(name="parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
+            @RequestParam(name = "parser", required = false, defaultValue = "java-parser, spring-parser") List<String> parserList) {
         String repoName = Arrays
                 .stream(url.split("/"))
                 .filter(name -> name.endsWith(Constants.DOT_GIT))
@@ -153,7 +156,7 @@ public class CloneController {
         System.out.println(token);
         try {
             String path = gitService.cloneRepoByCommit(url, repoName, commit, user, token);
-            if(analysis == false)
+            if (analysis == false)
                 return ResponseEntity.ok(new CloneRepoPath(path));
             else {
                 RestTemplate restTemplate = new RestTemplate();
@@ -177,6 +180,7 @@ public class CloneController {
 
     /**
      * Clone 2 repo by branch name
+     *
      * @return path where to save those repos
      */
     @GetMapping("/repos/clone/byBranch")
@@ -197,7 +201,7 @@ public class CloneController {
         System.out.println(token);
         try {
             Clone2RepoResponse res = gitService.clone2RepoByBranch(url, repoName, branch1, branch2, user, token);
-            if(compare == false)
+            if (compare == false)
                 return ResponseEntity.ok(res);
             else {
                 Version version = new Version(res.getPath1(), res.getPath2());
@@ -253,7 +257,7 @@ public class CloneController {
                 .replace(Constants.DOT_GIT, "");
         try {
             Clone2RepoResponse res = gitService.clone2RepoByCommits(url, repoName, commit1, commit2, user, token);
-            if(compare == false)
+            if (compare == false)
                 return ResponseEntity.ok(res);
             else {
                 Version version = new Version(res.getPath1(), res.getPath2());

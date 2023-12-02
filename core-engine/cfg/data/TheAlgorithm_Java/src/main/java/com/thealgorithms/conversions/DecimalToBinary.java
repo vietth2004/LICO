@@ -25,7 +25,7 @@ class DecimalToBinary {
         int n, b = 0, c = 0, d;
         Scanner input = new Scanner(System.in);
         System.out.printf(
-            "Conventional conversion.%n Enter the decimal number: "
+                "Conventional conversion.%n Enter the decimal number: "
         );
         n = input.nextInt();
         while (n != 0) {

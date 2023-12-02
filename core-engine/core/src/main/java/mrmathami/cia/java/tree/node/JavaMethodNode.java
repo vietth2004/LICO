@@ -28,37 +28,38 @@ import mrmathami.cia.java.tree.type.JavaType;
 import java.util.List;
 
 public interface JavaMethodNode extends JavaNode,
-		JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode {
+        JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaMethodNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaMethodNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	boolean isConstructor();
+    boolean isConstructor();
 
-	@Nullable
-	JavaType getReturnType();
+    @Nullable
+    JavaType getReturnType();
 
-	@Nonnull
-	List<? extends JavaType> getParameters();
+    @Nonnull
+    List<? extends JavaType> getParameters();
 
-	@Nonnull
-	List<? extends JavaType> getExceptions();
+    @Nonnull
+    List<? extends JavaType> getExceptions();
 
-	@Nullable
-	String getBodyBlock();
+    @Nullable
+    String getBodyBlock();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

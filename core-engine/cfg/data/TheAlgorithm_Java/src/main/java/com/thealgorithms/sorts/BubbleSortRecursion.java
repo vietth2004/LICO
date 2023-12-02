@@ -39,11 +39,11 @@ public class BubbleSortRecursion implements SortAlgorithm {
      * BubbleSort algorithm implements using recursion
      *
      * @param unsorted array contains elements
-     * @param len length of given array
+     * @param len      length of given array
      */
     private static <T extends Comparable<T>> void bubbleSort(
-        T[] unsorted,
-        int len
+            T[] unsorted,
+            int len
     ) {
         boolean swapped = false;
         /* flag to check if array is sorted or not */

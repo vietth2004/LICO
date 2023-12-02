@@ -3,6 +3,7 @@ package com.thealgorithms.others;
 /**
  * @author Prateek Kumar Oraon (https://github.com/prateekKrOraon)
  */
+
 import java.util.Scanner;
 
 // An implementation of Rabin-Karp string matching algorithm

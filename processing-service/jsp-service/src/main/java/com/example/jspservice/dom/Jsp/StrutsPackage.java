@@ -1,7 +1,6 @@
 package com.example.jspservice.dom.Jsp;
 
 import com.example.jspservice.dom.Node;
-import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.util.location.Location;
 
 import java.util.ArrayList;

@@ -30,7 +30,7 @@ public class ParenthesizedExpressionNode extends OperationExpressionNode {
     public static ExpressionNode executeParenthesizedExpressionNode(ParenthesizedExpressionNode parenthesizedExpressionNode, MemoryModel memoryModel) {
         ExpressionNode expression = parenthesizedExpressionNode.expression;
 
-        if(expression instanceof LiteralNode) {
+        if (expression instanceof LiteralNode) {
             return expression;
         } else {
             ExpressionNode oldExpression = parenthesizedExpressionNode.expression;

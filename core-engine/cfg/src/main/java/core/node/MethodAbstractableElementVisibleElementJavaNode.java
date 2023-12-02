@@ -1,13 +1,20 @@
 package core.node;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import core.parser.ASTHelper;
 import core.structureTree.SNode;
 import core.structureTree.structureNode.SFunctionNode;
 import lombok.Getter;
 import lombok.Setter;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ArrayType;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.ParameterizedType;
+import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -220,7 +227,7 @@ public class MethodAbstractableElementVisibleElementJavaNode extends Abstractabl
         //todo: config here
         sNode.setName(getName());
         sNode.setType(getObjectType());
-        ((SFunctionNode)sNode).setAst(this);
+        ((SFunctionNode) sNode).setAst(this);
         return sNode;
     }
 }

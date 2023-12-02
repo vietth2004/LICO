@@ -39,7 +39,7 @@ public class CircleLinkedList<E> {
         if (value == null) {
             // we do not want to add null elements to the list.
             throw new NullPointerException(
-                "Cannot add null element to the list"
+                    "Cannot add null element to the list"
             );
         }
         // head.next points to the last element;
@@ -71,7 +71,7 @@ public class CircleLinkedList<E> {
         if (pos > size || pos < 0) {
             // catching errors
             throw new IndexOutOfBoundsException(
-                "position cannot be greater than size or negative"
+                    "position cannot be greater than size or negative"
             );
         }
         // we need to keep track of the element before the element we want to remove we can see why

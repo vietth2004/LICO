@@ -6,7 +6,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Deque;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,10 +51,10 @@ public class FileHelper {
         Deque<File> open = new ArrayDeque<File>();
         open.push(d);
         closed.add(d);
-        while ( ! open.isEmpty()) {
+        while (!open.isEmpty()) {
             d = open.pop();
             for (File f : d.listFiles()) {
-                if (f.isDirectory() && ! closed.contains(f)) {
+                if (f.isDirectory() && !closed.contains(f)) {
                     open.push(f);
                     closed.add(f);
                 }

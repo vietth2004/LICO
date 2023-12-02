@@ -7,12 +7,17 @@ import core.parser.Convert;
 import core.structureTree.SNode;
 import core.structureTree.structureNode.SClassNode;
 import core.structureTree.structureNode.SInterfaceNode;
-import org.eclipse.jdt.core.dom.*;
-
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class ClassAbstractableElementVisibleElementJavaNode extends AbstractableElementVisibleElementJavaNode {
@@ -224,8 +229,7 @@ public class ClassAbstractableElementVisibleElementJavaNode extends Abstractable
         if (isInterface) {
             sNode = new SInterfaceNode();
             sNode.setType(getObjectType());
-        }
-        else sNode = new SClassNode();
+        } else sNode = new SClassNode();
         sNode.setName(getName());
         sNode.setType(getObjectType());
         //todo: config here

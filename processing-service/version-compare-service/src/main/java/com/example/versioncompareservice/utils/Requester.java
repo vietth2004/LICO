@@ -8,18 +8,15 @@ import com.example.versioncompareservice.model.CiaRequest;
 import com.example.versioncompareservice.model.CiaResponse;
 import com.example.versioncompareservice.model.Path;
 import com.example.versioncompareservice.utils.communicator.Response;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 public class Requester {
 
-    public static Set<NodeWeight> getImpactedNodes (List<JavaNode> javaNodes, List<JavaNode> changedNodes, List<Dependency> dependencies) {
+    public static Set<NodeWeight> getImpactedNodes(List<JavaNode> javaNodes, List<JavaNode> changedNodes, List<Dependency> dependencies) {
         RestTemplate restTemplate = new RestTemplate();
 
         List<Integer> changedNodesId = Converter.convertNodesToNodeIds(changedNodes);

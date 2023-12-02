@@ -15,23 +15,24 @@ package com.thealgorithms.others;
  * https://rosettacode.org/wiki/Dijkstra%27s_algorithm#Java Also most of the
  * comments are from RosettaCode.
  */
+
 import java.util.*;
 
 public class Dijkstra {
 
     private static final Graph.Edge[] GRAPH = {
-        // Distance from node "a" to node "b" is 7.
-        // In the current Graph there is no way to move the other way (e,g, from "b" to "a"),
-        // a new edge would be needed for that
-        new Graph.Edge("a", "b", 7),
-        new Graph.Edge("a", "c", 9),
-        new Graph.Edge("a", "f", 14),
-        new Graph.Edge("b", "c", 10),
-        new Graph.Edge("b", "d", 15),
-        new Graph.Edge("c", "d", 11),
-        new Graph.Edge("c", "f", 2),
-        new Graph.Edge("d", "e", 6),
-        new Graph.Edge("e", "f", 9),
+            // Distance from node "a" to node "b" is 7.
+            // In the current Graph there is no way to move the other way (e,g, from "b" to "a"),
+            // a new edge would be needed for that
+            new Graph.Edge("a", "b", 7),
+            new Graph.Edge("a", "c", 9),
+            new Graph.Edge("a", "f", 14),
+            new Graph.Edge("b", "c", 10),
+            new Graph.Edge("b", "d", 15),
+            new Graph.Edge("c", "d", 11),
+            new Graph.Edge("c", "f", 2),
+            new Graph.Edge("d", "e", 6),
+            new Graph.Edge("e", "f", 9),
     };
     private static final String START = "a";
     private static final String END = "e";
@@ -120,21 +121,21 @@ class Graph {
                 return false;
             }
             if (
-                name != null ? !name.equals(vertex.name) : vertex.name != null
+                    name != null ? !name.equals(vertex.name) : vertex.name != null
             ) {
                 return false;
             }
             if (
-                previous != null
-                    ? !previous.equals(vertex.previous)
-                    : vertex.previous != null
+                    previous != null
+                            ? !previous.equals(vertex.previous)
+                            : vertex.previous != null
             ) {
                 return false;
             }
             if (
-                neighbours != null
-                    ? !neighbours.equals(vertex.neighbours)
-                    : vertex.neighbours != null
+                    neighbours != null
+                            ? !neighbours.equals(vertex.neighbours)
+                            : vertex.neighbours != null
             ) {
                 return false;
             }
@@ -149,7 +150,7 @@ class Graph {
             result = 31 * result + dist;
             result = 31 * result + (previous != null ? previous.hashCode() : 0);
             result =
-                31 * result + (neighbours != null ? neighbours.hashCode() : 0);
+                    31 * result + (neighbours != null ? neighbours.hashCode() : 0);
             return result;
         }
 
@@ -189,8 +190,8 @@ class Graph {
     public void dijkstra(String startName) {
         if (!graph.containsKey(startName)) {
             System.err.printf(
-                "Graph doesn't contain start vertex \"%s\"%n",
-                startName
+                    "Graph doesn't contain start vertex \"%s\"%n",
+                    startName
             );
             return;
         }
@@ -239,8 +240,8 @@ class Graph {
     public void printPath(String endName) {
         if (!graph.containsKey(endName)) {
             System.err.printf(
-                "Graph doesn't contain end vertex \"%s\"%n",
-                endName
+                    "Graph doesn't contain end vertex \"%s\"%n",
+                    endName
             );
             return;
         }

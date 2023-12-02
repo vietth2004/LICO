@@ -4,10 +4,8 @@ package com.example.ciaservice.controller;
 import com.example.ciaservice.model.Request;
 import com.example.ciaservice.model.Response;
 import com.example.ciaservice.service.CiaService;
-
 import com.example.ciaservice.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
@@ -38,13 +36,13 @@ public class CiaController {
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());
 
-        if(type.equals("csv")) {
+        if (type.equals("csv")) {
             response.setContentType("application/octet-stream");
-            response.addHeader("Content-Disposition","attachment; filename=\"response" + currentDateTime + ".csv\"");
+            response.addHeader("Content-Disposition", "attachment; filename=\"response" + currentDateTime + ".csv\"");
             fileService.exportToCsv(nodeWeight, response);
-        } else if(type.equals("excel")) {
+        } else if (type.equals("excel")) {
             response.setContentType("application/octet-stream");
-            response.addHeader("Content-Disposition","attachment; filename=\"response" + currentDateTime + ".xlsx\"");
+            response.addHeader("Content-Disposition", "attachment; filename=\"response" + currentDateTime + ".xlsx\"");
             fileService.exportToExcel(nodeWeight, response);
         }
     }
@@ -60,13 +58,13 @@ public class CiaController {
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String currentDateTime = dateFormatter.format(new Date());
 
-        if(type.equals("csv")) {
+        if (type.equals("csv")) {
             response.setContentType("application/octet-stream");
-            response.addHeader("Content-Disposition","attachment; filename=\"response" + currentDateTime + ".csv\"");
+            response.addHeader("Content-Disposition", "attachment; filename=\"response" + currentDateTime + ".csv\"");
             fileService.exportToCsv(impact, response);
-        } else if(type.equals("excel")) {
+        } else if (type.equals("excel")) {
             response.setContentType("application/octet-stream");
-            response.addHeader("Content-Disposition","attachment; filename=\"response" + currentDateTime + ".xlsx\"");
+            response.addHeader("Content-Disposition", "attachment; filename=\"response" + currentDateTime + ".xlsx\"");
             fileService.exportToExcel(impact, response);
         }
 

@@ -1,7 +1,5 @@
 package core.ast.Expression.Literal.NumberLiteral;
 
-import core.ast.AstNode;
-
 public class DoubleLiteralNode extends NumberLiteralNode {
 
     public DoubleLiteralNode() {
@@ -16,7 +14,7 @@ public class DoubleLiteralNode extends NumberLiteralNode {
 
     public static DoubleLiteralNode[] createDoubleLiteralInitializationArray(int capacity) {
         DoubleLiteralNode[] array = new DoubleLiteralNode[capacity];
-        for(int i = 0; i < capacity; i++) {
+        for (int i = 0; i < capacity; i++) {
             array[i] = new DoubleLiteralNode();
         }
         return array;
@@ -24,7 +22,7 @@ public class DoubleLiteralNode extends NumberLiteralNode {
 
     public double getDoubleValue() {
         String token = super.getTokenValue();
-        if(isDoubleValue(token)) {
+        if (isDoubleValue(token)) {
             return Double.parseDouble(token);
         } else {
             return 0.0;

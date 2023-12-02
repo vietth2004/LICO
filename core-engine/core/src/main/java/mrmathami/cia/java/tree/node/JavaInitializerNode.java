@@ -25,74 +25,75 @@ import java.util.List;
 
 public interface JavaInitializerNode extends JavaNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaInitializerNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaInitializerNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	boolean isStatic();
+    boolean isStatic();
 
-	@Nonnull
-	List<? extends Initializer> getInitializers();
+    @Nonnull
+    List<? extends Initializer> getInitializers();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
-	interface Initializer extends JavaEntity {
-	}
+    interface Initializer extends JavaEntity {
+    }
 
-	interface BlockInitializer extends Initializer {
+    interface BlockInitializer extends Initializer {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaClassNode.BlockInitializer";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaClassNode.BlockInitializer";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nonnull
-		String getBodyBlock();
+        @Nonnull
+        String getBodyBlock();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-	}
+    }
 
-	interface FieldInitializer extends Initializer {
+    interface FieldInitializer extends Initializer {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaClassNode.FieldInitializer";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaClassNode.FieldInitializer";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nonnull
-		JavaFieldNode getFieldNode();
+        @Nonnull
+        JavaFieldNode getFieldNode();
 
-		@Nonnull
-		String getInitialExpression();
+        @Nonnull
+        String getInitialExpression();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-	}
+    }
 
 }

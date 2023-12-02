@@ -30,77 +30,78 @@ import java.util.NoSuchElementException;
 
 public interface JavaRootNode extends JavaNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaRootNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaRootNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	@Override
-	default boolean isRoot() {
-		return true;
-	}
+    @Override
+    default boolean isRoot() {
+        return true;
+    }
 
-	@Nonnull
-	@Override
-	default JavaRootNode getRoot() {
-		return this;
-	}
+    @Nonnull
+    @Override
+    default JavaRootNode getRoot() {
+        return this;
+    }
 
-	@Nonnull
-	@Override
-	default JavaNode getParent() {
-		throw new NoSuchElementException("JavaRootNode does not have a parent.");
-	}
+    @Nonnull
+    @Override
+    default JavaNode getParent() {
+        throw new NoSuchElementException("JavaRootNode does not have a parent.");
+    }
 
-	@Nonnull
-	@Override
-	default String getSimpleName() {
-		return "{ROOT}";
-	}
+    @Nonnull
+    @Override
+    default String getSimpleName() {
+        return "{ROOT}";
+    }
 
-	@Nonnull
-	@Override
-	default String getQualifiedName() {
-		return "{ROOT}";
-	}
+    @Nonnull
+    @Override
+    default String getQualifiedName() {
+        return "{ROOT}";
+    }
 
-	@Nonnull
-	@Override
-	default String getUniqueName() {
-		return "{ROOT}";
-	}
+    @Nonnull
+    @Override
+    default String getUniqueName() {
+        return "{ROOT}";
+    }
 
-	@Nullable
-	@Override
-	default JavaSourceFile getSourceFile() {
-		return null;
-	}
+    @Nullable
+    @Override
+    default JavaSourceFile getSourceFile() {
+        return null;
+    }
 
-	@Nullable
-	@Override
-	default JavaModule getModule() {
-		return null;
-	}
+    @Nullable
+    @Override
+    default JavaModule getModule() {
+        return null;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nonnull
-	List<? extends JavaNode> getAllNodes();
+    @Nonnull
+    List<? extends JavaNode> getAllNodes();
 
-	@Nonnull
-	List<? extends JavaType> getAllTypes();
+    @Nonnull
+    List<? extends JavaType> getAllTypes();
 
-	@Nonnull
-	List<? extends JavaAnnotate> getAllAnnotates();
+    @Nonnull
+    List<? extends JavaAnnotate> getAllAnnotates();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

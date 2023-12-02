@@ -35,149 +35,153 @@ import java.util.Map;
 
 public final class MethodNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaMethodNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	private final boolean isConstructor;
-	@Nonnull private final List<AbstractType> parameters;
-	@Nullable private AbstractType returnType;
-	@Nullable private String bodyBlock;
+    private final boolean isConstructor;
+    @Nonnull
+    private final List<AbstractType> parameters;
+    @Nullable
+    private AbstractType returnType;
+    @Nullable
+    private String bodyBlock;
 
-	@Nonnull private transient List<AbstractType> exceptions = List.of();
-
-
-	@Nonnull
-	private static String createUniqueNameSuffixFromParameters(@Nonnull List<AbstractType> parameters) {
-		if (parameters.isEmpty()) return "()";
-		final StringBuilder builder = new StringBuilder("(");
-		boolean next = false;
-		for (final AbstractType parameter : parameters) {
-			if (next) builder.append(',');
-			builder.append(parameter.getDescription());
-			next = true;
-		}
-		return builder.append(')').toString();
-	}
+    @Nonnull
+    private transient List<AbstractType> exceptions = List.of();
 
 
-	public MethodNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, boolean isConstructor, @Nonnull List<AbstractType> parameters) {
-		super(sourceFile, parent, simpleName, createUniqueNameSuffixFromParameters(parameters));
-		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class, InterfaceNode.class);
+    @Nonnull
+    private static String createUniqueNameSuffixFromParameters(@Nonnull List<AbstractType> parameters) {
+        if (parameters.isEmpty()) return "()";
+        final StringBuilder builder = new StringBuilder("(");
+        boolean next = false;
+        for (final AbstractType parameter : parameters) {
+            if (next) builder.append(',');
+            builder.append(parameter.getDescription());
+            next = true;
+        }
+        return builder.append(')').toString();
+    }
 
-		this.isConstructor = isConstructor;
-		this.parameters = List.copyOf(parameters);
-	}
+
+    public MethodNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+                      @Nonnull String simpleName, boolean isConstructor, @Nonnull List<AbstractType> parameters) {
+        super(sourceFile, parent, simpleName, createUniqueNameSuffixFromParameters(parameters));
+        checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class, InterfaceNode.class);
+
+        this.isConstructor = isConstructor;
+        this.parameters = List.copyOf(parameters);
+    }
 
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Override
-	public boolean isConstructor() {
-		return isConstructor;
-	}
+    @Override
+    public boolean isConstructor() {
+        return isConstructor;
+    }
 
-	@Nonnull
-	@Override
-	public List<AbstractType> getParameters() {
-		return parameters;
-	}
+    @Nonnull
+    @Override
+    public List<AbstractType> getParameters() {
+        return parameters;
+    }
 
-	@Nonnull
-	@Override
-	public List<AbstractType> getExceptions() {
-		return isFrozen() ? exceptions : Collections.unmodifiableList(exceptions);
-	}
+    @Nonnull
+    @Override
+    public List<AbstractType> getExceptions() {
+        return isFrozen() ? exceptions : Collections.unmodifiableList(exceptions);
+    }
 
-	public void setExceptions(@Nonnull List<AbstractType> exceptions) {
-		assertNonFrozen();
-		this.exceptions = exceptions;
-	}
+    public void setExceptions(@Nonnull List<AbstractType> exceptions) {
+        assertNonFrozen();
+        this.exceptions = exceptions;
+    }
 
-	@Nullable
-	@Override
-	public AbstractType getReturnType() {
-		return returnType;
-	}
+    @Nullable
+    @Override
+    public AbstractType getReturnType() {
+        return returnType;
+    }
 
-	public void setReturnType(@Nullable AbstractType returnType) {
-		assertNonFrozen();
-		this.returnType = returnType;
-	}
+    public void setReturnType(@Nullable AbstractType returnType) {
+        assertNonFrozen();
+        this.returnType = returnType;
+    }
 
-	@Nullable(
-	)
-	@Override
-	public String getBodyBlock() {
-		return bodyBlock;
-	}
+    @Nullable(
+    )
+    @Override
+    public String getBodyBlock() {
+        return bodyBlock;
+    }
 
-	public void setBodyBlock(@Nullable String bodyBlock) {
-		assertNonFrozen();
-		this.bodyBlock = bodyBlock;
-	}
+    public void setBodyBlock(@Nullable String bodyBlock) {
+        assertNonFrozen();
+        this.bodyBlock = bodyBlock;
+    }
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
-	//region Serialization Helper
+    //region Serialization Helper
 
-	@Override
-	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-		if (super.internalFreeze(map)) return true;
-		this.exceptions = List.copyOf(exceptions);
-		for (final AbstractType parameter : parameters) parameter.internalFreeze(map);
-		if (returnType != null) returnType.internalFreeze(map);
-		for (final AbstractType exception : exceptions) exception.internalFreeze(map);
-		return false;
-	}
+    @Override
+    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+        if (super.internalFreeze(map)) return true;
+        this.exceptions = List.copyOf(exceptions);
+        for (final AbstractType parameter : parameters) parameter.internalFreeze(map);
+        if (returnType != null) returnType.internalFreeze(map);
+        for (final AbstractType exception : exceptions) exception.internalFreeze(map);
+        return false;
+    }
 
-	private void writeObject(@Nonnull ObjectOutputStream outputStream)
-			throws IOException, UnsupportedOperationException {
-		assertFrozen();
-		outputStream.defaultWriteObject();
-		outputStream.writeObject(exceptions);
-	}
+    private void writeObject(@Nonnull ObjectOutputStream outputStream)
+            throws IOException, UnsupportedOperationException {
+        assertFrozen();
+        outputStream.defaultWriteObject();
+        outputStream.writeObject(exceptions);
+    }
 
-	@SuppressWarnings("unchecked")
-	private void readObject(@Nonnull ObjectInputStream inputStream)
-			throws IOException, ClassNotFoundException, ClassCastException {
-		inputStream.defaultReadObject();
-		this.exceptions = (List<AbstractType>) inputStream.readObject();
-	}
+    @SuppressWarnings("unchecked")
+    private void readObject(@Nonnull ObjectInputStream inputStream)
+            throws IOException, ClassNotFoundException, ClassCastException {
+        inputStream.defaultReadObject();
+        this.exceptions = (List<AbstractType>) inputStream.readObject();
+    }
 
-	//endregion Serialization Helper
+    //endregion Serialization Helper
 
-	//region Jsonify
+    //region Jsonify
 
-	@Override
-	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		super.internalToJsonStart(builder, indentation);
-		if (returnType != null) {
-			builder.append(", \"type\": { ");
-			returnType.internalToReferenceJson(builder);
-			builder.append(" }");
-		}
-		if (!parameters.isEmpty()) {
-			builder.append(", \"parameters\": [");
-			internalArrayToReferenceJson(builder, indentation, parameters);
-			builder.append('\n').append(indentation).append(']');
-		}
-		if (!exceptions.isEmpty()) {
-			builder.append(", \"exceptions\": [");
-			internalArrayToReferenceJson(builder, indentation, exceptions);
-			builder.append('\n').append(indentation).append(']');
-		}
-	}
+    @Override
+    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        super.internalToJsonStart(builder, indentation);
+        if (returnType != null) {
+            builder.append(", \"type\": { ");
+            returnType.internalToReferenceJson(builder);
+            builder.append(" }");
+        }
+        if (!parameters.isEmpty()) {
+            builder.append(", \"parameters\": [");
+            internalArrayToReferenceJson(builder, indentation, parameters);
+            builder.append('\n').append(indentation).append(']');
+        }
+        if (!exceptions.isEmpty()) {
+            builder.append(", \"exceptions\": [");
+            internalArrayToReferenceJson(builder, indentation, exceptions);
+            builder.append('\n').append(indentation).append(']');
+        }
+    }
 
-	@Override
-	protected void internalToJsonEnd(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		super.internalToJsonEnd(builder, indentation);
-		if (bodyBlock != null) {
-			builder.append(", \"bodyBlock\": \"");
-			internalEscapeString(builder, bodyBlock);
-			builder.append('"');
-		}
-	}
+    @Override
+    protected void internalToJsonEnd(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        super.internalToJsonEnd(builder, indentation);
+        if (bodyBlock != null) {
+            builder.append(", \"bodyBlock\": \"");
+            internalEscapeString(builder, bodyBlock);
+            builder.append('"');
+        }
+    }
 
-	//endregion Jsonify
+    //endregion Jsonify
 
 }

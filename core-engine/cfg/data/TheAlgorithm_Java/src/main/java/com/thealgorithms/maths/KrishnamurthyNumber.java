@@ -5,6 +5,7 @@ A number is a Krishnamurthy number if the sum of the factorials of the digits of
 For example, 1, 2 and 145 are Krishnamurthy numbers.
 Krishnamurthy number is also referred to as a Strong number.
  */
+
 import java.io.*;
 
 public class KrishnamurthyNumber {
@@ -46,10 +47,10 @@ public class KrishnamurthyNumber {
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(
-            new InputStreamReader(System.in)
+                new InputStreamReader(System.in)
         );
         System.out.println(
-            "Enter a number to check if it is a Krishnamurthy number: "
+                "Enter a number to check if it is a Krishnamurthy number: "
         );
         int n = Integer.parseInt(br.readLine());
         if (isKMurthy(n)) {

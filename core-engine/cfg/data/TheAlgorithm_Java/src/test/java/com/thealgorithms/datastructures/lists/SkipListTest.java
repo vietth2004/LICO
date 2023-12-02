@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.Test;
 
 class SkipListTest {
@@ -69,32 +70,32 @@ class SkipListTest {
     @Test
     void checkSortedOnLowestLayer() {
         SkipList<String> skipList = new SkipList<>();
-        String[] values = { "d", "b", "a", "c" };
+        String[] values = {"d", "b", "a", "c"};
         Arrays.stream(values).forEach(skipList::add);
         print(skipList);
 
         String[] actualOrder = IntStream
-            .range(0, values.length)
-            .mapToObj(skipList::get)
-            .toArray(String[]::new);
+                .range(0, values.length)
+                .mapToObj(skipList::get)
+                .toArray(String[]::new);
 
-        assertArrayEquals(new String[] { "a", "b", "c", "d" }, actualOrder);
+        assertArrayEquals(new String[]{"a", "b", "c", "d"}, actualOrder);
     }
 
     private SkipList<String> createSkipList() {
         SkipList<String> skipList = new SkipList<>();
         String[] values = {
-            "a",
-            "b",
-            "c",
-            "d",
-            "e",
-            "f",
-            "g",
-            "h",
-            "i",
-            "j",
-            "k",
+                "a",
+                "b",
+                "c",
+                "d",
+                "e",
+                "f",
+                "g",
+                "h",
+                "i",
+                "j",
+                "k",
         };
         Arrays.stream(values).forEach(skipList::add);
         return skipList;
@@ -103,6 +104,7 @@ class SkipListTest {
     /**
      * Print Skip List representation to console.
      * Optional method not involved in testing process. Used only for visualisation purposes.
+     *
      * @param skipList to print
      */
     private void print(SkipList<?> skipList) {

@@ -14,7 +14,8 @@ import java.util.List;
 
 public class Getter {
     private static int idCounter = 1;
-    private static final String[] IGNORED_DIRS = {".git", "resources", ".ide", ".mvn" , "target"};
+    private static final String[] IGNORED_DIRS = {".git", "resources", ".ide", ".mvn", "target"};
+
     public static Response getResponse(String path) {
         setIdCounter(1);
         File mainDir = new File(path);
@@ -69,6 +70,7 @@ public class Getter {
         }
         return node;
     }
+
     private static List<MethodNode> createJavaNodeFromFile(File file) {
         try {
             CompilationUnit compilationUnit = StaticJavaParser.parse(file);
@@ -101,14 +103,12 @@ public class Getter {
                 );
                 methodNodes.add(methodNode);
             }
-            return  methodNodes;
+            return methodNodes;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
 
 
     private static String getFileExtension(String fileName) {
@@ -141,6 +141,7 @@ public class Getter {
     public static void setIdCounter(int idCounter) {
         Getter.idCounter = idCounter;
     }
+
     private static boolean shouldIgnoreDir(String dirName) {
         for (String ignoredDir : IGNORED_DIRS) {
             if (dirName.equalsIgnoreCase(ignoredDir)) {

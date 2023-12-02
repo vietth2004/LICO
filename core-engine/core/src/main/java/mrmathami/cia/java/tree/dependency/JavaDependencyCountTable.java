@@ -25,15 +25,15 @@ import java.util.Map;
 
 public interface JavaDependencyCountTable {
 
-	@Nonnull
-	static JavaDependencyCountTable of(@Nonnull Map<JavaDependency, Integer> map) {
-		final EnumMap<JavaDependency, Integer> enumMap = new EnumMap<>(map);
-		return key -> {
-			final Integer value = enumMap.get(key);
-			return value != null ? value : 0;
-		};
-	}
+    @Nonnull
+    static JavaDependencyCountTable of(@Nonnull Map<JavaDependency, Integer> map) {
+        final EnumMap<JavaDependency, Integer> enumMap = new EnumMap<>(map);
+        return key -> {
+            final Integer value = enumMap.get(key);
+            return value != null ? value : 0;
+        };
+    }
 
-	int getCount(@Nonnull JavaDependency dependencyType);
+    int getCount(@Nonnull JavaDependency dependencyType);
 
 }

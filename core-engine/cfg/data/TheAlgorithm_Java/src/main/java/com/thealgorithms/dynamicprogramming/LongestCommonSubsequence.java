@@ -31,9 +31,9 @@ class LongestCommonSubsequence {
                     lcsMatrix[i][j] = lcsMatrix[i - 1][j - 1] + 1;
                 } else {
                     lcsMatrix[i][j] =
-                        lcsMatrix[i - 1][j] > lcsMatrix[i][j - 1]
-                            ? lcsMatrix[i - 1][j]
-                            : lcsMatrix[i][j - 1];
+                            lcsMatrix[i - 1][j] > lcsMatrix[i][j - 1]
+                                    ? lcsMatrix[i - 1][j]
+                                    : lcsMatrix[i][j - 1];
                 }
             }
         }
@@ -41,9 +41,9 @@ class LongestCommonSubsequence {
     }
 
     public static String lcsString(
-        String str1,
-        String str2,
-        int[][] lcsMatrix
+            String str1,
+            String str2,
+            int[][] lcsMatrix
     ) {
         StringBuilder lcs = new StringBuilder();
         int i = str1.length(), j = str2.length();

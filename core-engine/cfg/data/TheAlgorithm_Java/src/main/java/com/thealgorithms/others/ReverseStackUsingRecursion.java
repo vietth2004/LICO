@@ -1,6 +1,7 @@
 package com.thealgorithms.others;
 
 /* Program to reverse a Stack using Recursion*/
+
 import java.util.Stack;
 
 public class ReverseStackUsingRecursion {

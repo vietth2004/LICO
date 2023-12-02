@@ -23,11 +23,11 @@ import mrmathami.cia.java.tree.helper.Jsonify;
 
 public interface JavaEntity extends Jsonify {
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	String getEntityClass();
+    @Nonnull
+    String getEntityClass();
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
 }

@@ -33,87 +33,89 @@ import java.util.Map;
 
 public final class ReferenceType extends AbstractType implements JavaReferenceType {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nullable private AbstractNode node;
+    @Nullable
+    private AbstractNode node;
 
-	@Nonnull private transient List<AbstractType> arguments = List.of();
-
-
-	public ReferenceType(@Nonnull String description) {
-		super(description);
-	}
+    @Nonnull
+    private transient List<AbstractType> arguments = List.of();
 
 
-	//region Getter & Setter
+    public ReferenceType(@Nonnull String description) {
+        super(description);
+    }
 
-	@Nullable
-	@Override
-	public AbstractNode getNode() {
-		return node;
-	}
 
-	public void setNode(@Nonnull AbstractNode node) {
-		assertNonFrozen();
-		this.node = node;
-	}
+    //region Getter & Setter
 
-	@Nonnull
-	@Override
-	public List<AbstractType> getArguments() {
-		return isFrozen() ? arguments : Collections.unmodifiableList(arguments);
-	}
+    @Nullable
+    @Override
+    public AbstractNode getNode() {
+        return node;
+    }
 
-	public void setArguments(@Nonnull List<AbstractType> arguments) {
-		assertNonFrozen();
-		this.arguments = arguments;
-	}
+    public void setNode(@Nonnull AbstractNode node) {
+        assertNonFrozen();
+        this.node = node;
+    }
 
-	//endregion Getter & Setter
+    @Nonnull
+    @Override
+    public List<AbstractType> getArguments() {
+        return isFrozen() ? arguments : Collections.unmodifiableList(arguments);
+    }
 
-	//region Serialization Helper
+    public void setArguments(@Nonnull List<AbstractType> arguments) {
+        assertNonFrozen();
+        this.arguments = arguments;
+    }
 
-	@Override
-	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-		if (super.internalFreeze(map)) return true;
-		this.arguments = List.copyOf(arguments);
-		for (final AbstractType argument : arguments) argument.internalFreeze(map);
-		return false;
-	}
+    //endregion Getter & Setter
 
-	private void writeObject(@Nonnull ObjectOutputStream outputStream)
-			throws IOException, UnsupportedOperationException {
-		assertFrozen();
-		outputStream.defaultWriteObject();
-		outputStream.writeObject(arguments);
-	}
+    //region Serialization Helper
 
-	@SuppressWarnings("unchecked")
-	private void readObject(@Nonnull ObjectInputStream inputStream)
-			throws IOException, ClassNotFoundException, ClassCastException {
-		inputStream.defaultReadObject();
-		this.arguments = (List<AbstractType>) inputStream.readObject();
-	}
+    @Override
+    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+        if (super.internalFreeze(map)) return true;
+        this.arguments = List.copyOf(arguments);
+        for (final AbstractType argument : arguments) argument.internalFreeze(map);
+        return false;
+    }
 
-	//endregion Serialization Helper
+    private void writeObject(@Nonnull ObjectOutputStream outputStream)
+            throws IOException, UnsupportedOperationException {
+        assertFrozen();
+        outputStream.defaultWriteObject();
+        outputStream.writeObject(arguments);
+    }
 
-	//region Jsonify
+    @SuppressWarnings("unchecked")
+    private void readObject(@Nonnull ObjectInputStream inputStream)
+            throws IOException, ClassNotFoundException, ClassCastException {
+        inputStream.defaultReadObject();
+        this.arguments = (List<AbstractType>) inputStream.readObject();
+    }
 
-	@Override
-	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		super.internalToJsonStart(builder, indentation);
-		if (node != null) {
-			builder.append(", \"node\": { ");
-			node.internalToReferenceJson(builder);
-			builder.append(" }");
-		}
-		if (!arguments.isEmpty()) {
-			builder.append(", \"arguments\": [");
-			internalArrayToReferenceJson(builder, indentation, arguments);
-			builder.append('\n').append(indentation).append(']');
-		}
-	}
+    //endregion Serialization Helper
 
-	//endregion Jsonify
+    //region Jsonify
+
+    @Override
+    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        super.internalToJsonStart(builder, indentation);
+        if (node != null) {
+            builder.append(", \"node\": { ");
+            node.internalToReferenceJson(builder);
+            builder.append(" }");
+        }
+        if (!arguments.isEmpty()) {
+            builder.append(", \"arguments\": [");
+            internalArrayToReferenceJson(builder, indentation, arguments);
+            builder.append('\n').append(indentation).append(']');
+        }
+    }
+
+    //endregion Jsonify
 
 }

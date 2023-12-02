@@ -45,7 +45,7 @@ public class DynamicArray<E> implements Iterable<E> {
     public void add(final E element) {
         if (this.size == this.elements.length) {
             this.elements =
-                Arrays.copyOf(this.elements, newCapacity(2 * this.capacity));
+                    Arrays.copyOf(this.elements, newCapacity(2 * this.capacity));
         }
 
         this.elements[this.size] = element;
@@ -55,7 +55,7 @@ public class DynamicArray<E> implements Iterable<E> {
     /**
      * Places element of type <E> at the desired index
      *
-     * @param index the index for the element to be placed
+     * @param index   the index for the element to be placed
      * @param element the element to be inserted
      */
     public void put(final int index, E element) {
@@ -85,7 +85,7 @@ public class DynamicArray<E> implements Iterable<E> {
 
         if (this.capacity > DEFAULT_CAPACITY && size * 4 <= this.capacity) {
             this.elements =
-                Arrays.copyOf(this.elements, newCapacity(this.capacity / 2));
+                    Arrays.copyOf(this.elements, newCapacity(this.capacity / 2));
         }
         return oldElement;
     }
@@ -117,11 +117,11 @@ public class DynamicArray<E> implements Iterable<E> {
 
         if (newSize > index) {
             System.arraycopy(
-                elements,
-                index + 1,
-                elements,
-                index,
-                newSize - index
+                    elements,
+                    index + 1,
+                    elements,
+                    index,
+                    newSize - index
             );
         }
 
@@ -145,7 +145,7 @@ public class DynamicArray<E> implements Iterable<E> {
     @Override
     public String toString() {
         return Arrays.toString(
-            Arrays.stream(this.elements).filter(Objects::nonNull).toArray()
+                Arrays.stream(this.elements).filter(Objects::nonNull).toArray()
         );
     }
 

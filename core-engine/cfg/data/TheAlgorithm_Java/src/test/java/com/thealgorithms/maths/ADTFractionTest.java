@@ -14,8 +14,8 @@ public class ADTFractionTest {
     @Test
     void testConstructorWithDenominatorEqualToZero() {
         Exception exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new ADTFraction(1, 0)
+                IllegalArgumentException.class,
+                () -> new ADTFraction(1, 0)
         );
         assertEquals("Denominator cannot be 0", exception.getMessage());
     }

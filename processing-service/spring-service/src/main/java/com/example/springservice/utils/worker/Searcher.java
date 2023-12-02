@@ -12,7 +12,7 @@ public class Searcher {
 
 
         for (JavaNode obj : javaNodes) {
-            if(obj.getId().equals(id)) {
+            if (obj.getId().equals(id)) {
                 javaNode = obj;
             }
         }
@@ -25,7 +25,7 @@ public class Searcher {
         JavaNode javaNode = new JavaNode();
 
         for (JavaNode obj : javaNodes) {
-            if(obj.getQualifiedName().equals(name)) {
+            if (obj.getQualifiedName().equals(name)) {
                 javaNode = obj;
             }
         }
@@ -38,7 +38,7 @@ public class Searcher {
 
 
         for (Node obj : xmlNodes) {
-            if(obj.getName().equals(name)) {
+            if (obj.getName().equals(name)) {
                 xmlNode = obj;
             }
         }

@@ -24,11 +24,11 @@ import mrmathami.cia.java.tree.node.JavaPackageNode;
 
 public final class PackageNode extends AbstractAnnotatedNode implements JavaPackageNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	public PackageNode(@Nonnull AbstractNode parent, @Nonnull String name) {
-		super(null, parent, name);
-		checkParent(parent, PackageNode.class, RootNode.class);
-	}
+    public PackageNode(@Nonnull AbstractNode parent, @Nonnull String name) {
+        super(null, parent, name);
+        checkParent(parent, PackageNode.class, RootNode.class);
+    }
 
 }

@@ -21,46 +21,45 @@ package mrmathami.collections;
 import mrmathami.annotations.Nonnull;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.function.Predicate;
 
 import static mrmathami.collections.ImmutableCollections.up;
 
 abstract class AbstractImmutableCollection<E> implements Collection<E> {
 
-	@Override
-	public final boolean add(@Nonnull E element) {
-		throw up();
-	}
+    @Override
+    public final boolean add(@Nonnull E element) {
+        throw up();
+    }
 
-	@Override
-	public final boolean remove(@Nonnull Object object) {
-		throw up();
-	}
+    @Override
+    public final boolean remove(@Nonnull Object object) {
+        throw up();
+    }
 
-	@Override
-	public final boolean addAll(@Nonnull Collection<? extends E> collection) {
-		throw up();
-	}
+    @Override
+    public final boolean addAll(@Nonnull Collection<? extends E> collection) {
+        throw up();
+    }
 
-	@Override
-	public final boolean retainAll(@Nonnull Collection<?> collection) {
-		throw up();
-	}
+    @Override
+    public final boolean retainAll(@Nonnull Collection<?> collection) {
+        throw up();
+    }
 
-	@Override
-	public final boolean removeAll(@Nonnull Collection<?> collection) {
-		throw up();
-	}
+    @Override
+    public final boolean removeAll(@Nonnull Collection<?> collection) {
+        throw up();
+    }
 
-	@Override
-	public final void clear() {
-		throw up();
-	}
+    @Override
+    public final void clear() {
+        throw up();
+    }
 
-	@Override
-	public final boolean removeIf(@Nonnull Predicate<? super E> filter) {
-		throw up();
-	}
+    @Override
+    public final boolean removeIf(@Nonnull Predicate<? super E> filter) {
+        throw up();
+    }
 
 }

@@ -4,16 +4,14 @@ import java.util.Stack;
 
 /**
  * Postfix to Infix implementation via Stack
- *
+ * <p>
  * Function: String getPostfixToInfix(String postfix)
  * Returns the Infix Expression for the given postfix parameter.
- *
+ * <p>
  * Avoid using parentheses/brackets/braces for the postfix string.
  * Postfix Expressions don't require these.
  *
- *
  * @author nikslyon19 (Nikhil Bisht)
- *
  */
 
 public class PostfixToInfix {
@@ -124,6 +122,6 @@ public class PostfixToInfix {
         assert getPostfixToInfix("AB+C+D+").equals("(((A+B)+C)+D)");
         assert getPostfixToInfix("ABCDE^*/-").equals("(A-(B/(C*(D^E))))");
         assert getPostfixToInfix("AB+CD^/E*FGH+-^")
-            .equals("((((A+B)/(C^D))*E)^(F-(G+H)))");
+                .equals("((((A+B)/(C^D))*E)^(F-(G+H)))");
     }
 }

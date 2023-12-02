@@ -8,6 +8,7 @@ import com.example.jsfservice.utils.SupportParserJsp;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
 import java.util.List;
 
 public class JsfJspParser implements IParser {
@@ -56,13 +57,14 @@ public class JsfJspParser implements IParser {
     }
 
     //TODO: continue work here
+
     /**
      * @param element
      * @param parentPath
      * @return JspTagNode
      * @function: create JspTagNode from JSOUP Element and parent path
      */
-    private Node createJspTagNodeByElement(Element element, String parentPath){
+    private Node createJspTagNodeByElement(Element element, String parentPath) {
         return null;
     }
 

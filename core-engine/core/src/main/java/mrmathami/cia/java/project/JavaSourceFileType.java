@@ -23,8 +23,9 @@ import mrmathami.annotations.Nonnull;
 import java.util.List;
 
 public enum JavaSourceFileType {
-	JAVA, XML;
+    JAVA, XML;
 
-	@Nonnull public static final List<JavaSourceFileType> VALUE_LIST = List.of(values());
+    @Nonnull
+    public static final List<JavaSourceFileType> VALUE_LIST = List.of(values());
 
 }

@@ -1,7 +1,6 @@
 package com.example.uploadprojectservice.utils.cloneProjectUtils;
 
 import com.example.uploadprojectservice.utils.cloneProjectUtils.dataModel.ClassData;
-import org.eclipse.jdt.core.dom.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,20 +16,20 @@ public final class CloneProject {
         if (!dir.isDirectory()) {
             throw new RuntimeException("Invalid Dir");
         }
-        for(File file : dir.listFiles()) {
-            if(file.isDirectory()) {
-                if(file.getName().equals("java")) {
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                if (file.getName().equals("java")) {
                     return file.getPath();
-                }
-                else {
+                } else {
                     String dirPath = getJavaDirPath(file.getPath());
-                    if(dirPath.endsWith("java")) return dirPath;
+                    if (dirPath.endsWith("java")) return dirPath;
                 }
             }
         }
 
         return "";
     }
+
     public static void cloneProject(String directoryPath, String cloneDirectoryPath) throws IOException {
         deleteFilesInDirectory(cloneDirectoryPath);
 

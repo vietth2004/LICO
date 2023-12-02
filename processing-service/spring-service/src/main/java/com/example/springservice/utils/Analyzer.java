@@ -7,7 +7,11 @@ import com.example.springservice.ast.node.Node;
 import com.example.springservice.dependency.Dependency;
 import com.example.springservice.dom.Xml.XmlTagNode;
 import com.example.springservice.resource.Resource;
-import com.example.springservice.utils.worker.*;
+import com.example.springservice.utils.worker.Checker;
+import com.example.springservice.utils.worker.Converter;
+import com.example.springservice.utils.worker.Filter;
+import com.example.springservice.utils.worker.Getter;
+import com.example.springservice.utils.worker.Searcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 public class Analyzer {
-
 
 
     public static List<Dependency> getSpringDependency(List<JavaNode> springJavaNodes,
@@ -28,14 +31,14 @@ public class Analyzer {
         List<com.example.springservice.dom.Node> xmlNodesWithoutNull = Filter.filteringNullNodes(xmlNodes);
 
         // Gather each Spring Java class
-        for(JavaNode javaNode : springJavaNodes) {
-            if(Checker.containSpringAnnotations(javaNode, Resource.SPRING_MVC_CONTROLLER_SIMPLE_NAME)) {
+        for (JavaNode javaNode : springJavaNodes) {
+            if (Checker.containSpringAnnotations(javaNode, Resource.SPRING_MVC_CONTROLLER_SIMPLE_NAME)) {
                 springControllerJavaNodes.addAll(gatherControllerNode(javaNodes, javaNode));
             }
-            if(Checker.containSpringAnnotations(javaNode, Resource.SPRING_MVC_SERVICE_SIMPLE_NAME)) {
+            if (Checker.containSpringAnnotations(javaNode, Resource.SPRING_MVC_SERVICE_SIMPLE_NAME)) {
                 springServiceJavaNodes.addAll(gatherDaoNode(javaNodes, javaNode));
             }
-            if(Checker.containSpringAnnotations(javaNode, Resource.SPRING_MVC_REPOSITORY_SIMPLE_NAME)
+            if (Checker.containSpringAnnotations(javaNode, Resource.SPRING_MVC_REPOSITORY_SIMPLE_NAME)
                     || Checker.isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
                 springRepositoryJavaNodes.addAll(gatherDaoNode(javaNodes, javaNode));
             }
@@ -69,8 +72,8 @@ public class Analyzer {
 
     public static List<Dependency> getXmlJavaDependency(List<JavaNode> javaNodes, List<com.example.springservice.dom.Node> xmlNodes) {
         Set<Dependency> dependencies = new HashSet<>();
-        for(com.example.springservice.dom.Node xmlNode : xmlNodes) {
-            for(XmlTagNode xmlTagNode : xmlNode.getChildren()) {
+        for (com.example.springservice.dom.Node xmlNode : xmlNodes) {
+            for (XmlTagNode xmlTagNode : xmlNode.getChildren()) {
                 dependencies.addAll(findSpringXmlNodes(javaNodes, xmlTagNode, xmlNodes, dependencies));
             }
         }
@@ -96,32 +99,32 @@ public class Analyzer {
                                        Set<Dependency> dependencies,
                                        List<com.example.springservice.dom.Node> xmlNodes) {
 
-        for(XmlTagNode xmlTagNode : xmlTagNodes) {
+        for (XmlTagNode xmlTagNode : xmlTagNodes) {
 
-            if(xmlTagNode.getTagName().equals("import")) {
+            if (xmlTagNode.getTagName().equals("import")) {
                 String xmlNodeName = xmlTagNode.getAttributes().get("resource");
 
                 dependencies.add(new Dependency(xmlTagNode.getId(), Searcher.searchXmlNode(xmlNodeName, xmlNodes).getId(),
-                        new DependencyCountTable(0,0,0,0,0, 1)));
+                        new DependencyCountTable(0, 0, 0, 0, 0, 1)));
             }
 
-            if(xmlTagNode.getTagName().contains("component-scan")) {
+            if (xmlTagNode.getTagName().contains("component-scan")) {
                 String packageName = xmlTagNode.getAttributes().get("base-package");
 
                 dependencies.add(new Dependency(xmlTagNode.getId(), Searcher.searchJavaNode(packageName, javaNodes).getId(),
-                        new DependencyCountTable(0,0,0,0,0, 1)));
+                        new DependencyCountTable(0, 0, 0, 0, 0, 1)));
 
             }
 
-            if(xmlTagNode.getTagName().contains("property-placeholder")) {
+            if (xmlTagNode.getTagName().contains("property-placeholder")) {
 
             }
 
-            if(xmlTagNode.getTagName().contains("bean")) {
+            if (xmlTagNode.getTagName().contains("bean")) {
 
             }
 
-            if(xmlTagNode.getTagName().contains("beans")) {
+            if (xmlTagNode.getTagName().contains("beans")) {
                 analyzeXmlNodes(javaNodes, xmlTagNode.getChildren(), dependencies, xmlNodes);
             }
         }
@@ -140,7 +143,7 @@ public class Analyzer {
                         dependencies.add(new Dependency(
                                 callerNode.getId(),
                                 calleeNode.getId(),
-                                new DependencyCountTable(0,0,0,0,0, 1)));
+                                new DependencyCountTable(0, 0, 0, 0, 0, 1)));
                     }
 
                 }
@@ -149,7 +152,7 @@ public class Analyzer {
         return dependencies;
     }
 
-    public static List<JavaNode> gatherControllerNode (List<JavaNode> javaNodes, JavaNode javaNode) {
+    public static List<JavaNode> gatherControllerNode(List<JavaNode> javaNodes, JavaNode javaNode) {
         List<JavaNode> javaControllerNodes = new ArrayList<>();
         javaControllerNodes.add(javaNode);
         javaControllerNodes.addAll(Getter.getSpringChildren(javaNode.getChildren(), javaNodes));
@@ -166,10 +169,9 @@ public class Analyzer {
     }
 
 
-
-    public static void print (List<JavaNode> springControllerJavaNodes,
-                              List<JavaNode> springServiceJavaNodes,
-                              List<JavaNode> springRepositoryJavaNodes) {
+    public static void print(List<JavaNode> springControllerJavaNodes,
+                             List<JavaNode> springServiceJavaNodes,
+                             List<JavaNode> springRepositoryJavaNodes) {
 
 //        System.out.println();
 

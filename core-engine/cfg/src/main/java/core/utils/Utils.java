@@ -1,15 +1,31 @@
 package core.utils;
 
-import core.structureTree.SNode;
 import core.node.Node;
-import extent.Exporter;
+import core.structureTree.SNode;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -45,8 +61,7 @@ public class Utils {
 //
 //                }
 //            }
-        }
-        else if (node instanceof TypeDeclaration) {
+        } else if (node instanceof TypeDeclaration) {
             List<FieldDeclaration> atributes = Arrays.asList(((TypeDeclaration) node).getFields());
             for (FieldDeclaration attribute : atributes) {
                 children.add(attribute);
@@ -57,19 +72,16 @@ public class Utils {
                 children.add(method);
             }
 
-        }
-        else if (node instanceof Block) {
+        } else if (node instanceof Block) {
             List<Statement> statements = ((Block) node).statements();
             for (ASTNode statement : statements) {
                 children.add(statement);
             }
-        }
-        else if (node instanceof IfStatement) {
+        } else if (node instanceof IfStatement) {
             children.add(((IfStatement) node).getExpression());
             children.add(((IfStatement) node).getThenStatement());
             children.add(((IfStatement) node).getElseStatement());
-        }
-        else if (node instanceof ExpressionStatement) {
+        } else if (node instanceof ExpressionStatement) {
             children.add(((ExpressionStatement) node).getExpression());
         }
 
@@ -91,8 +103,7 @@ public class Utils {
 
         List<MethodDeclaration> methods = Arrays.asList(((TypeDeclaration) node).getMethods());
         for (MethodDeclaration method : methods) {
-            if (!method.isConstructor())
-            {
+            if (!method.isConstructor()) {
                 astFuncList.add(method);
             }
         }
@@ -101,8 +112,7 @@ public class Utils {
     public static void getConstructorChildren(ASTNode node, List<MethodDeclaration> constructorList) {
         List<MethodDeclaration> methods = Arrays.asList(((TypeDeclaration) node).getMethods());
         for (MethodDeclaration method : methods) {
-            if (method.isConstructor())
-            {
+            if (method.isConstructor()) {
                 constructorList.add(method);
             }
         }
@@ -112,17 +122,17 @@ public class Utils {
         String content = "";
         File fileToRead = new File(path);
 
-        try(FileReader fileStream = new FileReader( fileToRead );
-            BufferedReader bufferedReader = new BufferedReader( fileStream ) ) {
+        try (FileReader fileStream = new FileReader(fileToRead);
+             BufferedReader bufferedReader = new BufferedReader(fileStream)) {
 
             String line = null;
 
-            while( (line = bufferedReader.readLine()) != null ) {
+            while ((line = bufferedReader.readLine()) != null) {
                 //do something with line
                 content += line + "\n";
             }
 
-        } catch ( Exception ex ) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -146,8 +156,7 @@ public class Utils {
     public static String insertString(
             String originalString,
             String stringToBeInserted,
-            int index)
-    {
+            int index) {
 
         // Create a new string
         String newString = originalString.substring(0, index + 1)
@@ -162,7 +171,7 @@ public class Utils {
         String res = "";
         while (str.charAt(from) == ' ') {
             res += " ";
-            from --;
+            from--;
         }
         return res;
     }
@@ -170,7 +179,7 @@ public class Utils {
     public static String getWriteToTestPathContent(String content, String absolutePath) {
         return "try{\n" +
                 "        //Specify the file name and path here\n" +
-                "        File file =new File(\"" + absolutePath.replaceAll("\\\\", "/")+ "\");\n" +
+                "        File file =new File(\"" + absolutePath.replaceAll("\\\\", "/") + "\");\n" +
                 " \n" +
                 "        /* This logic is to create the file if the\n" +
                 "         * file is not already present\n" +
@@ -183,7 +192,7 @@ public class Utils {
                 "        FileWriter fw = new FileWriter(file,true);\n" +
                 "        //BufferedWriter writer give better performance\n" +
                 "        BufferedWriter bw = new BufferedWriter(fw);\n" +
-                "        bw.write(\"" +content+ "\" + \"\\n\");\n" +
+                "        bw.write(\"" + content + "\" + \"\\n\");\n" +
                 "        //Closing BufferedWriter Stream\n" +
                 "        bw.close();\n" +
                 " \n" +
@@ -198,7 +207,7 @@ public class Utils {
     public static String getWriteToActualPathContent(String arg, String absolutePath) {
         return "try{\n" +
                 "        //Specify the file name and path here\n" +
-                "        File file =new File(\"" + absolutePath.replaceAll("\\\\", "/")+ "\");\n" +
+                "        File file =new File(\"" + absolutePath.replaceAll("\\\\", "/") + "\");\n" +
                 " \n" +
                 "        /* This logic is to create the file if the\n" +
                 "         * file is not already present\n" +
@@ -236,7 +245,7 @@ public class Utils {
         String strLine;
 
         //Read File Line By Line
-        while ((strLine = br.readLine()) != null)   {
+        while ((strLine = br.readLine()) != null) {
             // Print the content on the console
             lines.add(strLine);
         }
@@ -271,23 +280,19 @@ public class Utils {
     }
 
     public static void printReport(String path) {
-        try
-        {
+        try {
             File file = new File(path);   //creating a new file instance
             FileInputStream fis = new FileInputStream(file);   //obtaining bytes from the file
 //creating Workbook instance that refers to .xlsx file
             XSSFWorkbook wb = new XSSFWorkbook(fis);
             XSSFSheet sheet = wb.getSheetAt(0);     //creating a Sheet object to retrieve object
             Iterator<Row> itr = sheet.iterator();    //iterating over excel file
-            while (itr.hasNext())
-            {
+            while (itr.hasNext()) {
                 Row row = itr.next();
                 Iterator<Cell> cellIterator = row.cellIterator();   //iterating over each column
-                while (cellIterator.hasNext())
-                {
+                while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    switch (cell.getCellType())
-                    {
+                    switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_STRING:    //field that represents string cell type
                             System.out.print(cell.getStringCellValue() + "\t\t\t");
                             break;
@@ -299,9 +304,7 @@ public class Utils {
                 }
                 System.out.println("");
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

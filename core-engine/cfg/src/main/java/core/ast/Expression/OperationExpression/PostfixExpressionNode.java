@@ -38,7 +38,7 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
         ExpressionNode oldOperand = postfixExpressionNode.operand;
 
-        if(!operand.isLiteralNode()) {
+        if (!operand.isLiteralNode()) {
             postfixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
         } else {
             return operand;
@@ -46,11 +46,11 @@ public class PostfixExpressionNode extends OperationExpressionNode {
         // PAUSE executing
 
         // RE-ASSIGN
-        if(operand instanceof NameNode) {
+        if (operand instanceof NameNode) {
             String key = NameNode.getStringNameNode((NameNode) operand);
             AstNode value = memoryModel.getValue(key);
 
-            if(value instanceof LiteralNode) {
+            if (value instanceof LiteralNode) {
                 memoryModel.assignVariable(key, LiteralNode.analyzeOnePostfixLiteral((LiteralNode) value, operator));
             } else if (value instanceof OperationExpressionNode) {
                 PostfixExpressionNode newValue = new PostfixExpressionNode();

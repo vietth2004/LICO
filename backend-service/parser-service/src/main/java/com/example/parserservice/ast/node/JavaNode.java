@@ -135,7 +135,7 @@ public class JavaNode extends Node implements Serializable {
         this.annotatesWithValue = annotatesWithValue;
     }
 
-    private void setupProperties (AbstractNode abstractNode) {
+    private void setupProperties(AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Converter.convertParameters(((MethodNode) abstractNode).getParameters());
         }

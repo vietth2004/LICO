@@ -8,17 +8,17 @@ import java.util.List;
 
 public class Converter {
 
-    public static List<Node> convertStrutsNodesToNodes (List<com.example.xmlservice.dom.Node> strutsNodes) {
+    public static List<Node> convertStrutsNodesToNodes(List<com.example.xmlservice.dom.Node> strutsNodes) {
         List<Node> rootNode = new ArrayList<>();
 
-        for(com.example.xmlservice.dom.Node tempNode : strutsNodes) {
+        for (com.example.xmlservice.dom.Node tempNode : strutsNodes) {
             rootNode.add(convertStrutsNodeToNode(tempNode));
         }
 
         return rootNode;
     }
 
-    public static Node convertStrutsNodeToNode (com.example.xmlservice.dom.Node strutsNode) {
+    public static Node convertStrutsNodeToNode(com.example.xmlservice.dom.Node strutsNode) {
         StrutsNode node = new StrutsNode();
 
         node.setId(strutsNode.getId());
@@ -28,7 +28,7 @@ public class Converter {
         node.setQualifiedName(strutsNode.getName());
         node.setUniqueName(strutsNode.getName());
 
-        for(com.example.xmlservice.dom.Node tempNode : strutsNode.getChildren()) {
+        for (com.example.xmlservice.dom.Node tempNode : strutsNode.getChildren()) {
             node.addChildren(convertStrutsNodeToNode(tempNode));
         }
 

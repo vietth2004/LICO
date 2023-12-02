@@ -41,10 +41,10 @@ class PollardRhoTest {
 
         //when
         Exception exception = assertThrows(
-            RuntimeException.class,
-            () -> {
-                PollardRho.pollardRho(number);
-            }
+                RuntimeException.class,
+                () -> {
+                    PollardRho.pollardRho(number);
+                }
         );
         String actualMessage = exception.getMessage();
 

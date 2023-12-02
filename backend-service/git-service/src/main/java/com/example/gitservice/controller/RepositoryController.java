@@ -1,8 +1,8 @@
 package com.example.gitservice.controller;
 
-import com.example.gitservice.dto.ErrorMessage;
 import com.example.gitservice.dto.BranchesResponse;
 import com.example.gitservice.dto.CommitResponse;
+import com.example.gitservice.dto.ErrorMessage;
 import com.example.gitservice.dto.RepoInfoResponse;
 import com.example.gitservice.service.GitService;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,14 +38,14 @@ public class RepositoryController {
         BranchesResponse branches = null;
         try {
             repoName = Arrays
-                .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
-                .collect(Collectors.toList())
-                .get(0)
-                .replace(".git", "");
+                    .stream(url.split("/"))
+                    .filter(name -> name.endsWith(".git"))
+                    .collect(Collectors.toList())
+                    .get(0)
+                    .replace(".git", "");
             branches = gitService.fetchGitBranches(url, user, token);
         } catch (GitAPIException e) {
-            if(e instanceof TransportException)
+            if (e instanceof TransportException)
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body(new ErrorMessage(
@@ -80,12 +79,12 @@ public class RepositoryController {
         logger.info("/repo/commits");
         String repoName = "";
         try {
-        repoName = Arrays
-                .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
-                .collect(Collectors.toList())
-                .get(0)
-                .replace(".git", "");
+            repoName = Arrays
+                    .stream(url.split("/"))
+                    .filter(name -> name.endsWith(".git"))
+                    .collect(Collectors.toList())
+                    .get(0)
+                    .replace(".git", "");
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -126,11 +125,11 @@ public class RepositoryController {
         BranchesResponse branches = null;
         try {
             repoName = Arrays
-                .stream(url.split("/"))
-                .filter(name -> name.endsWith(".git"))
-                .collect(Collectors.toList())
-                .get(0)
-                .replace(".git", "");
+                    .stream(url.split("/"))
+                    .filter(name -> name.endsWith(".git"))
+                    .collect(Collectors.toList())
+                    .get(0)
+                    .replace(".git", "");
 
             branches = gitService.fetchGitBranches(url, user, token);
         } catch (GitAPIException e) {
@@ -150,7 +149,7 @@ public class RepositoryController {
                     ));
         } catch (IOException e) {
             e.printStackTrace();
-        }  catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorMessage(

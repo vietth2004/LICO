@@ -21,7 +21,8 @@ public class Node implements Serializable {
         this.children = children;
         this.path = path;
     }
-    public Node(int id, String path){
+
+    public Node(int id, String path) {
         this.id = id;
         this.path = path;
     }

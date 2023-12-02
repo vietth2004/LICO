@@ -1,12 +1,9 @@
 package com.example.xmlservice.controller;
 
-import com.example.xmlservice.dom.Node;
 import com.example.xmlservice.dom.Properties.PropertiesFileNode;
 import com.example.xmlservice.dto.Request;
 import com.example.xmlservice.service.PropertiesService;
-import com.example.xmlservice.service.XmlService;
 import com.example.xmlservice.utils.communicator.PropResponse;
-import com.example.xmlservice.utils.communicator.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

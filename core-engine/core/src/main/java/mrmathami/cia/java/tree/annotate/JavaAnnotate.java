@@ -28,170 +28,172 @@ import java.util.List;
 
 public interface JavaAnnotate extends JavaIdentifiedEntity {
 
-	@Nonnull String OBJECT_CLASS = "JavaAnnotate";
-	@Nonnull String ID_CLASS = "JavaAnnotate";
+    @Nonnull
+    String OBJECT_CLASS = "JavaAnnotate";
+    @Nonnull
+    String ID_CLASS = "JavaAnnotate";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	@Nonnull
-	@Override
-	default String getIdClass() {
-		return ID_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getIdClass() {
+        return ID_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nonnull
-	String getName();
+    @Nonnull
+    String getName();
 
-	@Nullable
-	JavaNode getNode();
+    @Nullable
+    JavaNode getNode();
 
-	@Nonnull
-	List<? extends Parameter> getParameters();
+    @Nonnull
+    List<? extends Parameter> getParameters();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
-	interface Parameter extends JavaEntity {
+    interface Parameter extends JavaEntity {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaAnnotate.Parameter";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaAnnotate.Parameter";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nonnull
-		String getName();
+        @Nonnull
+        String getName();
 
-		@Nullable
-		JavaNode getNode();
+        @Nullable
+        JavaNode getNode();
 
-		@Nullable
-		Value getValue();
+        @Nullable
+        Value getValue();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-	}
+    }
 
-	interface Value extends JavaEntity {
-	}
+    interface Value extends JavaEntity {
+    }
 
-	interface ArrayValue extends Value {
+    interface ArrayValue extends Value {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaAnnotate.ArrayValue";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaAnnotate.ArrayValue";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nonnull
-		List<? extends NonArrayValue> getValues();
+        @Nonnull
+        List<? extends NonArrayValue> getValues();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-	}
+    }
 
-	interface NonArrayValue extends Value {
-	}
+    interface NonArrayValue extends Value {
+    }
 
-	interface SimpleValue extends NonArrayValue {
+    interface SimpleValue extends NonArrayValue {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaAnnotate.SimpleValue";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaAnnotate.SimpleValue";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nonnull
-		String getValueType();
+        @Nonnull
+        String getValueType();
 
-		@Nonnull
-		Object getValue();
+        @Nonnull
+        Object getValue();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-		//region Helper
+        //region Helper
 
-		static boolean isValidValueType(@Nonnull Object value) {
-			return value instanceof String || value instanceof Boolean || value instanceof Byte
-					|| value instanceof Short || value instanceof Integer || value instanceof Long
-					|| value instanceof Character || value instanceof Float || value instanceof Double;
-		}
+        static boolean isValidValueType(@Nonnull Object value) {
+            return value instanceof String || value instanceof Boolean || value instanceof Byte
+                    || value instanceof Short || value instanceof Integer || value instanceof Long
+                    || value instanceof Character || value instanceof Float || value instanceof Double;
+        }
 
-		//endregion Helper
+        //endregion Helper
 
-	}
+    }
 
-	interface NodeValue extends NonArrayValue {
+    interface NodeValue extends NonArrayValue {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaAnnotate.NodeValue";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaAnnotate.NodeValue";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nonnull
-		String getDescribe();
+        @Nonnull
+        String getDescribe();
 
-		@Nullable
-		JavaNode getNode();
+        @Nullable
+        JavaNode getNode();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-	}
+    }
 
-	interface AnnotateValue extends NonArrayValue {
+    interface AnnotateValue extends NonArrayValue {
 
-		//region Basic Getter
+        //region Basic Getter
 
-		@Nonnull
-		@Override
-		default String getEntityClass() {
-			return "JavaAnnotate.AnnotateValue";
-		}
+        @Nonnull
+        @Override
+        default String getEntityClass() {
+            return "JavaAnnotate.AnnotateValue";
+        }
 
-		//endregion Basic Getter
+        //endregion Basic Getter
 
-		//region Getter & Setter
+        //region Getter & Setter
 
-		@Nullable
-		JavaAnnotate getAnnotate();
+        @Nullable
+        JavaAnnotate getAnnotate();
 
-		//endregion Getter & Setter
+        //endregion Getter & Setter
 
-	}
+    }
 
 }

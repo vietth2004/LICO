@@ -82,7 +82,7 @@ public class Caesar {
     }
 
     /**
-     *  @return string array which contains all the possible decoded combination.
+     * @return string array which contains all the possible decoded combination.
      */
     public String[] bruteforce(String encryptedMessage) {
         String[] listOfAllTheAnswers = new String[27];

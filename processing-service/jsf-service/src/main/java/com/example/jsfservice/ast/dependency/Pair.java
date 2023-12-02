@@ -2,11 +2,14 @@ package com.example.jsfservice.ast.dependency;
 
 import com.example.jsfservice.ast.node.Node;
 
-public class Pair{
+public class Pair {
     private Node node;
     private DependencyCountTable dependency;
 
-    public Pair(){};
+    public Pair() {
+    }
+
+    ;
 
     public Pair(Node first, DependencyCountTable second) {
         this.node = first;

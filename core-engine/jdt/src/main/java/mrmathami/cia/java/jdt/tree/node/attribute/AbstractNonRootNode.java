@@ -27,130 +27,136 @@ import mrmathami.cia.java.project.JavaSourceFile;
 
 public abstract class AbstractNonRootNode extends AbstractNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nullable private final SourceFile sourceFile;
-	@Nonnull private final AbstractNode parent;
-	@Nonnull private final String simpleName;
-	@Nonnull private final String qualifiedName;
-	@Nonnull private final String uniqueName;
-
-
-	@Nullable private transient RootNode root; // only null when deserialize
-
-
-	public AbstractNonRootNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName) {
-		this.sourceFile = sourceFile;
-		this.parent = parent;
-		this.simpleName = normalizeSimpleName(simpleName);
-		this.uniqueName = this.qualifiedName = parent.isRoot()
-				? this.simpleName
-				: parent.getQualifiedName() + '.' + this.simpleName;
-		this.root = parent.getRoot();
-	}
-
-	public AbstractNonRootNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
-		this.sourceFile = sourceFile;
-		this.parent = parent;
-		this.simpleName = normalizeSimpleName(simpleName);
-		this.uniqueName = (
-				this.qualifiedName = parent.isRoot()
-						? this.simpleName
-						: parent.getQualifiedName() + '.' + this.simpleName
-		) + uniqueNameSuffix;
-		this.root = parent.getRoot();
-	}
+    @Nullable
+    private final SourceFile sourceFile;
+    @Nonnull
+    private final AbstractNode parent;
+    @Nonnull
+    private final String simpleName;
+    @Nonnull
+    private final String qualifiedName;
+    @Nonnull
+    private final String uniqueName;
 
 
-	@Nonnull
-	private static String normalizeSimpleName(@Nonnull String name) {
-		final int length = name.length();
-		assert length > 0 : "Invalid node name!";
-		final StringBuilder builder = new StringBuilder(name.length());
-		final char[] chars = name.toCharArray();
-		int i = 0;
-		do {
-			final char c1 = chars[i++];
-			assert Character.isLowSurrogate(c1) : "Invalid node name!";
-			final char c2;
-			final int cp;
-			if (Character.isHighSurrogate(c1)) {
-				c2 = chars[i++];
-				assert !Character.isLowSurrogate(c2) : "Invalid node name!";
-				cp = Character.toCodePoint(c1, c2);
-			} else {
-				c2 = 0;
-				cp = c1;
-			}
-			if (!Character.isIdentifierIgnorable(cp)) {
-				assert (builder.length() <= 0 || Character.isJavaIdentifierPart(cp))
-						&& Character.isJavaIdentifierStart(cp) : "Invalid node name!";
-				builder.append(c1);
-				if (c2 != 0) builder.append(c2);
-			}
-		} while (i < length);
-		assert builder.length() > 0 : "Invalid node name!";
-		return builder.toString();
-	}
+    @Nullable
+    private transient RootNode root; // only null when deserialize
 
 
-	//region Basic Getter
+    public AbstractNonRootNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+                               @Nonnull String simpleName) {
+        this.sourceFile = sourceFile;
+        this.parent = parent;
+        this.simpleName = normalizeSimpleName(simpleName);
+        this.uniqueName = this.qualifiedName = parent.isRoot()
+                ? this.simpleName
+                : parent.getQualifiedName() + '.' + this.simpleName;
+        this.root = parent.getRoot();
+    }
 
-	@Override
-	public final boolean isRoot() {
-		return false;
-	}
+    public AbstractNonRootNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+                               @Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
+        this.sourceFile = sourceFile;
+        this.parent = parent;
+        this.simpleName = normalizeSimpleName(simpleName);
+        this.uniqueName = (
+                this.qualifiedName = parent.isRoot()
+                        ? this.simpleName
+                        : parent.getQualifiedName() + '.' + this.simpleName
+        ) + uniqueNameSuffix;
+        this.root = parent.getRoot();
+    }
 
-	@Nonnull
-	@Override
-	public final RootNode getRoot() {
-		return root != null ? root : (this.root = parent.getRoot());
-	}
 
-	@Nonnull
-	@Override
-	public final AbstractNode getParent() {
-		return parent;
-	}
+    @Nonnull
+    private static String normalizeSimpleName(@Nonnull String name) {
+        final int length = name.length();
+        assert length > 0 : "Invalid node name!";
+        final StringBuilder builder = new StringBuilder(name.length());
+        final char[] chars = name.toCharArray();
+        int i = 0;
+        do {
+            final char c1 = chars[i++];
+            assert Character.isLowSurrogate(c1) : "Invalid node name!";
+            final char c2;
+            final int cp;
+            if (Character.isHighSurrogate(c1)) {
+                c2 = chars[i++];
+                assert !Character.isLowSurrogate(c2) : "Invalid node name!";
+                cp = Character.toCodePoint(c1, c2);
+            } else {
+                c2 = 0;
+                cp = c1;
+            }
+            if (!Character.isIdentifierIgnorable(cp)) {
+                assert (builder.length() <= 0 || Character.isJavaIdentifierPart(cp))
+                        && Character.isJavaIdentifierStart(cp) : "Invalid node name!";
+                builder.append(c1);
+                if (c2 != 0) builder.append(c2);
+            }
+        } while (i < length);
+        assert builder.length() > 0 : "Invalid node name!";
+        return builder.toString();
+    }
 
-	@Nonnull
-	@Override
-	public final String getSimpleName() {
-		return simpleName;
-	}
 
-	@Nonnull
-	@Override
-	public final String getQualifiedName() {
-		return qualifiedName;
-	}
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	public final String getUniqueName() {
-		return uniqueName;
-	}
+    @Override
+    public final boolean isRoot() {
+        return false;
+    }
 
-	@Nullable
-	@Override
-	public JavaSourceFile getSourceFile() {
-		return sourceFile;
-	}
+    @Nonnull
+    @Override
+    public final RootNode getRoot() {
+        return root != null ? root : (this.root = parent.getRoot());
+    }
 
-	//endregion Basic Getter
+    @Nonnull
+    @Override
+    public final AbstractNode getParent() {
+        return parent;
+    }
 
-	//region Jsonify
+    @Nonnull
+    @Override
+    public final String getSimpleName() {
+        return simpleName;
+    }
 
-	@Override
-	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-		super.internalToReferenceJsonStart(builder);
-		builder.append(", \"simpleName\": \"").append(simpleName)
-				.append("\", \"qualifiedName\": \"").append(qualifiedName)
-				.append("\", \"uniqueName\": \"").append(uniqueName).append('"');
-	}
+    @Nonnull
+    @Override
+    public final String getQualifiedName() {
+        return qualifiedName;
+    }
 
-	//endregion Jsonify
+    @Nonnull
+    @Override
+    public final String getUniqueName() {
+        return uniqueName;
+    }
+
+    @Nullable
+    @Override
+    public JavaSourceFile getSourceFile() {
+        return sourceFile;
+    }
+
+    //endregion Basic Getter
+
+    //region Jsonify
+
+    @Override
+    protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+        super.internalToReferenceJsonStart(builder);
+        builder.append(", \"simpleName\": \"").append(simpleName)
+                .append("\", \"qualifiedName\": \"").append(qualifiedName)
+                .append("\", \"uniqueName\": \"").append(uniqueName).append('"');
+    }
+
+    //endregion Jsonify
 
 }

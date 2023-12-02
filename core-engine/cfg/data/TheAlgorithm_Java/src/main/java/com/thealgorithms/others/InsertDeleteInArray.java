@@ -19,7 +19,7 @@ public class InsertDeleteInArray {
 
         // To insert a new element(we are creating a new array)
         System.out.println(
-            "Enter the index at which the element should be inserted"
+                "Enter the index at which the element should be inserted"
         );
         int insert_pos = s.nextInt();
         System.out.println("Enter the element to be inserted");

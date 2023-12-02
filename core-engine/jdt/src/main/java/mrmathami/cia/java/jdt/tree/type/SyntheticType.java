@@ -31,69 +31,70 @@ import java.util.Map;
 
 public final class SyntheticType extends AbstractType implements JavaSyntheticType {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nonnull private transient List<AbstractType> bounds = List.of();
-
-
-	public SyntheticType(@Nonnull String description) {
-		super(description);
-	}
+    @Nonnull
+    private transient List<AbstractType> bounds = List.of();
 
 
-	//region Getter & Setter
+    public SyntheticType(@Nonnull String description) {
+        super(description);
+    }
 
-	@Nonnull
-	@Override
-	public List<AbstractType> getBounds() {
-		return isFrozen() ? bounds : Collections.unmodifiableList(bounds);
-	}
 
-	public void setBounds(@Nonnull List<AbstractType> bounds) {
-		assertNonFrozen();
-		this.bounds = bounds;
-	}
+    //region Getter & Setter
 
-	//endregion Getter & Setter
+    @Nonnull
+    @Override
+    public List<AbstractType> getBounds() {
+        return isFrozen() ? bounds : Collections.unmodifiableList(bounds);
+    }
 
-	//region Serialization Helper
+    public void setBounds(@Nonnull List<AbstractType> bounds) {
+        assertNonFrozen();
+        this.bounds = bounds;
+    }
 
-	@Override
-	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-		if (super.internalFreeze(map)) return true;
-		this.bounds = List.copyOf(bounds);
-		for (final AbstractType bound : bounds) bound.internalFreeze(map);
-		return false;
-	}
+    //endregion Getter & Setter
 
-	private void writeObject(@Nonnull ObjectOutputStream outputStream)
-			throws IOException, UnsupportedOperationException {
-		assertFrozen();
-		outputStream.defaultWriteObject();
-		outputStream.writeObject(bounds);
-	}
+    //region Serialization Helper
 
-	@SuppressWarnings("unchecked")
-	private void readObject(@Nonnull ObjectInputStream inputStream)
-			throws IOException, ClassNotFoundException, ClassCastException {
-		inputStream.defaultReadObject();
-		this.bounds = (List<AbstractType>) inputStream.readObject();
-	}
+    @Override
+    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+        if (super.internalFreeze(map)) return true;
+        this.bounds = List.copyOf(bounds);
+        for (final AbstractType bound : bounds) bound.internalFreeze(map);
+        return false;
+    }
 
-	//endregion Serialization Helper
+    private void writeObject(@Nonnull ObjectOutputStream outputStream)
+            throws IOException, UnsupportedOperationException {
+        assertFrozen();
+        outputStream.defaultWriteObject();
+        outputStream.writeObject(bounds);
+    }
 
-	//region Jsonify
+    @SuppressWarnings("unchecked")
+    private void readObject(@Nonnull ObjectInputStream inputStream)
+            throws IOException, ClassNotFoundException, ClassCastException {
+        inputStream.defaultReadObject();
+        this.bounds = (List<AbstractType>) inputStream.readObject();
+    }
 
-	@Override
-	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		super.internalToJsonStart(builder, indentation);
-		if (!bounds.isEmpty()) {
-			builder.append(", \"bounds\": [");
-			internalArrayToReferenceJson(builder, indentation, bounds);
-			builder.append('\n').append(indentation).append(']');
-		}
-	}
+    //endregion Serialization Helper
 
-	//endregion Jsonify
+    //region Jsonify
+
+    @Override
+    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        super.internalToJsonStart(builder, indentation);
+        if (!bounds.isEmpty()) {
+            builder.append(", \"bounds\": [");
+            internalArrayToReferenceJson(builder, indentation, bounds);
+            builder.append('\n').append(indentation).append(']');
+        }
+    }
+
+    //endregion Jsonify
 
 }

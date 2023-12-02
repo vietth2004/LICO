@@ -8,24 +8,24 @@ public class GCDTest {
     @Test
     void test1() {
         Assertions.assertThrows(
-            ArithmeticException.class,
-            () -> GCD.gcd(-1, 0)
+                ArithmeticException.class,
+                () -> GCD.gcd(-1, 0)
         );
     }
 
     @Test
     void test2() {
         Assertions.assertThrows(
-            ArithmeticException.class,
-            () -> GCD.gcd(10, -2)
+                ArithmeticException.class,
+                () -> GCD.gcd(10, -2)
         );
     }
 
     @Test
     void test3() {
         Assertions.assertThrows(
-            ArithmeticException.class,
-            () -> GCD.gcd(-5, -3)
+                ArithmeticException.class,
+                () -> GCD.gcd(-5, -3)
         );
     }
 

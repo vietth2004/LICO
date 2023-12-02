@@ -8,19 +8,19 @@ public class PalindromeTest {
     @Test
     public void palindrome() {
 
-        String[] palindromes = { null, "", "aba", "123321", "kayak" };
+        String[] palindromes = {null, "", "aba", "123321", "kayak"};
         for (String s : palindromes) {
             Assertions.assertTrue(Palindrome.isPalindrome(s) &&
-            Palindrome.isPalindromeRecursion(s) &&
-            Palindrome.isPalindromeTwoPointer(s));
+                    Palindrome.isPalindromeRecursion(s) &&
+                    Palindrome.isPalindromeTwoPointer(s));
         }
 
-        String[] notPalindromes = { "abb", "abc", "abc123", "kayaks" };
+        String[] notPalindromes = {"abb", "abc", "abc123", "kayaks"};
         for (String s : notPalindromes) {
             Assertions.assertFalse(Palindrome.isPalindrome(s) ||
-            Palindrome.isPalindromeRecursion(s) ||
-            Palindrome.isPalindromeTwoPointer(s));
+                    Palindrome.isPalindromeRecursion(s) ||
+                    Palindrome.isPalindromeTwoPointer(s));
         }
-        
+
     }
 }

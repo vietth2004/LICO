@@ -1,9 +1,9 @@
 package com.example.jsfservice.dom.Xml;
 
+import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.utils.Type.ComponentType;
 import com.example.jsfservice.utils.Type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.jsfservice.dom.Node;
 import org.w3c.dom.Document;
 
 import java.util.List;

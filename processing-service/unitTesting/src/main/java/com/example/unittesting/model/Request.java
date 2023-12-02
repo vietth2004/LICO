@@ -4,8 +4,10 @@ public class Request {
 
 
     private String path;
+
     public Request() {
     }
+
     public Request(String path) {
         this.path = path;
     }

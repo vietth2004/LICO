@@ -1,5 +1,7 @@
-/** Author : Siddhant Swarup Mallick
+/**
+ * Author : Siddhant Swarup Mallick
  * Github : https://github.com/siddhant2002
+ * Program description - To find the maximum subarray sum
  */
 
 /** Program description - To find the maximum subarray sum */

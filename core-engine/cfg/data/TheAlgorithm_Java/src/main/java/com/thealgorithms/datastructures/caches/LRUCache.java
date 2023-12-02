@@ -126,13 +126,14 @@ public class LRUCache<K, V> {
         private I key;
         private J value;
 
-        public Entry() {}
+        public Entry() {
+        }
 
         public Entry(
-            Entry<I, J> preEntry,
-            Entry<I, J> nextEntry,
-            I key,
-            J value
+                Entry<I, J> preEntry,
+                Entry<I, J> nextEntry,
+                I key,
+                J value
         ) {
             this.preEntry = preEntry;
             this.nextEntry = nextEntry;

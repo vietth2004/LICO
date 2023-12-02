@@ -17,60 +17,60 @@ public class MergeSortTest {
 
     @Test
     void shouldAcceptWhenEmptyArrayIsPassed() {
-        Integer [] array = new Integer[]{};
-        Integer [] expected = new Integer[]{};
+        Integer[] array = new Integer[]{};
+        Integer[] expected = new Integer[]{};
 
-        Integer []sorted = mergeSort.sort(array);
+        Integer[] sorted = mergeSort.sort(array);
 
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void shouldAcceptWhenSingleValuedArrayIsPassed() {
-        Integer [] array = new Integer[]{2};
-        Integer [] expected = new Integer[]{2};
+        Integer[] array = new Integer[]{2};
+        Integer[] expected = new Integer[]{2};
 
-        Integer [] sorted = mergeSort.sort(array);
+        Integer[] sorted = mergeSort.sort(array);
 
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void shouldAcceptWhenArrayWithAllPositiveValuesIsPassed() {
-        Integer [] array = new Integer[]{60, 7, 55, 9, 999, 3};
-        Integer [] expected = new Integer[]{3, 7, 9, 55, 60, 999};
+        Integer[] array = new Integer[]{60, 7, 55, 9, 999, 3};
+        Integer[] expected = new Integer[]{3, 7, 9, 55, 60, 999};
 
-        Integer [] sorted = mergeSort.sort(array);
+        Integer[] sorted = mergeSort.sort(array);
 
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void shouldAcceptWhenArrayWithAllNegativeValuesIsPassed() {
-        Integer [] array = new Integer[]{-60, -7, -55, -9, -999, -3};
-        Integer [] expected = new Integer[]{-999, -60, -55, -9, -7, -3};
+        Integer[] array = new Integer[]{-60, -7, -55, -9, -999, -3};
+        Integer[] expected = new Integer[]{-999, -60, -55, -9, -7, -3};
 
-        Integer [] sorted = mergeSort.sort(array);
+        Integer[] sorted = mergeSort.sort(array);
 
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void shouldAcceptWhenArrayWithRealNumberValuesIsPassed() {
-        Integer [] array = new Integer[]{60, -7, 55, 9, -999, -3};
-        Integer [] expected = new Integer[]{-999, -7, -3, 9, 55, 60};
+        Integer[] array = new Integer[]{60, -7, 55, 9, -999, -3};
+        Integer[] expected = new Integer[]{-999, -7, -3, 9, 55, 60};
 
-        Integer [] sorted = mergeSort.sort(array);
+        Integer[] sorted = mergeSort.sort(array);
 
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void shouldAcceptWhenArrayWithDuplicateValueIsPassed() {
-        Integer [] array = new Integer[]{60, 7, 55, 55, 999, 3};
-        Integer [] expected = new Integer[]{3, 7, 55, 55, 60, 999};
+        Integer[] array = new Integer[]{60, 7, 55, 55, 999, 3};
+        Integer[] expected = new Integer[]{3, 7, 55, 55, 60, 999};
 
-        Integer [] sorted = mergeSort.sort(array);
+        Integer[] sorted = mergeSort.sort(array);
 
         assertArrayEquals(expected, sorted);
     }

@@ -7,6 +7,7 @@ import java.util.Queue;
  * This entire class is used to build a Binary Tree data structure. There is the
  * Node Class and the Tree Class, both explained below.
  */
+
 /**
  * A binary tree is a data structure in which an element has two
  * successors(children). The left child is usually smaller than the parent, and

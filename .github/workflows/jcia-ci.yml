@@ -15,20 +15,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-#        os: [ubuntu-latest, macos-latest]
+        os: [ ubuntu-latest ]
+    #        os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-#    - name: test with maven
-#      run: sh ./.github/scripts/mvn-verify.sh
-    - name: build with maven
-      if: ${{success()}}
-      run: sh ./.github/scripts/mvn-build.sh
+      - uses: actions/checkout@v2
+      - name: Setup JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      #    - name: test with maven
+      #      run: sh ./.github/scripts/mvn-verify.sh
+      - name: build with maven
+        if: ${{success()}}
+        run: sh ./.github/scripts/mvn-build.sh
 
   build-macos:
     runs-on: ${{ matrix.os }}
@@ -53,13 +53,13 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-#    - name: test with maven
-#      run: ./.github/scripts/mvn-verify.bat
-    - name: build with maven
-      if: ${{success()}}
-      run: ./.github/scripts/mvn-build.bat
+      - uses: actions/checkout@v2
+      - name: Setup JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      #    - name: test with maven
+      #      run: ./.github/scripts/mvn-verify.bat
+      - name: build with maven
+        if: ${{success()}}
+        run: ./.github/scripts/mvn-build.bat

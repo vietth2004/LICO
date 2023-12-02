@@ -28,7 +28,7 @@ public class Response {
     public Response() {
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes, List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
@@ -37,7 +37,7 @@ public class Response {
         this.xmlAddedNodes = xmlAddedNodes;
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, JavaNode rootNode) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes, List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, JavaNode rootNode) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
@@ -47,7 +47,7 @@ public class Response {
         this.xmlAddedNodes = xmlAddedNodes;
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, List dependencies, JavaNode rootNode) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes, List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, List dependencies, JavaNode rootNode) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;
@@ -58,7 +58,7 @@ public class Response {
         this.xmlAddedNodes = xmlAddedNodes;
     }
 
-    public Response(List changedNodes, List deletedNodes, List addedNodes,List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, List dependencies, Set impactedNodes, JavaNode rootNode) {
+    public Response(List changedNodes, List deletedNodes, List addedNodes, List xmlChangedNodes, List xmlDeletedNodes, List xmlAddedNodes, List dependencies, Set impactedNodes, JavaNode rootNode) {
         this.changedNodes = changedNodes;
         this.deletedNodes = deletedNodes;
         this.addedNodes = addedNodes;

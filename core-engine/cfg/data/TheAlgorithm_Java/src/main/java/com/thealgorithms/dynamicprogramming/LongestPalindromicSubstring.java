@@ -34,7 +34,7 @@ public class LongestPalindromicSubstring {
                     }
                 } else {
                     if (
-                        input.charAt(i) == input.charAt(j) && arr[i + 1][j - 1]
+                            input.charAt(i) == input.charAt(j) && arr[i + 1][j - 1]
                     ) {
                         arr[i][j] = true;
                     } else {

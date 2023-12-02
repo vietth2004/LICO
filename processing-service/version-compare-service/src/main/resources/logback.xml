@@ -7,7 +7,8 @@
         <file>logs/version-compare.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>service-log/version-compare-service/logs/version-compare.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>service-log/version-compare-service/logs/version-compare.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
 
             <!-- retain 7 days logs -->
             <maxHistory>7</maxHistory>
@@ -36,8 +37,8 @@
 
     <!-- trace - debug - info - warn - error - fatal -->
     <root level="INFO">
-        <appender-ref ref="ROLLIN" />
-<!--        <appender-ref ref="CONSOLE" />-->
+        <appender-ref ref="ROLLIN"/>
+        <!--        <appender-ref ref="CONSOLE" />-->
     </root>
 
     <logger name="root" level="ERROR"/>

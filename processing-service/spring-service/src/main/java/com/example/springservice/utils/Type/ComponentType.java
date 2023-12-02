@@ -33,6 +33,7 @@ public enum ComponentType {
     DEFAULT(Tier.NOTIER);
 
     private Tier tier;
+
     ComponentType(Tier tier) {
         this.tier = tier;
     }

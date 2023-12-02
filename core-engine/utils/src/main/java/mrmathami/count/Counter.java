@@ -23,19 +23,19 @@ import mrmathami.annotations.Nonnull;
 import java.io.Serializable;
 
 public final class Counter extends AbstractCounter implements Serializable, Cloneable {
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	public Counter(int count) {
-		super(count);
-	}
+    public Counter(int count) {
+        super(count);
+    }
 
-	@Nonnull
-	@Override
-	public Counter clone() {
-		try {
-			return (Counter) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Nonnull
+    @Override
+    public Counter clone() {
+        try {
+            return (Counter) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

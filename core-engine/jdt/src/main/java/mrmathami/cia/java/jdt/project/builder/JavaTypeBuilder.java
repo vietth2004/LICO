@@ -39,148 +39,152 @@ import java.util.Map;
 
 final class JavaTypeBuilder {
 
-	@Nonnull private final JavaNodeBuilder nodes;
-	@Nonnull private final JavaAnnotateBuilder annotates;
+    @Nonnull
+    private final JavaNodeBuilder nodes;
+    @Nonnull
+    private final JavaAnnotateBuilder annotates;
 
-	@Nonnull private final Map<ITypeBinding, Pair<AbstractType, Map<IBinding, int[]>>> delayedTypes = new HashMap<>();
-	@Nonnull private final Map<ITypeBinding, List<ReferenceType>> delayedReferenceTypeNodes = new HashMap<>();
-
-
-	JavaTypeBuilder(@Nonnull JavaNodeBuilder nodes, @Nonnull JavaAnnotateBuilder annotates) {
-		this.nodes = nodes;
-		this.annotates = annotates;
-	}
+    @Nonnull
+    private final Map<ITypeBinding, Pair<AbstractType, Map<IBinding, int[]>>> delayedTypes = new HashMap<>();
+    @Nonnull
+    private final Map<ITypeBinding, List<ReferenceType>> delayedReferenceTypeNodes = new HashMap<>();
 
 
-	void postprocessing(@Nonnull Map<IBinding, AbstractNode> bindingNodeMap) {
-		// delay reference type node
-		delayedTypes.clear();
-
-		for (final Map.Entry<ITypeBinding, List<ReferenceType>> entry : delayedReferenceTypeNodes.entrySet()) {
-			final AbstractNode node = bindingNodeMap.get(entry.getKey());
-			if (node != null) {
-				for (final ReferenceType referenceType : entry.getValue()) {
-					referenceType.setNode(node);
-				}
-			}
-		}
-		delayedReferenceTypeNodes.clear();
-	}
+    JavaTypeBuilder(@Nonnull JavaNodeBuilder nodes, @Nonnull JavaAnnotateBuilder annotates) {
+        this.nodes = nodes;
+        this.annotates = annotates;
+    }
 
 
-	@Nonnull
-	private List<AbstractType> internalCreateTypesFromTypeBindings(@Nonnull ITypeBinding[] typeBindings,
-			@Nonnull JavaDependency dependencyType, @Nullable Map<IBinding, int[]> dependencyMap)
-			throws JavaCiaException {
-		final List<AbstractType> types = new ArrayList<>(typeBindings.length);
-		for (final ITypeBinding typeBinding : typeBindings) {
-			types.add(internalCreateTypeFromTypeBinding(typeBinding, dependencyType, dependencyMap));
-		}
-		return types;
-	}
+    void postprocessing(@Nonnull Map<IBinding, AbstractNode> bindingNodeMap) {
+        // delay reference type node
+        delayedTypes.clear();
 
-	@Nonnull
-	private AbstractType internalCreateTypeFromTypeBinding(@Nonnull ITypeBinding typeBinding,
-			@Nonnull JavaDependency dependencyType, @Nullable Map<IBinding, int[]> dependencyMap)
-			throws JavaCiaException {
-		final Pair<AbstractType, Map<IBinding, int[]>> pair = delayedTypes.get(typeBinding);
-		if (pair != null) {
-			if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, pair.getB());
-			return pair.getA();
-		}
+        for (final Map.Entry<ITypeBinding, List<ReferenceType>> entry : delayedReferenceTypeNodes.entrySet()) {
+            final AbstractNode node = bindingNodeMap.get(entry.getKey());
+            if (node != null) {
+                for (final ReferenceType referenceType : entry.getValue()) {
+                    referenceType.setNode(node);
+                }
+            }
+        }
+        delayedReferenceTypeNodes.clear();
+    }
 
-		final ITypeBinding originTypeBinding = JavaNodeBuilder.getOriginTypeBinding(typeBinding);
-		final String typeBindingQualifiedName = typeBinding.getQualifiedName();
-		final Map<IBinding, int[]> newDependencyMap = new LinkedHashMap<>();
-		if (typeBinding.isTypeVariable() || typeBinding.isCapture() || typeBinding.isWildcardType()) {
-			final SyntheticType syntheticType = new SyntheticType(typeBindingQualifiedName);
-			delayedTypes.put(typeBinding, Pair.immutableOf(syntheticType, newDependencyMap));
-			JavaNodeBuilder.addDependencyToDelayedDependencyMap(newDependencyMap, originTypeBinding, dependencyType);
 
-			syntheticType.setAnnotates(annotates.createAnnotatesFromAnnotationBindings(typeBinding.getTypeAnnotations(),
-					dependencyType, newDependencyMap));
+    @Nonnull
+    private List<AbstractType> internalCreateTypesFromTypeBindings(@Nonnull ITypeBinding[] typeBindings,
+                                                                   @Nonnull JavaDependency dependencyType, @Nullable Map<IBinding, int[]> dependencyMap)
+            throws JavaCiaException {
+        final List<AbstractType> types = new ArrayList<>(typeBindings.length);
+        for (final ITypeBinding typeBinding : typeBindings) {
+            types.add(internalCreateTypeFromTypeBinding(typeBinding, dependencyType, dependencyMap));
+        }
+        return types;
+    }
 
-			if (typeBinding.isWildcardType()) {
-				final ITypeBinding typeBindingBound = typeBinding.getBound();
-				if (typeBindingBound != null) {
-					syntheticType.setBounds(List.of(internalCreateTypeFromTypeBinding(typeBindingBound,
-							dependencyType, newDependencyMap)));
-				}
-			} else {
-				syntheticType.setBounds(internalCreateTypesFromTypeBindings(typeBinding.getTypeBounds(),
-						dependencyType, newDependencyMap));
-			}
+    @Nonnull
+    private AbstractType internalCreateTypeFromTypeBinding(@Nonnull ITypeBinding typeBinding,
+                                                           @Nonnull JavaDependency dependencyType, @Nullable Map<IBinding, int[]> dependencyMap)
+            throws JavaCiaException {
+        final Pair<AbstractType, Map<IBinding, int[]>> pair = delayedTypes.get(typeBinding);
+        if (pair != null) {
+            if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, pair.getB());
+            return pair.getA();
+        }
 
-			if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, newDependencyMap);
-			return syntheticType;
+        final ITypeBinding originTypeBinding = JavaNodeBuilder.getOriginTypeBinding(typeBinding);
+        final String typeBindingQualifiedName = typeBinding.getQualifiedName();
+        final Map<IBinding, int[]> newDependencyMap = new LinkedHashMap<>();
+        if (typeBinding.isTypeVariable() || typeBinding.isCapture() || typeBinding.isWildcardType()) {
+            final SyntheticType syntheticType = new SyntheticType(typeBindingQualifiedName);
+            delayedTypes.put(typeBinding, Pair.immutableOf(syntheticType, newDependencyMap));
+            JavaNodeBuilder.addDependencyToDelayedDependencyMap(newDependencyMap, originTypeBinding, dependencyType);
 
-		} else if (typeBinding.isArray() || typeBinding.isPrimitive()) {
-			final SimpleType simpleType = new SimpleType(typeBindingQualifiedName);
-			delayedTypes.put(typeBinding, Pair.immutableOf(simpleType, newDependencyMap));
-			JavaNodeBuilder.addDependencyToDelayedDependencyMap(newDependencyMap, originTypeBinding, dependencyType);
+            syntheticType.setAnnotates(annotates.createAnnotatesFromAnnotationBindings(typeBinding.getTypeAnnotations(),
+                    dependencyType, newDependencyMap));
 
-			simpleType.setAnnotates(annotates.createAnnotatesFromAnnotationBindings(typeBinding.getTypeAnnotations(),
-					dependencyType, newDependencyMap));
+            if (typeBinding.isWildcardType()) {
+                final ITypeBinding typeBindingBound = typeBinding.getBound();
+                if (typeBindingBound != null) {
+                    syntheticType.setBounds(List.of(internalCreateTypeFromTypeBinding(typeBindingBound,
+                            dependencyType, newDependencyMap)));
+                }
+            } else {
+                syntheticType.setBounds(internalCreateTypesFromTypeBindings(typeBinding.getTypeBounds(),
+                        dependencyType, newDependencyMap));
+            }
 
-			final ITypeBinding componentTypeBinding = typeBinding.getComponentType();
-			if (componentTypeBinding != null) {
-				simpleType.setInnerType(internalCreateTypeFromTypeBinding(componentTypeBinding,
-						dependencyType, newDependencyMap));
-			}
+            if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, newDependencyMap);
+            return syntheticType;
 
-			if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, newDependencyMap);
-			return simpleType;
+        } else if (typeBinding.isArray() || typeBinding.isPrimitive()) {
+            final SimpleType simpleType = new SimpleType(typeBindingQualifiedName);
+            delayedTypes.put(typeBinding, Pair.immutableOf(simpleType, newDependencyMap));
+            JavaNodeBuilder.addDependencyToDelayedDependencyMap(newDependencyMap, originTypeBinding, dependencyType);
 
-		} else {
-			final ReferenceType referenceType = new ReferenceType(typeBindingQualifiedName);
-			delayedTypes.put(typeBinding, Pair.immutableOf(referenceType, newDependencyMap));
-			JavaNodeBuilder.addDependencyToDelayedDependencyMap(newDependencyMap, originTypeBinding, dependencyType);
+            simpleType.setAnnotates(annotates.createAnnotatesFromAnnotationBindings(typeBinding.getTypeAnnotations(),
+                    dependencyType, newDependencyMap));
 
-			referenceType.setAnnotates(annotates.createAnnotatesFromAnnotationBindings(typeBinding.getTypeAnnotations(),
-					dependencyType, newDependencyMap));
+            final ITypeBinding componentTypeBinding = typeBinding.getComponentType();
+            if (componentTypeBinding != null) {
+                simpleType.setInnerType(internalCreateTypeFromTypeBinding(componentTypeBinding,
+                        dependencyType, newDependencyMap));
+            }
 
-			referenceType.setArguments(internalCreateTypesFromTypeBindings(typeBinding.getTypeArguments(),
-					dependencyType, newDependencyMap));
+            if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, newDependencyMap);
+            return simpleType;
 
-			delayedReferenceTypeNodes.computeIfAbsent(originTypeBinding, JavaParser::createArrayList)
-					.add(referenceType);
+        } else {
+            final ReferenceType referenceType = new ReferenceType(typeBindingQualifiedName);
+            delayedTypes.put(typeBinding, Pair.immutableOf(referenceType, newDependencyMap));
+            JavaNodeBuilder.addDependencyToDelayedDependencyMap(newDependencyMap, originTypeBinding, dependencyType);
 
-			if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, newDependencyMap);
-			return referenceType;
-		}
-	}
+            referenceType.setAnnotates(annotates.createAnnotatesFromAnnotationBindings(typeBinding.getTypeAnnotations(),
+                    dependencyType, newDependencyMap));
 
-	@Nonnull
-	AbstractType createUnprocessedTypeFromTypeBinding(@Nonnull ITypeBinding typeBinding,
-			@Nonnull JavaDependency dependencyType) throws JavaCiaException {
-		return internalCreateTypeFromTypeBinding(typeBinding, dependencyType, null);
-	}
+            referenceType.setArguments(internalCreateTypesFromTypeBindings(typeBinding.getTypeArguments(),
+                    dependencyType, newDependencyMap));
 
-	void processUnprocessedType(@Nonnull ITypeBinding typeBinding, @Nonnull AbstractNode dependencySourceNode) {
-		final Pair<AbstractType, Map<IBinding, int[]>> pair = delayedTypes.get(typeBinding);
-		assert pair != null : "typeBinding are not create yet!";
-		nodes.createDelayDependencyFromDependencyMap(dependencySourceNode, pair.getB());
-	}
+            delayedReferenceTypeNodes.computeIfAbsent(originTypeBinding, JavaParser::createArrayList)
+                    .add(referenceType);
 
-	@Nonnull
-	List<AbstractType> createTypesFromTypeBindings(@Nonnull ITypeBinding[] typeBindings,
-			@Nonnull AbstractNode dependencySourceNode, @Nonnull JavaDependency dependencyType)
-			throws JavaCiaException {
-		if (typeBindings.length == 0) return List.of(); // unnecessary, but nice to have
-		final ArrayList<AbstractType> arguments = new ArrayList<>(typeBindings.length);
-		for (final ITypeBinding typeBinding : typeBindings) {
-			arguments.add(createTypeFromTypeBinding(typeBinding, dependencySourceNode, dependencyType));
-		}
-		return arguments;
-	}
+            if (dependencyMap != null) JavaNodeBuilder.combineDelayedDependencyMap(dependencyMap, newDependencyMap);
+            return referenceType;
+        }
+    }
 
-	@Nonnull
-	AbstractType createTypeFromTypeBinding(@Nonnull ITypeBinding typeBinding,
-			@Nonnull AbstractNode dependencySourceNode, @Nonnull JavaDependency dependencyType)
-			throws JavaCiaException {
-		final AbstractType type = createUnprocessedTypeFromTypeBinding(typeBinding, dependencyType);
-		processUnprocessedType(typeBinding, dependencySourceNode);
-		return type;
-	}
+    @Nonnull
+    AbstractType createUnprocessedTypeFromTypeBinding(@Nonnull ITypeBinding typeBinding,
+                                                      @Nonnull JavaDependency dependencyType) throws JavaCiaException {
+        return internalCreateTypeFromTypeBinding(typeBinding, dependencyType, null);
+    }
+
+    void processUnprocessedType(@Nonnull ITypeBinding typeBinding, @Nonnull AbstractNode dependencySourceNode) {
+        final Pair<AbstractType, Map<IBinding, int[]>> pair = delayedTypes.get(typeBinding);
+        assert pair != null : "typeBinding are not create yet!";
+        nodes.createDelayDependencyFromDependencyMap(dependencySourceNode, pair.getB());
+    }
+
+    @Nonnull
+    List<AbstractType> createTypesFromTypeBindings(@Nonnull ITypeBinding[] typeBindings,
+                                                   @Nonnull AbstractNode dependencySourceNode, @Nonnull JavaDependency dependencyType)
+            throws JavaCiaException {
+        if (typeBindings.length == 0) return List.of(); // unnecessary, but nice to have
+        final ArrayList<AbstractType> arguments = new ArrayList<>(typeBindings.length);
+        for (final ITypeBinding typeBinding : typeBindings) {
+            arguments.add(createTypeFromTypeBinding(typeBinding, dependencySourceNode, dependencyType));
+        }
+        return arguments;
+    }
+
+    @Nonnull
+    AbstractType createTypeFromTypeBinding(@Nonnull ITypeBinding typeBinding,
+                                           @Nonnull AbstractNode dependencySourceNode, @Nonnull JavaDependency dependencyType)
+            throws JavaCiaException {
+        final AbstractType type = createUnprocessedTypeFromTypeBinding(typeBinding, dependencyType);
+        processUnprocessedType(typeBinding, dependencySourceNode);
+        return type;
+    }
 
 }

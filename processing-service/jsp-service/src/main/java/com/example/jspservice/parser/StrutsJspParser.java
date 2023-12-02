@@ -1,6 +1,10 @@
 package com.example.jspservice.parser;
 
-import com.example.jspservice.dom.Jsp.*;
+import com.example.jspservice.dom.Jsp.ActionJsp;
+import com.example.jspservice.dom.Jsp.IncludeJsp;
+import com.example.jspservice.dom.Jsp.JspFileNode;
+import com.example.jspservice.dom.Jsp.JspTagNode;
+import com.example.jspservice.dom.Jsp.OgnlJsp;
 import com.example.jspservice.dom.Node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -166,11 +170,10 @@ public class StrutsJspParser implements IParser {
                     if (actionJsp1 != null) {
                         actionJsp1.setJspTagNode(result);
                         this.jspFileNode.addAction(actionJsp1);
-                    }
-                    else {
+                    } else {
                         OgnlJsp ognlJsp = partInternalOgnlInTag(entry.getValue().toString());
                         //logger.debug(ognlJsp);
-                        if(ognlJsp != null) {
+                        if (ognlJsp != null) {
                             ognlJsp.setJspTagNode(result);
                             this.jspFileNode.addOgnl(ognlJsp);
                         }
@@ -234,7 +237,7 @@ public class StrutsJspParser implements IParser {
         if (doc.getAllElements().size() < 5) return null;
         Element element = doc.getAllElements().get(4);
         //logger.debug(element.nodeName());
-        if(element.nodeName().equals("s:property")) return null;
+        if (element.nodeName().equals("s:property")) return null;
         String namespace = element.attributes().get("namespace");
         String action = element.attributes().get("action");
         action = supportParserJsp.splitAction(action);
@@ -261,16 +264,15 @@ public class StrutsJspParser implements IParser {
         return null;
     }
 
-    private OgnlJsp partInternalOgnlInTag(String internalTag){
+    private OgnlJsp partInternalOgnlInTag(String internalTag) {
         OgnlJsp result = new OgnlJsp();
         Document doc = Jsoup.parse(internalTag);
         if (doc.getAllElements().size() < 5) return null;
         Element element = doc.getAllElements().get(4);
-        if(element.nodeName().equals("s:property")){
+        if (element.nodeName().equals("s:property")) {
             result.setOgnl(element.attributes().get("value"));
-        }
-        else result = null;
-        return  result;
+        } else result = null;
+        return result;
     }
 
 

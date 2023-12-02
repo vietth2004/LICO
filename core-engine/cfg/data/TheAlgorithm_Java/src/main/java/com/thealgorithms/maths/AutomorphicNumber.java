@@ -17,7 +17,7 @@ public class AutomorphicNumber {
      *
      * @param n The number to be checked
      * @return {@code true} if {@code a} is Automorphic number, otherwise
-     *         {@code false}
+     * {@code false}
      */
     public static boolean isAutomorphic(long n) {
         if (n < 0)
@@ -37,7 +37,7 @@ public class AutomorphicNumber {
      *
      * @param n The number to be checked
      * @return {@code true} if {@code a} is Automorphic number, otherwise
-     *         {@code false}
+     * {@code false}
      */
     public static boolean isAutomorphic2(long n) {
         if (n < 0)
@@ -51,11 +51,11 @@ public class AutomorphicNumber {
      *
      * @param s The number in String to be checked
      * @return {@code true} if {@code a} is Automorphic number, otherwise
-     *         {@code false}
+     * {@code false}
      */
     public static boolean isAutomorphic3(String s) {
         BigInteger n = new BigInteger(s);
-        if (n.signum() == -1) 
+        if (n.signum() == -1)
             return false; //if number is negative, return false
         BigInteger square = n.multiply(n); // Calculating square of the number
         return String.valueOf(square).endsWith(String.valueOf(n));

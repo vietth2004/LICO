@@ -30,35 +30,35 @@ import mrmathami.collections.ImmutableOrderedSet;
 import java.util.Set;
 
 public final class ImmutableOrderedSetTest {
-	public static Test suite() {
-		final TestSuite suite = new TestSuite("ImmutableOrderedSetTest");
-		suite.addTest(SetTestSuiteBuilder.using(
-				new TestStringSetGenerator() {
-					@Override
-					public Set<String> create(String[] elements) {
-						return ImmutableOrderedSet.of(elements);
-					}
-				})
-				.named("TestStringSetGenerator")
-				.withFeatures(
-						CollectionFeature.KNOWN_ORDER,
-						CollectionFeature.REJECTS_DUPLICATES_AT_CREATION,
-						CollectionFeature.SERIALIZABLE,
-						CollectionSize.ANY)
-				.createTestSuite());
-		suite.addTest(SetTestSuiteBuilder.using(
-				new TestCollidingSetGenerator() {
-					@Override
-					public Set<Object> create(Object... elements) {
-						return ImmutableOrderedSet.of(elements);
-					}
-				})
-				.named("TestCollidingSetGenerator")
-				.withFeatures(
-						CollectionFeature.KNOWN_ORDER,
-						CollectionFeature.REJECTS_DUPLICATES_AT_CREATION,
-						CollectionSize.ANY)
-				.createTestSuite());
-		return suite;
-	}
+    public static Test suite() {
+        final TestSuite suite = new TestSuite("ImmutableOrderedSetTest");
+        suite.addTest(SetTestSuiteBuilder.using(
+                        new TestStringSetGenerator() {
+                            @Override
+                            public Set<String> create(String[] elements) {
+                                return ImmutableOrderedSet.of(elements);
+                            }
+                        })
+                .named("TestStringSetGenerator")
+                .withFeatures(
+                        CollectionFeature.KNOWN_ORDER,
+                        CollectionFeature.REJECTS_DUPLICATES_AT_CREATION,
+                        CollectionFeature.SERIALIZABLE,
+                        CollectionSize.ANY)
+                .createTestSuite());
+        suite.addTest(SetTestSuiteBuilder.using(
+                        new TestCollidingSetGenerator() {
+                            @Override
+                            public Set<Object> create(Object... elements) {
+                                return ImmutableOrderedSet.of(elements);
+                            }
+                        })
+                .named("TestCollidingSetGenerator")
+                .withFeatures(
+                        CollectionFeature.KNOWN_ORDER,
+                        CollectionFeature.REJECTS_DUPLICATES_AT_CREATION,
+                        CollectionSize.ANY)
+                .createTestSuite());
+        return suite;
+    }
 }

@@ -2,15 +2,14 @@ package core.parser;
 
 import core.cfg.CfgNode;
 import core.node.ClassAbstractableElementVisibleElementJavaNode;
-import core.structureTree.SNode;
 import core.node.FileNode;
-import core.node.Node;
 import core.node.FolderNode;
+import core.node.Node;
+import core.structureTree.SNode;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class ProjectParser {
     }
 
     public static ProjectParser getParser() {
-        if (parser == null){
+        if (parser == null) {
             parser = new ProjectParser();
         }
         return parser;
@@ -84,9 +83,7 @@ public class ProjectParser {
                     CfgNode cfgNode = CfgNode.parserToCFG(fileToString);
                     fileNode.addChildrenFolder(classes);
                     fileNode.setCfg(cfgNode);
-                }
-
-                else if (f.isDirectory()) {
+                } else if (f.isDirectory()) {
                     FolderNode childFolder = new FolderNode();
                     childFolder.setName(f.getName());
                     ProjectParser projectParser = new ProjectParser();
@@ -116,8 +113,7 @@ public class ProjectParser {
         return root;
     }
 
-    public static ArrayList<ASTNode> parseFile(String filePath) throws IOException
-    {
+    public static ArrayList<ASTNode> parseFile(String filePath) throws IOException {
         File file = new File(filePath);
 
         ProjectParser parser = ProjectParser.getParser();

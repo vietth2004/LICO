@@ -11,6 +11,7 @@ public abstract class CompositeLFSR implements BaseLFSR {
 
     /**
      * Implements irregular clocking using the clock bit for each register
+     *
      * @return the registers discarded bit xored value
      */
     @Override
@@ -30,10 +31,10 @@ public abstract class CompositeLFSR implements BaseLFSR {
         bitCount.put(true, 0);
 
         registers.forEach(lfsr ->
-            bitCount.put(
-                lfsr.getClockBit(),
-                bitCount.get(lfsr.getClockBit()) + 1
-            )
+                bitCount.put(
+                        lfsr.getClockBit(),
+                        bitCount.get(lfsr.getClockBit()) + 1
+                )
         );
         return bitCount.get(false) <= bitCount.get(true);
     }

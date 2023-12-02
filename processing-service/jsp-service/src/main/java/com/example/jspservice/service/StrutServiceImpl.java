@@ -1,6 +1,7 @@
 package com.example.jspservice.service;
 
 //import com.example.jspservice.analyzer.*;
+
 import com.example.jspservice.dom.Jsp.JspFileNode;
 import com.example.jspservice.dom.Node;
 import com.example.jspservice.parser.StrutsJspParser;
@@ -20,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-public class StrutServiceImpl implements StrutService{
+public class StrutServiceImpl implements StrutService {
 
     private final ExecutorService THREADPOOL_FIXED_SIZE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private StrutsJspParser strutsJspParser = new StrutsJspParser();
@@ -35,7 +36,7 @@ public class StrutServiceImpl implements StrutService{
 
         paths.forEach(p -> {
 
-            if(p.toString().endsWith(".jsp")) {
+            if (p.toString().endsWith(".jsp")) {
                 Node jspNode = new JspFileNode();
                 jspNode.setName(new File(p.toString()).getName());
                 jspNode.setAbsolutePath(p.toString());

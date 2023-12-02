@@ -1,8 +1,8 @@
 package com.jcia.xml.dom.Jsp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jcia.xml.dom.Node;
 import com.jcia.xml.utils.Exception.JciaIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jsoup.nodes.Element;
 
 import java.util.Map;

@@ -3,21 +3,22 @@ package com.thealgorithms.others;
 /**
  * This file contains an implementation of BANKER'S ALGORITM Wikipedia:
  * https://en.wikipedia.org/wiki/Banker%27s_algorithm
- *
+ * <p>
  * The algorithm for finding out whether or not a system is in a safe state can
  * be described as follows: 1. Let Work and Finish be vectors of length ‘m’ and
  * ‘n’ respectively. Initialize: Work= Available Finish [i]=false; for
  * i=1,2,……,n 2. Find an i such that both a) Finish [i]=false b) Need_i<=work
- *
+ * <p>
  * if no such i exists goto step (4) 3. Work=Work + Allocation_i Finish[i]= true
  * goto step(2) 4. If Finish[i]=true for all i, then the system is in safe
  * state.
- *
+ * <p>
  * Time Complexity: O(n*n*m) Space Complexity: O(n*m) where n = number of
  * processes and m = number of resources.
  *
  * @author AMRITESH ANAND (https://github.com/amritesh19)
  */
+
 import java.util.Scanner;
 
 public class BankersAlgorithm {
@@ -26,11 +27,11 @@ public class BankersAlgorithm {
      * This method finds the need of each process
      */
     static void calculateNeed(
-        int needArray[][],
-        int maxArray[][],
-        int allocationArray[][],
-        int totalProcess,
-        int totalResources
+            int needArray[][],
+            int maxArray[][],
+            int allocationArray[][],
+            int totalProcess,
+            int totalResources
     ) {
         for (int i = 0; i < totalProcess; i++) {
             for (int j = 0; j < totalResources; j++) {
@@ -55,21 +56,21 @@ public class BankersAlgorithm {
      * @return boolean if the system is in safe state or not
      */
     static boolean checkSafeSystem(
-        int processes[],
-        int availableArray[],
-        int maxArray[][],
-        int allocationArray[][],
-        int totalProcess,
-        int totalResources
+            int processes[],
+            int availableArray[],
+            int maxArray[][],
+            int allocationArray[][],
+            int totalProcess,
+            int totalResources
     ) {
         int[][] needArray = new int[totalProcess][totalResources];
 
         calculateNeed(
-            needArray,
-            maxArray,
-            allocationArray,
-            totalProcess,
-            totalResources
+                needArray,
+                maxArray,
+                allocationArray,
+                totalProcess,
+                totalResources
         );
 
         boolean[] finishProcesses = new boolean[totalProcess];
@@ -114,14 +115,14 @@ public class BankersAlgorithm {
             // If we could not find a next process in safe sequence.
             if (foundSafeSystem == false) {
                 System.out.print(
-                    "The system is not in the safe state because lack of resources"
+                        "The system is not in the safe state because lack of resources"
                 );
                 return false;
             }
         }
 
         System.out.print(
-            "The system is in safe sequence and the sequence is as follows: "
+                "The system is in safe sequence and the sequence is as follows: "
         );
         for (int i = 0; i < totalProcess; i++) {
             System.out.print("P" + safeSequenceArray[i] + " ");
@@ -164,7 +165,7 @@ public class BankersAlgorithm {
             System.out.println("For process " + i + ": ");
             for (int j = 0; j < numberOfResources; j++) {
                 System.out.println(
-                    "Enter the maximum instances of resource " + j
+                        "Enter the maximum instances of resource " + j
                 );
                 maxArray[i][j] = sc.nextInt();
             }
@@ -182,12 +183,12 @@ public class BankersAlgorithm {
         }
 
         checkSafeSystem(
-            processes,
-            availableArray,
-            maxArray,
-            allocationArray,
-            numberOfProcesses,
-            numberOfResources
+                processes,
+                availableArray,
+                maxArray,
+                allocationArray,
+                numberOfProcesses,
+                numberOfResources
         );
 
         sc.close();

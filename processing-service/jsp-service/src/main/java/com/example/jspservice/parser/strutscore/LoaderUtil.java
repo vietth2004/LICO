@@ -14,6 +14,7 @@ public class LoaderUtil {
 
     /**
      * Struts Resources Finder
+     *
      * @param resourceRoot
      * @param resourceName
      * @return
@@ -40,6 +41,7 @@ public class LoaderUtil {
 
     /**
      * Class finder, now we haven't supported yet so it is always true
+     *
      * @param className
      * @param callingClass
      * @return

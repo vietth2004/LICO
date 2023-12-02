@@ -1,5 +1,4 @@
 package core.cfg;
 
-public class CfgConditionNodeTemp extends CfgNode
-{
+public class CfgConditionNodeTemp extends CfgNode {
 }

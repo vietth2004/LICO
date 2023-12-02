@@ -9,7 +9,8 @@ import java.util.List;
 public final class MarkedPathV2 {
     private static List<String> markedStatements = new ArrayList<>();
 
-    private MarkedPathV2(){}
+    private MarkedPathV2() {
+    }
 
     public static void add(String statement) {
         markedStatements.add(statement);
@@ -20,12 +21,12 @@ public final class MarkedPathV2 {
         Node currentNode = path.getCurrentFirst();
         while (currentNode != null && i < markedStatements.size()) {
             CfgNode cfgNode = currentNode.getData();
-            if(cfgNode.getContent().equals("")) {
+            if (cfgNode.getContent().equals("")) {
                 currentNode = currentNode.getNext();
                 continue;
             }
 
-            if(!cfgNode.getContent().equals(markedStatements.get(i))) {
+            if (!cfgNode.getContent().equals(markedStatements.get(i))) {
                 reset();
                 return false;
             }

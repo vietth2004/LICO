@@ -25,7 +25,7 @@ class Cycle {
         }
 
         System.out.println(
-            "Enter the details of each edges <Start Node> <End Node>"
+                "Enter the details of each edges <Start Node> <End Node>"
         );
 
         for (int i = 0; i < edges; i++) {

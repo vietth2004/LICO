@@ -1,8 +1,6 @@
 package com.thealgorithms.datastructures.trees;
 
 /**
- *
- *
  * <h1>Binary Search Tree (Iterative)</h1>
  *
  * <p>
@@ -13,6 +11,7 @@ package com.thealgorithms.datastructures.trees;
  *
  * @author [Lakhan Nad](https://github.com/Lakhan-Nad)
  */
+
 import java.util.Stack;
 
 public class BSTIterative {
@@ -43,7 +42,7 @@ public class BSTIterative {
         assert !tree.find(2) : "2 was just deleted from BST";
         tree.remove(1);
         assert !tree.find(
-            1
+                1
         ) : "Since 1 was not present so find deleting would do no change";
         tree.add(30);
         tree.add(40);

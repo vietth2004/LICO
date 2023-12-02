@@ -14,10 +14,11 @@ import java.util.Date;
 public class UnauthorizedRequestAdvice {
     /**
      * Handle exception when token-refresh field expired
-     * @ResponseStatus return Forbidden
+     *
      * @param ex
      * @param request
      * @return
+     * @ResponseStatus return Forbidden
      */
     @ExceptionHandler(value = UnauthorizedRequestException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)

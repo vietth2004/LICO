@@ -10,12 +10,12 @@ public class zigZagPatternTest {
         String input1 = "HelloWorldFromJava";
         String input2 = "javaIsAProgrammingLanguage";
         Assertions.assertEquals(
-            zigZagPattern.encode(input1, 4),
-            "HooeWrrmalolFJvlda"
+                zigZagPattern.encode(input1, 4),
+                "HooeWrrmalolFJvlda"
         );
         Assertions.assertEquals(
-            zigZagPattern.encode(input2, 4),
-            "jAaLgasPrmgaaevIrgmnnuaoig"
+                zigZagPattern.encode(input2, 4),
+                "jAaLgasPrmgaaevIrgmnnuaoig"
         );
     }
 }

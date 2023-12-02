@@ -39,7 +39,6 @@ public class SinglyLinkedList extends Node {
     /**
      * Detects if there is a loop in the singly linked list using floy'd turtle
      * and hare algorithm.
-     *
      */
     public boolean detectLoop() {
         Node currentNodeFast = head;
@@ -56,7 +55,6 @@ public class SinglyLinkedList extends Node {
 
     /**
      * Swaps nodes of two given values a and b.
-     *
      */
     public void swapNodes(int valueFirst, int valueSecond) {
         if (valueFirst == valueSecond) {
@@ -102,7 +100,6 @@ public class SinglyLinkedList extends Node {
 
     /**
      * Reverse a singly linked list from a given node till the end
-     *
      */
     Node reverseList(Node node) {
         Node prevNode = head;
@@ -163,7 +160,6 @@ public class SinglyLinkedList extends Node {
 
     /**
      * Set head of the list.
-     *
      */
     public void setHead(Node head) {
         this.head = head;
@@ -224,7 +220,7 @@ public class SinglyLinkedList extends Node {
             if (newHead.next != null && newHead.value == newHead.next.value) {
                 // move till the end of duplicates sublist
                 while (
-                    newHead.next != null && newHead.value == newHead.next.value
+                        newHead.next != null && newHead.value == newHead.next.value
                 ) {
                     newHead = newHead.next;
                 }
@@ -272,7 +268,7 @@ public class SinglyLinkedList extends Node {
     /**
      * Inserts a new node at a specified position of the list
      *
-     * @param data data to be stored in a new node
+     * @param data     data to be stored in a new node
      * @param position position at which a new node is to be inserted
      */
     public void insertNth(int data, int position) {
@@ -362,10 +358,10 @@ public class SinglyLinkedList extends Node {
 
     /**
      * @param position to check position
-     * @param low low index
-     * @param high high index
+     * @param low      low index
+     * @param high     high index
      * @throws IndexOutOfBoundsException if {@code position} not in range
-     * {@code low} to {@code high}
+     *                                   {@code low} to {@code high}
      */
     public void checkBounds(int position, int low, int high) {
         if (position > high || position < low) {
@@ -392,14 +388,14 @@ public class SinglyLinkedList extends Node {
         System.out.println(list.toString());
         /* Test search function */
         assert list.search(10) &&
-        list.search(5) &&
-        list.search(1) &&
-        !list.search(100);
+                list.search(5) &&
+                list.search(1) &&
+                !list.search(100);
 
         /* Test get function */
         assert list.getNth(0) == 10 &&
-        list.getNth(2) == 5 &&
-        list.getNth(4) == 1;
+                list.getNth(2) == 5 &&
+                list.getNth(4) == 1;
 
         /* Test delete function */
         list.deleteHead();
@@ -423,8 +419,8 @@ public class SinglyLinkedList extends Node {
 
         SinglyLinkedList instance = new SinglyLinkedList();
         Node head = new Node(
-            0,
-            new Node(2, new Node(3, new Node(3, new Node(4))))
+                0,
+                new Node(2, new Node(3, new Node(3, new Node(4))))
         );
         instance.setHead(head);
         instance.deleteDuplicates();
@@ -448,7 +444,8 @@ class Node {
      */
     Node next;
 
-    Node() {}
+    Node() {
+    }
 
     /**
      * Constructor
@@ -463,7 +460,7 @@ class Node {
      * Constructor
      *
      * @param value Value to be put in the node
-     * @param next Reference to the next node
+     * @param next  Reference to the next node
      */
     Node(int value, Node next) {
         this.value = value;

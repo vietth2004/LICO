@@ -22,18 +22,18 @@ import mrmathami.annotations.Nonnull;
 
 public interface JavaIdentifiedEntity extends JavaEntity {
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	String getIdClass();
+    @Nonnull
+    String getIdClass();
 
-	/**
-	 * Return entity id. Guarantee to be continuous, start from 0.
-	 *
-	 * @return entity id
-	 */
-	int getId();
+    /**
+     * Return entity id. Guarantee to be continuous, start from 0.
+     *
+     * @return entity id
+     */
+    int getId();
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
 }

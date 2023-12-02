@@ -22,41 +22,41 @@ class QuickSortTest {
 
     @Test
     void quickSortSingleValueArrayShouldPass() {
-        Integer[] array = { 7 };
+        Integer[] array = {7};
         Integer[] sorted = quickSort.sort(array);
-        Integer[] expected = { 7 };
+        Integer[] expected = {7};
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void quickSortWithIntegerArrayShouldPass() {
-        Integer[] array = { 49, 4, 36, 9, 144, 1 };
+        Integer[] array = {49, 4, 36, 9, 144, 1};
         Integer[] sorted = quickSort.sort(array);
-        Integer[] expected = { 1, 4, 9, 36, 49, 144 };
+        Integer[] expected = {1, 4, 9, 36, 49, 144};
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void quickSortForArrayWithNegativeValuesShouldPass() {
-        Integer[] array = { 49, -36, -144, -49, 1, 9 };
+        Integer[] array = {49, -36, -144, -49, 1, 9};
         Integer[] sorted = quickSort.sort(array);
-        Integer[] expected = { -144, -49, -36, 1, 9, 49 };
+        Integer[] expected = {-144, -49, -36, 1, 9, 49};
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void quickSortForArrayWithDuplicateValuesShouldPass() {
-        Integer[] array = { 36, 1, 49, 1, 4, 9 };
+        Integer[] array = {36, 1, 49, 1, 4, 9};
         Integer[] sorted = quickSort.sort(array);
-        Integer[] expected = { 1, 1, 4, 9, 36, 49 };
+        Integer[] expected = {1, 1, 4, 9, 36, 49};
         assertArrayEquals(expected, sorted);
     }
 
     @Test
     void quickSortWithStringArrayShouldPass() {
-        String[] array = { "c", "a", "e", "b", "d" };
+        String[] array = {"c", "a", "e", "b", "d"};
         String[] sorted = quickSort.sort(array);
-        String[] expected = { "a", "b", "c", "d", "e" };
+        String[] expected = {"a", "b", "c", "d", "e"};
         assertArrayEquals(expected, sorted);
     }
 }

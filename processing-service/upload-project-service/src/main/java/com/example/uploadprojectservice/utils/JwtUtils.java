@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.function.Function;
+
 @Service
 public class JwtUtils {
     private String SECRET_KEY = "secret";

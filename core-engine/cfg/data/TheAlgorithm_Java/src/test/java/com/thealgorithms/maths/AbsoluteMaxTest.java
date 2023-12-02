@@ -16,8 +16,8 @@ public class AbsoluteMaxTest {
     @Test
     void testGetMaxValueWithNoArguments() {
         Exception exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> AbsoluteMax.getMaxValue()
+                IllegalArgumentException.class,
+                () -> AbsoluteMax.getMaxValue()
         );
         assertEquals("Numbers array cannot be empty", exception.getMessage());
     }

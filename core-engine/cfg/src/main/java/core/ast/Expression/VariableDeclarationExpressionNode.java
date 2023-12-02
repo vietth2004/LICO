@@ -18,7 +18,7 @@ public class VariableDeclarationExpressionNode extends ExpressionNode {
     public static void executeVariableDeclarationExpression(VariableDeclarationExpression variableDeclarationExpression,
                                                             MemoryModel memoryModel) {
         List<VariableDeclarationFragment> fragments = variableDeclarationExpression.fragments();
-        for(VariableDeclarationFragment fragment : fragments) {
+        for (VariableDeclarationFragment fragment : fragments) {
             VariableDeclarationFragmentNode.executeVariableDeclarationFragment(fragment, variableDeclarationExpression.getType(), memoryModel);
         }
     }

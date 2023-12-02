@@ -5,8 +5,7 @@ public class LazySegmentTree {
     /**
      * Lazy Segment Tree
      *
-     * @see
-     *	<a href="https://www.geeksforgeeks.org/lazy-propagation-in-segment-tree/">
+     * @see <a href="https://www.geeksforgeeks.org/lazy-propagation-in-segment-tree/">
      */
     static class Node {
 
@@ -24,7 +23,8 @@ public class LazySegmentTree {
             this.right = null;
         }
 
-        /** Update the value of this node with the given value diff.
+        /**
+         * Update the value of this node with the given value diff.
          *
          * @param diff The value to add to every index of this node range.
          */
@@ -33,7 +33,8 @@ public class LazySegmentTree {
             this.value += (this.end - this.start) * diff;
         }
 
-        /** Shift the lazy value of this node to its children.
+        /**
+         * Shift the lazy value of this node to its children.
          */
         public void shift() {
             if (lazy == 0) return;
@@ -44,9 +45,10 @@ public class LazySegmentTree {
             this.lazy = 0;
         }
 
-        /** Create a new node that is the sum of this node and the given node.
+        /**
+         * Create a new node that is the sum of this node and the given node.
          *
-         * @param left The left Node of merging
+         * @param left  The left Node of merging
          * @param right The right Node of merging
          * @return The new Node.
          */
@@ -54,9 +56,9 @@ public class LazySegmentTree {
             if (left == null) return right;
             if (right == null) return left;
             Node result = new Node(
-                left.start,
-                right.end,
-                left.value + right.value
+                    left.start,
+                    right.end,
+                    left.value + right.value
             );
             result.left = left;
             result.right = right;
@@ -78,7 +80,8 @@ public class LazySegmentTree {
 
     private final Node root;
 
-    /** Create a new LazySegmentTree with the given array.
+    /**
+     * Create a new LazySegmentTree with the given array.
      *
      * @param array The array to create the LazySegmentTree from.
      */
@@ -86,11 +89,12 @@ public class LazySegmentTree {
         this.root = buildTree(array, 0, array.length);
     }
 
-    /** Build a new LazySegmentTree from the given array in O(n) time.
+    /**
+     * Build a new LazySegmentTree from the given array in O(n) time.
      *
      * @param array The array to build the LazySegmentTree from.
      * @param start The start index of the current node.
-     * @param end The end index of the current node.
+     * @param end   The end index of the current node.
      * @return The root of the new LazySegmentTree.
      */
     private Node buildTree(int[] array, int start, int end) {
@@ -101,12 +105,13 @@ public class LazySegmentTree {
         return Node.merge(left, right);
     }
 
-    /** Update the value of given range with the given value diff in O(log n) time.
+    /**
+     * Update the value of given range with the given value diff in O(log n) time.
      *
-     * @param left The left index of the range to update.
+     * @param left  The left index of the range to update.
      * @param right The right index of the range to update.
-     * @param diff The value to add to every index of the range.
-     * @param curr The current node.
+     * @param diff  The value to add to every index of the range.
+     * @param curr  The current node.
      */
     private void updateRange(int left, int right, int diff, Node curr) {
         if (left <= curr.start && curr.end <= right) {
@@ -121,9 +126,10 @@ public class LazySegmentTree {
         curr.value = merge.value;
     }
 
-    /** Get Node of given range in O(log n) time.
+    /**
+     * Get Node of given range in O(log n) time.
      *
-     * @param left The left index of the range to update.
+     * @param left  The left index of the range to update.
      * @param right The right index of the range to update.
      * @return The Node representing the sum of the given range.
      */
@@ -132,8 +138,8 @@ public class LazySegmentTree {
         if (left >= curr.end || right <= curr.start) return null;
         curr.shift();
         return Node.merge(
-            getRange(left, right, curr.left),
-            getRange(left, right, curr.right)
+                getRange(left, right, curr.left),
+                getRange(left, right, curr.right)
         );
     }
 

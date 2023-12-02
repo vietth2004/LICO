@@ -23,17 +23,17 @@ import mrmathami.cia.java.tree.JavaNonIdentifiedEntity;
 
 public abstract class AbstractNonIdentifiedEntity extends AbstractEntity implements JavaNonIdentifiedEntity {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	//region Jsonify
+    //region Jsonify
 
-	@Override
-	public final void internalToJson(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		builder.append("\"entityClass\": \"").append(getEntityClass()).append('"');
-		internalToJsonStart(builder, indentation);
-		internalToJsonEnd(builder, indentation);
-	}
+    @Override
+    public final void internalToJson(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        builder.append("\"entityClass\": \"").append(getEntityClass()).append('"');
+        internalToJsonStart(builder, indentation);
+        internalToJsonEnd(builder, indentation);
+    }
 
-	//endregion Jsonify
+    //endregion Jsonify
 
 }

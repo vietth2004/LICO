@@ -25,26 +25,27 @@ import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 import mrmathami.cia.java.tree.type.JavaType;
 
 public interface JavaFieldNode extends JavaNode,
-		JavaAnnotatedNode, JavaModifiedNode {
+        JavaAnnotatedNode, JavaModifiedNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaFieldNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaFieldNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nullable
-	JavaType getType();
+    @Nullable
+    JavaType getType();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

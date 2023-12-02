@@ -75,7 +75,7 @@ public class JavaNode extends Node implements Serializable {
         this.setupProperties((AbstractNode) javaNode);
         this.status = status;
 
-        if(status.equals("deleted")) {
+        if (status.equals("deleted")) {
 //            this.dependencyFrom = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyFrom());
 //            this.dependencyTo = Utility.convertMap((Map<AbstractNode, DependencyCountTable>) javaNode.getDependencyTo());
             this.children = this.returnChildren((AbstractNode) javaNode, true, false);
@@ -151,7 +151,7 @@ public class JavaNode extends Node implements Serializable {
         this.children.add(javaNode);
     }
 
-    private void setupProperties (AbstractNode abstractNode) {
+    private void setupProperties(AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
         }
@@ -170,7 +170,7 @@ public class JavaNode extends Node implements Serializable {
     }
 
     private void setDependency(AbstractNode abstractNode, Boolean getDependency) {
-        if(getDependency){
+        if (getDependency) {
             this.dependencyFrom = Utility.convertMap(abstractNode.getDependencyFrom());
             this.dependencyTo = Utility.convertMap(abstractNode.getDependencyTo());
         }

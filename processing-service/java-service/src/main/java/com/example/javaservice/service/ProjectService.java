@@ -47,7 +47,7 @@ public class ProjectService {
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
+            if (fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
@@ -67,21 +67,21 @@ public class ProjectService {
         try {
             ZipFile zipFile = new ZipFile(Filepath);
             List fileHeaders = zipFile.getFileHeaders();
-            for(int i=0;i<fileHeaders.size();i++) {
-                FileHeader fileHeader=(FileHeader) fileHeaders.get(i);
+            for (int i = 0; i < fileHeaders.size(); i++) {
+                FileHeader fileHeader = (FileHeader) fileHeaders.get(i);
                 String fileName = fileHeader.getFileName();
                 if (fileName.contains("\\")) {
-                    fileName=fileName.replace("\\","\\\\");
-                    String[] Folders=fileName.split("\\\\");
+                    fileName = fileName.replace("\\", "\\\\");
+                    String[] Folders = fileName.split("\\\\");
                     StringBuilder newFilepath = new StringBuilder();
                     newFilepath.append(DestinationFolderPath);
-                    for (int j=0;j<Folders.length-1;j++){
+                    for (int j = 0; j < Folders.length - 1; j++) {
                         newFilepath.append(File.separator);
                         newFilepath.append(Folders[j]);
                     }
-                    zipFile.extractFile(fileHeader, Folders[Folders.length-1], newFilepath.toString(), null);
-                }else {
-                    zipFile.extractFile(fileHeader,DestinationFolderPath);
+                    zipFile.extractFile(fileHeader, Folders[Folders.length - 1], newFilepath.toString(), null);
+                } else {
+                    zipFile.extractFile(fileHeader, DestinationFolderPath);
                 }
             }
         } catch (ZipException e) {

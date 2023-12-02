@@ -34,7 +34,7 @@ public class MaximumMinimumWindow {
      * window size using Stack Data Structure.
      *
      * @param arr Array containing the numbers
-     * @param n Length of the array
+     * @param n   Length of the array
      * @return result array
      */
     public static int[] calculateMaxOfMin(int[] arr, int n) {
@@ -97,8 +97,8 @@ public class MaximumMinimumWindow {
     }
 
     public static void main(String args[]) {
-        int[] arr = new int[] { 10, 20, 30, 50, 10, 70, 30 };
-        int[] target = new int[] { 70, 30, 20, 10, 10, 10, 10 };
+        int[] arr = new int[]{10, 20, 30, 50, 10, 70, 30};
+        int[] target = new int[]{70, 30, 20, 10, 10, 10, 10};
         int[] res = calculateMaxOfMin(arr, arr.length);
         assert Arrays.equals(target, res);
     }

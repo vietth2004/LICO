@@ -19,8 +19,8 @@ public class FFTBluestein {
      * https://en.wikipedia.org/wiki/Chirp_Z-transform#Bluestein.27s_algorithm
      * http://tka4.org/materials/lib/Articles-Books/Numerical%20Algorithms/Hartley_Trasform/Bluestein%27s%20FFT%20algorithm%20-%20Wikipedia,%20the%20free%20encyclopedia.htm
      *
-     * @param x The discrete signal which is then converted to the FFT or the
-     * IFFT of signal x.
+     * @param x       The discrete signal which is then converted to the FFT or the
+     *                IFFT of signal x.
      * @param inverse True if you want to find the inverse FFT.
      */
     public static void fftBluestein(ArrayList<FFT.Complex> x, boolean inverse) {
@@ -39,8 +39,8 @@ public class FFTBluestein {
             double angle = (i - N + 1) * (i - N + 1) * Math.PI / N * direction;
             bn.set(i, new FFT.Complex(Math.cos(angle), Math.sin(angle)));
             bn.set(
-                bnSize - i - 1,
-                new FFT.Complex(Math.cos(angle), Math.sin(angle))
+                    bnSize - i - 1,
+                    new FFT.Complex(Math.cos(angle), Math.sin(angle))
             );
         }
 
@@ -48,15 +48,15 @@ public class FFTBluestein {
         for (int i = 0; i < N; i++) {
             double angle = -i * i * Math.PI / N * direction;
             an.add(
-                x
-                    .get(i)
-                    .multiply(new FFT.Complex(Math.cos(angle), Math.sin(angle)))
+                    x
+                            .get(i)
+                            .multiply(new FFT.Complex(Math.cos(angle), Math.sin(angle)))
             );
         }
 
         ArrayList<FFT.Complex> convolution = ConvolutionFFT.convolutionFFT(
-            an,
-            bn
+                an,
+                bn
         );
 
         /* The final multiplication of the convolution with the b*(k) factor  */

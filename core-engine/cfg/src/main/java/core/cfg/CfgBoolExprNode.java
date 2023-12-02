@@ -4,8 +4,7 @@ import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.IfStatement;
 
-public class CfgBoolExprNode extends CfgNode implements IEvaluateCoverage
-{
+public class CfgBoolExprNode extends CfgNode implements IEvaluateCoverage {
     private CfgNode trueNode = null;
     private CfgNode falseNode = null;
     private CfgEndBlockNode endBlockNode = null;
@@ -35,33 +34,27 @@ public class CfgBoolExprNode extends CfgNode implements IEvaluateCoverage
         return getContent();
     }
 
-    public CfgNode getTrueNode()
-    {
+    public CfgNode getTrueNode() {
         return trueNode;
     }
 
-    public void setTrueNode(CfgNode trueNode)
-    {
+    public void setTrueNode(CfgNode trueNode) {
         this.trueNode = trueNode;
     }
 
-    public CfgNode getFalseNode()
-    {
+    public CfgNode getFalseNode() {
         return falseNode;
     }
 
-    public void setFalseNode(CfgNode falseNode)
-    {
+    public void setFalseNode(CfgNode falseNode) {
         this.falseNode = falseNode;
     }
 
-    public CfgEndBlockNode getEndBlockNode()
-    {
+    public CfgEndBlockNode getEndBlockNode() {
         return endBlockNode;
     }
 
-    public void setEndBlockNode(CfgEndBlockNode endBlockNode)
-    {
+    public void setEndBlockNode(CfgEndBlockNode endBlockNode) {
         this.endBlockNode = endBlockNode;
     }
 

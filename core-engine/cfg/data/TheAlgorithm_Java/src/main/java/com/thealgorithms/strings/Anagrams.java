@@ -19,16 +19,16 @@ public class Anagrams {
         // All the below methods takes input but doesn't return any output to the main method.
         Anagrams nm = new Anagrams();
         System.out.println(
-            nm.approach2(first, second)
+                nm.approach2(first, second)
         );/* To activate methods for different approaches*/
         System.out.println(
-            nm.approach1(first, second)
+                nm.approach1(first, second)
         );/* To activate methods for different approaches*/
         System.out.println(
-            nm.approach3(first, second)
+                nm.approach3(first, second)
         );/* To activate methods for different approaches*/
         System.out.println(
-            nm.approach4(first, second)
+                nm.approach4(first, second)
         );/* To activate methods for different approaches*/
         /**
          * OUTPUT :
@@ -54,7 +54,7 @@ public class Anagrams {
             char d[] = t.toCharArray();
             Arrays.sort(c);
             Arrays.sort(
-                d
+                    d
             );/* In this approach the strings are stored in the character arrays and both the arrays are sorted. After that both the arrays are compared for checking anangram */
 
             return Arrays.equals(c, d);

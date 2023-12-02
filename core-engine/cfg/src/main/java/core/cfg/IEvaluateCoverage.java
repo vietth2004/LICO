@@ -1,6 +1,5 @@
 package core.cfg;
 
-public interface IEvaluateCoverage
-{
+public interface IEvaluateCoverage {
     String markContent(String testPath);
 }

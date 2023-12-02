@@ -21,10 +21,10 @@ package mrmathami.cia.java.jdt;
 import mrmathami.annotations.Nonnull;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.project.Project;
-import mrmathami.cia.java.jdt.project.builder.parameter.BuildInputSources;
-import mrmathami.cia.java.jdt.project.differ.JavaSnapshotComparator;
 import mrmathami.cia.java.jdt.project.builder.SnapshotBuilder;
+import mrmathami.cia.java.jdt.project.builder.parameter.BuildInputSources;
 import mrmathami.cia.java.jdt.project.builder.parameter.SnapshotBuildParameter;
+import mrmathami.cia.java.jdt.project.differ.JavaSnapshotComparator;
 import mrmathami.cia.java.project.JavaProject;
 import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
@@ -34,26 +34,26 @@ import java.util.Set;
 
 public final class ProjectBuilder {
 
-	private ProjectBuilder() {
-	}
+    private ProjectBuilder() {
+    }
 
-	@Nonnull
-	public static JavaProject createProject(@Nonnull String name) {
-		return new Project(name);
-	}
+    @Nonnull
+    public static JavaProject createProject(@Nonnull String name) {
+        return new Project(name);
+    }
 
-	@Nonnull
-	public static JavaProjectSnapshot createProjectSnapshot(@Nonnull String snapshotName,
-			@Nonnull JavaDependencyWeightTable dependencyWeightTable, @Nonnull BuildInputSources inputSources,
-			@Nonnull Set<SnapshotBuildParameter> parameters) throws JavaCiaException {
-		return SnapshotBuilder.build(snapshotName, dependencyWeightTable, inputSources, parameters);
-	}
+    @Nonnull
+    public static JavaProjectSnapshot createProjectSnapshot(@Nonnull String snapshotName,
+                                                            @Nonnull JavaDependencyWeightTable dependencyWeightTable, @Nonnull BuildInputSources inputSources,
+                                                            @Nonnull Set<SnapshotBuildParameter> parameters) throws JavaCiaException {
+        return SnapshotBuilder.build(snapshotName, dependencyWeightTable, inputSources, parameters);
+    }
 
-	@Nonnull
-	public static JavaProjectSnapshotComparison createProjectSnapshotComparison(@Nonnull String comparisonName,
-			@Nonnull JavaProjectSnapshot previousSnapshot, @Nonnull JavaProjectSnapshot currentSnapshot,
-			@Nonnull JavaDependencyWeightTable impactWeightTable) throws JavaCiaException {
-		return JavaSnapshotComparator.compare(comparisonName, previousSnapshot, currentSnapshot, impactWeightTable);
-	}
+    @Nonnull
+    public static JavaProjectSnapshotComparison createProjectSnapshotComparison(@Nonnull String comparisonName,
+                                                                                @Nonnull JavaProjectSnapshot previousSnapshot, @Nonnull JavaProjectSnapshot currentSnapshot,
+                                                                                @Nonnull JavaDependencyWeightTable impactWeightTable) throws JavaCiaException {
+        return JavaSnapshotComparator.compare(comparisonName, previousSnapshot, currentSnapshot, impactWeightTable);
+    }
 
 }

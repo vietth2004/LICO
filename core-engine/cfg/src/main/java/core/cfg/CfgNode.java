@@ -3,14 +3,19 @@ package core.cfg;
 import core.parser.ASTHelper;
 import core.structureTree.structureNode.SFunctionNode;
 import core.utils.Utils;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CfgNode
-{
+public class CfgNode {
     private int startPosition;
     private int endPosition;
 
@@ -29,25 +34,21 @@ public class CfgNode
 
     private ASTNode ast;
 
-    public CfgNode(ASTNode ast)
-    {
+    public CfgNode(ASTNode ast) {
         this.ast = ast;
         setStartPosition(ast.getStartPosition());
         setEndPosition(ast.getStartPosition() + ast.getLength());
 
     }
 
-    public CfgNode()
-    {
+    public CfgNode() {
     }
 
-    public ASTNode getAst()
-    {
+    public ASTNode getAst() {
         return ast;
     }
 
-    public void setAst(ASTNode ast)
-    {
+    public void setAst(ASTNode ast) {
         this.ast = ast;
         this.content = ast.toString();
     }
@@ -60,23 +61,19 @@ public class CfgNode
         return lineNumber;
     }
 
-    public int getStartPosition()
-    {
+    public int getStartPosition() {
         return startPosition;
     }
 
-    public void setStartPosition(int startPosition)
-    {
+    public void setStartPosition(int startPosition) {
         this.startPosition = startPosition;
     }
 
-    public int getEndPosition()
-    {
+    public int getEndPosition() {
         return endPosition;
     }
 
-    public void setEndPosition(int endPosition)
-    {
+    public void setEndPosition(int endPosition) {
         this.endPosition = endPosition;
     }
 
@@ -84,48 +81,39 @@ public class CfgNode
     private List<CfgNode> children = new ArrayList<>();
     private boolean isVisited = false;
 
-    public String getContent()
-    {
+    public String getContent() {
         return content;
     }
 
-    public String getContentReport()
-    {
+    public String getContentReport() {
         return content;
     }
 
-    public void setContent(String content)
-    {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public CfgNode getParent()
-    {
+    public CfgNode getParent() {
         return parent;
     }
 
-    public void setParent(CfgNode parent)
-    {
+    public void setParent(CfgNode parent) {
         this.parent = parent;
     }
 
-    public List<CfgNode> getChildren()
-    {
+    public List<CfgNode> getChildren() {
         return children;
     }
 
-    public void setChildren(List<CfgNode> children)
-    {
+    public void setChildren(List<CfgNode> children) {
         this.children = children;
     }
 
-    public boolean isVisited()
-    {
+    public boolean isVisited() {
         return isVisited;
     }
 
-    public void setVisited(boolean visited)
-    {
+    public void setVisited(boolean visited) {
         isVisited = visited;
     }
 
@@ -137,32 +125,27 @@ public class CfgNode
         isFalseNode = falseNode;
     }
 
-    public static CfgNode parseToCFG(SFunctionNode functionNode)
-    {
+    public static CfgNode parseToCFG(SFunctionNode functionNode) {
         ASTNode astNode = functionNode.getAst().getAstNode();
         CfgNode cfgNode = new CfgStartNode(astNode);
         ASTHelper.generateCFGTreeFromASTNode(astNode, cfgNode);
         return cfgNode;
     }
 
-    public static CfgNode parserToCFG(String sourceCode)
-    {
+    public static CfgNode parserToCFG(String sourceCode) {
         CfgNode cfg = new CfgNode();
 
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setSource(sourceCode.toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-        ASTVisitor visitor = new ASTVisitor()
-        {
+        ASTVisitor visitor = new ASTVisitor() {
             @Override
-            public boolean visit(TypeDeclaration node)
-            {
+            public boolean visit(TypeDeclaration node) {
 
                 List<ASTNode> children = Utils.getChildren(node);
 
-                for (ASTNode func : children)
-                {
+                for (ASTNode func : children) {
 
                 }
 
@@ -177,18 +160,15 @@ public class CfgNode
     }
 
 
-    public static ArrayList<ASTNode> parserToAstFuncList(String sourceCodeFile)
-    {
+    public static ArrayList<ASTNode> parserToAstFuncList(String sourceCodeFile) {
         ArrayList<ASTNode> AstFuncList = new ArrayList<>();
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setSource(sourceCodeFile.toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-        ASTVisitor visitor = new ASTVisitor()
-        {
+        ASTVisitor visitor = new ASTVisitor() {
             @Override
-            public boolean visit(TypeDeclaration node)
-            {
+            public boolean visit(TypeDeclaration node) {
                 Utils.getFunctionChildren(node, AstFuncList);
 
                 return true;
@@ -206,11 +186,9 @@ public class CfgNode
         parser.setSource(sourceCode.toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-        ASTVisitor visitor = new ASTVisitor()
-        {
+        ASTVisitor visitor = new ASTVisitor() {
             @Override
-            public boolean visit(TypeDeclaration node)
-            {
+            public boolean visit(TypeDeclaration node) {
                 Utils.getConstructorChildren(node, constructorList);
 
                 return true;
@@ -229,22 +207,19 @@ public class CfgNode
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         return (CompilationUnit) parser.createAST(null);
     }
-    public static ASTNode parserToAstFuncList0(String sourceCodeFile, String funcName)
-    {
+
+    public static ASTNode parserToAstFuncList0(String sourceCodeFile, String funcName) {
         ArrayList<ASTNode> AstFuncList = new ArrayList<>();
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setSource(sourceCodeFile.toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-        ASTVisitor visitor = new ASTVisitor()
-        {
+        ASTVisitor visitor = new ASTVisitor() {
             @Override
-            public boolean visit(TypeDeclaration node)
-            {
+            public boolean visit(TypeDeclaration node) {
                 List<MethodDeclaration> methods = Arrays.asList(node.getMethods());
                 for (MethodDeclaration method : methods) {
-                    if (method.isConstructor() == false)
-                    {
+                    if (method.isConstructor() == false) {
                         AstFuncList.add(method);
                     }
                 }
@@ -255,10 +230,8 @@ public class CfgNode
 
         cu.accept(visitor);
 
-        for (int i = 0; i < AstFuncList.size(); i++)
-        {
-            if (((MethodDeclaration)AstFuncList.get(i)).getName().getIdentifier().equals("foo"))
-            {
+        for (int i = 0; i < AstFuncList.size(); i++) {
+            if (((MethodDeclaration) AstFuncList.get(i)).getName().getIdentifier().equals("foo")) {
                 return AstFuncList.get(i);
             }
         }
@@ -266,18 +239,16 @@ public class CfgNode
         return null;
     }
 
-    public String markContent(String testPath)
-    {
+    public String markContent(String testPath) {
         return "";
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "CFGNode{" +
 //                "start=" + startPosition +
 //                ", end=" + endPosition +
-                ("".equals(content)? "null" : ", content='" + content + '\'') +
+                ("".equals(content) ? "null" : ", content='" + content + '\'') +
                 ", isRootNode=" + isBeginCfgNode +
                 ", isEndNode=" + isEndCfgNode +
                 //", children=" + children +
@@ -285,43 +256,35 @@ public class CfgNode
                 '}';
     }
 
-    public CfgNode getBeforeStatementNode()
-    {
+    public CfgNode getBeforeStatementNode() {
         return beforeStatementNode;
     }
 
-    public void setBeforeStatementNode(CfgNode beforeStatementNode)
-    {
+    public void setBeforeStatementNode(CfgNode beforeStatementNode) {
         this.beforeStatementNode = beforeStatementNode;
     }
 
-    public CfgNode getAfterStatementNode()
-    {
+    public CfgNode getAfterStatementNode() {
         return afterStatementNode;
     }
 
-    public void setAfterStatementNode(CfgNode afterStatementNode)
-    {
+    public void setAfterStatementNode(CfgNode afterStatementNode) {
         this.afterStatementNode = afterStatementNode;
     }
 
-    public boolean getIsBeginCfgNode()
-    {
+    public boolean getIsBeginCfgNode() {
         return isBeginCfgNode;
     }
 
-    public void setIsBeginCfgNode(boolean isBeginCfgNode)
-    {
+    public void setIsBeginCfgNode(boolean isBeginCfgNode) {
         this.isBeginCfgNode = isBeginCfgNode;
     }
 
-    public boolean getIsEndCfgNode()
-    {
+    public boolean getIsEndCfgNode() {
         return isEndCfgNode;
     }
 
-    public void setIsEndCfgNode(boolean isEndCfgNode)
-    {
+    public void setIsEndCfgNode(boolean isEndCfgNode) {
         this.isEndCfgNode = isEndCfgNode;
     }
 

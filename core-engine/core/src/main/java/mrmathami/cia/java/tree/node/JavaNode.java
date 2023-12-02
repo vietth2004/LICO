@@ -33,106 +33,109 @@ import java.util.Stack;
 
 public interface JavaNode extends JavaIdentifiedEntity {
 
-	@Nonnull String ID_CLASS = "JavaNode";
+    @Nonnull
+    String ID_CLASS = "JavaNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getIdClass() {
-		return ID_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getIdClass() {
+        return ID_CLASS;
+    }
 
-	/**
-	 * Return node id. Guarantee to be continuous, start from 0.
-	 * Guarantee to satisfy <code>this == this.getRoot().getAllNodes().get(this.getId())</code>
-	 *
-	 * @return node id
-	 */
-	@Override
-	int getId();
+    /**
+     * Return node id. Guarantee to be continuous, start from 0.
+     * Guarantee to satisfy <code>this == this.getRoot().getAllNodes().get(this.getId())</code>
+     *
+     * @return node id
+     */
+    @Override
+    int getId();
 
-	boolean isRoot();
+    boolean isRoot();
 
-	@Nonnull
-	JavaRootNode getRoot();
+    @Nonnull
+    JavaRootNode getRoot();
 
-	@Nonnull
-	JavaNode getParent();
+    @Nonnull
+    JavaNode getParent();
 
-	@Nonnull
-	List<? extends JavaNode> getChildren();
+    @Nonnull
+    List<? extends JavaNode> getChildren();
 
-	@Nonnull
-	String getSimpleName();
+    @Nonnull
+    String getSimpleName();
 
-	@Nonnull
-	String getQualifiedName();
+    @Nonnull
+    String getQualifiedName();
 
-	@Nonnull
-	String getUniqueName();
+    @Nonnull
+    String getUniqueName();
 
-	@Nullable
-	JavaSourceFile getSourceFile();
+    @Nullable
+    JavaSourceFile getSourceFile();
 
-	@Nullable
-	default JavaModule getModule() {
-		final JavaSourceFile sourceFile = getSourceFile();
-		return sourceFile != null ? sourceFile.getModule() : null;
-	}
+    @Nullable
+    default JavaModule getModule() {
+        final JavaSourceFile sourceFile = getSourceFile();
+        return sourceFile != null ? sourceFile.getModule() : null;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Dependency
+    //region Dependency
 
-	@Nonnull
-	Map<? extends JavaNode, ? extends JavaDependencyCountTable> getDependencyFrom();
+    @Nonnull
+    Map<? extends JavaNode, ? extends JavaDependencyCountTable> getDependencyFrom();
 
-	@Nonnull
-	Map<? extends JavaNode, ? extends JavaDependencyCountTable> getDependencyTo();
+    @Nonnull
+    Map<? extends JavaNode, ? extends JavaDependencyCountTable> getDependencyTo();
 
-	@Nonnull
-	Set<? extends JavaNode> getDependencyFromNodes();
+    @Nonnull
+    Set<? extends JavaNode> getDependencyFromNodes();
 
-	@Nonnull
-	Set<? extends JavaNode> getDependencyToNodes();
+    @Nonnull
+    Set<? extends JavaNode> getDependencyToNodes();
 
-	//endregion Dependency
+    //endregion Dependency
 
-	//region Visit Iterator
+    //region Visit Iterator
 
-	@Nonnull
-	default Iterator<? extends JavaNode> getVisitIterator() {
-		return new VisitIterator(this);
-	}
+    @Nonnull
+    default Iterator<? extends JavaNode> getVisitIterator() {
+        return new VisitIterator(this);
+    }
 
-	final class VisitIterator implements Iterator<JavaNode> {
-		@Nonnull private final Stack<Iterator<? extends JavaNode>> stack = new Stack<>();
-		@Nullable private JavaNode current;
+    final class VisitIterator implements Iterator<JavaNode> {
+        @Nonnull
+        private final Stack<Iterator<? extends JavaNode>> stack = new Stack<>();
+        @Nullable
+        private JavaNode current;
 
-		private VisitIterator(@Nullable JavaNode current) {
-			this.current = current;
-		}
+        private VisitIterator(@Nullable JavaNode current) {
+            this.current = current;
+        }
 
-		@Override
-		public boolean hasNext() {
-			if (current != null) stack.push(current.getChildren().iterator());
-			this.current = null;
-			do {
-				if (stack.peek().hasNext()) return true;
-				stack.pop();
-			} while (!stack.isEmpty());
-			return false;
-		}
+        @Override
+        public boolean hasNext() {
+            if (current != null) stack.push(current.getChildren().iterator());
+            this.current = null;
+            do {
+                if (stack.peek().hasNext()) return true;
+                stack.pop();
+            } while (!stack.isEmpty());
+            return false;
+        }
 
-		@Override
-		public JavaNode next() {
-			if (current != null) stack.push(current.getChildren().iterator());
-			return this.current = stack.peek().next();
-		}
-	}
+        @Override
+        public JavaNode next() {
+            if (current != null) stack.push(current.getChildren().iterator());
+            return this.current = stack.peek().next();
+        }
+    }
 
-	//endregion Visit Iterator
+    //endregion Visit Iterator
 
 }

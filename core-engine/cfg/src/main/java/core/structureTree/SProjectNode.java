@@ -2,7 +2,7 @@ package core.structureTree;
 
 import core.parser.ProjectParser;
 
-public class SProjectNode extends SNode{
+public class SProjectNode extends SNode {
 
     public static void main(String[] args) {
         ProjectParser parser = ProjectParser.getParser();

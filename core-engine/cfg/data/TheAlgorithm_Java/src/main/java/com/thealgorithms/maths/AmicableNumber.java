@@ -43,20 +43,20 @@ public class AmicableNumber {
                 if (isAmicableNumber(i, j)) {
                     countofRes++;
                     res.append(
-                        "" + countofRes + ": = ( " + i + "," + j + ")" + "\t"
+                            "" + countofRes + ": = ( " + i + "," + j + ")" + "\t"
                     );
                 }
             }
         }
         res.insert(
-            0,
-            "Int Range of " +
-            startValue +
-            " till " +
-            stopValue +
-            " there are " +
-            countofRes +
-            " Amicable_numbers.These are \n "
+                0,
+                "Int Range of " +
+                        startValue +
+                        " till " +
+                        stopValue +
+                        " there are " +
+                        countofRes +
+                        " Amicable_numbers.These are \n "
         );
         System.out.println(res.toString());
     }
@@ -70,10 +70,10 @@ public class AmicableNumber {
      */
     static boolean isAmicableNumber(int numberOne, int numberTwo) {
         return (
-            (
-                recursiveCalcOfDividerSum(numberOne, numberOne) == numberTwo &&
-                numberOne == recursiveCalcOfDividerSum(numberTwo, numberTwo)
-            )
+                (
+                        recursiveCalcOfDividerSum(numberOne, numberOne) == numberTwo &&
+                                numberOne == recursiveCalcOfDividerSum(numberTwo, numberTwo)
+                )
         );
     }
 
@@ -81,7 +81,7 @@ public class AmicableNumber {
      * calculated in recursive calls the Sum of all the Dividers beside it self
      *
      * @param number div = the next to test dividely by using the modulo
-     * operator
+     *               operator
      * @return sum of all the dividers
      */
     static int recursiveCalcOfDividerSum(int number, int div) {

@@ -2,11 +2,12 @@ package core.ast.Expression.OperationExpression;
 
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
-import core.ast.*;
+import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.dataStructure.MemoryModel;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.InfixExpression;
 
 import java.util.ArrayList;
 import java.util.List;

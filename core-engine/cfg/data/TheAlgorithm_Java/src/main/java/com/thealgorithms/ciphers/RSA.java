@@ -21,7 +21,7 @@ public class RSA {
      */
     public synchronized String encrypt(String message) {
         return (new BigInteger(message.getBytes())).modPow(publicKey, modulus)
-            .toString();
+                .toString();
     }
 
     /**
@@ -36,8 +36,8 @@ public class RSA {
      */
     public synchronized String decrypt(String encryptedMessage) {
         return new String(
-            (new BigInteger(encryptedMessage)).modPow(privateKey, modulus)
-                .toByteArray()
+                (new BigInteger(encryptedMessage)).modPow(privateKey, modulus)
+                        .toByteArray()
         );
     }
 
@@ -58,7 +58,7 @@ public class RSA {
         modulus = p.multiply(q);
 
         BigInteger m =
-            (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
+                (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
 
         publicKey = BigInteger.valueOf(3L);
 

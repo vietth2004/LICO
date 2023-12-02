@@ -43,6 +43,7 @@ public class OgnlJsp {
     public String getOgnl() {
         return ognl;
     }
+
     public JspFileNode getJspFileNode() {
         return jspFileNode;
     }
@@ -56,25 +57,25 @@ public class OgnlJsp {
         // normalize();
     }
 
-    public void normalize(){
+    public void normalize() {
         //start cut %{#....}
-        if(ognl == null || ognl.equals("")) return;
+        if (ognl == null || ognl.equals("")) return;
         this.ognl = this.ognl.trim();
         StringBuilder stringBuilder = new StringBuilder(ognl);
-        if(stringBuilder.charAt(0) == '%'){
+        if (stringBuilder.charAt(0) == '%') {
             stringBuilder.deleteCharAt(0);
             stringBuilder.deleteCharAt(0);
-            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
 
         this.ognl = stringBuilder.toString();
         this.ognl = this.ognl.trim();
 
         handle3();
-        if(ognl == null || ognl.equals("")) return;
+        if (ognl == null || ognl.equals("")) return;
 
         StringBuilder builder2 = new StringBuilder(ognl);
-        if(builder2.charAt(0) == '#'){
+        if (builder2.charAt(0) == '#') {
             builder2.deleteCharAt(0);
         }
         this.ognl = builder2.toString();
@@ -89,10 +90,10 @@ public class OgnlJsp {
     /**
      * handle ognl type same as: session['name']
      */
-    private void hanlde1(){
+    private void hanlde1() {
         // check contain []
         int check = this.ognl.indexOf('[');
-        if(check == -1) return;
+        if (check == -1) return;
         //end check
 
         String[] split = ognl.split("\\[");
@@ -100,7 +101,7 @@ public class OgnlJsp {
         Pattern pattern = Pattern.compile("\\['(.*?)\\']");
         Matcher matcher = pattern.matcher(this.getOgnl());
         String newOgnl = null;
-        while (matcher.find()){
+        while (matcher.find()) {
             newOgnl = matcher.group(1).trim();
         }
         this.ognl = newOgnl;
@@ -110,28 +111,27 @@ public class OgnlJsp {
     /**
      * handle ognl type same as: session.name
      */
-    private void handle2(){
+    private void handle2() {
         int check = this.ognl.indexOf('[');
-        if(check != -1) return;
-        else{
+        if (check != -1) return;
+        else {
             int checkdot = this.ognl.indexOf('.');
             //logger.debug("checkdot: " + checkdot);
-            if(checkdot != -1){
+            if (checkdot != -1) {
                 String[] split = this.ognl.split("\\.");
 //                logger.debug(split.length);
-                if(split.length < 2 ) return;
+                if (split.length < 2) return;
 //                logger.debug(split[0]);
-                if(split[0].equals("action")
+                if (split[0].equals("action")
                         || split[0].equals("attr")
                         || split[0].equals("session")
                         || split[0].equals("request")
                         || split[0].equals("parameters")
-                        || split[0].equals("application")){
+                        || split[0].equals("application")) {
 //                    logger.debug(split[1]);
                     this.type = split[0];
                     this.ognl = split[1];
-                }
-                else {
+                } else {
                     this.ognl = split[0];
                     this.type = "action";
                 }
@@ -142,7 +142,7 @@ public class OgnlJsp {
     /**
      * check if contain + same as : %{#action.name + "hieu"}
      */
-    private void handle3(){
+    private void handle3() {
         int check = this.ognl.indexOf('+');
         int checkMinus = this.ognl.indexOf('-');
         int checkEqual = this.ognl.indexOf('=');
@@ -150,11 +150,11 @@ public class OgnlJsp {
         int checkLess = this.ognl.indexOf('<');
         int checkAnd = this.ognl.indexOf('&');
         int checkOr = this.ognl.indexOf('|');
-        if(checkOr == -1 && checkAnd == -1 && checkMore == -1 && checkLess == -1
+        if (checkOr == -1 && checkAnd == -1 && checkMore == -1 && checkLess == -1
                 && check == -1 && checkMinus == -1 && checkEqual == -1) return;
-        else{
+        else {
             String[] split = this.ognl.split("\\-|\\+|=|!|>|<|&|\\|");
-            for(String temp : split){
+            for (String temp : split) {
                 String temp2 = temp.trim();
                 //  if(temp2.charAt(0)!= ' '){
                 this.ognl = null;

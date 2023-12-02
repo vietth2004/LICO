@@ -1,6 +1,5 @@
 package com.example.parserservice.ast.utility;
 
-import com.example.parserservice.ast.node.JavaNode;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.Set;
 public class Utils {
 
 
-    public static void printList (List list) {
+    public static void printList(List list) {
 
 //        for(Object obj : list) {
 //            if(obj instanceof JavaNode) {
@@ -24,8 +23,7 @@ public class Utils {
 
         printDependency(javaRootNode.getDependencyTo());
 
-        for(mrmathami.cia.java.tree.node.JavaNode javaNode : javaRootNode.getChildren())
-        {
+        for (mrmathami.cia.java.tree.node.JavaNode javaNode : javaRootNode.getChildren()) {
             findDependency(javaNode);
         }
     }
@@ -34,7 +32,7 @@ public class Utils {
         Set<AbstractNode> nodes = Dependencies.keySet();
 
 
-        for(AbstractNode node : nodes) {
+        for (AbstractNode node : nodes) {
             mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable dependencyCountTable = (mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable) Dependencies.get(node);
 //            System.out.println(dependencyCountTable.getCount(JavaDependency.USE));
         }

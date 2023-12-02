@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CountCharTest {
 
     @Test
-    void testCountCharacters(){
+    void testCountCharacters() {
         String input = "12345";
         int expectedValue = 5;
 

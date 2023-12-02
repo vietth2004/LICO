@@ -1,14 +1,16 @@
 package com.thealgorithms.strings;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
+
 import java.util.*;
 
 public class WordLadderTest {
 
     @Test
     public void testWordLadder() {
-       
+
         /**
          * Test 1:
          * Input: beginWord = "hit", endWord = "cog", wordList =
@@ -34,5 +36,5 @@ public class WordLadderTest {
         List<String> wordList2 = Arrays.asList("hot", "dot", "dog", "lot", "log");
         assertEquals(WordLadder.ladderLength("hit", "cog", wordList2), 0);
 
-     }
+    }
 }

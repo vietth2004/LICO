@@ -14,7 +14,7 @@ public class ConvolutionFFT {
     /**
      * This method pads the signal with zeros until it reaches the new size.
      *
-     * @param x The signal to be padded.
+     * @param x       The signal to be padded.
      * @param newSize The new size of the signal.
      */
     private static void padding(ArrayList<FFT.Complex> x, int newSize) {
@@ -43,8 +43,8 @@ public class ConvolutionFFT {
      * @return The convolved signal.
      */
     public static ArrayList<FFT.Complex> convolutionFFT(
-        ArrayList<FFT.Complex> a,
-        ArrayList<FFT.Complex> b
+            ArrayList<FFT.Complex> a,
+            ArrayList<FFT.Complex> b
     ) {
         int convolvedSize = a.size() + b.size() - 1; // The size of the convolved signal
         padding(a, convolvedSize); // Zero padding both signals

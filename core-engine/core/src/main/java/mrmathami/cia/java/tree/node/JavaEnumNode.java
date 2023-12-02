@@ -28,26 +28,27 @@ import mrmathami.cia.java.tree.type.JavaType;
 import java.util.List;
 
 public interface JavaEnumNode extends JavaNode,
-		JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode, JavaTypeNode {
+        JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode, JavaTypeNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaEnumNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaEnumNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nonnull
-	List<? extends JavaType> getImplementsInterfaces();
+    @Nonnull
+    List<? extends JavaType> getImplementsInterfaces();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

@@ -15,20 +15,20 @@ public class ArrayAccessNode extends ExpressionNode {
     public static ExpressionNode executeArrayAccessNode(ArrayAccess arrayAccess, MemoryModel memoryModel) {
         int index;
         ExpressionNode arrayIndex = (ExpressionNode) AstNode.executeASTNode(arrayAccess.getIndex(), memoryModel);
-        if(arrayIndex instanceof NameNode) {
+        if (arrayIndex instanceof NameNode) {
             arrayIndex = NameNode.executeNameNode((NameNode) arrayIndex, memoryModel);
         }
-        if(arrayIndex instanceof LiteralNode) {
+        if (arrayIndex instanceof LiteralNode) {
             index = LiteralNode.changeLiteralNodeToInteger((LiteralNode) arrayIndex);
         } else {
             throw new RuntimeException("Can't execute Index");
         }
 
         Expression arrayExpression = arrayAccess.getArray();
-        if(arrayExpression instanceof ArrayAccess) {
+        if (arrayExpression instanceof ArrayAccess) {
             ArrayNode arrayNode = (ArrayNode) executeArrayAccessNode((ArrayAccess) arrayExpression, memoryModel);
             return (ExpressionNode) arrayNode.get(index);
-        } else if(arrayExpression instanceof Name){
+        } else if (arrayExpression instanceof Name) {
             String name = NameNode.getStringName((Name) arrayExpression);
             return (ExpressionNode) ((ArrayNode) memoryModel.getValue(name)).get(index);
         } else {

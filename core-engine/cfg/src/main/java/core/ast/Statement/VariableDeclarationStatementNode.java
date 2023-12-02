@@ -1,7 +1,6 @@
 package core.ast.Statement;
 
 import core.ast.AstNode;
-import core.ast.Statement.StatementNode;
 import core.ast.VariableDeclaration.VariableDeclarationFragmentNode;
 import core.dataStructure.MemoryModel;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -18,7 +17,7 @@ public class VariableDeclarationStatementNode extends StatementNode {
 
     public static void executeVariableDeclarationStatement(VariableDeclarationStatement statement, MemoryModel memoryModel) {
         List<VariableDeclarationFragment> fragments = statement.fragments();
-        for(VariableDeclarationFragment fragment : fragments) {
+        for (VariableDeclarationFragment fragment : fragments) {
             VariableDeclarationFragmentNode.executeVariableDeclarationFragment(fragment, statement.getType(), memoryModel);
         }
     }

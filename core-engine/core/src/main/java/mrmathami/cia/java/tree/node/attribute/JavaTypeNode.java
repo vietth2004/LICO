@@ -23,11 +23,11 @@ import mrmathami.cia.java.tree.node.JavaNode;
 
 public interface JavaTypeNode extends JavaNode {
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nullable
-	String getBinaryName();
+    @Nullable
+    String getBinaryName();
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
 }

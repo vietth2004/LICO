@@ -9,5 +9,5 @@ public class XmlTagNodeCondition implements ICondition {
     public boolean isSatisfiable(Node node) {
         return (node instanceof XmlTagNode);
     }
-    
+
 }

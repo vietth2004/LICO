@@ -33,153 +33,160 @@ import java.util.TreeMap;
 
 public final class BuildInputSources implements Iterable<BuildInputSources.InputModule>, Serializable {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nonnull private final Path path;
-	@Nonnull private final Map<String, InputModule> map = new TreeMap<>();
-
-
-	public BuildInputSources(@Nonnull Path path) throws IOException {
-		this.path = path.toRealPath(LinkOption.NOFOLLOW_LINKS);
-	}
+    @Nonnull
+    private final Path path;
+    @Nonnull
+    private final Map<String, InputModule> map = new TreeMap<>();
 
 
-	@Nonnull
-	public Path getPath() {
-		return path;
-	}
-
-	@Nonnull
-	@Override
-	public Iterator<InputModule> iterator() {
-		return map.values().iterator();
-	}
-
-	@Nonnull
-	@Override
-	public Spliterator<InputModule> spliterator() {
-		return map.values().spliterator();
-	}
-
-	@Nonnull
-	public InputModule createModule(@Nonnull String name, @Nonnull Path path) throws IOException {
-		if (map.containsKey(name)) throw new IllegalArgumentException("Module \"" + name + "\" already exist!");
-		final Path realPath = path.toRealPath(LinkOption.NOFOLLOW_LINKS);
-		if (!realPath.startsWith(this.path)) throw new IOException("Input path must start with project path!");
-		final InputModule module = new InputModule(name, realPath);
-		map.put(name, module);
-		return module;
-	}
-
-	@Nullable
-	public InputModule getModule(@Nonnull String name) {
-		return map.get(name);
-	}
-
-	@Nonnull
-	public InputModule removeModule(@Nonnull String name) {
-		return map.remove(name);
-	}
-
-	public int size() {
-		return map.size();
-	}
-
-	public void clear() {
-		map.clear();
-	}
+    public BuildInputSources(@Nonnull Path path) throws IOException {
+        this.path = path.toRealPath(LinkOption.NOFOLLOW_LINKS);
+    }
 
 
-	public static final class InputModule implements Iterable<InputSourceFile>, Serializable {
+    @Nonnull
+    public Path getPath() {
+        return path;
+    }
 
-		private static final long serialVersionUID = -1L;
+    @Nonnull
+    @Override
+    public Iterator<InputModule> iterator() {
+        return map.values().iterator();
+    }
 
-		@Nonnull private final String name;
-		@Nonnull private final Path path;
-		@Nonnull private final Map<Path, InputSourceFile> map = new TreeMap<>();
+    @Nonnull
+    @Override
+    public Spliterator<InputModule> spliterator() {
+        return map.values().spliterator();
+    }
 
+    @Nonnull
+    public InputModule createModule(@Nonnull String name, @Nonnull Path path) throws IOException {
+        if (map.containsKey(name)) throw new IllegalArgumentException("Module \"" + name + "\" already exist!");
+        final Path realPath = path.toRealPath(LinkOption.NOFOLLOW_LINKS);
+        if (!realPath.startsWith(this.path)) throw new IOException("Input path must start with project path!");
+        final InputModule module = new InputModule(name, realPath);
+        map.put(name, module);
+        return module;
+    }
 
-		private InputModule(@Nonnull String name, @Nonnull Path path) {
-			this.name = name;
-			this.path = path;
-		}
+    @Nullable
+    public InputModule getModule(@Nonnull String name) {
+        return map.get(name);
+    }
 
+    @Nonnull
+    public InputModule removeModule(@Nonnull String name) {
+        return map.remove(name);
+    }
 
-		@Nonnull
-		public String getName() {
-			return name;
-		}
+    public int size() {
+        return map.size();
+    }
 
-		@Nonnull
-		public Path getPath() {
-			return path;
-		}
-
-		@Nonnull
-		@Override
-		public Iterator<InputSourceFile> iterator() {
-			return map.values().iterator();
-		}
-
-		@Nonnull
-		@Override
-		public Spliterator<InputSourceFile> spliterator() {
-			return map.values().spliterator();
-		}
-
-		@Nonnull
-		public InputSourceFile createFile(@Nonnull Path path, @Nonnull JavaSourceFileType type) throws IOException {
-			final Path realPath = path.toRealPath(LinkOption.NOFOLLOW_LINKS);
-			if (map.containsKey(realPath)) throw new IllegalArgumentException("");
-			if (!realPath.startsWith(this.path)) throw new IOException("Input path must start with module path!");
-			final InputSourceFile file = new InputSourceFile(realPath, type);
-			map.put(realPath, file);
-			return file;
-		}
-
-		@Nullable
-		public InputSourceFile getFile(@Nonnull Path path) throws IOException {
-			return map.get(path.toRealPath(LinkOption.NOFOLLOW_LINKS));
-		}
-
-		@Nonnull
-		public InputSourceFile removeFile(@Nonnull Path path) throws IOException {
-			return map.remove(path.toRealPath(LinkOption.NOFOLLOW_LINKS));
-		}
-
-		public int size() {
-			return map.size();
-		}
-
-		public void clear() {
-			map.clear();
-		}
-
-	}
-
-	public static final class InputSourceFile implements Serializable {
-
-		private static final long serialVersionUID = -1L;
-
-		@Nonnull private final Path path;
-		@Nonnull private final JavaSourceFileType type;
+    public void clear() {
+        map.clear();
+    }
 
 
-		private InputSourceFile(@Nonnull Path path, @Nonnull JavaSourceFileType type) {
-			this.path = path;
-			this.type = type;
-		}
+    public static final class InputModule implements Iterable<InputSourceFile>, Serializable {
 
-		@Nonnull
-		public Path getPath() {
-			return path;
-		}
+        private static final long serialVersionUID = -1L;
 
-		@Nonnull
-		public JavaSourceFileType getType() {
-			return type;
-		}
+        @Nonnull
+        private final String name;
+        @Nonnull
+        private final Path path;
+        @Nonnull
+        private final Map<Path, InputSourceFile> map = new TreeMap<>();
 
-	}
+
+        private InputModule(@Nonnull String name, @Nonnull Path path) {
+            this.name = name;
+            this.path = path;
+        }
+
+
+        @Nonnull
+        public String getName() {
+            return name;
+        }
+
+        @Nonnull
+        public Path getPath() {
+            return path;
+        }
+
+        @Nonnull
+        @Override
+        public Iterator<InputSourceFile> iterator() {
+            return map.values().iterator();
+        }
+
+        @Nonnull
+        @Override
+        public Spliterator<InputSourceFile> spliterator() {
+            return map.values().spliterator();
+        }
+
+        @Nonnull
+        public InputSourceFile createFile(@Nonnull Path path, @Nonnull JavaSourceFileType type) throws IOException {
+            final Path realPath = path.toRealPath(LinkOption.NOFOLLOW_LINKS);
+            if (map.containsKey(realPath)) throw new IllegalArgumentException("");
+            if (!realPath.startsWith(this.path)) throw new IOException("Input path must start with module path!");
+            final InputSourceFile file = new InputSourceFile(realPath, type);
+            map.put(realPath, file);
+            return file;
+        }
+
+        @Nullable
+        public InputSourceFile getFile(@Nonnull Path path) throws IOException {
+            return map.get(path.toRealPath(LinkOption.NOFOLLOW_LINKS));
+        }
+
+        @Nonnull
+        public InputSourceFile removeFile(@Nonnull Path path) throws IOException {
+            return map.remove(path.toRealPath(LinkOption.NOFOLLOW_LINKS));
+        }
+
+        public int size() {
+            return map.size();
+        }
+
+        public void clear() {
+            map.clear();
+        }
+
+    }
+
+    public static final class InputSourceFile implements Serializable {
+
+        private static final long serialVersionUID = -1L;
+
+        @Nonnull
+        private final Path path;
+        @Nonnull
+        private final JavaSourceFileType type;
+
+
+        private InputSourceFile(@Nonnull Path path, @Nonnull JavaSourceFileType type) {
+            this.path = path;
+            this.type = type;
+        }
+
+        @Nonnull
+        public Path getPath() {
+            return path;
+        }
+
+        @Nonnull
+        public JavaSourceFileType getType() {
+            return type;
+        }
+
+    }
 
 }

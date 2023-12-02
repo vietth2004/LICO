@@ -1,15 +1,28 @@
 package core.generationStrategy;
 
 //import com.sun.istack.internal.NotNull;
+
 import core.structureTree.SNode;
-import core.structureTree.normalNode.*;
+import core.structureTree.normalNode.SNormalCharNode;
+import core.structureTree.normalNode.SNormalDoubleNode;
+import core.structureTree.normalNode.SNormalFloatNode;
+import core.structureTree.normalNode.SNormalIntegerNode;
+import core.structureTree.normalNode.SNormalNode;
 import core.structureTree.structureNode.SAbstractableNode;
 import core.structureTree.structureNode.SClassNode;
 import core.structureTree.structureNode.SFunctionNode;
 import core.structureTree.structureNode.SStructNode;
 import core.testcases.TestCase;
-import core.testdata.*;
-import core.testdata.normal_datanode.*;
+import core.testdata.DataNode;
+import core.testdata.GlobalDataNode;
+import core.testdata.ReturnDataNode;
+import core.testdata.RootDataNode;
+import core.testdata.SubProgramDataNode;
+import core.testdata.normal_datanode.NormalCharDataNode;
+import core.testdata.normal_datanode.NormalDataNode;
+import core.testdata.normal_datanode.NormalDoubleDataNode;
+import core.testdata.normal_datanode.NormalFloatDataNode;
+import core.testdata.normal_datanode.NormalIntDataNode;
 import core.testdata.structure_datanode.ClassDataNode;
 import core.testdata.structure_datanode.StructDataNode;
 
@@ -53,7 +66,7 @@ public class RandomGenerationStrategy extends GenerationStrategy {
         if (dataNode instanceof SubProgramDataNode) {
             ReturnDataNode returnDataNode = new ReturnDataNode();
             //String type = ((SubProgramDataNode)dataNode).getFunctionNode().getAst().getReturnType();
-            String type = ((SubProgramDataNode)dataNode).getFunctionNode().getAst().getObjectType();//VietTH
+            String type = ((SubProgramDataNode) dataNode).getFunctionNode().getAst().getObjectType();//VietTH
             returnDataNode.setType(type);
             if (!type.equals("")) {
                 returnDataNode.setValue(generateRandomValue(returnDataNode));
@@ -67,11 +80,9 @@ public class RandomGenerationStrategy extends GenerationStrategy {
         if (sNode instanceof SNormalNode) {
             if (sNode instanceof SNormalCharNode) {
                 dataNode = new NormalCharDataNode();
-            }
-            else if (sNode instanceof SNormalIntegerNode) {
+            } else if (sNode instanceof SNormalIntegerNode) {
                 dataNode = new NormalIntDataNode();
-            }
-            else if (sNode instanceof SNormalDoubleNode) {
+            } else if (sNode instanceof SNormalDoubleNode) {
                 dataNode = new NormalDoubleDataNode();
             } else if (sNode instanceof SNormalFloatNode) {
                 dataNode = new NormalFloatDataNode();
@@ -79,17 +90,14 @@ public class RandomGenerationStrategy extends GenerationStrategy {
             dataNode.setName(sNode.getName());
             dataNode.setType(sNode.getType());
             if (dataNode instanceof NormalDataNode) {
-                ((NormalDataNode)dataNode).setValue(generateRandomValue(dataNode));
+                ((NormalDataNode) dataNode).setValue(generateRandomValue(dataNode));
             }
-        }
-        else if (sNode instanceof SAbstractableNode) {
+        } else if (sNode instanceof SAbstractableNode) {
             if (sNode instanceof SClassNode) {
                 dataNode = new ClassDataNode();
-            }
-            else if (sNode instanceof SStructNode) {
+            } else if (sNode instanceof SStructNode) {
                 dataNode = new StructDataNode();
-            }
-            else if (sNode instanceof SFunctionNode) {
+            } else if (sNode instanceof SFunctionNode) {
                 dataNode = new SubProgramDataNode((SFunctionNode) sNode);
             }
 
@@ -112,11 +120,16 @@ public class RandomGenerationStrategy extends GenerationStrategy {
     public String generateRandomValue(DataNode dataNode) {
         String type = dataNode.getType();
         switch (type) {
-            case "int": return String.valueOf(random.nextInt());
-            case "double": return String.valueOf(random.nextDouble());
-            case "float": return String.valueOf(random.nextFloat());
-            case "char": return String.valueOf(random.nextInt(124));
-            default: return "";
+            case "int":
+                return String.valueOf(random.nextInt());
+            case "double":
+                return String.valueOf(random.nextDouble());
+            case "float":
+                return String.valueOf(random.nextFloat());
+            case "char":
+                return String.valueOf(random.nextInt(124));
+            default:
+                return "";
         }
     }
 }

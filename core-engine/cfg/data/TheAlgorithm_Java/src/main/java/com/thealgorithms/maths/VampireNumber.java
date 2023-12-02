@@ -32,17 +32,17 @@ public class VampireNumber {
                 if (isVampireNumber(i, j, true)) {
                     countofRes++;
                     res.append(
-                        "" +
-                        countofRes +
-                        ": = ( " +
-                        i +
-                        "," +
-                        j +
-                        " = " +
-                        i *
-                        j +
-                        ")" +
-                        "\n"
+                            "" +
+                                    countofRes +
+                                    ": = ( " +
+                                    i +
+                                    "," +
+                                    j +
+                                    " = " +
+                                    i *
+                                            j +
+                                    ")" +
+                                    "\n"
                     );
                 }
             }
@@ -51,9 +51,9 @@ public class VampireNumber {
     }
 
     static boolean isVampireNumber(
-        int a,
-        int b,
-        boolean noPseudoVamireNumbers
+            int a,
+            int b,
+            boolean noPseudoVamireNumbers
     ) {
         // this is for pseudoVampireNumbers  pseudovampire number need not be of length n/2 digits for
         // example

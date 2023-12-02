@@ -1,7 +1,7 @@
 package com.example.gitservice.service;
 
-import com.example.gitservice.dto.Clone2RepoResponse;
 import com.example.gitservice.dto.BranchesResponse;
+import com.example.gitservice.dto.Clone2RepoResponse;
 import com.example.gitservice.dto.CommitResponse;
 import com.example.gitservice.thread.GetCommitThread;
 import com.example.gitservice.thread.ZipFolderThread;
@@ -9,7 +9,6 @@ import com.example.gitservice.utils.DeleteFileVisitor;
 import com.example.gitservice.utils.DirectoryUtils;
 import com.example.gitservice.utils.ZipUtils;
 import org.eclipse.jgit.api.CheckoutCommand;
-import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -25,7 +24,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,8 +52,8 @@ public class GitService {
         logger.info("Cloning repository: {}", repoName);
         String pathToSaved = "./project/" + username + "/" + repoName;
 
-        if(Files.exists(Path.of(pathToSaved))) {
-            if(isGitRepo(pathToSaved)) {
+        if (Files.exists(Path.of(pathToSaved))) {
+            if (isGitRepo(pathToSaved)) {
                 return updateCloneCommand(pathToSaved, username, repoName, pat, "master");
             }
         }
@@ -86,8 +91,8 @@ public class GitService {
     public String cloneRepoByBranchName(String url, String repoName, String branchName, String username, String pat) throws IOException {
         logger.info("Cloning repository {} in branch {}", repoName, branchName);
         String pathToSaved = "./project/" + username + "/" + repoName + "-" + branchName;
-        if(Files.exists(Path.of(pathToSaved))) {
-            if(isGitRepo(pathToSaved)) {
+        if (Files.exists(Path.of(pathToSaved))) {
+            if (isGitRepo(pathToSaved)) {
                 return updateCloneCommand(pathToSaved, username, repoName, pat, branchName);
             }
         }
@@ -128,8 +133,8 @@ public class GitService {
         logger.info("Cloning repository {} with commit {}", repoName, commitSha);
         DirectoryUtils.deleteDir(new File(pathToSaved));
         Files.walkFileTree(Path.of(pathToSaved), new DeleteFileVisitor());
-        if(Files.exists(Path.of(pathToSaved))) {
-            if(isGitRepo(pathToSaved)) {
+        if (Files.exists(Path.of(pathToSaved))) {
+            if (isGitRepo(pathToSaved)) {
                 return pathToSaved;
             }
         }
@@ -250,7 +255,7 @@ public class GitService {
         List<String> fullName = new ArrayList<>();
         for (Ref ref : refs) {
             fullName.add(ref.getName());
-            shortName.add(ref.getName().substring(ref.getName().lastIndexOf("/")+1, ref.getName().length()));
+            shortName.add(ref.getName().substring(ref.getName().lastIndexOf("/") + 1, ref.getName().length()));
         }
         Collections.sort(shortName);
         Collections.sort(fullName);
@@ -270,12 +275,12 @@ public class GitService {
         Set<CommitResponse> commitSet = new HashSet<>();
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<List<CommitResponse>>> futures = new ArrayList<>();
-        for(String branch : branches) {
+        for (String branch : branches) {
             Future<List<CommitResponse>> future = executor.submit(new GetCommitThread(url, repoName, branch, user, token));
             futures.add(future);
         }
         executor.shutdown();
-        for(Future<List<CommitResponse>> future : futures) {
+        for (Future<List<CommitResponse>> future : futures) {
             try {
                 commitSet.addAll(future.get());
             } catch (InterruptedException e) {
@@ -300,7 +305,7 @@ public class GitService {
                 return true;
             }
             return false;
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }

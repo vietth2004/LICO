@@ -1,7 +1,5 @@
 package com.example.parserservice.ast.dependency;
 
-import com.example.parserservice.ast.node.Node;
-
 public class OrientedPair {
 
     private Integer node;

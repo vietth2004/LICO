@@ -5,7 +5,7 @@ package com.thealgorithms.maths;
  * sum of its positive divisors, excluding the number itself. For instance, 6
  * has divisors 1, 2 and 3 (excluding itself), and 1 + 2 + 3 = 6, so 6 is a
  * perfect number.
- *
+ * <p>
  * link:https://en.wikipedia.org/wiki/Perfect_number
  */
 public class PerfectNumber {
@@ -28,7 +28,7 @@ public class PerfectNumber {
         }
         return sum == number;
     }
-    
+
     /**
      * Check if {@code n} is perfect number or not
      *
@@ -40,7 +40,7 @@ public class PerfectNumber {
             return false;
         int sum = 1;
         double root = Math.sqrt(n);
-        
+
         /*
          * We can get the factors after the root by dividing number by its factors
          * before the root.
@@ -55,7 +55,7 @@ public class PerfectNumber {
                 sum += i + n / i;
             }
         }
-        
+
         // if n is a perfect square then its root was added twice in above loop, so subtracting root from sum
         if (root == (int) root)
             sum -= root;

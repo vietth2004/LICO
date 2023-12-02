@@ -27,54 +27,54 @@ import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 
 public abstract class AbstractModifiedAnnotatedNode extends AbstractAnnotatedNode implements JavaModifiedNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	private int modifiers;
-
-
-	public AbstractModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName) {
-		super(sourceFile, parent, simpleName);
-	}
-
-	public AbstractModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-			@Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
-		super(sourceFile, parent, simpleName, uniqueNameSuffix);
-	}
+    private int modifiers;
 
 
-	//region Getter & Setter
+    public AbstractModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+                                         @Nonnull String simpleName) {
+        super(sourceFile, parent, simpleName);
+    }
 
-	@Override
-	public final int getModifiers() {
-		return modifiers;
-	}
+    public AbstractModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+                                         @Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
+        super(sourceFile, parent, simpleName, uniqueNameSuffix);
+    }
 
-	public final void setModifiers(int modifiers) {
-		assertNonFrozen();
-		this.modifiers = modifiers;
-	}
 
-	//endregion Getter & Setter
+    //region Getter & Setter
 
-	//region Jsonify
+    @Override
+    public final int getModifiers() {
+        return modifiers;
+    }
 
-	@Override
-	protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
-		super.internalToReferenceJsonEnd(builder);
-		if (modifiers != 0) {
-			builder.append(", \"modifiers\": [ ");
-			boolean next = false;
-			for (final JavaModifier modifier : JavaModifier.VALUE_LIST) {
-				if (isContainModifier(modifier)) {
-					builder.append(next ? ", \"" : "\"").append(modifier).append('"');
-					next = true;
-				}
-			}
-			builder.append(" ]");
-		}
-	}
+    public final void setModifiers(int modifiers) {
+        assertNonFrozen();
+        this.modifiers = modifiers;
+    }
 
-	//endregion Jsonify
+    //endregion Getter & Setter
+
+    //region Jsonify
+
+    @Override
+    protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
+        super.internalToReferenceJsonEnd(builder);
+        if (modifiers != 0) {
+            builder.append(", \"modifiers\": [ ");
+            boolean next = false;
+            for (final JavaModifier modifier : JavaModifier.VALUE_LIST) {
+                if (isContainModifier(modifier)) {
+                    builder.append(next ? ", \"" : "\"").append(modifier).append('"');
+                    next = true;
+                }
+            }
+            builder.append(" ]");
+        }
+    }
+
+    //endregion Jsonify
 
 }

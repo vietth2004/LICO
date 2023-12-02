@@ -89,8 +89,8 @@ public class MinPriorityQueue {
             int minIndex;
             if (this.heap[2 * k] >= this.heap[k]) {
                 if (
-                    2 * k + 1 <= this.size &&
-                    this.heap[2 * k + 1] >= this.heap[k]
+                        2 * k + 1 <= this.size &&
+                                this.heap[2 * k + 1] >= this.heap[k]
                 ) {
                     break;
                 } else if (2 * k + 1 > this.size) {
@@ -101,13 +101,13 @@ public class MinPriorityQueue {
                 minIndex = this.heap[2 * k] < this.heap[k] ? 2 * k : k;
             } else {
                 if (
-                    this.heap[k] > this.heap[2 * k] ||
-                    this.heap[k] > this.heap[2 * k + 1]
+                        this.heap[k] > this.heap[2 * k] ||
+                                this.heap[k] > this.heap[2 * k + 1]
                 ) {
                     minIndex =
-                        this.heap[2 * k] < this.heap[2 * k + 1]
-                            ? 2 * k
-                            : 2 * k + 1;
+                            this.heap[2 * k] < this.heap[2 * k + 1]
+                                    ? 2 * k
+                                    : 2 * k + 1;
                 } else {
                     minIndex = k;
                 }

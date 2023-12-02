@@ -22,12 +22,12 @@ public class Wrapper {
         List<Pair<Integer, Integer>> changedNodesBind = new ArrayList<>();
 
         //add unchanged nodes
-        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
+        for (mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getUnchangedNodes()) {
-            if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
+            if (javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
                 String oldNode = ((JavaMethodNode) javaNode.getA()).getReturnType().getDescription();
                 String newNode = ((JavaMethodNode) javaNode.getB()).getReturnType().getDescription();
-                if(!oldNode.equals(newNode)) {
+                if (!oldNode.equals(newNode)) {
                     changedNodes.add(new JavaNode(javaNode.getA(), "changed", version.getNewVersion()));
                 }
             } else {
@@ -36,19 +36,19 @@ public class Wrapper {
         }
 
         //add changed nodes
-        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
+        for (mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getChangedNodes()) {
             changedNodes.add(new JavaNode(javaNode.getA(), "changed", version.getNewVersion()));
             changedNodesBind.add(new Pair<>(javaNode.getA().getId(), javaNode.getB().getId()));
         }
 
         //add added nodes
-        for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
+        for (mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
             addedNodes.add(new JavaNode(javaNode, "added", version.getNewVersion()));
         }
 
         //add removed nodes
-        for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
+        for (mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
             deletedNodes.add(new Pair<>(javaNode.getParent().getId(), new JavaNode(javaNode, "deleted", version.getOldVersion())));
         }
 
@@ -61,15 +61,15 @@ public class Wrapper {
 
     //Node binding
     public static void bindRemovedNode(JavaNode rootNode,
-                                 List<Pair<Integer, JavaNode>> deletedNodes,
-                                 List<Pair<Integer, Integer>> changedNodesBind,
-                                 int size) {
+                                       List<Pair<Integer, JavaNode>> deletedNodes,
+                                       List<Pair<Integer, Integer>> changedNodesBind,
+                                       int size) {
         int bindId = size;
         for (Pair<Integer, JavaNode> node : deletedNodes) {
             int parentId = node.first();
             int newParentId;
-            for(Pair<Integer, Integer> bind : changedNodesBind) {
-                if(parentId == bind.second()) {
+            for (Pair<Integer, Integer> bind : changedNodesBind) {
+                if (parentId == bind.second()) {
                     newParentId = bind.first();
                     addNode(rootNode, node.second(), newParentId, bindId);
                 }
@@ -78,7 +78,7 @@ public class Wrapper {
     }
 
     public static void addNode(JavaNode rootNode, JavaNode addedNode, int parentId, int bindId) {
-        if(rootNode.getId() == parentId) {
+        if (rootNode.getId() == parentId) {
             bindId(addedNode, bindId);
             rootNode.addChildren(addedNode);
         } else {
@@ -92,11 +92,11 @@ public class Wrapper {
     }
 
     public static void bindId(JavaNode addedNode, int bindId) {
-        addedNode.setId(addedNode.getId()*(-1));
+        addedNode.setId(addedNode.getId() * (-1));
         addedNode.setStatus("deleted");
 
-        for(Object childNode : addedNode.getChildren()) {
-            if(childNode instanceof JavaNode) {
+        for (Object childNode : addedNode.getChildren()) {
+            if (childNode instanceof JavaNode) {
                 bindId((JavaNode) childNode, bindId);
             }
         }

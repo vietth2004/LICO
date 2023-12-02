@@ -14,7 +14,7 @@ public class CircularConvolutionFFT {
     /**
      * This method pads the signal with zeros until it reaches the new size.
      *
-     * @param x The signal to be padded.
+     * @param x       The signal to be padded.
      * @param newSize The new size of the signal.
      */
     private static void padding(ArrayList<FFT.Complex> x, int newSize) {
@@ -39,8 +39,8 @@ public class CircularConvolutionFFT {
      * @return The convolved signal.
      */
     public static ArrayList<FFT.Complex> fftCircularConvolution(
-        ArrayList<FFT.Complex> a,
-        ArrayList<FFT.Complex> b
+            ArrayList<FFT.Complex> a,
+            ArrayList<FFT.Complex> b
     ) {
         int convolvedSize = Math.max(a.size(), b.size()); // The two signals must have the same size equal to the bigger one
         padding(a, convolvedSize); // Zero padding the smaller signal

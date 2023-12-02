@@ -18,6 +18,6 @@ public class HostConstant {
     public static final String XML_SERVICE = "XML-SERVICE";
     public static final String JSP_SERVICE = "JSP-SERVICE";
     public static final String UTEST_SERVICE = "UTEST-SERVICE";
-    public static final String UPLOAD_PROJECT_SERVICE ="UPLOAD-PROJECT-SERVICE";
+    public static final String UPLOAD_PROJECT_SERVICE = "UPLOAD-PROJECT-SERVICE";
 
 }

@@ -5,7 +5,6 @@ import com.example.versioncompareservice.model.Version;
 import com.example.versioncompareservice.service.FileStorageService;
 import com.example.versioncompareservice.service.VersionService;
 import mrmathami.cia.java.JavaCiaException;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,8 +25,8 @@ public class VersionController {
 
     @PostMapping("/byFile")
     public Response versionCompareByFile(@RequestBody List<MultipartFile> files,
-                                         @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project,
-                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)
+                                         @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project,
+                                         @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user)
             throws JavaCiaException, IOException {
         System.out.println(project);
         return versionService.getCompare(files, user, project);
@@ -35,7 +34,7 @@ public class VersionController {
 
     @PostMapping("/byPath")
     public Response versionCompareByPath(@RequestBody Version path,
-                                         @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)
+                                         @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user)
             throws JavaCiaException, IOException {
         System.out.println(path.getNewVersion());
         System.out.println(path.getOldVersion());
@@ -44,9 +43,9 @@ public class VersionController {
 
     @PostMapping("/newVersion")
     public Response newVersionCompare(@RequestBody MultipartFile file,
-                                      @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
-                                      @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project,
-                                      @RequestParam(name="oldPath") String oldPath) throws JavaCiaException, IOException {
+                                      @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
+                                      @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project,
+                                      @RequestParam(name = "oldPath") String oldPath) throws JavaCiaException, IOException {
         System.out.println(project);
         return versionService.getCompare(file, user, project, oldPath);
     }
@@ -55,7 +54,6 @@ public class VersionController {
     public String versionCompareByPath() throws JavaCiaException, IOException {
         return "hello";
     }
-
 
 
 }

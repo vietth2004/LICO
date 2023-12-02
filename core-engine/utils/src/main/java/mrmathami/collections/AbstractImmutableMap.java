@@ -29,77 +29,77 @@ import static mrmathami.collections.ImmutableCollections.up;
 
 abstract class AbstractImmutableMap<K, V> implements Map<K, V> {
 
-	@Nullable
-	@Override
-	public final V put(@Nonnull K key, @Nonnull V value) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V put(@Nonnull K key, @Nonnull V value) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V remove(@Nonnull Object key) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V remove(@Nonnull Object key) {
+        throw up();
+    }
 
-	@Override
-	public final void putAll(@Nonnull Map<? extends K, ? extends V> map) {
-		throw up();
-	}
+    @Override
+    public final void putAll(@Nonnull Map<? extends K, ? extends V> map) {
+        throw up();
+    }
 
-	@Override
-	public final void clear() {
-		throw up();
-	}
+    @Override
+    public final void clear() {
+        throw up();
+    }
 
-	@Override
-	public final void replaceAll(@Nonnull BiFunction<? super K, ? super V, ? extends V> remapper) {
-		throw up();
-	}
+    @Override
+    public final void replaceAll(@Nonnull BiFunction<? super K, ? super V, ? extends V> remapper) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V putIfAbsent(@Nonnull K key, @Nonnull V value) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V putIfAbsent(@Nonnull K key, @Nonnull V value) {
+        throw up();
+    }
 
-	@Override
-	public final boolean remove(@Nonnull Object key, @Nonnull Object value) {
-		throw up();
-	}
+    @Override
+    public final boolean remove(@Nonnull Object key, @Nonnull Object value) {
+        throw up();
+    }
 
-	@Override
-	public final boolean replace(@Nonnull K key, @Nullable V oldValue, @Nullable V newValue) {
-		throw up();
-	}
+    @Override
+    public final boolean replace(@Nonnull K key, @Nullable V oldValue, @Nullable V newValue) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V replace(@Nonnull K key, @Nullable V value) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V replace(@Nonnull K key, @Nullable V value) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V computeIfAbsent(@Nonnull K key, @Nonnull Function<? super K, ? extends V> remapper) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V computeIfAbsent(@Nonnull K key, @Nonnull Function<? super K, ? extends V> remapper) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V computeIfPresent(@Nonnull K key, @Nonnull BiFunction<? super K, ? super V, ? extends V> remapper) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V computeIfPresent(@Nonnull K key, @Nonnull BiFunction<? super K, ? super V, ? extends V> remapper) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V compute(@Nonnull K key, @Nonnull BiFunction<? super K, ? super V, ? extends V> remapper) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V compute(@Nonnull K key, @Nonnull BiFunction<? super K, ? super V, ? extends V> remapper) {
+        throw up();
+    }
 
-	@Nullable
-	@Override
-	public final V merge(@Nonnull K key, @Nonnull V value, @Nonnull BiFunction<? super V, ? super V, ? extends V> remapper) {
-		throw up();
-	}
+    @Nullable
+    @Override
+    public final V merge(@Nonnull K key, @Nonnull V value, @Nonnull BiFunction<? super V, ? super V, ? extends V> remapper) {
+        throw up();
+    }
 
 }

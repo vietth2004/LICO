@@ -4,7 +4,20 @@ import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.example.unittesting.constan.HostConstant.*;
+import static com.example.unittesting.constan.HostConstant.API_GATEWAY;
+import static com.example.unittesting.constan.HostConstant.CIA_SERVICE;
+import static com.example.unittesting.constan.HostConstant.FILE_SERVICE;
+import static com.example.unittesting.constan.HostConstant.GITHUB_SERVICE;
+import static com.example.unittesting.constan.HostConstant.JAVA_SERVICE;
+import static com.example.unittesting.constan.HostConstant.JSF_SERVICE;
+import static com.example.unittesting.constan.HostConstant.PARSER_SERVICE;
+import static com.example.unittesting.constan.HostConstant.PROJECT_SERVICE;
+import static com.example.unittesting.constan.HostConstant.SPRING_SERVICE;
+import static com.example.unittesting.constan.HostConstant.STRUT_SERVICE;
+import static com.example.unittesting.constan.HostConstant.USER_SERVICE;
+import static com.example.unittesting.constan.HostConstant.UTEST_SERVICE;
+import static com.example.unittesting.constan.HostConstant.UTILITY_SERVICE;
+import static com.example.unittesting.constan.HostConstant.VERSION_COMPARE_SERVICE;
 
 @Component
 public class HostIPConstants {
@@ -63,7 +76,8 @@ public class HostIPConstants {
     public String getStrutServiceIp() {
         return eurekaClient.getApplication(STRUT_SERVICE).getInstances().get(0).getIPAddr();
     }
-    public String getUnitTestingIP(){
-        return  eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
+
+    public String getUnitTestingIP() {
+        return eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
     }
 }

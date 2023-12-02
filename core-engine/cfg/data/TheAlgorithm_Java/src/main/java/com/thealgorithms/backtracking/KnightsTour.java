@@ -27,14 +27,14 @@ public class KnightsTour {
 
     private static final int base = 12;
     private static final int[][] moves = {
-        { 1, -2 },
-        { 2, -1 },
-        { 2, 1 },
-        { 1, 2 },
-        { -1, 2 },
-        { -2, 1 },
-        { -2, -1 },
-        { -1, -2 },
+            {1, -2},
+            {2, -1},
+            {2, 1},
+            {1, 2},
+            {-1, 2},
+            {-2, 1},
+            {-2, -1},
+            {-1, -2},
     }; // Possible moves by knight on chess
     private static int[][] grid; // chess grid
     private static int total; // total squares in chess
@@ -76,12 +76,12 @@ public class KnightsTour {
         }
 
         Collections.sort(
-            neighbor,
-            new Comparator<int[]>() {
-                public int compare(int[] a, int[] b) {
-                    return a[2] - b[2];
+                neighbor,
+                new Comparator<int[]>() {
+                    public int compare(int[] a, int[] b) {
+                        return a[2] - b[2];
+                    }
                 }
-            }
         );
 
         for (int[] nb : neighbor) {
@@ -89,8 +89,8 @@ public class KnightsTour {
             column = nb[1];
             grid[row][column] = count;
             if (
-                !orphanDetected(count, row, column) &&
-                solve(row, column, count + 1)
+                    !orphanDetected(count, row, column) &&
+                            solve(row, column, count + 1)
             ) {
                 return true;
             }
@@ -109,7 +109,7 @@ public class KnightsTour {
             int y = m[1];
             if (grid[row + y][column + x] == 0) {
                 int num = countNeighbors(row + y, column + x);
-                neighbour.add(new int[] { row + y, column + x, num });
+                neighbour.add(new int[]{row + y, column + x, num});
             }
         }
         return neighbour;

@@ -1,7 +1,11 @@
 package core.ast.Type;
 
 import core.ast.AstNode;
-import core.ast.Type.AnnotatableType.*;
+import core.ast.Type.AnnotatableType.AnnotatableTypeNode;
+import core.ast.Type.AnnotatableType.NameQualifiedTypeNode;
+import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
+import core.ast.Type.AnnotatableType.QualifiedTypeNode;
+import core.ast.Type.AnnotatableType.SimpleTypeNode;
 import core.ast.Type.AnnotatableType.WildcardTypeNode;
 
 public class TypeNode extends AstNode {

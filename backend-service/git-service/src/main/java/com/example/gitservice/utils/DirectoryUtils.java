@@ -25,7 +25,7 @@ public class DirectoryUtils {
 
     public static void deleteDir(File dir) {
         File[] files = dir.listFiles();
-        if(files != null) {
+        if (files != null) {
             for (final File file : files) {
                 deleteDir(file);
             }

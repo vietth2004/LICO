@@ -1,5 +1,7 @@
-/** Author : Siddhant Swarup Mallick
+/**
+ * Author : Siddhant Swarup Mallick
  * Github : https://github.com/siddhant2002
+ * Program description - Given an integer array. The task is to find the maximum of the minimum of the array
  */
 
 /** Program description - Given an integer array. The task is to find the maximum of the minimum of the array */

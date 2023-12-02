@@ -17,10 +17,10 @@ public class ThreeSumProblem {
         }
         ThreeSumProblem th = new ThreeSumProblem();
         System.out.println(
-            "Brute Force Approach\n" + (th.BruteForce(arr, ts)) + "\n"
+                "Brute Force Approach\n" + (th.BruteForce(arr, ts)) + "\n"
         );
         System.out.println(
-            "Two Pointer Approach\n" + (th.TwoPointer(arr, ts)) + "\n"
+                "Two Pointer Approach\n" + (th.TwoPointer(arr, ts)) + "\n"
         );
         System.out.println("Hashmap Approach\n" + (th.Hashmap(arr, ts)));
     }
@@ -43,7 +43,7 @@ public class ThreeSumProblem {
             }
         }
         arr =
-            new ArrayList<List<Integer>>(new LinkedHashSet<List<Integer>>(arr));
+                new ArrayList<List<Integer>>(new LinkedHashSet<List<Integer>>(arr));
         return arr;
     }
 

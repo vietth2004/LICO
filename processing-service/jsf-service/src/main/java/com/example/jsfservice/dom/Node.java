@@ -7,11 +7,13 @@ import com.example.jsfservice.utils.JciaData;
 import com.example.jsfservice.utils.Type.ComponentType;
 import com.example.jsfservice.utils.Type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 //@JsonTypeInfo(
 //        use = JsonTypeInfo.Id.MINIMAL_CLASS,

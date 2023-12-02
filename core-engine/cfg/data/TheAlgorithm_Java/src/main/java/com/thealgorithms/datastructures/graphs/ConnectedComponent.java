@@ -43,7 +43,7 @@ class Graph<E extends Comparable<E>> {
      * will be added to it.
      *
      * @param startNode the starting Node from the edge
-     * @param endNode the ending Node from the edge
+     * @param endNode   the ending Node from the edge
      */
     public void addEdge(E startNode, E endNode) {
         Node start = null, end = null;
@@ -92,7 +92,7 @@ class Graph<E extends Comparable<E>> {
     /**
      * Implementation of depth first search.
      *
-     * @param n the actual visiting node
+     * @param n       the actual visiting node
      * @param visited A list of already visited nodes in the depth first search
      * @return returns a set of visited nodes
      */
@@ -138,10 +138,10 @@ public class ConnectedComponent {
         graphInts.addEdge(10, 8);
 
         System.out.println(
-            "Amount of different char-graphs: " + graphChars.countGraphs()
+                "Amount of different char-graphs: " + graphChars.countGraphs()
         );
         System.out.println(
-            "Amount of different int-graphs: " + graphInts.countGraphs()
+                "Amount of different int-graphs: " + graphInts.countGraphs()
         );
     }
 }

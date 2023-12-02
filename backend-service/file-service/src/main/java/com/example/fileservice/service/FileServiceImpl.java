@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 @Service
-public class FileServiceImpl implements FileService{
+public class FileServiceImpl implements FileService {
 
     public FileResponse readFile(String address) {
         String content = new String();

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DependencyServiceImpl implements DependencyService{
+public class DependencyServiceImpl implements DependencyService {
 
     public List<Dependency> getDependencies(List<JavaNode> javaNodes, List<Node> xmlNodes) {
         List<JavaNode> springJavaNodes = Converter.convertSpringJavaNodes(javaNodes);

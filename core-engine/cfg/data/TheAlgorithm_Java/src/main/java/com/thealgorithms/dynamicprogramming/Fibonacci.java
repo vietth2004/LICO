@@ -27,7 +27,7 @@ public class Fibonacci {
      * This method finds the nth fibonacci number using memoization technique
      *
      * @param n The input n for which we have to determine the fibonacci number
-     * Outputs the nth fibonacci number
+     *          Outputs the nth fibonacci number
      */
     public static int fibMemo(int n) {
         if (map.containsKey(n)) {
@@ -49,7 +49,7 @@ public class Fibonacci {
      * This method finds the nth fibonacci number using bottom up
      *
      * @param n The input n for which we have to determine the fibonacci number
-     * Outputs the nth fibonacci number
+     *          Outputs the nth fibonacci number
      */
     public static int fibBotUp(int n) {
         Map<Integer, Integer> fib = new HashMap<>();
@@ -71,13 +71,13 @@ public class Fibonacci {
      * This method finds the nth fibonacci number using bottom up
      *
      * @param n The input n for which we have to determine the fibonacci number
-     * Outputs the nth fibonacci number
-     * <p>
-     * This is optimized version of Fibonacci Program. Without using Hashmap and
-     * recursion. It saves both memory and time. Space Complexity will be O(1)
-     * Time Complexity will be O(n)
-     * <p>
-     * Whereas , the above functions will take O(n) Space.
+     *          Outputs the nth fibonacci number
+     *          <p>
+     *          This is optimized version of Fibonacci Program. Without using Hashmap and
+     *          recursion. It saves both memory and time. Space Complexity will be O(1)
+     *          Time Complexity will be O(n)
+     *          <p>
+     *          Whereas , the above functions will take O(n) Space.
      * @author Shoaib Rayeen (https://github.com/shoaibrayeen)
      */
     public static int fibOptimized(int n) {
@@ -91,21 +91,21 @@ public class Fibonacci {
             res = next;
         }
         return res;
-}
-    
+    }
+
     /**
-    * We have only defined the nth Fibonacci number in terms of the two before it. Now, we will look at Binet's formula to calculate the nth Fibonacci number in constant time.
-    * The Fibonacci terms maintain a ratio called golden ratio denoted by Φ, the Greek character pronounced ‘phi'.
-    * First, let's look at how the golden ratio is calculated: Φ = ( 1 + √5 )/2 = 1.6180339887...
-    * Now, let's look at Binet's formula: Sn = Φⁿ–(– Φ⁻ⁿ)/√5
-    * We first calculate the squareRootof5 and phi and store them in variables. Later, we apply Binet's formula to get the required term.
-    * Time Complexity will be O(1)
-    */
-    
+     * We have only defined the nth Fibonacci number in terms of the two before it. Now, we will look at Binet's formula to calculate the nth Fibonacci number in constant time.
+     * The Fibonacci terms maintain a ratio called golden ratio denoted by Φ, the Greek character pronounced ‘phi'.
+     * First, let's look at how the golden ratio is calculated: Φ = ( 1 + √5 )/2 = 1.6180339887...
+     * Now, let's look at Binet's formula: Sn = Φⁿ–(– Φ⁻ⁿ)/√5
+     * We first calculate the squareRootof5 and phi and store them in variables. Later, we apply Binet's formula to get the required term.
+     * Time Complexity will be O(1)
+     */
+
     public static int fibBinet(int n) {
         double squareRootOf5 = Math.sqrt(5);
-        double phi = (1 + squareRootOf5)/2;
-        int nthTerm = (int) ((Math.pow(phi, n) - Math.pow(-phi, -n))/squareRootOf5);
+        double phi = (1 + squareRootOf5) / 2;
+        int nthTerm = (int) ((Math.pow(phi, n) - Math.pow(-phi, -n)) / squareRootOf5);
         return nthTerm;
     }
 }

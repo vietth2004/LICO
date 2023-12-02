@@ -7,13 +7,10 @@ import com.example.projectservice.version.Version;
 import com.example.projectservice.version.VersionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
-import java.util.HashMap;
 import java.util.Objects;
 
 @RestController
@@ -34,7 +31,7 @@ public class ProjectController {
                                              @RequestParam(name = "name", required = false) String name,
                                              @RequestParam(name = "language", required = false) String language,
                                              @RequestParam(name = "id", required = false) String id,
-            Pageable pageable){
+                                             Pageable pageable) {
         Page<Project> projectPage = projectRepository.findAll((Specification<Project>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
             if (Objects.nonNull(user)) {
@@ -46,7 +43,7 @@ public class ProjectController {
             if (Objects.nonNull(id)) {
                 p = cb.and(p, cb.equal(root.get("id"), id));
             }
-            if (Objects.nonNull(language)){
+            if (Objects.nonNull(language)) {
                 p = cb.and(p, cb.equal(root.get("language"), language));
             }
             cq.orderBy(cb.desc(root.get("name")), cb.asc(root.get("id")));
@@ -57,7 +54,7 @@ public class ProjectController {
     }
 
     @PostMapping("/project/save")
-    public ResponseEntity<?> saveProject(@RequestBody Project project){
+    public ResponseEntity<?> saveProject(@RequestBody Project project) {
 
         //save project
 //        int count = 0;
@@ -79,7 +76,7 @@ public class ProjectController {
         projectRepository.save(tmpProject);
 
         //save version
-        for(Version version : project.getVersionList()) {
+        for (Version version : project.getVersionList()) {
             System.out.println(projectRepository.getById(tmpProject.getId()));
             version.setProject(projectRepository.getById(tmpProject.getId()));
             versionRepository.save(version);
@@ -90,7 +87,7 @@ public class ProjectController {
     @GetMapping("/version/get")
     public Page<Version> getAllVersionInProjectByUser(@RequestParam(name = "name", required = false) String name,
                                                       @RequestParam(name = "pid") Integer id,
-                                                      Pageable pageable){
+                                                      Pageable pageable) {
         System.out.println("1111");
         Page<Version> versionPage = versionRepository.findAll((Specification<Version>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
@@ -108,8 +105,8 @@ public class ProjectController {
     }
 
     @PostMapping("/version/save")
-    public ResponseEntity<?> saveVersion(@RequestBody Version version){
-        for (Version version1: versionRepository.findAll()) {
+    public ResponseEntity<?> saveVersion(@RequestBody Version version) {
+        for (Version version1 : versionRepository.findAll()) {
             System.out.println(version1.getName() + " " + version1.getProject());
         }
         versionRepository.save(version);

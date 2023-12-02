@@ -7,7 +7,7 @@ public class CreateAndDetectLoop {
     /**
      * Prints the linked list.
      *
-     * @param	head	head node of the linked list
+     * @param    head    head node of the linked list
      */
     static void printList(Node head) {
         Node cur = head;
@@ -21,11 +21,10 @@ public class CreateAndDetectLoop {
     /**
      * Creates a loop in the linked list.
      *
-     * @see
-     * 	<a href="https://www.geeksforgeeks.org/make-loop-k-th-position-linked-list/">
+     * @param    head    head node of the linked list
+     * @param    k    position of node where loop is to be created
+     * @see <a href="https://www.geeksforgeeks.org/make-loop-k-th-position-linked-list/">
      * GeeksForGeeks: Make a loop at K-th position</a>
-     * @param	head	head node of the linked list
-     * @param	k	position of node where loop is to be created
      */
     static void createLoop(Node head, int k) {
         if (head == null) {
@@ -50,13 +49,10 @@ public class CreateAndDetectLoop {
     /**
      * Detects the presence of a loop in the linked list.
      *
-     * @see
-     * 	<a href="https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare">
-     * Floyd's Cycle Detection Algorithm</a>
-     *
      * @param head the head node of the linked list
-     *
      * @return true if loop exists else false
+     * @see <a href="https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare">
+     * Floyd's Cycle Detection Algorithm</a>
      */
     static boolean detectLoop(Node head) {
         Node sptr = head;

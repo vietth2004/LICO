@@ -19,23 +19,23 @@
 package mrmathami.count;
 
 public interface Countable {
-	int getCount();
+    int getCount();
 
-	int setCount(int count);
+    int setCount(int count);
 
-	default int increaseCount() {
-		return setCount(getCount() + 1);
-	}
+    default int increaseCount() {
+        return setCount(getCount() + 1);
+    }
 
-	default int decreaseCount() {
-		return setCount(getCount() - 1);
-	}
+    default int decreaseCount() {
+        return setCount(getCount() - 1);
+    }
 
-	default int addCount(int value) {
-		return setCount(getCount() + value);
-	}
+    default int addCount(int value) {
+        return setCount(getCount() + value);
+    }
 
-	default int subtractCount(int value) {
-		return setCount(getCount() - value);
-	}
+    default int subtractCount(int value) {
+        return setCount(getCount() - value);
+    }
 }

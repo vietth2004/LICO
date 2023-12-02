@@ -13,17 +13,17 @@ import java.util.Stack;
 
 public class Wrapper {
 
-    public static List<Dependency> wrapDependency (List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
+    public static List<Dependency> wrapDependency(List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
 
-        if(type.equals("SPRING")){
+        if (type.equals("SPRING")) {
             dependencies.addAll(frameworkDependencies);
         }
 
-        if(type.equals("JSF")) {
+        if (type.equals("JSF")) {
             dependencies.addAll(frameworkDependencies);
         }
 
-        if(type.equals("STRUTS")){
+        if (type.equals("STRUTS")) {
             dependencies.addAll(frameworkDependencies);
         }
 
@@ -86,18 +86,18 @@ public class Wrapper {
 
     public static int wrapXmlNode(List nodes, int totalNodes, List<Node> xmlNodes) {
         Stack<Node> stackWrapXmlNode = new Stack<>();
-        for (int i = nodes.size() - 1; i >= 0 ; i--) {
-             if (nodes.get(i) instanceof Node) {
-                 stackWrapXmlNode.push((Node) nodes.get(i));
-             }
+        for (int i = nodes.size() - 1; i >= 0; i--) {
+            if (nodes.get(i) instanceof Node) {
+                stackWrapXmlNode.push((Node) nodes.get(i));
+            }
         }
         while (!stackWrapXmlNode.isEmpty()) {
-           Node xmlNode = stackWrapXmlNode.pop();
-           xmlNode.setId(++totalNodes);
-           xmlNodes.add(xmlNode);
-           for (int i = xmlNode.getChildren().size() - 1; i >= 0; i--) {
-               stackWrapXmlNode.push(xmlNode.getChildren().get(i));
-           }
+            Node xmlNode = stackWrapXmlNode.pop();
+            xmlNode.setId(++totalNodes);
+            xmlNodes.add(xmlNode);
+            for (int i = xmlNode.getChildren().size() - 1; i >= 0; i--) {
+                stackWrapXmlNode.push(xmlNode.getChildren().get(i));
+            }
         }
 //        for(Object xmlNode : nodes) {
 //            if(xmlNode instanceof Node) {
@@ -112,7 +112,7 @@ public class Wrapper {
 
     public static int wrapJspNode(List nodes, int totalNodes, List<Node> jspNodes) {
         Stack<Node> stackWrapJspNode = new Stack<>();
-        for (int i = nodes.size() - 1; i >= 0 ; i--) {
+        for (int i = nodes.size() - 1; i >= 0; i--) {
             if (nodes.get(i) instanceof Node) {
                 stackWrapJspNode.push((Node) nodes.get(i));
             }
@@ -137,10 +137,10 @@ public class Wrapper {
     }
 
     public static int wrapPropNode(List nodes, int totalNodes) {
-        for(Object propNode : nodes) {
-            if(propNode instanceof PropertiesFileNode) {
+        for (Object propNode : nodes) {
+            if (propNode instanceof PropertiesFileNode) {
                 ((PropertiesFileNode) propNode).setId(++totalNodes);
-                for(PropertiesNode prop : ((PropertiesFileNode) propNode).getProperties()) {
+                for (PropertiesNode prop : ((PropertiesFileNode) propNode).getProperties()) {
                     prop.setId(++totalNodes);
                 }
             }

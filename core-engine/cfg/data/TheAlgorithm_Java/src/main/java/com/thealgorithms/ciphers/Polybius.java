@@ -15,12 +15,12 @@ package com.thealgorithms.ciphers;
 public class Polybius {
 
     private static final char[][] key = {
-        //         0    1    2    3    4
-        /* 0 */{ 'A', 'B', 'C', 'D', 'E' },
-        /* 1 */{ 'F', 'G', 'H', 'I', 'J' },
-        /* 2 */{ 'K', 'L', 'M', 'N', 'O' },
-        /* 3 */{ 'P', 'Q', 'R', 'S', 'T' },
-        /* 4 */{ 'V', 'W', 'X', 'Y', 'Z' },
+            //         0    1    2    3    4
+            /* 0 */{'A', 'B', 'C', 'D', 'E'},
+            /* 1 */{'F', 'G', 'H', 'I', 'J'},
+            /* 2 */{'K', 'L', 'M', 'N', 'O'},
+            /* 3 */{'P', 'Q', 'R', 'S', 'T'},
+            /* 4 */{'V', 'W', 'X', 'Y', 'Z'},
     };
 
     private static String findLocationByCharacter(final char character) {

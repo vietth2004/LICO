@@ -17,7 +17,7 @@ public class AnyBaseToDecimal {
     /**
      * Convert any radix to decimal number
      *
-     * @param s the string to be convert
+     * @param s     the string to be convert
      * @param radix the radix
      * @return decimal of bits
      * @throws NumberFormatException if {@code bits} or {@code radix} is invalid
@@ -43,7 +43,7 @@ public class AnyBaseToDecimal {
      * @param c the character
      * @return represented digit of given character
      * @throws NumberFormatException if {@code ch} is not UpperCase or Digit
-     * character.
+     *                               character.
      */
     public static int valOfChar(char c) {
         if (!(Character.isUpperCase(c) || Character.isDigit(c))) {

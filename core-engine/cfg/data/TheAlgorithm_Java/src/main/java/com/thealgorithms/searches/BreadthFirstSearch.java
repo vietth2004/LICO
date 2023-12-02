@@ -1,6 +1,7 @@
 package com.thealgorithms.searches;
 
 import com.thealgorithms.searches.DepthFirstSearch.Node;
+
 import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;

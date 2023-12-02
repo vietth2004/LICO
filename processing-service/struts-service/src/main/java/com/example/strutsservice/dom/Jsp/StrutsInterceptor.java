@@ -9,7 +9,7 @@ public class StrutsInterceptor extends InterceptorConfig implements IStrutsEleme
 
     private InterceptorConfig interceptorConfig;
     private Node treeNode;
-    
+
     public StrutsInterceptor(Node treeNode, InterceptorConfig interceptorConfig) {
         super("", "");
         this.treeNode = treeNode;

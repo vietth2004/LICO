@@ -19,24 +19,21 @@
 package mrmathami.cia.java.project;
 
 import mrmathami.annotations.Nonnull;
-import mrmathami.annotations.Nullable;
 import mrmathami.cia.java.tree.dependency.JavaDependencyWeightTable;
 import mrmathami.cia.java.tree.node.JavaRootNode;
 
-import java.io.Serializable;
-
 public interface JavaProjectSnapshot {
 
-	@Nonnull
-	String getName();
+    @Nonnull
+    String getName();
 
-	@Nonnull
-	JavaRootNode getRootNode();
+    @Nonnull
+    JavaRootNode getRootNode();
 
-	@Nonnull
-	JavaDependencyWeightTable getDependencyWeightTable();
+    @Nonnull
+    JavaDependencyWeightTable getDependencyWeightTable();
 
-	@Nonnull
-	JavaNodeWeightTable getNodeWeightTable();
+    @Nonnull
+    JavaNodeWeightTable getNodeWeightTable();
 
 }

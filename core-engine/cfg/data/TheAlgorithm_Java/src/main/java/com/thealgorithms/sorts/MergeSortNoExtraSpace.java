@@ -23,11 +23,11 @@ public class MergeSortNoExtraSpace {
     }
 
     public static void implement_merge_sort(
-        int a[],
-        int start,
-        int mid,
-        int end,
-        int maxele
+            int a[],
+            int start,
+            int mid,
+            int end,
+            int maxele
     ) { //implementation of mergesort
         int i = start;
         int j = mid + 1;

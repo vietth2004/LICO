@@ -9,6 +9,7 @@ package com.thealgorithms.datastructures.graphs;
 // Priority Queue is used, to take first those less weighted.
 // This implementations below has some changes compared to conventional ones, but they are explained
 // all along the code.
+
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -31,10 +32,10 @@ public class Kruskal {
     }
 
     private static void addEdge(
-        HashSet<Edge>[] graph,
-        int from,
-        int to,
-        int weight
+            HashSet<Edge>[] graph,
+            int from,
+            int to,
+            int weight
     ) {
         graph[from].add(new Edge(from, to, weight));
     }
@@ -59,7 +60,7 @@ public class Kruskal {
         for (int i = 0; i < graph.length; i++) {
             for (Edge edge : graph[i]) {
                 System.out.println(
-                    i + " <-- weight " + edge.weight + " --> " + edge.to
+                        i + " <-- weight " + edge.weight + " --> " + edge.to
                 );
             }
         }
@@ -71,7 +72,7 @@ public class Kruskal {
         for (int i = 0; i < solGraph.length; i++) {
             for (Edge edge : solGraph[i]) {
                 System.out.println(
-                    i + " <-- weight " + edge.weight + " --> " + edge.to
+                        i + " <-- weight " + edge.weight + " --> " + edge.to
                 );
             }
         }
@@ -84,7 +85,7 @@ public class Kruskal {
         HashSet<Integer>[] connectedGroups = new HashSet[nodes];
         HashSet<Edge>[] minGraph = new HashSet[nodes];
         PriorityQueue<Edge> edges = new PriorityQueue<>(
-            (Comparator.comparingInt(edge -> edge.weight))
+                (Comparator.comparingInt(edge -> edge.weight))
         );
         for (int i = 0; i < nodes; i++) {
             minGraph[i] = new HashSet<>();
@@ -99,17 +100,17 @@ public class Kruskal {
             Edge edge = edges.poll();
             // This if avoids cycles
             if (
-                !connectedGroups[captain[edge.from]].contains(edge.to) &&
-                !connectedGroups[captain[edge.to]].contains(edge.from)
+                    !connectedGroups[captain[edge.from]].contains(edge.to) &&
+                            !connectedGroups[captain[edge.to]].contains(edge.from)
             ) {
                 // merge sets of the captains of each point connected by the edge
                 connectedGroups[captain[edge.from]].addAll(
                         connectedGroups[captain[edge.to]]
-                    );
+                );
                 // update captains of the elements merged
                 connectedGroups[captain[edge.from]].forEach(i ->
                         captain[i] = captain[edge.from]
-                    );
+                );
                 // add Edge to minimal graph
                 addEdge(minGraph, edge.from, edge.to, edge.weight);
                 // count how many elements have been merged

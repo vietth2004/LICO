@@ -24,19 +24,20 @@ import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
 import mrmathami.cia.java.tree.node.attribute.JavaTypeNode;
 
 public interface JavaAnnotationNode extends
-		JavaNode, JavaAnnotatedNode, JavaModifiedNode, JavaTypeNode {
+        JavaNode, JavaAnnotatedNode, JavaModifiedNode, JavaTypeNode {
 
-	@Nonnull String OBJECT_CLASS = "JavaAnnotationNode";
+    @Nonnull
+    String OBJECT_CLASS = "JavaAnnotationNode";
 
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	default String getEntityClass() {
-		return OBJECT_CLASS;
-	}
+    @Nonnull
+    @Override
+    default String getEntityClass() {
+        return OBJECT_CLASS;
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
 }

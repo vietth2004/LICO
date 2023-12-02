@@ -12,7 +12,7 @@ public class StringLiteralNode extends LiteralNode {
     }
 
     public String getEscapedValue() {
-        return "\""+ this.stringValue + "\"";
+        return "\"" + this.stringValue + "\"";
     }
 
     public String getStringValue() {

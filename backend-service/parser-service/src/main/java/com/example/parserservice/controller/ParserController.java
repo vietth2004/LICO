@@ -3,15 +3,11 @@ package com.example.parserservice.controller;
 import com.example.parserservice.model.Path;
 import com.example.parserservice.model.Response;
 import com.example.parserservice.service.ParserService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -28,31 +24,31 @@ public class ParserController {
 
 
     @PostMapping("/parse/file")
-    public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
-                                                  @RequestBody MultipartFile file,
-                                                  @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
-                                                  @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
+    public Response parseProjectToRootNodeByFile(@RequestParam(name = "parser") List<String> parserList,
+                                                 @RequestBody MultipartFile file,
+                                                 @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
+                                                 @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
 
         long start = System.currentTimeMillis();
         long memoryBefore = getUsedMemory();
         Response response = parserService.build(parserList, file, user, project);
         long end = System.currentTimeMillis();
         long memoryAfter = getUsedMemory();
-        System.out.println("Total time is " + (end-start));
-        System.out.println("Total memory is " + (memoryAfter-memoryBefore));
+        System.out.println("Total time is " + (end - start));
+        System.out.println("Total memory is " + (memoryAfter - memoryBefore));
 
         return response;
     }
 
-    private long getUsedMemory()
-    {
+    private long getUsedMemory() {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
+
     @PostMapping("/parse/path")
-    public ResponseEntity<Object> parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList,
-                                                                    @RequestBody Path path) throws IOException {
+    public ResponseEntity<Object> parseProjectToRootNodeByPath(@RequestParam(name = "parser") List<String> parserList,
+                                                               @RequestBody Path path) throws IOException {
         String checkJson = ".json";
-        if(!path.getPath().contains(checkJson)) {
+        if (!path.getPath().contains(checkJson)) {
             parserService.build(parserList, path);
             path.setPath(path.getPath() + "/tmp-prj.json");
         }
@@ -61,7 +57,7 @@ public class ParserController {
         Object analysisFile;
         try {
             Object obj = jsonParser.parse(file);
-            analysisFile =  obj;
+            analysisFile = obj;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

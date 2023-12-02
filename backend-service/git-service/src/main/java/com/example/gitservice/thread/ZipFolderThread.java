@@ -13,7 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Slf4j
-public class ZipFolderThread implements Runnable{
+public class ZipFolderThread implements Runnable {
 
     private String sourceDirPath;
     private String zipFilePath;
@@ -36,18 +36,18 @@ public class ZipFolderThread implements Runnable{
         Path pp = Paths.get(this.sourceDirPath);
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p));
              Stream<Path> paths = Files.walk(pp)) {
-                    paths
-                            .filter(path -> !Files.isDirectory(path))
-                            .forEach(path -> {
-                                ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
-                                try {
-                                    zs.putNextEntry(zipEntry);
-                                    Files.copy(path, zs);
-                                    zs.closeEntry();
-                                } catch (IOException e) {
-                                    System.err.println(e);
-                                }
-                            });
+            paths
+                    .filter(path -> !Files.isDirectory(path))
+                    .forEach(path -> {
+                        ZipEntry zipEntry = new ZipEntry(pp.relativize(path).toString());
+                        try {
+                            zs.putNextEntry(zipEntry);
+                            Files.copy(path, zs);
+                            zs.closeEntry();
+                        } catch (IOException e) {
+                            System.err.println(e);
+                        }
+                    });
         } catch (IOException e) {
             e.printStackTrace();
         }

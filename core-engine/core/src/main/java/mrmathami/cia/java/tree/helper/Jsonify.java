@@ -22,7 +22,7 @@ import mrmathami.annotations.Nonnull;
 
 public interface Jsonify {
 
-	@Nonnull
-	String toJson();
+    @Nonnull
+    String toJson();
 
 }

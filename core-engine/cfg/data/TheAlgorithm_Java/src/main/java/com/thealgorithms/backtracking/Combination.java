@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * Finds all permutations of given array
+ *
  * @author Alan Piao (https://github.com/cpiao3)
  */
 public class Combination {
@@ -12,8 +13,9 @@ public class Combination {
 
     /**
      * Find all combinations of given array using backtracking
+     *
      * @param arr the array.
-     * @param n length of combination
+     * @param n   length of combination
      * @param <T> the type of elements in the array.
      * @return a list of all combinations of length n. If n == 0, return null.
      */
@@ -31,17 +33,18 @@ public class Combination {
 
     /**
      * Backtrack all possible combinations of a given array
-     * @param arr the array.
-     * @param index the starting index.
+     *
+     * @param arr     the array.
+     * @param index   the starting index.
      * @param currSet set that tracks current combination
-     * @param result the list contains all combination.
-     * @param <T> the type of elements in the array.
+     * @param result  the list contains all combination.
+     * @param <T>     the type of elements in the array.
      */
     private static <T> void backtracking(
-        T[] arr,
-        int index,
-        TreeSet<T> currSet,
-        List<TreeSet<T>> result
+            T[] arr,
+            int index,
+            TreeSet<T> currSet,
+            List<TreeSet<T>> result
     ) {
         if (index + length - currSet.size() > arr.length) return;
         if (length - 1 == currSet.size()) {

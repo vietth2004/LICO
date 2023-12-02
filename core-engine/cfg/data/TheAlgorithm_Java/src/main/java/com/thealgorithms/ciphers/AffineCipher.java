@@ -16,7 +16,7 @@ class AffineCipher {
             bring it in range of ascii alphabet[ 65-90 | A-Z ] */
             if (msg[i] != ' ') {
                 cipher =
-                    cipher + (char) ((((a * (msg[i] - 'A')) + b) % 26) + 'A');
+                        cipher + (char) ((((a * (msg[i] - 'A')) + b) % 26) + 'A');
             } else { // else simply append space character
                 cipher += msg[i];
             }
@@ -46,10 +46,10 @@ class AffineCipher {
             to bring it in range of ASCII alphabet[ 65-90 | A-Z ] */
             if (cipher.charAt(i) != ' ') {
                 msg =
-                    msg +
-                    (char) (
-                        ((a_inv * ((cipher.charAt(i) + 'A' - b)) % 26)) + 'A'
-                    );
+                        msg +
+                                (char) (
+                                        ((a_inv * ((cipher.charAt(i) + 'A' - b)) % 26)) + 'A'
+                                );
             } else { //else simply append space character
                 msg += cipher.charAt(i);
             }
@@ -68,7 +68,7 @@ class AffineCipher {
 
         // Calling Decryption function
         System.out.println(
-            "Decrypted Message is: " + decryptCipher(cipherText)
+                "Decrypted Message is: " + decryptCipher(cipherText)
         );
     }
 }

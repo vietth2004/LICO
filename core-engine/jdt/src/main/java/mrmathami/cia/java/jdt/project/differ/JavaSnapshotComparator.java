@@ -42,106 +42,106 @@ import java.util.concurrent.Future;
 
 public final class JavaSnapshotComparator {
 
-	private JavaSnapshotComparator() {
-	}
+    private JavaSnapshotComparator() {
+    }
 
 
-	@Nonnull
-	public static ProjectSnapshotComparison compare(@Nonnull String comparisonName,
-			@Nonnull JavaProjectSnapshot previousSnapshot, @Nonnull JavaProjectSnapshot currentSnapshot,
-			@Nonnull JavaDependencyWeightTable impactWeightMap) throws JavaCiaException {
-		final JavaRootNode previousRootNode = previousSnapshot.getRootNode();
-		final JavaRootNode currentRootNode = currentSnapshot.getRootNode();
+    @Nonnull
+    public static ProjectSnapshotComparison compare(@Nonnull String comparisonName,
+                                                    @Nonnull JavaProjectSnapshot previousSnapshot, @Nonnull JavaProjectSnapshot currentSnapshot,
+                                                    @Nonnull JavaDependencyWeightTable impactWeightMap) throws JavaCiaException {
+        final JavaRootNode previousRootNode = previousSnapshot.getRootNode();
+        final JavaRootNode currentRootNode = currentSnapshot.getRootNode();
 
-		final Set<JavaNode> addedNodes = new LinkedHashSet<>();
-		final Set<JavaNode> removedNodes = new LinkedHashSet<>();
-		final Set<Pair<JavaNode, JavaNode>> changedNodes = new LinkedHashSet<>();
-		final Set<Pair<JavaNode, JavaNode>> unchangedNodes = new LinkedHashSet<>();
+        final Set<JavaNode> addedNodes = new LinkedHashSet<>();
+        final Set<JavaNode> removedNodes = new LinkedHashSet<>();
+        final Set<Pair<JavaNode, JavaNode>> changedNodes = new LinkedHashSet<>();
+        final Set<Pair<JavaNode, JavaNode>> unchangedNodes = new LinkedHashSet<>();
 
-		compareRootNodes(previousRootNode, currentRootNode, addedNodes, removedNodes, changedNodes, unchangedNodes);
+        compareRootNodes(previousRootNode, currentRootNode, addedNodes, removedNodes, changedNodes, unchangedNodes);
 
-		final double[] dependencyImpacts = new double[JavaDependency.VALUE_LIST.size()];
-		for (final JavaDependency type : JavaDependency.VALUE_LIST) {
-			dependencyImpacts[type.ordinal()] = impactWeightMap.getWeight(type);
-		}
+        final double[] dependencyImpacts = new double[JavaDependency.VALUE_LIST.size()];
+        for (final JavaDependency type : JavaDependency.VALUE_LIST) {
+            dependencyImpacts[type.ordinal()] = impactWeightMap.getWeight(type);
+        }
 
-		return new ProjectSnapshotComparison(comparisonName, previousSnapshot, currentSnapshot,
-				addedNodes, removedNodes, changedNodes, unchangedNodes, dependencyImpacts,
-				calculateNodeImpacts(dependencyImpacts, currentRootNode, addedNodes, changedNodes));
-	}
+        return new ProjectSnapshotComparison(comparisonName, previousSnapshot, currentSnapshot,
+                addedNodes, removedNodes, changedNodes, unchangedNodes, dependencyImpacts,
+                calculateNodeImpacts(dependencyImpacts, currentRootNode, addedNodes, changedNodes));
+    }
 
 
-	private static void compareRootNodes(@Nonnull JavaRootNode previousRootNode, @Nonnull JavaRootNode currentRootNode,
-			@Nonnull Set<JavaNode> addedNodes, @Nonnull Set<JavaNode> removedNodes,
-			@Nonnull Set<Pair<JavaNode, JavaNode>> changedNodes,
-			@Nonnull Set<Pair<JavaNode, JavaNode>> unchangedNodes) {
-		final EntityMatcher matcher = new EntityMatcher();
+    private static void compareRootNodes(@Nonnull JavaRootNode previousRootNode, @Nonnull JavaRootNode currentRootNode,
+                                         @Nonnull Set<JavaNode> addedNodes, @Nonnull Set<JavaNode> removedNodes,
+                                         @Nonnull Set<Pair<JavaNode, JavaNode>> changedNodes,
+                                         @Nonnull Set<Pair<JavaNode, JavaNode>> unchangedNodes) {
+        final EntityMatcher matcher = new EntityMatcher();
 
-		final Map<EntityWrapper, JavaNode> previousNodeMap = new HashMap<>();
-		final Map<EntityWrapper, JavaNode> currentNodeMap = new HashMap<>();
+        final Map<EntityWrapper, JavaNode> previousNodeMap = new HashMap<>();
+        final Map<EntityWrapper, JavaNode> currentNodeMap = new HashMap<>();
 
-		for (final JavaNode node : previousRootNode.getAllNodes()) {
-			previousNodeMap.put(matcher.wrap(node, false), node);
-		}
-		for (final JavaNode node : currentRootNode.getAllNodes()) {
-			currentNodeMap.put(matcher.wrap(node, false), node);
-		}
+        for (final JavaNode node : previousRootNode.getAllNodes()) {
+            previousNodeMap.put(matcher.wrap(node, false), node);
+        }
+        for (final JavaNode node : currentRootNode.getAllNodes()) {
+            currentNodeMap.put(matcher.wrap(node, false), node);
+        }
 
-		for (final Map.Entry<EntityWrapper, JavaNode> previousEntry : previousNodeMap.entrySet()) {
-			final EntityWrapper previousWrapper = previousEntry.getKey();
-			final JavaNode previousNode = previousEntry.getValue();
-			final JavaNode currentNode = currentNodeMap.get(previousWrapper);
-			if (currentNode != null) {
-				if (matcher.match(previousNode, currentNode, true)) {
-					unchangedNodes.add(Pair.immutableOf(previousNode, currentNode));
-				} else {
-					changedNodes.add(Pair.immutableOf(previousNode, currentNode));
-				}
-			} else {
-				removedNodes.add(previousNode);
-			}
-		}
-		for (final Map.Entry<EntityWrapper, JavaNode> currentEntry : currentNodeMap.entrySet()) {
-			final EntityWrapper currentWrapper = currentEntry.getKey();
-			final JavaNode currentNode = currentEntry.getValue();
-			final JavaNode previousNode = previousNodeMap.get(currentWrapper);
-			if (previousNode == null) addedNodes.add(currentNode);
-		}
-	}
+        for (final Map.Entry<EntityWrapper, JavaNode> previousEntry : previousNodeMap.entrySet()) {
+            final EntityWrapper previousWrapper = previousEntry.getKey();
+            final JavaNode previousNode = previousEntry.getValue();
+            final JavaNode currentNode = currentNodeMap.get(previousWrapper);
+            if (currentNode != null) {
+                if (matcher.match(previousNode, currentNode, true)) {
+                    unchangedNodes.add(Pair.immutableOf(previousNode, currentNode));
+                } else {
+                    changedNodes.add(Pair.immutableOf(previousNode, currentNode));
+                }
+            } else {
+                removedNodes.add(previousNode);
+            }
+        }
+        for (final Map.Entry<EntityWrapper, JavaNode> currentEntry : currentNodeMap.entrySet()) {
+            final EntityWrapper currentWrapper = currentEntry.getKey();
+            final JavaNode currentNode = currentEntry.getValue();
+            final JavaNode previousNode = previousNodeMap.get(currentWrapper);
+            if (previousNode == null) addedNodes.add(currentNode);
+        }
+    }
 
-	@Nonnull
-	private static double[] calculateNodeImpacts(@Nonnull double[] dependencyImpacts,
-			@Nonnull JavaRootNode rootNode, @Nonnull Set<JavaNode> addedNodes,
-			@Nonnull Set<Pair<JavaNode, JavaNode>> changedNodes) throws JavaCiaException {
+    @Nonnull
+    private static double[] calculateNodeImpacts(@Nonnull double[] dependencyImpacts,
+                                                 @Nonnull JavaRootNode rootNode, @Nonnull Set<JavaNode> addedNodes,
+                                                 @Nonnull Set<Pair<JavaNode, JavaNode>> changedNodes) throws JavaCiaException {
 
-		final int nodeCount = rootNode.getAllNodes().size();
-		final List<Future<double[]>> taskFutures = new ArrayList<>(addedNodes.size() + changedNodes.size());
+        final int nodeCount = rootNode.getAllNodes().size();
+        final List<Future<double[]>> taskFutures = new ArrayList<>(addedNodes.size() + changedNodes.size());
 
-		final ExecutorService executorService = Executors.newWorkStealingPool();
-		for (final JavaNode node : addedNodes) {
-			taskFutures.add(executorService.submit(new ImpactCalculator(nodeCount, dependencyImpacts, node)));
-		}
-		for (final Pair<JavaNode, JavaNode> pair : changedNodes) {
-			taskFutures.add(executorService.submit(new ImpactCalculator(nodeCount, dependencyImpacts, pair.getB())));
-		}
-		executorService.shutdown();
+        final ExecutorService executorService = Executors.newWorkStealingPool();
+        for (final JavaNode node : addedNodes) {
+            taskFutures.add(executorService.submit(new ImpactCalculator(nodeCount, dependencyImpacts, node)));
+        }
+        for (final Pair<JavaNode, JavaNode> pair : changedNodes) {
+            taskFutures.add(executorService.submit(new ImpactCalculator(nodeCount, dependencyImpacts, pair.getB())));
+        }
+        executorService.shutdown();
 
-		final double[] weights = new double[nodeCount];
-		Arrays.fill(weights, 1.0f);
+        final double[] weights = new double[nodeCount];
+        Arrays.fill(weights, 1.0f);
 
-		try {
-			for (final Future<double[]> future : taskFutures) {
-				final double[] singleWeights = future.get();
+        try {
+            for (final Future<double[]> future : taskFutures) {
+                final double[] singleWeights = future.get();
 
-				//for (int i = 0; i < nodeCount; i++) weights[i] *= 1.0f - singleWeights[i]; // NOTE: change me both!!
-				for (int i = 0; i < nodeCount; i++) weights[i] *= singleWeights[i];
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			throw new JavaCiaException("Cannot calculate impact weights!", e);
-		}
+                //for (int i = 0; i < nodeCount; i++) weights[i] *= 1.0f - singleWeights[i]; // NOTE: change me both!!
+                for (int i = 0; i < nodeCount; i++) weights[i] *= singleWeights[i];
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new JavaCiaException("Cannot calculate impact weights!", e);
+        }
 
-		for (int i = 0; i < nodeCount; i++) weights[i] = 1.0f - weights[i];
-		return weights;
-	}
+        for (int i = 0; i < nodeCount; i++) weights[i] = 1.0f - weights[i];
+        return weights;
+    }
 
 }

@@ -28,63 +28,64 @@ import java.util.Arrays;
 
 public final class DependencyCountTable implements JavaDependencyCountTable, Serializable {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nonnull private final int[] counts;
-
-
-	public DependencyCountTable(@Nonnull int[] counts) {
-		assert counts.length == JavaDependency.VALUE_LIST.size() : "Invalid length for counts.";
-		this.counts = counts;
-	}
+    @Nonnull
+    private final int[] counts;
 
 
-	@Override
-	public int getCount(@Nonnull JavaDependency dependencyType) {
-		return counts[dependencyType.ordinal()];
-	}
+    public DependencyCountTable(@Nonnull int[] counts) {
+        assert counts.length == JavaDependency.VALUE_LIST.size() : "Invalid length for counts.";
+        this.counts = counts;
+    }
 
 
-	@Override
-	public boolean equals(@Nullable Object object) {
-		if (this == object) return true;
-		if (object instanceof DependencyCountTable)
-			return Arrays.equals(counts, ((DependencyCountTable) object).counts);
-		if (object instanceof JavaDependencyCountTable) {
-			final JavaDependencyCountTable dependency = (JavaDependencyCountTable) object;
-			for (int i = 0; i < counts.length; i++) {
-				if (dependency.getCount(JavaDependency.VALUE_LIST.get(i)) != counts[i]) return false;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Arrays.hashCode(counts);
-	}
+    @Override
+    public int getCount(@Nonnull JavaDependency dependencyType) {
+        return counts[dependencyType.ordinal()];
+    }
 
 
-	@Nonnull
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		toString(builder);
-		return builder.toString();
-	}
+    @Override
+    public boolean equals(@Nullable Object object) {
+        if (this == object) return true;
+        if (object instanceof DependencyCountTable)
+            return Arrays.equals(counts, ((DependencyCountTable) object).counts);
+        if (object instanceof JavaDependencyCountTable) {
+            final JavaDependencyCountTable dependency = (JavaDependencyCountTable) object;
+            for (int i = 0; i < counts.length; i++) {
+                if (dependency.getCount(JavaDependency.VALUE_LIST.get(i)) != counts[i]) return false;
+            }
+        }
+        return false;
+    }
 
-	public void toString(@Nonnull StringBuilder builder) {
-		final int[] counts = this.counts;
-		builder.append('{');
-		boolean innerNext = false;
-		for (int i = 0; i < counts.length; i++) {
-			if (counts[i] != 0) {
-				builder.append(innerNext ? ", \"" : " \"")
-						.append(JavaDependency.VALUE_LIST.get(i)).append("\": ").append(counts[i]);
-				innerNext = true;
-			}
-		}
-		builder.append(innerNext ? " }" : "}");
-	}
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(counts);
+    }
+
+
+    @Nonnull
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        toString(builder);
+        return builder.toString();
+    }
+
+    public void toString(@Nonnull StringBuilder builder) {
+        final int[] counts = this.counts;
+        builder.append('{');
+        boolean innerNext = false;
+        for (int i = 0; i < counts.length; i++) {
+            if (counts[i] != 0) {
+                builder.append(innerNext ? ", \"" : " \"")
+                        .append(JavaDependency.VALUE_LIST.get(i)).append("\": ").append(counts[i]);
+                innerNext = true;
+            }
+        }
+        builder.append(innerNext ? " }" : "}");
+    }
 
 }

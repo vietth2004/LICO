@@ -1,5 +1,5 @@
 package com.example.jsfservice.ast.dependency;
-import mrmathami.cia.java.tree.dependency.JavaDependency;
+
 import java.io.Serializable;
 
 public class DependencyCountTable implements Serializable {

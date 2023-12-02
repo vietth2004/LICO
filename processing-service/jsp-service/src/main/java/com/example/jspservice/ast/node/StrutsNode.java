@@ -3,7 +3,7 @@ package com.example.jspservice.ast.node;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StrutsNode extends Node{
+public class StrutsNode extends Node {
 
     private List children = new ArrayList();
 

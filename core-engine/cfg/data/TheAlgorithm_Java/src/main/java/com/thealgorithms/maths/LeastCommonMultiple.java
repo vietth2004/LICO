@@ -6,6 +6,7 @@ import java.util.*;
  * Is a common mathematics concept to find the smallest value number
  * that can be divide using either number without having the remainder.
  * https://maticschool.blogspot.com/2013/11/find-least-common-multiple-lcm.html
+ *
  * @author LauKinHoong
  */
 
@@ -21,7 +22,7 @@ public class LeastCommonMultiple {
         System.out.println("Please enter second number >> ");
         int num2 = input.nextInt();
         System.out.println(
-            "The least common multiple of two numbers is >> " + lcm(num1, num2)
+                "The least common multiple of two numbers is >> " + lcm(num1, num2)
         );
     }
 

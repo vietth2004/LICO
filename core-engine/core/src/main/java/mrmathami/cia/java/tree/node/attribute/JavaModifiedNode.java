@@ -40,72 +40,72 @@ import static mrmathami.cia.java.tree.JavaModifier.VOLATILE;
 
 public interface JavaModifiedNode extends JavaNode {
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	int getModifiers();
+    int getModifiers();
 
-	@Nonnull
-	default Set<JavaModifier> getModifierSet() {
-		final int modifiers = getModifiers();
-		final EnumSet<JavaModifier> modifierSet = EnumSet.noneOf(JavaModifier.class);
-		for (final JavaModifier modifier : VALUE_LIST) {
-			if (isContainModifier(modifiers, modifier)) modifierSet.add(modifier);
-		}
-		return modifierSet;
-	}
+    @Nonnull
+    default Set<JavaModifier> getModifierSet() {
+        final int modifiers = getModifiers();
+        final EnumSet<JavaModifier> modifierSet = EnumSet.noneOf(JavaModifier.class);
+        for (final JavaModifier modifier : VALUE_LIST) {
+            if (isContainModifier(modifiers, modifier)) modifierSet.add(modifier);
+        }
+        return modifierSet;
+    }
 
-	default boolean isContainModifier(@Nonnull JavaModifier modifier) {
-		return isContainModifier(getModifiers(), modifier);
-	}
+    default boolean isContainModifier(@Nonnull JavaModifier modifier) {
+        return isContainModifier(getModifiers(), modifier);
+    }
 
-	default boolean isPublic() {
-		return isContainModifier(getModifiers(), PUBLIC);
-	}
+    default boolean isPublic() {
+        return isContainModifier(getModifiers(), PUBLIC);
+    }
 
-	default boolean isProtected() {
-		return isContainModifier(getModifiers(), PROTECTED);
-	}
+    default boolean isProtected() {
+        return isContainModifier(getModifiers(), PROTECTED);
+    }
 
-	default boolean isPrivate() {
-		return isContainModifier(getModifiers(), PRIVATE);
-	}
+    default boolean isPrivate() {
+        return isContainModifier(getModifiers(), PRIVATE);
+    }
 
-	default boolean isStatic() {
-		return isContainModifier(getModifiers(), STATIC);
-	}
+    default boolean isStatic() {
+        return isContainModifier(getModifiers(), STATIC);
+    }
 
-	default boolean isAbstract() {
-		return isContainModifier(getModifiers(), ABSTRACT);
-	}
+    default boolean isAbstract() {
+        return isContainModifier(getModifiers(), ABSTRACT);
+    }
 
-	default boolean isFinal() {
-		return isContainModifier(getModifiers(), FINAL);
-	}
+    default boolean isFinal() {
+        return isContainModifier(getModifiers(), FINAL);
+    }
 
-	default boolean isNative() {
-		return isContainModifier(getModifiers(), NATIVE);
-	}
+    default boolean isNative() {
+        return isContainModifier(getModifiers(), NATIVE);
+    }
 
-	default boolean isSynchronized() {
-		return isContainModifier(getModifiers(), SYNCHRONIZED);
-	}
+    default boolean isSynchronized() {
+        return isContainModifier(getModifiers(), SYNCHRONIZED);
+    }
 
-	default boolean isTransient() {
-		return isContainModifier(getModifiers(), TRANSIENT);
-	}
+    default boolean isTransient() {
+        return isContainModifier(getModifiers(), TRANSIENT);
+    }
 
-	default boolean isVolatile() {
-		return isContainModifier(getModifiers(), VOLATILE);
-	}
+    default boolean isVolatile() {
+        return isContainModifier(getModifiers(), VOLATILE);
+    }
 
-	default boolean isStrictfp() {
-		return isContainModifier(getModifiers(), STRICTFP);
-	}
+    default boolean isStrictfp() {
+        return isContainModifier(getModifiers(), STRICTFP);
+    }
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
-	private static boolean isContainModifier(int modifiers, @Nonnull JavaModifier modifier) {
-		return (modifiers & (1 << modifier.ordinal())) != 0;
-	}
+    private static boolean isContainModifier(int modifiers, @Nonnull JavaModifier modifier) {
+        return (modifiers & (1 << modifier.ordinal())) != 0;
+    }
 
 }

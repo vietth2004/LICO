@@ -32,98 +32,109 @@ import java.util.Set;
 
 public final class ProjectSnapshotComparison implements JavaProjectSnapshotComparison, Serializable {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nonnull private final String name;
-	@Nonnull private final JavaProjectSnapshot previousSnapshot;
-	@Nonnull private final JavaProjectSnapshot currentSnapshot;
-	@Nonnull private final Set<JavaNode> removedNodes;
-	@Nonnull private final Set<JavaNode> addedNodes;
-	@Nonnull private final Set<Pair<JavaNode, JavaNode>> changedNodes;
-	@Nonnull private final Set<Pair<JavaNode, JavaNode>> unchangedNodes;
-	@Nonnull private final double[] dependencyImpacts;
-	@Nonnull private final double[] nodeImpacts;
+    @Nonnull
+    private final String name;
+    @Nonnull
+    private final JavaProjectSnapshot previousSnapshot;
+    @Nonnull
+    private final JavaProjectSnapshot currentSnapshot;
+    @Nonnull
+    private final Set<JavaNode> removedNodes;
+    @Nonnull
+    private final Set<JavaNode> addedNodes;
+    @Nonnull
+    private final Set<Pair<JavaNode, JavaNode>> changedNodes;
+    @Nonnull
+    private final Set<Pair<JavaNode, JavaNode>> unchangedNodes;
+    @Nonnull
+    private final double[] dependencyImpacts;
+    @Nonnull
+    private final double[] nodeImpacts;
 
-	@Nullable private DependencyWeightTable dependencyImpactMap;
-	@Nullable private NodeWeightTable nodeImpactTable;
-
-
-	public ProjectSnapshotComparison(@Nonnull String name,
-			@Nonnull JavaProjectSnapshot previousSnapshot, @Nonnull JavaProjectSnapshot currentSnapshot,
-			@Nonnull Set<JavaNode> removedNodes, @Nonnull Set<JavaNode> addedNodes,
-			@Nonnull Set<Pair<JavaNode, JavaNode>> changedNodes,
-			@Nonnull Set<Pair<JavaNode, JavaNode>> unchangedNodes,
-			@Nonnull double[] dependencyImpacts, @Nonnull double[] nodeImpacts) {
-		this.name = name;
-		this.previousSnapshot = previousSnapshot;
-		this.currentSnapshot = currentSnapshot;
-		this.removedNodes = ImmutableOrderedSet.copyOf(removedNodes);
-		this.addedNodes = ImmutableOrderedSet.copyOf(addedNodes);
-		this.changedNodes = ImmutableOrderedSet.copyOf(changedNodes);
-		this.unchangedNodes = ImmutableOrderedSet.copyOf(unchangedNodes);
-		this.dependencyImpacts = dependencyImpacts;
-		this.nodeImpacts = nodeImpacts;
-	}
+    @Nullable
+    private DependencyWeightTable dependencyImpactMap;
+    @Nullable
+    private NodeWeightTable nodeImpactTable;
 
 
-	//region Getter
+    public ProjectSnapshotComparison(@Nonnull String name,
+                                     @Nonnull JavaProjectSnapshot previousSnapshot, @Nonnull JavaProjectSnapshot currentSnapshot,
+                                     @Nonnull Set<JavaNode> removedNodes, @Nonnull Set<JavaNode> addedNodes,
+                                     @Nonnull Set<Pair<JavaNode, JavaNode>> changedNodes,
+                                     @Nonnull Set<Pair<JavaNode, JavaNode>> unchangedNodes,
+                                     @Nonnull double[] dependencyImpacts, @Nonnull double[] nodeImpacts) {
+        this.name = name;
+        this.previousSnapshot = previousSnapshot;
+        this.currentSnapshot = currentSnapshot;
+        this.removedNodes = ImmutableOrderedSet.copyOf(removedNodes);
+        this.addedNodes = ImmutableOrderedSet.copyOf(addedNodes);
+        this.changedNodes = ImmutableOrderedSet.copyOf(changedNodes);
+        this.unchangedNodes = ImmutableOrderedSet.copyOf(unchangedNodes);
+        this.dependencyImpacts = dependencyImpacts;
+        this.nodeImpacts = nodeImpacts;
+    }
 
-	@Nonnull
-	@Override
-	public String getName() {
-		return name;
-	}
 
-	@Nonnull
-	@Override
-	public JavaProjectSnapshot getPreviousSnapshot() {
-		return previousSnapshot;
-	}
+    //region Getter
 
-	@Nonnull
-	@Override
-	public JavaProjectSnapshot getCurrentSnapshot() {
-		return currentSnapshot;
-	}
+    @Nonnull
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Nonnull
-	@Override
-	public Set<JavaNode> getRemovedNodes() {
-		return removedNodes;
-	}
+    @Nonnull
+    @Override
+    public JavaProjectSnapshot getPreviousSnapshot() {
+        return previousSnapshot;
+    }
 
-	@Nonnull
-	@Override
-	public Set<JavaNode> getAddedNodes() {
-		return addedNodes;
-	}
+    @Nonnull
+    @Override
+    public JavaProjectSnapshot getCurrentSnapshot() {
+        return currentSnapshot;
+    }
 
-	@Nonnull
-	@Override
-	public Set<Pair<JavaNode, JavaNode>> getChangedNodes() {
-		return changedNodes;
-	}
+    @Nonnull
+    @Override
+    public Set<JavaNode> getRemovedNodes() {
+        return removedNodes;
+    }
 
-	@Nonnull
-	@Override
-	public Set<Pair<JavaNode, JavaNode>> getUnchangedNodes() {
-		return unchangedNodes;
-	}
+    @Nonnull
+    @Override
+    public Set<JavaNode> getAddedNodes() {
+        return addedNodes;
+    }
 
-	@Nonnull
-	@Override
-	public DependencyWeightTable getDependencyImpactTable() {
-		return dependencyImpactMap != null ? dependencyImpactMap
-				: (this.dependencyImpactMap = new DependencyWeightTable(dependencyImpacts));
-	}
+    @Nonnull
+    @Override
+    public Set<Pair<JavaNode, JavaNode>> getChangedNodes() {
+        return changedNodes;
+    }
 
-	@Nonnull
-	@Override
-	public NodeWeightTable getNodeImpactTable() {
-		return nodeImpactTable != null ? nodeImpactTable
-				: (this.nodeImpactTable = new NodeWeightTable(nodeImpacts, currentSnapshot.getRootNode()));
-	}
+    @Nonnull
+    @Override
+    public Set<Pair<JavaNode, JavaNode>> getUnchangedNodes() {
+        return unchangedNodes;
+    }
 
-	//endregion Getter
+    @Nonnull
+    @Override
+    public DependencyWeightTable getDependencyImpactTable() {
+        return dependencyImpactMap != null ? dependencyImpactMap
+                : (this.dependencyImpactMap = new DependencyWeightTable(dependencyImpacts));
+    }
+
+    @Nonnull
+    @Override
+    public NodeWeightTable getNodeImpactTable() {
+        return nodeImpactTable != null ? nodeImpactTable
+                : (this.nodeImpactTable = new NodeWeightTable(nodeImpacts, currentSnapshot.getRootNode()));
+    }
+
+    //endregion Getter
 
 }

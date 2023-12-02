@@ -24,17 +24,17 @@ import java.io.Serializable;
 
 public abstract class SnapshotBuildParameter implements Serializable {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
 
-	@Override
-	public final int hashCode() {
-		return getClass().hashCode();
-	}
+    @Override
+    public final int hashCode() {
+        return getClass().hashCode();
+    }
 
-	@Override
-	public boolean equals(@Nullable Object object) {
-		return object == this || object != null && object.getClass() == getClass();
-	}
+    @Override
+    public boolean equals(@Nullable Object object) {
+        return object == this || object != null && object.getClass() == getClass();
+    }
 
 }

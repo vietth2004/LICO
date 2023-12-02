@@ -1,7 +1,5 @@
 package com.example.jspservice.controller;
 
-import com.example.jspservice.ast.dependency.Dependency;
-import com.example.jspservice.ast.node.JavaNode;
 import com.example.jspservice.dom.Node;
 import com.example.jspservice.dto.Request;
 import com.example.jspservice.service.StrutService;
@@ -9,7 +7,6 @@ import com.example.jspservice.utils.Converter;
 import com.example.jspservice.utils.communicator.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package com.example.jsfservice.dom.Xml;
 
+import com.example.jsfservice.dom.FileNode;
 import com.example.jsfservice.utils.Exception.JciaIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.jsfservice.dom.FileNode;
 import org.w3c.dom.Document;
 
 public class XmlFileNode extends FileNode {

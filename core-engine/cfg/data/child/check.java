@@ -3,7 +3,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Test {
-    public Test(){}
+    public Test() {
+    }
 
     public <T extends Comparable<T>> int find(T[] array, T value) {
         for (int i = 0; i < array.length; i++) {
@@ -15,19 +16,18 @@ public class Test {
     }
 
 
-    public void foo(char a, int b, int c, int d)
-    {
-        int i = 0;int j = 0;
+    public void foo(char a, int b, int c, int d) {
+        int i = 0;
+        int j = 0;
 
         ArrayList<String> list = new ArrayList<>();
         list.add("hello");
         list.add("world");
 
         for (
-                String str:
+                String str :
                 list
-        )
-        {
+        ) {
             System.out.println("str = " + str);
             int i = 5 + 10;
         }

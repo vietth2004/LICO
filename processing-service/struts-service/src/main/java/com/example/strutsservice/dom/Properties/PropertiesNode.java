@@ -10,11 +10,13 @@ public class PropertiesNode {
     private int id;
     private String name;
     private String value;
+
     public PropertiesNode(String name, String value) {
         this.name = name;
         this.value = value;
         this.id = count.incrementAndGet();
     }
+
     public PropertiesNode() {
         this.id = count.incrementAndGet();
     }

@@ -1,8 +1,8 @@
 package com.example.jsfservice.dom.Xml;
 
+import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.utils.Exception.JciaIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.jsfservice.dom.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +52,10 @@ public class XmlTagNode extends Node {
         listAttr = new ArrayList<>();
     }
 
-    public void addToListAttr(String attr)
-    {
+    public void addToListAttr(String attr) {
         this.listAttr.add(attr);
     }
+
     public XmlTagNode(String name) {
         this();
         this.tagName = name;

@@ -7,7 +7,11 @@ import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.OperationExpression.InfixExpressionNode;
 import core.dataStructure.MemoryModel;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ArrayAccess;
+import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.Name;
 
 public class AssignmentNode extends ExpressionNode {
 
@@ -24,15 +28,15 @@ public class AssignmentNode extends ExpressionNode {
 
         Expression leftHandSide = assignment.getLeftHandSide();
 
-        if(leftHandSide instanceof Name) {
+        if (leftHandSide instanceof Name) {
             String key = NameNode.getStringName((Name) leftHandSide);
             memoryModel.assignVariable(key, assignValue);
-        } else if(leftHandSide instanceof ArrayAccess){
+        } else if (leftHandSide instanceof ArrayAccess) {
             ArrayAccess arrayAccess = (ArrayAccess) leftHandSide;
 
             int index;
             ExpressionNode arrayIndex = (ExpressionNode) AstNode.executeASTNode(arrayAccess.getIndex(), memoryModel);
-            if(arrayIndex instanceof LiteralNode) {
+            if (arrayIndex instanceof LiteralNode) {
                 index = LiteralNode.changeLiteralNodeToInteger((LiteralNode) arrayIndex);
             } else {
                 throw new RuntimeException("Can't execute Index");
@@ -40,9 +44,9 @@ public class AssignmentNode extends ExpressionNode {
 
             Expression arrayExpression = arrayAccess.getArray();
             ArrayNode arrayNode;
-            if(arrayExpression instanceof ArrayAccess) {
+            if (arrayExpression instanceof ArrayAccess) {
                 arrayNode = (ArrayNode) ArrayAccessNode.executeArrayAccessNode((ArrayAccess) arrayExpression, memoryModel);
-            } else if(arrayExpression instanceof Name){
+            } else if (arrayExpression instanceof Name) {
                 String name = NameNode.getStringName((Name) arrayExpression);
                 arrayNode = (ArrayNode) memoryModel.getValue(name);
             } else {
@@ -59,7 +63,7 @@ public class AssignmentNode extends ExpressionNode {
 
         if (assignmentOperator.equals(Assignment.Operator.ASSIGN)) {
             return initialValue;
-        } else if(assignmentOperator.equals(Assignment.Operator.PLUS_ASSIGN)) {
+        } else if (assignmentOperator.equals(Assignment.Operator.PLUS_ASSIGN)) {
             assignValue.setOperator(InfixExpression.Operator.PLUS);
         } else if (assignmentOperator.equals(Assignment.Operator.MINUS_ASSIGN)) {
             assignValue.setOperator(InfixExpression.Operator.MINUS);
@@ -85,7 +89,7 @@ public class AssignmentNode extends ExpressionNode {
             throw new RuntimeException("Invalid operator");
         }
 
-        if(initialValue instanceof LiteralNode) {
+        if (initialValue instanceof LiteralNode) {
             return LiteralNode.analyzeTwoInfixLiteral((LiteralNode) initialValue, assignValue.getOperator(), (LiteralNode) assignValue.getRightOperand());
         } else {
             return assignValue;

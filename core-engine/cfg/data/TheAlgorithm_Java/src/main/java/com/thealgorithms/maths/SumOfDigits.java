@@ -4,16 +4,16 @@ public class SumOfDigits {
 
     public static void main(String[] args) {
         assert sumOfDigits(-123) == 6 &&
-        sumOfDigitsRecursion(-123) == 6 &&
-        sumOfDigitsFast(-123) == 6;
+                sumOfDigitsRecursion(-123) == 6 &&
+                sumOfDigitsFast(-123) == 6;
 
         assert sumOfDigits(0) == 0 &&
-        sumOfDigitsRecursion(0) == 0 &&
-        sumOfDigitsFast(0) == 0;
+                sumOfDigitsRecursion(0) == 0 &&
+                sumOfDigitsFast(0) == 0;
 
         assert sumOfDigits(12345) == 15 &&
-        sumOfDigitsRecursion(12345) == 15 &&
-        sumOfDigitsFast(12345) == 15;
+                sumOfDigitsRecursion(12345) == 15 &&
+                sumOfDigitsFast(12345) == 15;
     }
 
     /**
@@ -43,8 +43,8 @@ public class SumOfDigits {
         number = number < 0 ? -number : number;
         /* calculate abs value */
         return number < 10
-            ? number
-            : number % 10 + sumOfDigitsRecursion(number / 10);
+                ? number
+                : number % 10 + sumOfDigitsRecursion(number / 10);
     }
 
     /**

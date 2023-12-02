@@ -9,5 +9,6 @@ import java.util.concurrent.ExecutionException;
 
 public interface XmlService {
     List<Node> parseProjectWithPath(String path) throws IOException, ExecutionException, InterruptedException;
+
     List<Node> parseProjectWithFile(MultipartFile file) throws IOException;
 }

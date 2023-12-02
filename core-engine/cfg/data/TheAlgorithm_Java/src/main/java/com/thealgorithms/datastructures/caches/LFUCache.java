@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Java program for LFU Cache (https://en.wikipedia.org/wiki/Least_frequently_used)
+ *
  * @author Akshay Dubey (https://github.com/itsAkshayDubey)
  */
 public class LFUCache<K, V> {

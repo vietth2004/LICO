@@ -33,12 +33,12 @@ public class Calculator {
         int weight = 0;
         int childWeight = 0;
 
-        for(Pair dependency : javaNodes.getDependencyFrom()) {
+        for (Pair dependency : javaNodes.getDependencyFrom()) {
             weight += 0;
         }
 
-        for(Object javaNode : javaNodes.getChildren()) {
-            if(javaNode instanceof JavaNode) {
+        for (Object javaNode : javaNodes.getChildren()) {
+            if (javaNode instanceof JavaNode) {
                 int tmp = calculateJavaNodeWeight((JavaNode) javaNode, dependencies);
                 ((JavaNode) javaNode).setWeight(tmp);
                 childWeight += tmp;
@@ -52,7 +52,6 @@ public class Calculator {
 
     public static int calculateDependenciesWeight(List<Dependency> dependencies) {
         int weight = 0;
-
 
 
         return weight;

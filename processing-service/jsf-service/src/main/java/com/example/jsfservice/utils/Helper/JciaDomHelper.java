@@ -5,13 +5,17 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationAttributes;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
@@ -42,7 +46,6 @@ public class JciaDomHelper {
      * using the {@link #getLocationObject(Element)} method.
      *
      * @param inputSource the inputSource to read the document from
-     *
      * @return the W3C Document
      */
     public static Document parse(InputSource inputSource) {
@@ -57,7 +60,6 @@ public class JciaDomHelper {
      *
      * @param inputSource the inputSource to read the document from
      * @param dtdMappings a map of DTD names and public ids
-     *
      * @return the W3C Document
      */
     public static Document parse(InputSource inputSource, Map<String, String> dtdMappings) {
@@ -111,16 +113,24 @@ public class JciaDomHelper {
      */
     static public class DOMBuilder implements ContentHandler {
 
-        /** The default transformer factory shared by all instances */
+        /**
+         * The default transformer factory shared by all instances
+         */
         protected static SAXTransformerFactory FACTORY;
 
-        /** The transformer factory */
+        /**
+         * The transformer factory
+         */
         protected SAXTransformerFactory factory;
 
-        /** The result */
+        /**
+         * The result
+         */
         protected DOMResult result;
 
-        /** The parentNode */
+        /**
+         * The parentNode
+         */
         protected Node parentNode;
 
         protected ContentHandler nextHandler;
@@ -151,6 +161,7 @@ public class JciaDomHelper {
 
         /**
          * Construct a new instance of this DOMBuilder.
+         *
          * @param factory the SAX transformer factory
          */
         public DOMBuilder(SAXTransformerFactory factory) {
@@ -169,11 +180,11 @@ public class JciaDomHelper {
         /**
          * Construct a new instance of this DOMBuilder.
          *
-         * @param factory the SAX transformer factory
+         * @param factory    the SAX transformer factory
          * @param parentNode the parent node
          */
         public DOMBuilder(SAXTransformerFactory factory, Node parentNode) {
-            this.factory = factory == null? FACTORY: factory;
+            this.factory = factory == null ? FACTORY : factory;
             this.parentNode = parentNode;
             setup();
         }
@@ -263,7 +274,8 @@ public class JciaDomHelper {
 
         /**
          * Create a filter that is chained to another handler.
-         * @param next the next handler in the chain.
+         *
+         * @param next        the next handler in the chain.
          * @param dtdMappings map of DTD mappings
          */
         public StartHandler(ContentHandler next, Map<String, String> dtdMappings) {

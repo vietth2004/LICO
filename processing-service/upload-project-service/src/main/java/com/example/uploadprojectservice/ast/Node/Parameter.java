@@ -4,7 +4,8 @@ public class Parameter {
     private String nameParameter;
     private String describe;
     private String value;
-    public Parameter(){
+
+    public Parameter() {
 
     }
 

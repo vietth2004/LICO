@@ -3,7 +3,7 @@
 package com.thealgorithms.strings;
 
 public class MyAtoi {
-public static int myAtoi(String s) {
+    public static int myAtoi(String s) {
         s = s.trim();
         char[] char_1 = s.toCharArray();
         String number = "";
@@ -50,15 +50,15 @@ public static int myAtoi(String s) {
                 break;
             }
         }
-    
-    if (!isDigit) {
+
+        if (!isDigit) {
             return 0;
         }
-    
-         number = number.replaceFirst("^0+(?!$)", "");
-    
-    
-    if (number.length() > 10 && negative) {
+
+        number = number.replaceFirst("^0+(?!$)", "");
+
+
+        if (number.length() > 10 && negative) {
             return -2147483648;
         } else if (number.length() > 10) {
             return 2147483647;
@@ -72,16 +72,16 @@ public static int myAtoi(String s) {
             if (db1 > (2147483647)) {
                 return 2147483647;
             }
-        }else if (number.length() == 10 && negative) {
+        } else if (number.length() == 10 && negative) {
             double db1 = Double.parseDouble(number);
             if (db1 >= 2147483648d) {
                 return -2147483648;
             }
         }
-    
-    if(negative){
-        return Integer.parseInt(number)*-1;
-    }
+
+        if (negative) {
+            return Integer.parseInt(number) * -1;
+        }
 
         return Integer.parseInt(number);
     }

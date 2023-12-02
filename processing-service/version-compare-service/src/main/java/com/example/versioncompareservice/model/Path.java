@@ -1,8 +1,5 @@
 package com.example.versioncompareservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 public class Path {
 
     private String path;

@@ -4,12 +4,11 @@ import java.util.Objects;
 
 /**
  * This class implements a Cursor Linked List.
- *
+ * <p>
  * A CursorLinkedList is an array version of a Linked List. Essentially you have
  * an array of list nodes but instead of each node containing a pointer to the
  * next item in the linked list, each node element in the array contains the
  * index for the next node element.
- *
  */
 public class CursorLinkedList<T> {
 
@@ -75,8 +74,8 @@ public class CursorLinkedList<T> {
 
     /**
      * @param position , the logical index of the element , not the actual one
-     * within the [cursorSpace] array . this method should be used to get the
-     * index give by indexOf() method.
+     *                 within the [cursorSpace] array . this method should be used to get the
+     *                 index give by indexOf() method.
      * @return
      */
     public T get(int position) {
@@ -121,7 +120,7 @@ public class CursorLinkedList<T> {
                 T current_element = cursorSpace[current_index].element;
                 if (current_element.equals(element)) {
                     cursorSpace[prev_index].next =
-                        cursorSpace[current_index].next;
+                            cursorSpace[current_index].next;
                     free(current_index);
                     break;
                 }

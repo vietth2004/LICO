@@ -1,16 +1,20 @@
 package com.example.parserservice.dom;
 
 import com.example.parserservice.dom.Xml.XmlTagNode;
+import com.example.parserservice.util.JciaData;
 import com.example.parserservice.util.exception.JciaIgnore;
 import com.example.parserservice.util.helper.NodeHelper;
-import com.example.parserservice.util.JciaData;
 import com.example.parserservice.util.type.ComponentType;
 import com.example.parserservice.util.type.Tier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 //@JsonTypeInfo(
 //        use = JsonTypeInfo.Id.MINIMAL_CLASS,

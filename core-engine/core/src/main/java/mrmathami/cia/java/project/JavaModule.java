@@ -23,10 +23,10 @@ import mrmathami.cia.java.utils.RelativePath;
 
 public interface JavaModule {
 
-	@Nonnull
-	String getName();
+    @Nonnull
+    String getName();
 
-	@Nonnull
-	RelativePath getRelativePath();
+    @Nonnull
+    RelativePath getRelativePath();
 
 }

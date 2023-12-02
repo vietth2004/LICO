@@ -1,12 +1,17 @@
 package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
+import com.example.parserservice.model.Path;
+import com.example.parserservice.model.Response;
 import com.example.parserservice.model.jsf.JSFResponse;
-import com.example.parserservice.service.project.ProjectService;
-import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
+import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.util.JwtUtils;
-import com.example.parserservice.util.worker.*;
+import com.example.parserservice.util.worker.Converter;
+import com.example.parserservice.util.worker.Getter;
+import com.example.parserservice.util.worker.Requester;
+import com.example.parserservice.util.worker.Wrapper;
+import com.example.parserservice.util.worker.Writer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.http.HttpClient;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
-public class ParserServiceImpl implements ParserService{
+public class ParserServiceImpl implements ParserService {
 
     final ProjectService projectService;
 
@@ -46,7 +51,7 @@ public class ParserServiceImpl implements ParserService{
     public Response build(List<String> parserList, MultipartFile file, String user, String project) {
         log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String userPath = user;
-        if(!userPath.equals("anonymous")){
+        if (!userPath.equals("anonymous")) {
             userPath = jwtUtils.extractUsername(user);
         }
         String fileName = projectService.storeFile(file, userPath, project);
@@ -63,7 +68,7 @@ public class ParserServiceImpl implements ParserService{
             e.printStackTrace();
         }
         long end = System.currentTimeMillis();
-        System.out.println("Total time build:" + (start-end));
+        System.out.println("Total time build:" + (start - end));
         Wrapper.wrapXmlAndJspNode(request);
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
@@ -138,7 +143,7 @@ public class ParserServiceImpl implements ParserService{
                 , jspRequest.getBody().getJspNodes()
                 , propRequest.getBody().getPropertiesNodes()
                 , path.getPath()
-                );
+        );
 
         return request;
     }

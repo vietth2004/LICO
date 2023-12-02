@@ -52,6 +52,7 @@ public class StrutsHelper {
 
     /**
      * Find interceptor or interceptor-stack in a package by given name
+     *
      * @param strutsPackage
      * @param interceptorName
      * @return

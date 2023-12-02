@@ -57,11 +57,11 @@ public class Utils {
                                        List<JavaNode> changedNodes,
                                        List<JavaNode> addedNodes) {
 
-        for(JavaNode javaNode : changedNodes) {
+        for (JavaNode javaNode : changedNodes) {
             changeStatus(rootNode, javaNode, "changed");
         }
 
-        for(JavaNode javaNode : addedNodes) {
+        for (JavaNode javaNode : addedNodes) {
             changeStatus(rootNode, javaNode, "added");
         }
 
@@ -69,15 +69,15 @@ public class Utils {
     }
 
     private static void changeStatus(JavaNode javaNode, JavaNode statusNode, String status) {
-        if(javaNode.getUniqueName().equals(statusNode.getUniqueName())) {
+        if (javaNode.getUniqueName().equals(statusNode.getUniqueName())) {
             logger.info(status);
             logger.info(javaNode.getUniqueName() + " " + javaNode.getId());
             logger.info(statusNode.getUniqueName() + " " + statusNode.getId());
             logger.info("\n");
             javaNode.setStatus(status);
         } else {
-            for(Object childNode: javaNode.getChildren()) {
-                if(childNode instanceof JavaNode) {
+            for (Object childNode : javaNode.getChildren()) {
+                if (childNode instanceof JavaNode) {
                     changeStatus((JavaNode) childNode, statusNode, status);
                 }
             }
@@ -91,7 +91,7 @@ public class Utils {
         List<Dependency> dependencies = request.getAllDependencies();
 
         for (String parser : parserList) {
-            if(Resource.PARSER.contains(parser)) {
+            if (Resource.PARSER.contains(parser)) {
                 dependencies = wrapDependency(dependencies, getDependencies(parser, javaNodes), "SPRING");
             }
         }
@@ -115,12 +115,12 @@ public class Utils {
         return ciaResponse.getNodes();
     }
 
-    public static List<Dependency> wrapDependency (List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
+    public static List<Dependency> wrapDependency(List<Dependency> dependencies, List<Dependency> frameworkDependencies, String type) {
 
-        for(Dependency dependency : frameworkDependencies) {
-            for(Dependency base : dependencies) {
-                if(isDependency(base, dependency)) {
-                    if(type.equals("SPRING")){
+        for (Dependency dependency : frameworkDependencies) {
+            for (Dependency base : dependencies) {
+                if (isDependency(base, dependency)) {
+                    if (type.equals("SPRING")) {
                         base.getType().setSPRING(dependency.getType().getSPRING());
                     }
                 }
@@ -131,7 +131,7 @@ public class Utils {
     }
 
     public static Boolean isDependency(Dependency base, Dependency dependency) {
-        if(base.getCalleeNode().equals(dependency.getCalleeNode())
+        if (base.getCalleeNode().equals(dependency.getCalleeNode())
                 && base.getCallerNode().equals(dependency.getCallerNode())) {
             return true;
         }
@@ -141,7 +141,7 @@ public class Utils {
     public static List getDependencies(String parser, List javaNodes) {
         RestTemplate restTemplate = new RestTemplate();
         List dependencies = new ArrayList();
-        if(parser.equals("spring-parser")) {
+        if (parser.equals("spring-parser")) {
 
             Request springs = restTemplate.postForObject(
                     "http://localhost:7003/api/spring-service/dependency/spring", //spring-service
@@ -158,7 +158,7 @@ public class Utils {
         javaNode.setDependencyFrom(getDependencyFrom(javaNode, javaNode.getDependencyFrom(), dependencies));
 
         for (Object childNode : javaNode.getChildren()) {
-            if(childNode instanceof JavaNode){
+            if (childNode instanceof JavaNode) {
                 wrapRootNode((JavaNode) childNode, dependencies);
             }
         }
@@ -167,8 +167,8 @@ public class Utils {
     public static List<Pair> getDependencyTo(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
         List<Pair> dependenciesTempList = new ArrayList<>();
         for (Pair pair : nodeDependency) {
-            for(Dependency dependency : dependencies) {
-                if(javaNode.getId().equals(dependency.getCallerNode())
+            for (Dependency dependency : dependencies) {
+                if (javaNode.getId().equals(dependency.getCallerNode())
                         && pair.getNode().getId().equals(dependency.getCalleeNode())) {
                     pair.setDependency(dependency.getType());
                 }
@@ -181,8 +181,8 @@ public class Utils {
     public static List<Pair> getDependencyFrom(JavaNode javaNode, List<Pair> nodeDependency, List<Dependency> dependencies) {
         List<Pair> dependenciesTempList = new ArrayList<>();
         for (Pair pair : nodeDependency) {
-            for(Dependency dependency : dependencies) {
-                if(javaNode.getId().equals(dependency.getCalleeNode())
+            for (Dependency dependency : dependencies) {
+                if (javaNode.getId().equals(dependency.getCalleeNode())
                         && pair.getNode().getId().equals(dependency.getCallerNode())) {
                     pair.setDependency(dependency.getType());
                 }

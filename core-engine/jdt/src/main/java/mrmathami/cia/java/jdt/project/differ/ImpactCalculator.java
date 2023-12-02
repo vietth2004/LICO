@@ -30,61 +30,65 @@ import java.util.concurrent.Callable;
 
 final class ImpactCalculator implements Callable<double[]> {
 
-	private static final double THRESHOLD = 1.0e-5;
+    private static final double THRESHOLD = 1.0e-5;
 
-	@Nonnull private final BitSet pathSet;
-	@Nonnull private final double[] calculatingWeights;
-	@Nonnull private final double[] dependencyImpacts;
-	@Nonnull private final JavaNode changedNode;
-
-
-	ImpactCalculator(int nodeCount, @Nonnull double[] dependencyImpacts, @Nonnull JavaNode changedNode) {
-		this.pathSet = new BitSet(nodeCount);
-		this.calculatingWeights = new double[nodeCount];
-		this.dependencyImpacts = dependencyImpacts;
-		this.changedNode = changedNode;
-	}
+    @Nonnull
+    private final BitSet pathSet;
+    @Nonnull
+    private final double[] calculatingWeights;
+    @Nonnull
+    private final double[] dependencyImpacts;
+    @Nonnull
+    private final JavaNode changedNode;
 
 
-	private void recursiveCalculate(@Nonnull JavaNode currentNode, double currentWeight) {
-		for (final Map.Entry<? extends JavaNode, ? extends JavaDependencyCountTable> entry
-				: currentNode.getDependencyFrom().entrySet()) {
-			final JavaNode nextNode = entry.getKey();
-			final int nextId = nextNode.getId();
-			if (pathSet.get(nextId)) continue;
-			pathSet.set(nextId);
+    ImpactCalculator(int nodeCount, @Nonnull double[] dependencyImpacts, @Nonnull JavaNode changedNode) {
+        this.pathSet = new BitSet(nodeCount);
+        this.calculatingWeights = new double[nodeCount];
+        this.dependencyImpacts = dependencyImpacts;
+        this.changedNode = changedNode;
+    }
 
-			double linkWeight = 1.0;
-			final JavaDependencyCountTable nodeDependency = entry.getValue();
-			for (final JavaDependency dependency : JavaDependency.VALUE_LIST) {
-				final int count = nodeDependency.getCount(dependency);
-				if (count > 0) {
-					linkWeight *= Math.pow(1.0 - dependencyImpacts[dependency.ordinal()], count);
-				}
-			}
 
-			final double nextWeight = currentWeight * (1.0 - linkWeight);
-			if (nextWeight >= THRESHOLD) {
-				calculatingWeights[nextId] *= 1.0 - nextWeight;
-				recursiveCalculate(nextNode, nextWeight);
-			}
+    private void recursiveCalculate(@Nonnull JavaNode currentNode, double currentWeight) {
+        for (final Map.Entry<? extends JavaNode, ? extends JavaDependencyCountTable> entry
+                : currentNode.getDependencyFrom().entrySet()) {
+            final JavaNode nextNode = entry.getKey();
+            final int nextId = nextNode.getId();
+            if (pathSet.get(nextId)) continue;
+            pathSet.set(nextId);
 
-			pathSet.clear(nextId);
-		}
-	}
+            double linkWeight = 1.0;
+            final JavaDependencyCountTable nodeDependency = entry.getValue();
+            for (final JavaDependency dependency : JavaDependency.VALUE_LIST) {
+                final int count = nodeDependency.getCount(dependency);
+                if (count > 0) {
+                    linkWeight *= Math.pow(1.0 - dependencyImpacts[dependency.ordinal()], count);
+                }
+            }
 
-	@Override
-	public double[] call() {
-		Arrays.fill(calculatingWeights, 1.0);
+            final double nextWeight = currentWeight * (1.0 - linkWeight);
+            if (nextWeight >= THRESHOLD) {
+                calculatingWeights[nextId] *= 1.0 - nextWeight;
+                recursiveCalculate(nextNode, nextWeight);
+            }
 
-		final int changedId = changedNode.getId();
-		calculatingWeights[changedId] = 0.0;
-		pathSet.set(changedId);
+            pathSet.clear(nextId);
+        }
+    }
 
-		recursiveCalculate(changedNode, 1.0);
+    @Override
+    public double[] call() {
+        Arrays.fill(calculatingWeights, 1.0);
 
-		//for (int i = 0; i < nodeCount; i++) weights[i] = 1.0f - weights[i]; // NOTE: change me both!!
-		return calculatingWeights;
-	}
+        final int changedId = changedNode.getId();
+        calculatingWeights[changedId] = 0.0;
+        pathSet.set(changedId);
+
+        recursiveCalculate(changedNode, 1.0);
+
+        //for (int i = 0; i < nodeCount; i++) weights[i] = 1.0f - weights[i]; // NOTE: change me both!!
+        return calculatingWeights;
+    }
 
 }

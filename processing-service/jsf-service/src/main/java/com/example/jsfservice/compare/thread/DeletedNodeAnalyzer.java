@@ -27,10 +27,10 @@ public class DeletedNodeAnalyzer implements Callable {
         List<Node> deletedNodes = new ArrayList<>();
 
         List<Node> children = ParserUtils.getChildrenLevel1XmlFileNode(oldVer);
-        for(Node node : oldVer)
-            if(CompareUtils.searchByFullyQualifiedName(newVer, node.getFullyQualifiedName()).size() <= 0)
+        for (Node node : oldVer)
+            if (CompareUtils.searchByFullyQualifiedName(newVer, node.getFullyQualifiedName()).size() <= 0)
                 deletedNodes.add(node);
-        for(Node child : children) {
+        for (Node child : children) {
             deletedNodes.addAll(analyzeChild(newVer, child));
         }
         deletedNodes.forEach(node -> {
@@ -42,9 +42,9 @@ public class DeletedNodeAnalyzer implements Callable {
 
     public List<Node> analyzeChild(List<Node> newVer, Node node) {
         List<Node> deletedNodes = new ArrayList<>();
-        if(CompareUtils.searchByFullyQualifiedName(newVer, node.getFullyQualifiedName()).size() <= 0)
+        if (CompareUtils.searchByFullyQualifiedName(newVer, node.getFullyQualifiedName()).size() <= 0)
             deletedNodes.add(node);
-        for(Node child : node.getChildren()) {
+        for (Node child : node.getChildren()) {
             deletedNodes.addAll(analyzeChild(newVer, child));
         }
         return deletedNodes;

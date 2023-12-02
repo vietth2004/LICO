@@ -17,10 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/user-service/")
@@ -60,7 +59,7 @@ public class UserController {
         if (ipAddress == null) {
             ipAddress = request.getRemoteAddr();
         }
-        logger.log(Level.INFO ,"User IP: " + ipAddress);
+        logger.log(Level.INFO, "User IP: " + ipAddress);
 
         final UserDetails userDetails = userDetailService
                 .loadUserByUsername(authenticationRequest.getUsername());
@@ -78,7 +77,7 @@ public class UserController {
         if (ipAddress == null) {
             ipAddress = request.getRemoteAddr();
         }
-        logger.log(Level.INFO ,"User IP: " + ipAddress);
+        logger.log(Level.INFO, "User IP: " + ipAddress);
 
         if (accountRepository.findUserByUsername(user.getAccount().getUsername()) != null) {
             return ResponseEntity.ok(new AuthenticationResponse("Username is already used!"));
@@ -98,8 +97,7 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
 
             return ResponseEntity.ok(new AuthenticationResponse("Email or username or name is already use", "none", 0));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok(new AuthenticationResponse("Sum Ting Wong!"));
         }
@@ -113,12 +111,12 @@ public class UserController {
     }
 
     @GetMapping("/user/token-username")
-    public ResponseEntity<?> getTokenInfo (@RequestParam String jwt) {
+    public ResponseEntity<?> getTokenInfo(@RequestParam String jwt) {
         String username = jwtTokenUtil.extractUsername(jwt);
         Date expireDate = jwtTokenUtil.extractExpiration(jwt);
 
         return ResponseEntity.ok(new AuthenticationResponse(expireDate.toString(), username, 0));
     }
 
-    
+
 }

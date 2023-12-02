@@ -22,42 +22,42 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public final class Range {
-	private Range() {
-	}
+    private Range() {
+    }
 
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface Short {
-		short from() default java.lang.Short.MIN_VALUE;
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Short {
+        short from() default java.lang.Short.MIN_VALUE;
 
-		short to() default java.lang.Short.MAX_VALUE;
-	}
+        short to() default java.lang.Short.MAX_VALUE;
+    }
 
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface Integer {
-		int from() default java.lang.Integer.MIN_VALUE;
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Integer {
+        int from() default java.lang.Integer.MIN_VALUE;
 
-		int to() default java.lang.Integer.MAX_VALUE;
-	}
+        int to() default java.lang.Integer.MAX_VALUE;
+    }
 
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface Long {
-		long from() default java.lang.Long.MIN_VALUE;
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Long {
+        long from() default java.lang.Long.MIN_VALUE;
 
-		long to() default java.lang.Long.MAX_VALUE;
-	}
+        long to() default java.lang.Long.MAX_VALUE;
+    }
 
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface Float {
-		float from() default java.lang.Float.MIN_VALUE;
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Float {
+        float from() default java.lang.Float.MIN_VALUE;
 
-		float to() default java.lang.Float.MAX_VALUE;
-	}
+        float to() default java.lang.Float.MAX_VALUE;
+    }
 
-	@Retention(RetentionPolicy.SOURCE)
-	public @interface Double {
-		double from() default java.lang.Double.MIN_VALUE;
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Double {
+        double from() default java.lang.Double.MIN_VALUE;
 
-		double to() default java.lang.Double.MAX_VALUE;
-	}
+        double to() default java.lang.Double.MAX_VALUE;
+    }
 
 }

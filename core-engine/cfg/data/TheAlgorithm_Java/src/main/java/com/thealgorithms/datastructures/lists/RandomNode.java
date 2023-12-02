@@ -1,5 +1,22 @@
-/** Author : Suraj Kumar
+/**
+ * Author : Suraj Kumar
  * Github : https://github.com/skmodi649
+ * PROBLEM DESCRIPTION :
+ * There is a single linked list and we are supposed to find a random node in the given linked list
+ * ALGORITHM :
+ * Step 1 : START
+ * Step 2 : Create an arraylist of type integer
+ * Step 3 : Declare an integer type variable for size and linked list type for head
+ * Step 4 : We will use two methods, one for traversing through the linked list using while loop and also increase the size by 1
+ * <p>
+ * (a) RandomNode(head)
+ * (b) run a while loop till null;
+ * (c) add the value to arraylist;
+ * (d) increase the size;
+ * <p>
+ * Step 5 : Now use another method for getting random values using Math.random() and return the value present in arraylist for the calculated index
+ * Step 6 : Now in main() method we will simply insert nodes in the linked list and then call the appropriate method and then print the random node generated
+ * Step 7 : STOP
  */
 
 /** PROBLEM DESCRIPTION :

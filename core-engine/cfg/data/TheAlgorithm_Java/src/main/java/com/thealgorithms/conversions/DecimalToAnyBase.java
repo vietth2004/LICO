@@ -12,7 +12,7 @@ public class DecimalToAnyBase {
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(
-            new InputStreamReader(System.in)
+                new InputStreamReader(System.in)
         );
         System.out.println("Enter the decimal input below: ");
         int decInput = Integer.parseInt(br.readLine());
@@ -24,12 +24,12 @@ public class DecimalToAnyBase {
 
         System.out.println("Decimal Input" + " is: " + decInput);
         System.out.println(
-            "Value of " +
-            decInput +
-            " in base " +
-            base +
-            " is: " +
-            convertToAnyBase(decInput, base)
+                "Value of " +
+                        decInput +
+                        " in base " +
+                        base +
+                        " is: " +
+                        convertToAnyBase(decInput, base)
         );
 
         br.close();

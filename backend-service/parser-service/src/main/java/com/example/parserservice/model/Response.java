@@ -44,14 +44,14 @@ public class Response {
         this.javaNodes = allNodes;
     }
 
-    public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies) {
+    public Response(JavaNode rootNode, Integer totalNodes, List allNodes, List<Dependency> allDependencies) {
         this.rootNode = rootNode;
         this.dependencies = allDependencies;
         this.javaNodes = allNodes;
         this.totalNodes = totalNodes;
     }
 
-    public Response(JavaNode rootNode, Integer totalNodes , List allNodes, List<Dependency> allDependencies, String address) {
+    public Response(JavaNode rootNode, Integer totalNodes, List allNodes, List<Dependency> allDependencies, String address) {
         this.rootNode = rootNode;
         this.dependencies = allDependencies;
         this.javaNodes = allNodes;

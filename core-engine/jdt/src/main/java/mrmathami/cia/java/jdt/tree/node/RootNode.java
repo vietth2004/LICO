@@ -40,104 +40,107 @@ import java.util.NoSuchElementException;
 
 public final class RootNode extends AbstractNode implements JavaRootNode {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	@Nonnull private transient List<AbstractNode> allNodes = List.of();
-	@Nonnull private transient List<AbstractType> allTypes = List.of();
-	@Nonnull private transient List<Annotate> allAnnotates = List.of();
+    @Nonnull
+    private transient List<AbstractNode> allNodes = List.of();
+    @Nonnull
+    private transient List<AbstractType> allTypes = List.of();
+    @Nonnull
+    private transient List<Annotate> allAnnotates = List.of();
 
 
-	public RootNode() {
-	}
+    public RootNode() {
+    }
 
 
-	//region Root Helper
+    //region Root Helper
 
-	@Nonnull
-	public static <A, B extends A, C extends Collection<B>> C collectionFilter(
-			@Nonnull C destCollection, @Nonnull Collection<A> collection, @Nonnull Class<B> filterClass) {
-		for (final A element : collection) {
-			if (filterClass.isInstance(element)) destCollection.add(filterClass.cast(element));
-		}
-		return destCollection;
-	}
+    @Nonnull
+    public static <A, B extends A, C extends Collection<B>> C collectionFilter(
+            @Nonnull C destCollection, @Nonnull Collection<A> collection, @Nonnull Class<B> filterClass) {
+        for (final A element : collection) {
+            if (filterClass.isInstance(element)) destCollection.add(filterClass.cast(element));
+        }
+        return destCollection;
+    }
 
-	public void freeze() {
-		final Map<String, List<AbstractIdentifiedEntity>> map = new LinkedHashMap<>();
-		internalFreeze(map);
+    public void freeze() {
+        final Map<String, List<AbstractIdentifiedEntity>> map = new LinkedHashMap<>();
+        internalFreeze(map);
 
-		final List<AbstractIdentifiedEntity> allNodes = map.get(JavaNode.ID_CLASS);
-		if (allNodes != null) {
-			this.allNodes = List.copyOf(collectionFilter(new ArrayList<>(), allNodes, AbstractNode.class));
-		}
+        final List<AbstractIdentifiedEntity> allNodes = map.get(JavaNode.ID_CLASS);
+        if (allNodes != null) {
+            this.allNodes = List.copyOf(collectionFilter(new ArrayList<>(), allNodes, AbstractNode.class));
+        }
 
-		final List<AbstractIdentifiedEntity> allTypes = map.get(JavaType.ID_CLASS);
-		if (allTypes != null) {
-			this.allTypes = List.copyOf(collectionFilter(new ArrayList<>(), allTypes, AbstractType.class));
-		}
+        final List<AbstractIdentifiedEntity> allTypes = map.get(JavaType.ID_CLASS);
+        if (allTypes != null) {
+            this.allTypes = List.copyOf(collectionFilter(new ArrayList<>(), allTypes, AbstractType.class));
+        }
 
-		final List<AbstractIdentifiedEntity> allAnnotates = map.get(JavaAnnotate.ID_CLASS);
-		if (allAnnotates != null) {
-			this.allAnnotates = List.copyOf(collectionFilter(new ArrayList<>(), allAnnotates, Annotate.class));
-		}
-	}
+        final List<AbstractIdentifiedEntity> allAnnotates = map.get(JavaAnnotate.ID_CLASS);
+        if (allAnnotates != null) {
+            this.allAnnotates = List.copyOf(collectionFilter(new ArrayList<>(), allAnnotates, Annotate.class));
+        }
+    }
 
-	//endregion Root Helper
+    //endregion Root Helper
 
-	//region Basic Getter
+    //region Basic Getter
 
-	@Nonnull
-	@Override
-	public RootNode getRoot() {
-		return this;
-	}
+    @Nonnull
+    @Override
+    public RootNode getRoot() {
+        return this;
+    }
 
-	@Nonnull
-	@Override
-	public AbstractNode getParent() {
-		throw new NoSuchElementException("JavaRootNode");
-	}
+    @Nonnull
+    @Override
+    public AbstractNode getParent() {
+        throw new NoSuchElementException("JavaRootNode");
+    }
 
-	//endregion Basic Getter
+    //endregion Basic Getter
 
-	//region Getter & Setter
+    //region Getter & Setter
 
-	@Nonnull
-	@Override
-	public List<AbstractNode> getAllNodes() {
-		return isFrozen() ? allNodes : Collections.unmodifiableList(allNodes);
-	}
+    @Nonnull
+    @Override
+    public List<AbstractNode> getAllNodes() {
+        return isFrozen() ? allNodes : Collections.unmodifiableList(allNodes);
+    }
 
 //	void setAllNodes(@Nonnull List<AbstractNode> allNodes) {
 //		checkFrozen();
 //		this.allNodes = allNodes;
 //	}
 
-	@Nonnull
-	@Override
-	public List<AbstractType> getAllTypes() {
-		return isFrozen() ? allTypes : Collections.unmodifiableList(allTypes);
-	}
+    @Nonnull
+    @Override
+    public List<AbstractType> getAllTypes() {
+        return isFrozen() ? allTypes : Collections.unmodifiableList(allTypes);
+    }
 
 //	void setAllTypes(@Nonnull List<AbstractType> allTypes) {
 //		checkFrozen();
 //		this.allTypes = allTypes;
 //	}
 
-	@Nonnull
-	@Override
-	public List<Annotate> getAllAnnotates() {
-		return isFrozen() ? allAnnotates : Collections.unmodifiableList(allAnnotates);
-	}
+    @Nonnull
+    @Override
+    public List<Annotate> getAllAnnotates() {
+        return isFrozen() ? allAnnotates : Collections.unmodifiableList(allAnnotates);
+    }
 
 //	void setAllAnnotates(@Nonnull List<Annotate> allAnnotates) {
 //		checkFrozen();
 //		this.allAnnotates = allAnnotates;
 //	}
 
-	//endregion Getter & Setter
+    //endregion Getter & Setter
 
-	//region Serialization Helper
+    //region Serialization Helper
 
 //	@Override
 //	void internalFreeze(@Nonnull List<AbstractType> allTypes, @Nonnull List<Annotate> allAnnotates) {
@@ -147,48 +150,48 @@ public final class RootNode extends AbstractNode implements JavaRootNode {
 //		this.allAnnotates = List.copyOf(allAnnotates);
 //	}
 
-	private void writeObject(@Nonnull ObjectOutputStream outputStream)
-			throws IOException, UnsupportedOperationException {
-		assertFrozen();
-		outputStream.defaultWriteObject();
-		outputStream.writeObject(allNodes);
-		outputStream.writeObject(allTypes);
-		outputStream.writeObject(allAnnotates);
-	}
+    private void writeObject(@Nonnull ObjectOutputStream outputStream)
+            throws IOException, UnsupportedOperationException {
+        assertFrozen();
+        outputStream.defaultWriteObject();
+        outputStream.writeObject(allNodes);
+        outputStream.writeObject(allTypes);
+        outputStream.writeObject(allAnnotates);
+    }
 
-	@SuppressWarnings("unchecked")
-	private void readObject(@Nonnull ObjectInputStream inputStream)
-			throws IOException, ClassNotFoundException, ClassCastException {
-		inputStream.defaultReadObject();
-		this.allNodes = (List<AbstractNode>) inputStream.readObject();
-		this.allTypes = (List<AbstractType>) inputStream.readObject();
-		this.allAnnotates = (List<Annotate>) inputStream.readObject();
-	}
+    @SuppressWarnings("unchecked")
+    private void readObject(@Nonnull ObjectInputStream inputStream)
+            throws IOException, ClassNotFoundException, ClassCastException {
+        inputStream.defaultReadObject();
+        this.allNodes = (List<AbstractNode>) inputStream.readObject();
+        this.allTypes = (List<AbstractType>) inputStream.readObject();
+        this.allAnnotates = (List<Annotate>) inputStream.readObject();
+    }
 
-	//endregion Serialization Helper
+    //endregion Serialization Helper
 
-	//region Jsonify
+    //region Jsonify
 
-	@Override
-	protected void internalToJsonEnd(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-		super.internalToJsonEnd(builder, indentation);
-		if (!allNodes.isEmpty()) {
-			builder.append(", \"allNodes\": [");
-			internalArrayToReferenceJson(builder, indentation, allNodes);
-			builder.append('\n').append(indentation).append(']');
-		}
-		if (!allTypes.isEmpty()) {
-			builder.append(", \"allTypes\": [");
-			internalArrayToJson(builder, indentation, true, allTypes);
-			builder.append('\n').append(indentation).append(']');
-		}
-		if (!allAnnotates.isEmpty()) {
-			builder.append(", \"allAnnotates\": [");
-			internalArrayToJson(builder, indentation, true, allAnnotates);
-			builder.append('\n').append(indentation).append(']');
-		}
-	}
+    @Override
+    protected void internalToJsonEnd(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+        super.internalToJsonEnd(builder, indentation);
+        if (!allNodes.isEmpty()) {
+            builder.append(", \"allNodes\": [");
+            internalArrayToReferenceJson(builder, indentation, allNodes);
+            builder.append('\n').append(indentation).append(']');
+        }
+        if (!allTypes.isEmpty()) {
+            builder.append(", \"allTypes\": [");
+            internalArrayToJson(builder, indentation, true, allTypes);
+            builder.append('\n').append(indentation).append(']');
+        }
+        if (!allAnnotates.isEmpty()) {
+            builder.append(", \"allAnnotates\": [");
+            internalArrayToJson(builder, indentation, true, allAnnotates);
+            builder.append('\n').append(indentation).append(']');
+        }
+    }
 
-	//endregion Jsonify
+    //endregion Jsonify
 
 }

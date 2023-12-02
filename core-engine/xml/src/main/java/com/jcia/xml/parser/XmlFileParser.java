@@ -1,8 +1,8 @@
 package com.jcia.xml.parser;
 
+import com.jcia.xml.dom.Node;
 import com.jcia.xml.dom.Xml.XmlFileNode;
 import com.jcia.xml.dom.Xml.XmlTagNode;
-import com.jcia.xml.dom.Node;
 import com.jcia.xml.utils.Exception.JciaNotFoundException;
 import com.jcia.xml.utils.Helper.JciaDomHelper;
 import com.jcia.xml.utils.Helper.StringHelper;
@@ -11,7 +11,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 
 import java.io.File;

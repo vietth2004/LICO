@@ -67,15 +67,15 @@ public class BucketSort {
                 arr[index++] = value;
             }
         }
-        
+
         return arr;
     }
 
     /**
      * Get index of bucket which of our elements gets placed into it.
      *
-     * @param elem the element of array to be sorted
-     * @param min min value of array
+     * @param elem           the element of array to be sorted
+     * @param min            min value of array
      * @param numberOfBucket the number of bucket
      * @return index of bucket
      */

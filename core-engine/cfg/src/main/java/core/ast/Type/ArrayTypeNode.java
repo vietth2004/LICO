@@ -1,7 +1,6 @@
 package core.ast.Type;
 
 import core.ast.AstNode;
-import org.eclipse.jdt.core.dom.ArrayType;
 
 import java.util.List;
 

@@ -3,11 +3,10 @@ package com.thealgorithms.devutils.nodes;
 /**
  * Base class for any node implementation which contains a generic type
  * variable.
- *
+ * <p>
  * All known subclasses: {@link TreeNode}, {@link SimpleNode}.
  *
  * @param <E> The type of the data held in the Node.
- *
  * @author <a href="https://github.com/aitorfi">aitorfi</a>
  */
 public abstract class Node<E> {
@@ -20,7 +19,8 @@ public abstract class Node<E> {
     /**
      * Empty constructor.
      */
-    public Node() {}
+    public Node() {
+    }
 
     /**
      * Initializes the Nodes' data.

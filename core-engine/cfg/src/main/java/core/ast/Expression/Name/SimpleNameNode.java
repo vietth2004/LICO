@@ -32,6 +32,7 @@ public class SimpleNameNode extends NameNode {
     public static String getStringSimpleNameNode(SimpleNameNode simpleNameNode) {
         return simpleNameNode.identifier;
     }
+
     public String getIdentifier() {
         return this.identifier;
     }

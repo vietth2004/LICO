@@ -21,10 +21,20 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.example.jsfservice.utils.ParserUtils.*;
+import static com.example.jsfservice.utils.ParserUtils.filterBeanFromFacesConfig;
+import static com.example.jsfservice.utils.ParserUtils.filterTagNode;
+import static com.example.jsfservice.utils.ParserUtils.findAllBeanInjection;
+import static com.example.jsfservice.utils.ParserUtils.findBeanInjectionName;
+import static com.example.jsfservice.utils.ParserUtils.getAllJsfBeanNode;
+import static com.example.jsfservice.utils.ParserUtils.getChildrenLevel1XmlFileNode;
+import static com.example.jsfservice.utils.ParserUtils.xhtmlNodeFilter;
 
 @Service
 public class XmlServiceImpl implements XmlService {
@@ -32,7 +42,8 @@ public class XmlServiceImpl implements XmlService {
     private final Logger logger = LoggerFactory.getLogger(XmlServiceImpl.class);
     private final ExecutorService THREADPOOL_FIXED_SIZE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    public XmlServiceImpl(){}
+    public XmlServiceImpl() {
+    }
 
     @Override
     public List<Node> parseProjectWithPath(String folderPath) throws IOException, ExecutionException, InterruptedException {
@@ -44,15 +55,15 @@ public class XmlServiceImpl implements XmlService {
          * Submit callable task to ThreadPool
          */
         List<Future<Node>> xmlNodeFutures = new ArrayList<>();
-        paths.forEach(x -> {    
-            if(StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))){
-                    Future<Node> future = null;
-                    future = THREADPOOL_FIXED_SIZE.submit(new XmlFileParser(x.toString()));
-                    xmlNodeFutures.add(future);
+        paths.forEach(x -> {
+            if (StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))) {
+                Future<Node> future = null;
+                future = THREADPOOL_FIXED_SIZE.submit(new XmlFileParser(x.toString()));
+                xmlNodeFutures.add(future);
             }
         });
 
-        for(Future<Node> future : xmlNodeFutures) {
+        for (Future<Node> future : xmlNodeFutures) {
             Node parsedNode = future.get();
             xmlNodes.add(parsedNode);
         }
@@ -62,6 +73,7 @@ public class XmlServiceImpl implements XmlService {
 
     /**
      * No need to do this thing
+     *
      * @param file (.zip file format)
      * @return arrays of xml nodes
      * @throws IOException
@@ -91,10 +103,11 @@ public class XmlServiceImpl implements XmlService {
 
     /**
      * get all dependencies from java bean to injected java bean node
+     *
      * @param nodes
      * @return
      */
-    public List<Dependency> analyzeDependencyBetweenBeans(List<JavaNode> nodes){
+    public List<Dependency> analyzeDependencyBetweenBeans(List<JavaNode> nodes) {
         List<Dependency> dependencies = new ArrayList<>();
         List<JsfBeanNode> jsfBeanMap = getAllJsfBeanNode(nodes);
         List<JavaNode> jsfBeansInjection = findAllBeanInjection(nodes);
@@ -103,7 +116,7 @@ public class XmlServiceImpl implements XmlService {
                 node -> {
                     JsfBeanInjectionNode beanInjection = new JsfBeanInjectionNode();
                     beanInjection.setValue(node);
-                    if(findBeanInjectionName(node) != null)
+                    if (findBeanInjectionName(node) != null)
                         beanInjection.setBeanInjection(findBeanInjectionName(node));
                     else
                         beanInjection.setBeanInjection(Character.toLowerCase(node.getSimpleName().charAt(0)) + node.getSimpleName().substring(1));
@@ -114,13 +127,13 @@ public class XmlServiceImpl implements XmlService {
         /**
          * Assign jsf dependency
          */
-        for(JsfBeanNode beanNode : jsfBeanMap) {
-            for(JsfBeanInjectionNode injectionNode : jsfBeanInjectionMap) {
-                if(injectionNode.getBeanInjection().equals(beanNode.getBeanName())) {
+        for (JsfBeanNode beanNode : jsfBeanMap) {
+            for (JsfBeanInjectionNode injectionNode : jsfBeanInjectionMap) {
+                if (injectionNode.getBeanInjection().equals(beanNode.getBeanName())) {
                     dependencies.add(new Dependency(
                             injectionNode.getValue().getId(),
                             beanNode.getValue().getId(),
-                            new DependencyCountTable(0,0,0,0,0, 1)
+                            new DependencyCountTable(0, 0, 0, 0, 0, 1)
                     ));
                 }
             }
@@ -132,11 +145,12 @@ public class XmlServiceImpl implements XmlService {
     /**
      * get all dependencies from java bean to xhtml fileNode
      * injected bean has pattern #{...}
+     *
      * @param javaNode
      * @param xmlNodes
      * @return
      */
-    public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> javaNode, List<Node> xmlNodes){
+    public List<Dependency> analyzeDependencyFromBeanToView(List<JavaNode> javaNode, List<Node> xmlNodes) {
         List<Dependency> dependencies = new ArrayList<>();
         List<JsfBeanNode> beanNodes = getAllJsfBeanNode(javaNode);
 
@@ -146,7 +160,7 @@ public class XmlServiceImpl implements XmlService {
         List<Node> xhtmlNodes = xhtmlNodeFilter(xmlNodes);
         List<Node> allChildren = getChildrenLevel1XmlFileNode(xhtmlNodes);
         List<XmlBeanInjectionNode> injectionNodes = new ArrayList<>();
-        for(Node child : allChildren) {
+        for (Node child : allChildren) {
             injectionNodes.addAll(filterTagNode(child));
         }
 
@@ -162,23 +176,23 @@ public class XmlServiceImpl implements XmlService {
                 .filter(node -> node.getName().equals("faces-config.xml"))
                 .collect(Collectors.toList());
 
-        for(Node node : getChildrenLevel1XmlFileNode(faceConfig)) {
+        for (Node node : getChildrenLevel1XmlFileNode(faceConfig)) {
             beanNodes.addAll(filterBeanFromFacesConfig(node, javaNode));
         }
 
         /**
          * traversal function to analyze dependencies
          */
-        for(XmlBeanInjectionNode injectionNode : injectionNodes) {
-            for(JsfBeanNode beanNode : beanNodes) {
+        for (XmlBeanInjectionNode injectionNode : injectionNodes) {
+            for (JsfBeanNode beanNode : beanNodes) {
                 /**
                  * analyze dependencies if bean has pattern #{abc.def()}
                  */
-                if(injectionNode.getBeanInjection().contains(".")) {
+                if (injectionNode.getBeanInjection().contains(".")) {
                     String[] beanComponents = injectionNode.getBeanInjection().split("\\.");
                     String beanInjectionName = beanComponents[0];
                     String beanName = beanNode.getBeanName();
-                    if(beanName.equals(beanInjectionName)) {
+                    if (beanName.equals(beanInjectionName)) {
                         logger.info("Bean: {} call injectedBean: {} with path {}", beanNode.getValue().getSimpleName(), injectionNode.getBeanInjection(), injectionNode.getValue().getAbsolutePath());
 
                         /**
@@ -187,7 +201,7 @@ public class XmlServiceImpl implements XmlService {
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
-                                new DependencyCountTable(0,0,0,0,0, 1)
+                                new DependencyCountTable(0, 0, 0, 0, 0, 1)
                         ));
                     }
                 } else {
@@ -196,7 +210,7 @@ public class XmlServiceImpl implements XmlService {
                      */
                     String beanInjectionName = injectionNode.getBeanInjection();
                     String beanName = beanNode.getBeanName();
-                    if(beanName.equals(beanInjectionName)) {
+                    if (beanName.equals(beanInjectionName)) {
                         logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getSimpleName(), injectionNode.getValue().getAbsolutePath(), beanName);
 
                         /**
@@ -205,7 +219,7 @@ public class XmlServiceImpl implements XmlService {
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
-                                new DependencyCountTable(0,0,0,0,0, 1)
+                                new DependencyCountTable(0, 0, 0, 0, 0, 1)
                         ));
                     }
                 }
@@ -213,12 +227,12 @@ public class XmlServiceImpl implements XmlService {
                 /**
                  * analyze dependencies if custom bean config
                  */
-                if(injectionNode.getBeanInjection().contains("[")) {
+                if (injectionNode.getBeanInjection().contains("[")) {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
                     String beanName = beanNode.getBeanName();
-                    if(beanName.equals(beanInjectionName)) {
+                    if (beanName.equals(beanInjectionName)) {
                         logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getSimpleName(), injectionNode.getValue().getAbsolutePath(), beanName);
-                        if(beanNode.getValue().getId() == null)
+                        if (beanNode.getValue().getId() == null)
                             continue;
                         /**
                          * Assign jsf dependency
@@ -226,7 +240,7 @@ public class XmlServiceImpl implements XmlService {
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
-                                new DependencyCountTable(0,0,0,0,0, 1)
+                                new DependencyCountTable(0, 0, 0, 0, 0, 1)
                         ));
                     }
                 }
@@ -239,11 +253,12 @@ public class XmlServiceImpl implements XmlService {
     /**
      * get all dependencies from javaNode
      * MVC pattern
+     *
      * @param node
      * @param xmlNodes
      * @return
      */
-    public List<Dependency> analyzeDependencyFromControllerToView(List<JavaNode> node, List<Node> xmlNodes){
+    public List<Dependency> analyzeDependencyFromControllerToView(List<JavaNode> node, List<Node> xmlNodes) {
         List<Dependency> dependencies = new ArrayList<>();
         return dependencies;
     }

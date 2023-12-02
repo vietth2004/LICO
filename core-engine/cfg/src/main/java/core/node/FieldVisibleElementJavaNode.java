@@ -6,7 +6,11 @@ import core.structureTree.normalNode.SNormalCharNode;
 import core.structureTree.normalNode.SNormalDoubleNode;
 import core.structureTree.normalNode.SNormalFloatNode;
 import core.structureTree.normalNode.SNormalIntegerNode;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +53,7 @@ public class FieldVisibleElementJavaNode extends VisibleElementJavaNode {
         List<FieldVisibleElementJavaNode> fieldNodes = new ArrayList<>();
         for (int i = 0; i < node.fragments().size(); i++) {
             FieldVisibleElementJavaNode fieldNode = new FieldVisibleElementJavaNode();
-            fieldNode.setType(ASTHelper.getFullyQualifiedName(node.getType(), (CompilationUnit)node.getRoot()));
+            fieldNode.setType(ASTHelper.getFullyQualifiedName(node.getType(), (CompilationUnit) node.getRoot()));
             fieldNode.setStartPosition(node.getStartPosition());
             //set ten cua thuoc tinh
             if (node.fragments().get(i) instanceof VariableDeclarationFragment) {
@@ -151,12 +155,12 @@ public class FieldVisibleElementJavaNode extends VisibleElementJavaNode {
                 //todo: config here
 
             }
-            case "char" : {
+            case "char": {
                 sNode = new SNormalCharNode();
                 //todo: config here
 
             }
-            case "float" : {
+            case "float": {
                 sNode = new SNormalFloatNode();
                 //todo: config here
 

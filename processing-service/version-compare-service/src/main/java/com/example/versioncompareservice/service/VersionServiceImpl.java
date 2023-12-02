@@ -10,8 +10,12 @@ import com.example.versioncompareservice.model.Version;
 import com.example.versioncompareservice.service.analyzer.AddedNodeAnalyzer;
 import com.example.versioncompareservice.service.analyzer.ChangedNodeAnalyzer;
 import com.example.versioncompareservice.service.analyzer.DeletedNodeAnalyzer;
-import com.example.versioncompareservice.service.analyzer.UnchangedNodeAnalyzer;
-import com.example.versioncompareservice.utils.*;
+import com.example.versioncompareservice.utils.CompareUtils;
+import com.example.versioncompareservice.utils.Getter;
+import com.example.versioncompareservice.utils.JwtUtils;
+import com.example.versioncompareservice.utils.Requester;
+import com.example.versioncompareservice.utils.Utils;
+import com.example.versioncompareservice.utils.Wrapper;
 import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
@@ -27,16 +31,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 @Service
-public class VersionServiceImpl implements VersionService{
+public class VersionServiceImpl implements VersionService {
 
     @Autowired
     CompareUtils compareUtils;
@@ -73,7 +80,7 @@ public class VersionServiceImpl implements VersionService{
         Version version = new Version();
         String userPath = user;
 
-        if(!userPath.equals("anonymous")){
+        if (!userPath.equals("anonymous")) {
             userPath = jwtUtils.extractUsername(user);
         }
 
@@ -87,11 +94,11 @@ public class VersionServiceImpl implements VersionService{
         return getCompare(version);
     }
 
-    public Response getCompare (MultipartFile file, String user, String project, String oldPath) throws JavaCiaException, IOException {
+    public Response getCompare(MultipartFile file, String user, String project, String oldPath) throws JavaCiaException, IOException {
         String userPath = user;
         Version version = new Version();
 
-        if(!userPath.equals("anonymous")){
+        if (!userPath.equals("anonymous")) {
             userPath = jwtUtils.extractUsername(user);
         }
         String newVersion = fileStorageService.storeFile(file, userPath, project);
@@ -99,7 +106,9 @@ public class VersionServiceImpl implements VersionService{
         version.setOldVersion(oldPath);
 
         return getCompare(version);
-    };
+    }
+
+    ;
 
     @Override
     public Response getCompare(Version files) throws JavaCiaException, IOException {
