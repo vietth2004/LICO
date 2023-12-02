@@ -21,17 +21,17 @@ public class FindMinRecursion {
         }
 
         assert min(array, 0, array.length - 1) ==
-                Arrays.stream(array).min().getAsInt();
+        Arrays.stream(array).min().getAsInt();
         assert min(array, array.length) ==
-                Arrays.stream(array).min().getAsInt();
+        Arrays.stream(array).min().getAsInt();
     }
 
     /**
      * Get min of array using divide and conquer algorithm
      *
      * @param array contains elements
-     * @param low   the index of the first element
-     * @param high  the index of the last element
+     * @param low the index of the first element
+     * @param high the index of the last element
      * @return min of {@code array}
      */
     public static int min(int[] array, int low, int high) {
@@ -51,12 +51,12 @@ public class FindMinRecursion {
      * Get min of array using recursion algorithm
      *
      * @param array contains elements
-     * @param len   length of given array
+     * @param len length of given array
      * @return min value of {@code array}
      */
     public static int min(int[] array, int len) {
         return len == 1
-                ? array[0]
-                : Math.min(min(array, len - 1), array[len - 1]);
+            ? array[0]
+            : Math.min(min(array, len - 1), array[len - 1]);
     }
 }

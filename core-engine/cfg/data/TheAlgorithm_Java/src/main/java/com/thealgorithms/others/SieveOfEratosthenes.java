@@ -29,7 +29,7 @@ public class SieveOfEratosthenes {
 
     /**
      * @param n The number till which we have to check for prime Prints all the
-     *          prime numbers till n. Should be more than 1.
+     * prime numbers till n. Should be more than 1.
      * @return array of all prime numbers between 0 to n
      */
     public static int[] findPrimesTill(int n) {
@@ -53,9 +53,9 @@ public class SieveOfEratosthenes {
 
         //Write all primes to result array
         int primesCount = (int) Arrays
-                .stream(numbers)
-                .filter(element -> element == Type.PRIME)
-                .count();
+            .stream(numbers)
+            .filter(element -> element == Type.PRIME)
+            .count();
         int[] primes = new int[primesCount];
 
         int primeIndex = 0;

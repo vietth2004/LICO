@@ -27,39 +27,36 @@ import java.io.Serializable;
 
 public final class SourceFile implements JavaSourceFile, Serializable {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final Module module;
-    @Nonnull
-    private final JavaSourceFileType type;
-    @Nonnull
-    private final RelativePath relativePath;
+	@Nonnull private final Module module;
+	@Nonnull private final JavaSourceFileType type;
+	@Nonnull private final RelativePath relativePath;
 
 
-    public SourceFile(@Nonnull Module module, @Nonnull JavaSourceFileType type, @Nonnull RelativePath relativePath) {
-        this.module = module;
-        this.type = type;
-        this.relativePath = relativePath;
-    }
+	public SourceFile(@Nonnull Module module, @Nonnull JavaSourceFileType type, @Nonnull RelativePath relativePath) {
+		this.module = module;
+		this.type = type;
+		this.relativePath = relativePath;
+	}
 
 
-    @Nonnull
-    @Override
-    public Module getModule() {
-        return module;
-    }
+	@Nonnull
+	@Override
+	public Module getModule() {
+		return module;
+	}
 
-    @Nonnull
-    @Override
-    public JavaSourceFileType getType() {
-        return type;
-    }
+	@Nonnull
+	@Override
+	public JavaSourceFileType getType() {
+		return type;
+	}
 
-    @Nonnull
-    @Override
-    public RelativePath getRelativePath() {
-        return relativePath;
-    }
+	@Nonnull
+	@Override
+	public RelativePath getRelativePath() {
+		return relativePath;
+	}
 
 }

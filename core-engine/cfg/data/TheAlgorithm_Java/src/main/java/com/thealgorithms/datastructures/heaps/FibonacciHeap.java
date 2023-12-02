@@ -144,9 +144,9 @@ public class FibonacciHeap {
             return new int[0]; ///return an empty array
         }
         int[] rankArray = new int[(int) Math.floor(
-                Math.log(this.size()) / Math.log(GOLDEN_RATIO)
+            Math.log(this.size()) / Math.log(GOLDEN_RATIO)
         ) +
-                1]; //creates the array
+        1]; //creates the array
         rankArray[this.min.rank]++;
         HeapNode curr = this.min.next;
         while (curr != this.min) {
@@ -287,9 +287,9 @@ public class FibonacciHeap {
      */
     private HeapNode[] toBuckets(HeapNode curr) {
         HeapNode[] buckets = new HeapNode[(int) Math.floor(
-                Math.log(this.size()) / Math.log(GOLDEN_RATIO)
+            Math.log(this.size()) / Math.log(GOLDEN_RATIO)
         ) +
-                1];
+        1];
         curr.prev.next = null;
         HeapNode tmpCurr;
         while (curr != null) {

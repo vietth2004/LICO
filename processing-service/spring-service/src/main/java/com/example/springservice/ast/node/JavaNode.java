@@ -78,11 +78,11 @@ public class JavaNode extends Node {
     }
 
     private void setupProperties(AbstractNode abstractNode) {
-        if (abstractNode instanceof AbstractAnnotatedNode) {
+        if(abstractNode instanceof AbstractAnnotatedNode) {
             this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
         }
 
-        if (abstractNode instanceof InterfaceNode) {
+        if(abstractNode instanceof InterfaceNode) {
             this.extendInterfaces = Utility.convertParameters(((InterfaceNode) abstractNode).getExtendsInterfaces());
         }
     }

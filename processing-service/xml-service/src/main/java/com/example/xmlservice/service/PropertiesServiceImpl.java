@@ -25,10 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.example.xmlservice.utils.ParserUtils.filterPropBeanFromFacesConfig;
-import static com.example.xmlservice.utils.ParserUtils.filterTagNode;
-import static com.example.xmlservice.utils.ParserUtils.getChildrenLevel1XmlFileNode;
-import static com.example.xmlservice.utils.ParserUtils.xhtmlNodeFilter;
+import static com.example.xmlservice.utils.ParserUtils.*;
 
 @Service
 public class PropertiesServiceImpl implements PropertiesService {
@@ -48,14 +45,14 @@ public class PropertiesServiceImpl implements PropertiesService {
          */
         List<Future<PropertiesFileNode>> propNodeFuture = new ArrayList<>();
         paths.forEach(x -> {
-            if (FileHelper.getFileExtension(x.toString()).equals("properties")) {
+            if(FileHelper.getFileExtension(x.toString()).equals("properties")){
                 Future<PropertiesFileNode> future = null;
                 future = THREAD_POOL.submit(new PropertiesFileParser(x.toString()));
                 propNodeFuture.add(future);
             }
         });
 
-        for (Future<PropertiesFileNode> future : propNodeFuture) {
+        for(Future<PropertiesFileNode> future : propNodeFuture) {
             PropertiesFileNode parsedNode = future.get();
             propsFileNodes.add(parsedNode);
         }
@@ -83,7 +80,7 @@ public class PropertiesServiceImpl implements PropertiesService {
         List<Node> xhtmlNodes = xhtmlNodeFilter(xmlNodes);
         List<Node> allChildren = getChildrenLevel1XmlFileNode(xhtmlNodes);
         List<XmlBeanInjectionNode> injectionNodes = new ArrayList<>();
-        for (Node child : allChildren) {
+        for(Node child : allChildren) {
             injectionNodes.addAll(filterTagNode(child));
         }
         injectionNodes = injectionNodes.stream().filter(node -> node != null).filter(node -> node.getBeanInjection().contains("[")).collect(Collectors.toList());
@@ -101,20 +98,20 @@ public class PropertiesServiceImpl implements PropertiesService {
          * Get all first children from faces-config file
          * unify all nodes to XmlTagNode
          */
-        for (Node node : getChildrenLevel1XmlFileNode(faceConfig)) {
+        for(Node node : getChildrenLevel1XmlFileNode(faceConfig)) {
             beanNodes.addAll(filterPropBeanFromFacesConfig(node, propertiesFileNodes));
         }
 
-        for (XmlBeanInjectionNode injectionNode : injectionNodes) {
-            for (PropsBeanNode beanNode : beanNodes) {
+        for(XmlBeanInjectionNode injectionNode : injectionNodes) {
+            for(PropsBeanNode beanNode : beanNodes) {
                 /**
                  * analyze dependencies if custom bean config
                  */
-                if (injectionNode.getBeanInjection().contains("[")) {
+                if(injectionNode.getBeanInjection().contains("[")) {
                     String beanInjectionName = injectionNode.getBeanInjection().split("\\[")[0];
                     String injectedValue = injectionNode.getBeanInjection().split("\\[")[1].replace("]", "");
                     String beanName = beanNode.getBeanName();
-                    if (beanNode.getValue().getProperties() != null) {
+                    if(beanNode.getValue().getProperties() != null) {
                         for (PropertiesNode prop : beanNode.getValue().getProperties()) {
                             if (prop.getName().equals(injectedValue) && beanName.equals(beanInjectionName)) {
                                 logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getBeanName(), injectionNode.getBeanInjection(), beanName);
@@ -126,12 +123,12 @@ public class PropertiesServiceImpl implements PropertiesService {
                             }
                         }
                     }
-                    if (beanName.equals(beanInjectionName)) {
+                    if(beanName.equals(beanInjectionName)) {
                         logger.info("Bean: {} call injectedBean: {} with value {}", beanNode.getValue().getName(), injectionNode.getValue().getAbsolutePath(), beanName);
                         dependencies.add(new Dependency(
                                 injectionNode.getValue().getId(),
                                 beanNode.getValue().getId(),
-                                new DependencyCountTable(0, 0, 0, 0, 0, 1)
+                                new DependencyCountTable(0,0,0,0,0, 1)
                         ));
                     }
                 }

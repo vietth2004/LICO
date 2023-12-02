@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 
 @Service
 @Slf4j
-public class CompareServiceImpl implements CompareService {
+public class CompareServiceImpl implements CompareService{
 
     @Autowired
     CompareUtils compareUtils;

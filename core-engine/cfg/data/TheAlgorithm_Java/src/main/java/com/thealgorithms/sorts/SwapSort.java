@@ -18,7 +18,7 @@ public class SwapSort implements SortAlgorithm {
 
         while (index < LENGTH - 1) {
             int amountSmallerElements =
-                    this.getSmallerElementCount(array, index);
+                this.getSmallerElementCount(array, index);
 
             if (amountSmallerElements > 0 && index != amountSmallerElements) {
                 T element = array[index];
@@ -33,8 +33,8 @@ public class SwapSort implements SortAlgorithm {
     }
 
     private <T extends Comparable<T>> int getSmallerElementCount(
-            T[] array,
-            int index
+        T[] array,
+        int index
     ) {
         int counter = 0;
         for (int i = 0; i < array.length; i++) {
@@ -48,7 +48,7 @@ public class SwapSort implements SortAlgorithm {
 
     public static void main(String[] args) {
         // ==== Int =======
-        Integer[] a = {3, 7, 45, 1, 33, 5, 2, 9};
+        Integer[] a = { 3, 7, 45, 1, 33, 5, 2, 9 };
         System.out.print("unsorted: ");
         print(a);
         System.out.println();
@@ -60,14 +60,14 @@ public class SwapSort implements SortAlgorithm {
 
         // ==== String =======
         String[] b = {
-                "banana",
-                "berry",
-                "orange",
-                "grape",
-                "peach",
-                "cherry",
-                "apple",
-                "pineapple",
+            "banana",
+            "berry",
+            "orange",
+            "grape",
+            "peach",
+            "cherry",
+            "apple",
+            "pineapple",
         };
         System.out.print("unsorted: ");
         print(b);

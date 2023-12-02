@@ -2,7 +2,8 @@ package core.cfg;
 
 import core.utils.Utils;
 
-public class CfgReturnStatementNode extends CfgNode implements IEvaluateCoverage {
+public class CfgReturnStatementNode extends CfgNode implements IEvaluateCoverage
+{
     String returnType = "";
 
     public String getReturnType() {

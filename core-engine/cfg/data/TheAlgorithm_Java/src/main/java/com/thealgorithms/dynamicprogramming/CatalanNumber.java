@@ -3,12 +3,11 @@ package com.thealgorithms.dynamicprogramming;
 /**
  * This file contains an implementation of finding the nth CATALAN NUMBER using
  * dynamic programming Wikipedia: https://en.wikipedia.org/wiki/Catalan_number
- * <p>
+ *
  * Time Complexity: O(n^2) Space Complexity: O(n)
  *
  * @author AMRITESH ANAND (https://github.com/amritesh19)
  */
-
 import java.util.Scanner;
 
 public class CatalanNumber {
@@ -49,7 +48,7 @@ public class CatalanNumber {
         Scanner sc = new Scanner(System.in);
 
         System.out.println(
-                "Enter the number n to find nth Catalan number (n <= 50)"
+            "Enter the number n to find nth Catalan number (n <= 50)"
         );
         int n = sc.nextInt();
         System.out.println(n + "th Catalan number is " + findNthCatalan(n));

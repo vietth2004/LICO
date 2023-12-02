@@ -6,12 +6,12 @@ import java.util.List;
 public class HammingDistance {
 
     public int getHammingDistanceBetweenBits(
-            String senderBits,
-            String receiverBits
+        String senderBits,
+        String receiverBits
     ) {
         if (senderBits.length() != receiverBits.length()) {
             throw new IllegalArgumentException(
-                    "Sender and Receiver bits should be same"
+                "Sender and Receiver bits should be same"
             );
         }
 

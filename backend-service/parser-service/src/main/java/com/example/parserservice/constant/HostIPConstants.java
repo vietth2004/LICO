@@ -4,22 +4,7 @@ import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.example.parserservice.constant.HostConstant.API_GATEWAY;
-import static com.example.parserservice.constant.HostConstant.CIA_SERVICE;
-import static com.example.parserservice.constant.HostConstant.FILE_SERVICE;
-import static com.example.parserservice.constant.HostConstant.GITHUB_SERVICE;
-import static com.example.parserservice.constant.HostConstant.JAVA_SERVICE;
-import static com.example.parserservice.constant.HostConstant.JSF_SERVICE;
-import static com.example.parserservice.constant.HostConstant.JSP_SERVICE;
-import static com.example.parserservice.constant.HostConstant.PARSER_SERVICE;
-import static com.example.parserservice.constant.HostConstant.PROJECT_SERVICE;
-import static com.example.parserservice.constant.HostConstant.SPRING_SERVICE;
-import static com.example.parserservice.constant.HostConstant.STRUT_SERVICE;
-import static com.example.parserservice.constant.HostConstant.USER_SERVICE;
-import static com.example.parserservice.constant.HostConstant.UTEST_SERVICE;
-import static com.example.parserservice.constant.HostConstant.UTILITY_SERVICE;
-import static com.example.parserservice.constant.HostConstant.VERSION_COMPARE_SERVICE;
-import static com.example.parserservice.constant.HostConstant.XML_SERVICE;
+import static com.example.parserservice.constant.HostConstant.*;
 
 @Component
 public class HostIPConstants {
@@ -86,8 +71,7 @@ public class HostIPConstants {
     public String getJspServiceIp() {
         return eurekaClient.getApplication(JSP_SERVICE).getInstances().get(0).getIPAddr();
     }
-
-    public String getUnitTestingIP() {
-        return eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
+    public String getUnitTestingIP(){
+        return  eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
     }
 }

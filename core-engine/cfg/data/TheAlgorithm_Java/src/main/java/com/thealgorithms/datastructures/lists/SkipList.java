@@ -39,7 +39,6 @@ public class SkipList<E extends Comparable<E>> {
 
     /**
      * Function for determining height of new nodes.
-     *
      * @see HeightStrategy
      */
     private final HeightStrategy heightStrategy;
@@ -191,24 +190,24 @@ public class SkipList<E extends Comparable<E>> {
 
         Collections.reverse(layers);
         String result = layers
-                .stream()
-                .map(layer -> {
-                    StringBuilder acc = new StringBuilder();
-                    for (boolean b : layer) {
-                        if (b) {
-                            acc.append("[ ]");
-                        } else {
-                            acc.append("---");
-                        }
-                        acc.append(" ");
+            .stream()
+            .map(layer -> {
+                StringBuilder acc = new StringBuilder();
+                for (boolean b : layer) {
+                    if (b) {
+                        acc.append("[ ]");
+                    } else {
+                        acc.append("---");
                     }
-                    return acc.toString();
-                })
-                .collect(Collectors.joining("\n"));
+                    acc.append(" ");
+                }
+                return acc.toString();
+            })
+            .collect(Collectors.joining("\n"));
         String positions = IntStream
-                .range(0, sizeWithHeader - 1)
-                .mapToObj(i -> String.format("%3d", i))
-                .collect(Collectors.joining(" "));
+            .range(0, sizeWithHeader - 1)
+            .mapToObj(i -> String.format("%3d", i))
+            .collect(Collectors.joining(" "));
 
         return result + String.format("%n H %s%n", positions);
     }
@@ -217,7 +216,6 @@ public class SkipList<E extends Comparable<E>> {
      * Value container.
      * Each node have pointers to the closest nodes left and right from current
      * on each layer of nodes height.
-     *
      * @param <E> type of elements
      */
     private static class Node<E> {
@@ -269,12 +267,10 @@ public class SkipList<E extends Comparable<E>> {
     /**
      * Height strategy is a way of calculating maximum height for skip list
      * and height for each node.
-     *
      * @see BernoulliHeightStrategy
      */
     public interface HeightStrategy {
         int height(int expectedSize);
-
         int nodeHeight(int heightCap);
     }
 
@@ -303,7 +299,7 @@ public class SkipList<E extends Comparable<E>> {
         public BernoulliHeightStrategy(double probability) {
             if (probability <= 0 || probability >= 1) {
                 throw new IllegalArgumentException(
-                        "Probability should be from 0 to 1. But was: " + probability
+                    "Probability should be from 0 to 1. But was: " + probability
                 );
             }
             this.probability = probability;
@@ -312,7 +308,7 @@ public class SkipList<E extends Comparable<E>> {
         @Override
         public int height(int expectedSize) {
             long height = Math.round(
-                    Math.log10(expectedSize) / Math.log10(1 / probability)
+                Math.log10(expectedSize) / Math.log10(1 / probability)
             );
             if (height > Integer.MAX_VALUE) {
                 throw new IllegalArgumentException();

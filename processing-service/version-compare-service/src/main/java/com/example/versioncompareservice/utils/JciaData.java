@@ -100,7 +100,7 @@ public class JciaData {
 
     public static JciaData getInstance() {
 //        return THREAD_LOCAL.get();
-        if (instances == null) {
+        if(instances == null) {
             //synchronized block to remove overhead
             synchronized (JciaData.class) {
                 if (instances == null) {

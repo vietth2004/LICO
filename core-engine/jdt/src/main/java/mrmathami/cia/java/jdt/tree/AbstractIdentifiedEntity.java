@@ -28,65 +28,65 @@ import java.util.Map;
 
 public abstract class AbstractIdentifiedEntity extends AbstractEntity implements JavaIdentifiedEntity {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    private int id;
-
-
-    //region Serialization Helper
-
-    @Nonnull
-    private static <A, R> List<A> createArrayList(@Nullable R any) {
-        return new ArrayList<>();
-    }
-
-    // must be called when @Override
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        final List<AbstractIdentifiedEntity> list
-                = map.computeIfAbsent(getIdClass(), AbstractIdentifiedEntity::createArrayList);
-        this.id = list.size();
-        list.add(this);
-        return false;
-    }
-
-    //endregion Serialization Helper
-
-    //region Getter & Setter
-
-    @Override
-    public int getId() {
-        assertFrozen();
-        return id;
-    }
-
-    //endregion Getter & Setter
-
-    //region Jsonify
-
-    @Override
-    public final void internalToJson(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        internalToReferenceJson(builder);
-        internalToJsonStart(builder, indentation);
-        internalToJsonEnd(builder, indentation);
-    }
-
-    public final void internalToReferenceJson(@Nonnull StringBuilder builder) {
-        builder.append("\"entityClass\": \"").append(getEntityClass())
-                .append("\", \"idClass\": \"").append(getIdClass())
-                .append("\", \"id\": ").append(id);
-        internalToReferenceJsonStart(builder);
-        internalToReferenceJsonEnd(builder);
-    }
+	private int id;
 
 
-    protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-    }
+	//region Serialization Helper
 
-    protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
-    }
+	@Nonnull
+	private static <A, R> List<A> createArrayList(@Nullable R any) {
+		return new ArrayList<>();
+	}
 
-    //endregion Jsonify
+	// must be called when @Override
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		final List<AbstractIdentifiedEntity> list
+				= map.computeIfAbsent(getIdClass(), AbstractIdentifiedEntity::createArrayList);
+		this.id = list.size();
+		list.add(this);
+		return false;
+	}
+
+	//endregion Serialization Helper
+
+	//region Getter & Setter
+
+	@Override
+	public int getId() {
+		assertFrozen();
+		return id;
+	}
+
+	//endregion Getter & Setter
+
+	//region Jsonify
+
+	@Override
+	public final void internalToJson(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		internalToReferenceJson(builder);
+		internalToJsonStart(builder, indentation);
+		internalToJsonEnd(builder, indentation);
+	}
+
+	public final void internalToReferenceJson(@Nonnull StringBuilder builder) {
+		builder.append("\"entityClass\": \"").append(getEntityClass())
+				.append("\", \"idClass\": \"").append(getIdClass())
+				.append("\", \"id\": ").append(id);
+		internalToReferenceJsonStart(builder);
+		internalToReferenceJsonEnd(builder);
+	}
+
+
+	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+	}
+
+	protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
+	}
+
+	//endregion Jsonify
 
 }

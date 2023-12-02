@@ -62,6 +62,6 @@ public class TestCoverage {
         }
         setTotalNode(totalList.size());
         setPassNode(countPass);
-        setResult(passNode / totalNode);
+        setResult(passNode/totalNode);
     }
 }

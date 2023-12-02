@@ -30,83 +30,81 @@ import java.util.stream.StreamSupport;
 
 public final class RelativePath implements Serializable {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final String[] components;
+	@Nonnull private final String[] components;
 
-    @Nullable
-    private transient List<String> componentList;
+	@Nullable private transient List<String> componentList;
 
 
-    public RelativePath(@Nonnull String[] components) {
-        this.components = components;
-    }
+	public RelativePath(@Nonnull String[] components) {
+		this.components = components;
+	}
 
 
-    @Nonnull
-    public static RelativePath fromPath(@Nonnull Path path) {
-        return new RelativePath(
-                StreamSupport.stream(path.spliterator(), false)
-                        .map(Path::toString)
-                        .toArray(String[]::new)
-        );
-    }
+	@Nonnull
+	public static RelativePath fromPath(@Nonnull Path path) {
+		return new RelativePath(
+				StreamSupport.stream(path.spliterator(), false)
+						.map(Path::toString)
+						.toArray(String[]::new)
+		);
+	}
 
-    @Nonnull
-    public static RelativePath concat(@Nonnull RelativePath relativePathA, @Nonnull RelativePath relativePathB) {
-        final String[] componentsA = relativePathA.components, componentsB = relativePathB.components;
-        return componentsA.length == 0 ? relativePathB : componentsB.length == 0 ? relativePathA
-                : new RelativePath(ArrayUtils.concat(componentsA, componentsB));
-    }
-
-
-    public int length() {
-        return components.length;
-    }
-
-    @Nonnull
-    public String getComponent(int index) {
-        final int length = components.length;
-        if (index < -length || index >= length) throw new IndexOutOfBoundsException();
-        return index >= 0 ? components[index] : components[length + index];
-    }
-
-    @Nonnull
-    public List<String> getComponents() {
-        return componentList != null ? componentList : (this.componentList = List.of(components));
-    }
-
-    @Nonnull
-    public String[] toArray() {
-        return components.clone();
-    }
-
-    @Nonnull
-    public Path appendToPath(@Nonnull Path path) {
-        Path result = path;
-        for (final String component : components) {
-            result = result.resolve(component);
-        }
-        return result;
-    }
+	@Nonnull
+	public static RelativePath concat(@Nonnull RelativePath relativePathA, @Nonnull RelativePath relativePathB) {
+		final String[] componentsA = relativePathA.components, componentsB = relativePathB.components;
+		return componentsA.length == 0 ? relativePathB : componentsB.length == 0 ? relativePathA
+				: new RelativePath(ArrayUtils.concat(componentsA, componentsB));
+	}
 
 
-    @Override
-    public boolean equals(@Nullable Object object) {
-        if (this == object) return true;
-        if (!(object instanceof RelativePath)) return false;
-        return Arrays.equals(components, ((RelativePath) object).components);
-    }
+	public int length() {
+		return components.length;
+	}
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(components);
-    }
+	@Nonnull
+	public String getComponent(int index) {
+		final int length = components.length;
+		if (index < -length || index >= length) throw new IndexOutOfBoundsException();
+		return index >= 0 ? components[index] : components[length + index];
+	}
 
-    @Override
-    public String toString() {
-        return String.join("/", components);
-    }
+	@Nonnull
+	public List<String> getComponents() {
+		return componentList != null ? componentList : (this.componentList = List.of(components));
+	}
+
+	@Nonnull
+	public String[] toArray() {
+		return components.clone();
+	}
+
+	@Nonnull
+	public Path appendToPath(@Nonnull Path path) {
+		Path result = path;
+		for (final String component : components) {
+			result = result.resolve(component);
+		}
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(@Nullable Object object) {
+		if (this == object) return true;
+		if (!(object instanceof RelativePath)) return false;
+		return Arrays.equals(components, ((RelativePath) object).components);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(components);
+	}
+
+	@Override
+	public String toString() {
+		return String.join("/", components);
+	}
 
 }

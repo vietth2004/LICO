@@ -34,423 +34,413 @@ import java.util.Map;
 
 public final class Annotate extends AbstractIdentifiedEntity implements JavaAnnotate {
 
-    private static final long serialVersionUID = -1L;
-
-    @Nonnull
-    private final String name;
-    @Nullable
-    private AbstractNode node;
-    @Nonnull
-    private transient List<ParameterImpl> parameters = List.of();
-
-
-    public Annotate(@Nonnull String name) {
-        this.name = name;
-    }
-
-
-    //region Getter & Setter
-
-    @Nonnull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    @Override
-    public AbstractNode getNode() {
-        return node;
-    }
-
-    public void setNode(@Nullable AbstractNode node) {
-        assertNonFrozen();
-        this.node = node;
-    }
-
-    @Nonnull
-    @Override
-    public List<ParameterImpl> getParameters() {
-        return isFrozen() ? parameters : Collections.unmodifiableList(parameters);
-    }
-
-    public void setParameters(@Nonnull List<ParameterImpl> parameters) {
-        assertNonFrozen();
-        this.parameters = parameters;
-    }
-
-    //endregion Getter & Setter
-
-    //region Serialization Helper
-
-    // must be called when @Override
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        this.parameters = List.copyOf(parameters);
-        for (final ParameterImpl parameter : parameters) parameter.internalFreeze(map);
-        return false;
-    }
-
-    private void writeObject(@Nonnull ObjectOutputStream outputStream)
-            throws IOException, UnsupportedOperationException {
-        assertFrozen();
-        outputStream.defaultWriteObject();
-        outputStream.writeObject(parameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void readObject(@Nonnull ObjectInputStream inputStream)
-            throws IOException, ClassNotFoundException, ClassCastException {
-        inputStream.defaultReadObject();
-        this.parameters = (List<ParameterImpl>) inputStream.readObject();
-    }
-
-    //endregion Serialization Helper
-
-    //region Jsonify
-
-    @Override
-    protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
-        super.internalToReferenceJsonEnd(builder);
-        builder.append(", \"name\": \"").append(name).append('"');
-    }
-
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (node != null) {
-            builder.append(", \"node\": { ");
-            node.internalToReferenceJson(builder);
-            builder.append(" }");
-        }
-        if (!parameters.isEmpty()) {
-            builder.append(", \"parameters\": [");
-            internalArrayToJson(builder, indentation, true, parameters);
-            builder.append('\n').append(indentation).append(']');
-        }
-    }
-
-    //endregion Jsonify
-
-    @Nonnull
-    @Override
-    public final String toString() {
-        return name;
-    }
+	private static final long serialVersionUID = -1L;
+
+	@Nonnull private final String name;
+	@Nullable private AbstractNode node;
+	@Nonnull private transient List<ParameterImpl> parameters = List.of();
+
+
+	public Annotate(@Nonnull String name) {
+		this.name = name;
+	}
+
+
+	//region Getter & Setter
+
+	@Nonnull
+	@Override
+	public String getName() {
+		return name;
+	}
 
+	@Nullable
+	@Override
+	public AbstractNode getNode() {
+		return node;
+	}
+
+	public void setNode(@Nullable AbstractNode node) {
+		assertNonFrozen();
+		this.node = node;
+	}
+
+	@Nonnull
+	@Override
+	public List<ParameterImpl> getParameters() {
+		return isFrozen() ? parameters : Collections.unmodifiableList(parameters);
+	}
+
+	public void setParameters(@Nonnull List<ParameterImpl> parameters) {
+		assertNonFrozen();
+		this.parameters = parameters;
+	}
+
+	//endregion Getter & Setter
+
+	//region Serialization Helper
+
+	// must be called when @Override
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		this.parameters = List.copyOf(parameters);
+		for (final ParameterImpl parameter : parameters) parameter.internalFreeze(map);
+		return false;
+	}
+
+	private void writeObject(@Nonnull ObjectOutputStream outputStream)
+			throws IOException, UnsupportedOperationException {
+		assertFrozen();
+		outputStream.defaultWriteObject();
+		outputStream.writeObject(parameters);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void readObject(@Nonnull ObjectInputStream inputStream)
+			throws IOException, ClassNotFoundException, ClassCastException {
+		inputStream.defaultReadObject();
+		this.parameters = (List<ParameterImpl>) inputStream.readObject();
+	}
+
+	//endregion Serialization Helper
+
+	//region Jsonify
+
+	@Override
+	protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
+		super.internalToReferenceJsonEnd(builder);
+		builder.append(", \"name\": \"").append(name).append('"');
+	}
+
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (node != null) {
+			builder.append(", \"node\": { ");
+			node.internalToReferenceJson(builder);
+			builder.append(" }");
+		}
+		if (!parameters.isEmpty()) {
+			builder.append(", \"parameters\": [");
+			internalArrayToJson(builder, indentation, true, parameters);
+			builder.append('\n').append(indentation).append(']');
+		}
+	}
+
+	//endregion Jsonify
 
-    public static final class ParameterImpl extends AbstractNonIdentifiedEntity implements Parameter {
+	@Nonnull
+	@Override
+	public final String toString() {
+		return name;
+	}
 
-        private static final long serialVersionUID = -1L;
 
-        @Nonnull
-        private final String name;
-        @Nullable
-        private ValueImpl value;
-        @Nullable
-        private AbstractNode node;
+	public static final class ParameterImpl extends AbstractNonIdentifiedEntity implements Parameter {
 
+		private static final long serialVersionUID = -1L;
 
-        public ParameterImpl(@Nonnull String name) {
-            this.name = name;
-        }
+		@Nonnull private final String name;
+		@Nullable private ValueImpl value;
+		@Nullable private AbstractNode node;
 
 
-        //region Getter & Setter
+		public ParameterImpl(@Nonnull String name) {
+			this.name = name;
+		}
 
-        @Nonnull
-        @Override
-        public String getName() {
-            return name;
-        }
 
-        @Nullable
-        @Override
-        public ValueImpl getValue() {
-            return value;
-        }
+		//region Getter & Setter
 
-        public void setValue(@Nonnull ValueImpl value) {
-            assertNonFrozen();
-            this.value = value;
-        }
+		@Nonnull
+		@Override
+		public String getName() {
+			return name;
+		}
 
-        @Nullable
-        @Override
-        public AbstractNode getNode() {
-            return node;
-        }
+		@Nullable
+		@Override
+		public ValueImpl getValue() {
+			return value;
+		}
 
-        public void setNode(@Nonnull AbstractNode node) {
-            assertNonFrozen();
-            this.node = node;
-        }
+		public void setValue(@Nonnull ValueImpl value) {
+			assertNonFrozen();
+			this.value = value;
+		}
 
-        //endregion Getter & Setter
+		@Nullable
+		@Override
+		public AbstractNode getNode() {
+			return node;
+		}
 
-        //region Serialization Helper
+		public void setNode(@Nonnull AbstractNode node) {
+			assertNonFrozen();
+			this.node = node;
+		}
 
-        @Override
-        public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-            if (super.internalFreeze(map)) return true;
-            if (value != null) value.internalFreeze(map);
-            return false;
-        }
+		//endregion Getter & Setter
 
-        //endregion Serialization Helper
+		//region Serialization Helper
 
-        //region Jsonify
+		@Override
+		public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+			if (super.internalFreeze(map)) return true;
+			if (value != null) value.internalFreeze(map);
+			return false;
+		}
 
-        @Override
-        protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-            super.internalToJsonStart(builder, indentation);
-            builder.append(", \"name\": \"").append(name).append('"');
-            if (node != null) {
-                builder.append(", \"node\": { ");
-                node.internalToReferenceJson(builder);
-                builder.append(" }");
-            }
-            if (value != null) {
-                builder.append(", \"value\": { ");
-                value.internalToJson(builder, indentation);
-                builder.append(" }");
-            }
-        }
+		//endregion Serialization Helper
 
-        //endregion Jsonify
+		//region Jsonify
 
-    }
+		@Override
+		protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+			super.internalToJsonStart(builder, indentation);
+			builder.append(", \"name\": \"").append(name).append('"');
+			if (node != null) {
+				builder.append(", \"node\": { ");
+				node.internalToReferenceJson(builder);
+				builder.append(" }");
+			}
+			if (value != null) {
+				builder.append(", \"value\": { ");
+				value.internalToJson(builder, indentation);
+				builder.append(" }");
+			}
+		}
 
-    public static abstract class ValueImpl extends AbstractNonIdentifiedEntity implements Value {
+		//endregion Jsonify
 
-        private static final long serialVersionUID = -1L;
+	}
 
-    }
+	public static abstract class ValueImpl extends AbstractNonIdentifiedEntity implements Value {
 
-    public static final class ArrayValueImpl extends ValueImpl implements ArrayValue {
+		private static final long serialVersionUID = -1L;
 
-        private static final long serialVersionUID = -1L;
+	}
 
-        @Nonnull
-        private transient List<NonArrayValueImpl> values = List.of();
+	public static final class ArrayValueImpl extends ValueImpl implements ArrayValue {
 
+		private static final long serialVersionUID = -1L;
 
-        //region Getter & Setter
+		@Nonnull private transient List<NonArrayValueImpl> values = List.of();
 
-        @Nonnull
-        @Override
-        public List<NonArrayValueImpl> getValues() {
-            return values;
-        }
 
-        public void setValues(@Nonnull List<NonArrayValueImpl> values) {
-            assertNonFrozen();
-            this.values = values;
-        }
+		//region Getter & Setter
 
-        //endregion Getter & Setter
+		@Nonnull
+		@Override
+		public List<NonArrayValueImpl> getValues() {
+			return values;
+		}
 
-        //region Serialization Helper
+		public void setValues(@Nonnull List<NonArrayValueImpl> values) {
+			assertNonFrozen();
+			this.values = values;
+		}
 
-        @Override
-        public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-            if (super.internalFreeze(map)) return true;
-            this.values = List.copyOf(values);
-            for (final NonArrayValueImpl value : values) value.internalFreeze(map);
-            return false;
-        }
+		//endregion Getter & Setter
 
-        private void writeObject(@Nonnull ObjectOutputStream outputStream)
-                throws IOException, UnsupportedOperationException {
-            assertFrozen();
-            outputStream.defaultWriteObject();
-            outputStream.writeObject(values);
-        }
+		//region Serialization Helper
 
-        @SuppressWarnings("unchecked")
-        private void readObject(@Nonnull ObjectInputStream inputStream)
-                throws IOException, ClassNotFoundException, ClassCastException {
-            inputStream.defaultReadObject();
-            this.values = (List<NonArrayValueImpl>) inputStream.readObject();
-        }
+		@Override
+		public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+			if (super.internalFreeze(map)) return true;
+			this.values = List.copyOf(values);
+			for (final NonArrayValueImpl value : values) value.internalFreeze(map);
+			return false;
+		}
 
-        //endregion Serialization Helper
+		private void writeObject(@Nonnull ObjectOutputStream outputStream)
+				throws IOException, UnsupportedOperationException {
+			assertFrozen();
+			outputStream.defaultWriteObject();
+			outputStream.writeObject(values);
+		}
 
-        //region Jsonify
+		@SuppressWarnings("unchecked")
+		private void readObject(@Nonnull ObjectInputStream inputStream)
+				throws IOException, ClassNotFoundException, ClassCastException {
+			inputStream.defaultReadObject();
+			this.values = (List<NonArrayValueImpl>) inputStream.readObject();
+		}
 
-        @Override
-        protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-            super.internalToJsonStart(builder, indentation);
-            if (!values.isEmpty()) {
-                builder.append(", \"values\": [");
-                internalArrayToJson(builder, indentation, true, values);
-                builder.append('\n').append(indentation).append(']');
-            }
-        }
+		//endregion Serialization Helper
 
-        //endregion Jsonify
+		//region Jsonify
 
-    }
+		@Override
+		protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+			super.internalToJsonStart(builder, indentation);
+			if (!values.isEmpty()) {
+				builder.append(", \"values\": [");
+				internalArrayToJson(builder, indentation, true, values);
+				builder.append('\n').append(indentation).append(']');
+			}
+		}
 
-    public static abstract class NonArrayValueImpl extends ValueImpl implements NonArrayValue {
+		//endregion Jsonify
 
-        private static final long serialVersionUID = -1L;
+	}
 
-    }
+	public static abstract class NonArrayValueImpl extends ValueImpl implements NonArrayValue {
 
-    public static final class SimpleValueImpl extends NonArrayValueImpl implements SimpleValue {
+		private static final long serialVersionUID = -1L;
 
-        private static final long serialVersionUID = -1L;
+	}
 
-        @Nonnull
-        private final Object value;
+	public static final class SimpleValueImpl extends NonArrayValueImpl implements SimpleValue {
 
+		private static final long serialVersionUID = -1L;
 
-        public SimpleValueImpl(@Nonnull Object value) {
-            if (!SimpleValue.isValidValueType(value)) throw new IllegalArgumentException("Invalid value type!");
-            this.value = value;
-        }
+		@Nonnull private final Object value;
 
 
-        //region Getter & Setter
+		public SimpleValueImpl(@Nonnull Object value) {
+			if (!SimpleValue.isValidValueType(value)) throw new IllegalArgumentException("Invalid value type!");
+			this.value = value;
+		}
 
-        @Nonnull
-        @Override
-        public String getValueType() {
-            return value.getClass().getSimpleName();
-        }
 
-        @Nonnull
-        @Override
-        public Object getValue() {
-            return value;
-        }
+		//region Getter & Setter
 
-        //endregion Getter & Setter
+		@Nonnull
+		@Override
+		public String getValueType() {
+			return value.getClass().getSimpleName();
+		}
 
-        //region Jsonify
+		@Nonnull
+		@Override
+		public Object getValue() {
+			return value;
+		}
 
-        @Override
-        protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-            super.internalToJsonStart(builder, indentation);
-            builder.append(", \"type\": \"").append(getValueType())
-                    .append("\", \"value\": ");
-            if (value instanceof String) {
-                builder.append('"');
-                internalEscapeString(builder, (String) value);
-                builder.append('"');
-            } else {
-                builder.append(value);
-            }
-        }
+		//endregion Getter & Setter
 
-        //endregion Jsonify
+		//region Jsonify
 
-    }
+		@Override
+		protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+			super.internalToJsonStart(builder, indentation);
+			builder.append(", \"type\": \"").append(getValueType())
+					.append("\", \"value\": ");
+			if (value instanceof String) {
+				builder.append('"');
+				internalEscapeString(builder, (String) value);
+				builder.append('"');
+			} else {
+				builder.append(value);
+			}
+		}
 
-    public static final class NodeValueImpl extends NonArrayValueImpl implements NodeValue {
+		//endregion Jsonify
 
-        private static final long serialVersionUID = -1L;
+	}
 
-        @Nonnull
-        private final String describe;
+	public static final class NodeValueImpl extends NonArrayValueImpl implements NodeValue {
 
-        @Nullable
-        private AbstractNode node;
+		private static final long serialVersionUID = -1L;
 
+		@Nonnull private final String describe;
 
-        public NodeValueImpl(@Nonnull String describe) {
-            this.describe = describe;
-        }
+		@Nullable private AbstractNode node;
 
 
-        //region Getter & Setter
+		public NodeValueImpl(@Nonnull String describe) {
+			this.describe = describe;
+		}
 
-        @Nonnull
-        @Override
-        public String getDescribe() {
-            return describe;
-        }
 
-        @Nullable
-        @Override
-        public AbstractNode getNode() {
-            return node;
-        }
+		//region Getter & Setter
 
-        public void setNode(@Nonnull AbstractNode node) {
-            assertNonFrozen();
-            this.node = node;
-        }
+		@Nonnull
+		@Override
+		public String getDescribe() {
+			return describe;
+		}
 
-        //endregion Getter & Setter
+		@Nullable
+		@Override
+		public AbstractNode getNode() {
+			return node;
+		}
 
-        //region Jsonify
+		public void setNode(@Nonnull AbstractNode node) {
+			assertNonFrozen();
+			this.node = node;
+		}
 
-        @Override
-        protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-            super.internalToJsonStart(builder, indentation);
-            builder.append(", \"describe\": \"").append(describe).append('"');
-            if (node != null) {
-                builder.append(", \"node\": { ");
-                node.internalToReferenceJson(builder);
-                builder.append(" }");
-            }
-        }
+		//endregion Getter & Setter
 
-        //endregion Jsonify
+		//region Jsonify
 
-    }
+		@Override
+		protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+			super.internalToJsonStart(builder, indentation);
+			builder.append(", \"describe\": \"").append(describe).append('"');
+			if (node != null) {
+				builder.append(", \"node\": { ");
+				node.internalToReferenceJson(builder);
+				builder.append(" }");
+			}
+		}
 
-    public static final class AnnotateValueImpl extends NonArrayValueImpl implements AnnotateValue {
+		//endregion Jsonify
 
-        private static final long serialVersionUID = -1L;
+	}
 
-        @Nullable
-        private Annotate annotate;
+	public static final class AnnotateValueImpl extends NonArrayValueImpl implements AnnotateValue {
 
+		private static final long serialVersionUID = -1L;
 
-        //region Getter & Setter
+		@Nullable
+		private Annotate annotate;
 
-        @Nullable
-        @Override
-        public Annotate getAnnotate() {
-            return annotate;
-        }
 
-        public void setAnnotate(@Nonnull Annotate annotate) {
-            assertNonFrozen();
-            this.annotate = annotate;
-        }
+		//region Getter & Setter
 
-        //endregion Getter & Setter
+		@Nullable
+		@Override
+		public Annotate getAnnotate() {
+			return annotate;
+		}
 
-        //region Serialization Helper
+		public void setAnnotate(@Nonnull Annotate annotate) {
+			assertNonFrozen();
+			this.annotate = annotate;
+		}
 
-        @Override
-        public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-            if (super.internalFreeze(map)) return true;
-            if (annotate != null) annotate.internalFreeze(map);
-            return false;
-        }
+		//endregion Getter & Setter
 
-        //endregion Serialization Helper
+		//region Serialization Helper
 
-        //region Jsonify
+		@Override
+		public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+			if (super.internalFreeze(map)) return true;
+			if (annotate != null) annotate.internalFreeze(map);
+			return false;
+		}
 
-        @Override
-        protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-            super.internalToJsonStart(builder, indentation);
-            if (annotate != null) {
-                builder.append(", \"annotate\": { ");
-                annotate.internalToReferenceJson(builder);
-                builder.append(" }");
-            }
-        }
+		//endregion Serialization Helper
 
-        //endregion Jsonify
+		//region Jsonify
 
-    }
+		@Override
+		protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+			super.internalToJsonStart(builder, indentation);
+			if (annotate != null) {
+				builder.append(", \"annotate\": { ");
+				annotate.internalToReferenceJson(builder);
+				builder.append(" }");
+			}
+		}
+
+		//endregion Jsonify
+
+	}
 
 }

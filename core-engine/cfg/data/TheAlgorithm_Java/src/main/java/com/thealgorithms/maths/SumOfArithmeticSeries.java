@@ -31,18 +31,18 @@ public class SumOfArithmeticSeries {
     /**
      * Calculate sum of arithmetic series
      *
-     * @param firstTerm  the initial term of an arithmetic series
+     * @param firstTerm the initial term of an arithmetic series
      * @param commonDiff the common difference of an arithmetic series
      * @param numOfTerms the total terms of an arithmetic series
      * @return sum of given arithmetic series
      */
     private static double sumOfSeries(
-            double firstTerm,
-            double commonDiff,
-            int numOfTerms
+        double firstTerm,
+        double commonDiff,
+        int numOfTerms
     ) {
         return (
-                numOfTerms / 2.0 * (2 * firstTerm + (numOfTerms - 1) * commonDiff)
+            numOfTerms / 2.0 * (2 * firstTerm + (numOfTerms - 1) * commonDiff)
         );
     }
 }

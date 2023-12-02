@@ -29,10 +29,9 @@ public class LinearSearchThread {
             t1.join();
             t2.join();
             t3.join();
-        } catch (InterruptedException e) {
-        }
+        } catch (InterruptedException e) {}
         boolean found =
-                t.getResult() || t1.getResult() || t2.getResult() || t3.getResult();
+            t.getResult() || t1.getResult() || t2.getResult() || t3.getResult();
         System.out.println("Found = " + found);
     }
 }

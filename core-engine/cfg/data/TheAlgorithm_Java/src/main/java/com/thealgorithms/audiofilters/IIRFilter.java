@@ -2,7 +2,7 @@ package com.thealgorithms.audiofilters;
 
 /**
  * N-Order IIR Filter Assumes inputs are normalized to [-1, 1]
- * <p>
+ *
  * Based on the difference equation from
  * https://en.wikipedia.org/wiki/Infinite_impulse_response
  */
@@ -23,7 +23,7 @@ public class IIRFilter {
     public IIRFilter(int order) throws IllegalArgumentException {
         if (order < 1) {
             throw new IllegalArgumentException(
-                    "order must be greater than zero"
+                "order must be greater than zero"
             );
         }
 
@@ -45,25 +45,25 @@ public class IIRFilter {
      * @param aCoeffs Denominator coefficients
      * @param bCoeffs Numerator coefficients
      * @throws IllegalArgumentException if {@code aCoeffs} or {@code bCoeffs} is
-     *                                  not of size {@code order}, or if {@code aCoeffs[0]} is 0.0
+     * not of size {@code order}, or if {@code aCoeffs[0]} is 0.0
      */
     public void setCoeffs(double[] aCoeffs, double[] bCoeffs)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         if (aCoeffs.length != order) {
             throw new IllegalArgumentException(
-                    "aCoeffs must be of size " + order + ", got " + aCoeffs.length
+                "aCoeffs must be of size " + order + ", got " + aCoeffs.length
             );
         }
 
         if (aCoeffs[0] == 0.0) {
             throw new IllegalArgumentException(
-                    "aCoeffs.get(0) must not be zero"
+                "aCoeffs.get(0) must not be zero"
             );
         }
 
         if (bCoeffs.length != order) {
             throw new IllegalArgumentException(
-                    "bCoeffs must be of size " + order + ", got " + bCoeffs.length
+                "bCoeffs must be of size " + order + ", got " + bCoeffs.length
             );
         }
 
@@ -85,7 +85,7 @@ public class IIRFilter {
         // Process
         for (int i = 1; i <= order; i++) {
             result +=
-                    (coeffsB[i] * historyX[i - 1] - coeffsA[i] * historyY[i - 1]);
+                (coeffsB[i] * historyX[i - 1] - coeffsA[i] * historyY[i - 1]);
         }
         result = (result + coeffsB[0] * sample) / coeffsA[0];
 

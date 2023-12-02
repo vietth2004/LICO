@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import core.structureTree.SNode;
 import core.structureTree.SProjectNode;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class FolderNode extends Node {
+
 
 
     @JsonIgnore

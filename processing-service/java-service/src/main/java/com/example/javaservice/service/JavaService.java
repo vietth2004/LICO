@@ -11,6 +11,5 @@ import java.io.IOException;
 
 public interface JavaService {
     public JavaRootNode parseProject(String path) throws JavaCiaException, IOException;
-
     public JavaRootNode parseProjectWithFile(MultipartFile file) throws JavaCiaException, IOException;
 }

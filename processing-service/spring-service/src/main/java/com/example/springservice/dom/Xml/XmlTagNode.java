@@ -52,10 +52,10 @@ public class XmlTagNode extends Node {
         listAttr = new ArrayList<>();
     }
 
-    public void addToListAttr(String attr) {
+    public void addToListAttr(String attr)
+    {
         this.listAttr.add(attr);
     }
-
     public XmlTagNode(String name) {
         this();
         this.tagName = name;

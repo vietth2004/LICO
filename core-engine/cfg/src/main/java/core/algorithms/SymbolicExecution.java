@@ -1,19 +1,9 @@
 package core.algorithms;
 
-import com.microsoft.z3.BoolExpr;
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
-import com.microsoft.z3.IntExpr;
-import com.microsoft.z3.IntNum;
-import com.microsoft.z3.Model;
-import com.microsoft.z3.RatNum;
-import com.microsoft.z3.RealExpr;
-import com.microsoft.z3.Solver;
-import com.microsoft.z3.Status;
+import com.microsoft.z3.*;
 import core.ast.AstNode;
-import core.ast.Expression.ExpressionNode;
-import core.ast.Expression.OperationExpression.OperationExpressionNode;
-import core.ast.Expression.OperationExpression.PrefixExpressionNode;
+import core.ast.Expression.*;
+import core.ast.Expression.OperationExpression.*;
 import core.ast.additionalNodes.Node;
 import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;
@@ -100,7 +90,7 @@ public final class SymbolicExecution {
             String name = declaration.getName().toString();
 
             Expr variable = Variable.createZ3Variable(memoryModel.getVariable(name), ctx);
-            if (!haveDuplicateVariable(variable.toString())) {
+            if(!haveDuplicateVariable(variable.toString())) {
                 vars.add(variable);
             }
         } else {
@@ -109,8 +99,8 @@ public final class SymbolicExecution {
     }
 
     private boolean haveDuplicateVariable(String var) {
-        for (int i = 0; i < vars.size(); i++) {
-            if (var.equals(vars.get(i).toString())) {
+        for(int i = 0; i < vars.size(); i++) {
+            if(var.equals(vars.get(i).toString())) {
                 return true;
             }
         }
@@ -132,7 +122,7 @@ public final class SymbolicExecution {
     }
 
     private void evaluateAndSaveTestDataCreated() {
-        if (model != null) {
+        if(model != null) {
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < vars.size(); i++) {
@@ -157,7 +147,7 @@ public final class SymbolicExecution {
                     }
                 }
 
-                if (i != vars.size() - 1) {
+                if(i != vars.size() - 1) {
                     result.append("\n");
                 }
             }
@@ -171,7 +161,7 @@ public final class SymbolicExecution {
             FileWriter writer = new FileWriter("core-engine/cfg/src/main/java/data/TestData.txt");
             writer.write(data + "\n");
             writer.close();
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

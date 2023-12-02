@@ -124,9 +124,7 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      */
     public class FillDefinitionRule extends JciaRule {
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         @Override
         public void begin(String namespace, String name, Attributes attributes, JciaLocator locator) {
             TilesDefinition definition = (TilesDefinition) digester.peek();
@@ -164,9 +162,7 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      */
     public class FillAttributeRule extends JciaRule {
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         @Override
         public void begin(String namespace, String name, Attributes attributes, JciaLocator locator) {
             TilesAttribute attribute = (TilesAttribute) digester.peek();
@@ -196,9 +192,7 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      */
     public class PutAttributeRule extends JciaRule {
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         @Override
         public void begin(String namespace, String name, Attributes attributes, JciaLocator locator) {
             TilesAttribute attribute = (TilesAttribute) digester.peek(0);
@@ -216,9 +210,7 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      */
     public class AddNestedDefinitionRule extends JciaRule {
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         @Override
         public void begin(String namespace, String name, Attributes attributes, JciaLocator locator) {
             TilesDefinition definition = (TilesDefinition) digester.peek(0);
@@ -281,7 +273,7 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      * Sets the validation of XML files.
      *
      * @param validating <code>true</code> means that XML validation is turned
-     *                   on. <code>false</code> otherwise.
+     * on. <code>false</code> otherwise.
      * @since 3.3.0
      */
     public void setValidating(boolean validating) {
@@ -412,23 +404,17 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      */
     private static class ThrowingErrorHandler implements ErrorHandler {
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         public void warning(SAXParseException exception) throws SAXException {
             throw exception;
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         public void error(SAXParseException exception) throws SAXException {
             throw exception;
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         public void fatalError(SAXParseException exception) throws SAXException {
             throw exception;
         }
@@ -443,7 +429,7 @@ public class JciaDigesterDefinitionsReader implements DefinitionsReader {
      */
     protected String[] getRegistrations() {
         if (registrations == null) {
-            registrations = new String[]{
+            registrations = new String[] {
                     "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN",
                     "/org/apache/tiles/resources/tiles-config_3_0.dtd"};
         }

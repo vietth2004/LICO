@@ -3,10 +3,10 @@ package com.thealgorithms.maths;
 public class DistanceFormula {
 
     public static double euclideanDistance(
-            double x1,
-            double y1,
-            double x2,
-            double y2
+        double x1,
+        double y1,
+        double x2,
+        double y2
     ) {
         double dX = Math.pow(x2 - x1, 2);
         double dY = Math.pow(y2 - x1, 2);
@@ -15,10 +15,10 @@ public class DistanceFormula {
     }
 
     public static double manhattanDistance(
-            double x1,
-            double y1,
-            double x2,
-            double y2
+        double x1,
+        double y1,
+        double x2,
+        double y2
     ) {
         double d = Math.abs(x1 - x2) + Math.abs(y1 - y2);
         return d;

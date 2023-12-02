@@ -27,24 +27,22 @@ import java.io.Serializable;
 
 public final class NodeWeightTable implements JavaNodeWeightTable, Serializable {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final double[] weights;
-    @Nonnull
-    private final JavaRootNode rootNode;
+	@Nonnull private final double[] weights;
+	@Nonnull private final JavaRootNode rootNode;
 
-    public NodeWeightTable(@Nonnull double[] weights, @Nonnull JavaRootNode rootNode) {
-        assert weights.length == rootNode.getAllNodes().size();
+	public NodeWeightTable(@Nonnull double[] weights, @Nonnull JavaRootNode rootNode) {
+		assert weights.length == rootNode.getAllNodes().size();
 
-        this.weights = weights;
-        this.rootNode = rootNode;
-    }
+		this.weights = weights;
+		this.rootNode = rootNode;
+	}
 
-    @Override
-    public double getWeight(@Nonnull JavaNode javaNode) {
-        if (javaNode.getRoot() == rootNode) return weights[javaNode.getId()];
-        throw new IllegalArgumentException("Input JavaNode doesn't exist in this tree!");
-    }
+	@Override
+	public double getWeight(@Nonnull JavaNode javaNode) {
+		if (javaNode.getRoot() == rootNode) return weights[javaNode.getId()];
+		throw new IllegalArgumentException("Input JavaNode doesn't exist in this tree!");
+	}
 
 }

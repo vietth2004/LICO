@@ -13,19 +13,11 @@ import core.testexecution.TestExecution;
 import core.utils.CFGUtils;
 import core.utils.SearchInDataTree;
 import core.utils.Utils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +100,6 @@ public class Exporter {
     public void setExecution(TestExecution execution) {
         this.execution = execution;
     }
-
     public void export() {
         Sheet sheet = workbook.getSheetAt(0);
         sheet.autoSizeColumn(0);
@@ -118,7 +109,7 @@ public class Exporter {
 
         getCell(sheet, "B1").setCellValue(functionNode.getName());
         getCell(sheet, "B2").setCellValue(testCases.size());
-        getCell(sheet, "B3").setCellValue(execution.getCoverage().getResult() * 100.0 + "%");
+        getCell(sheet, "B3").setCellValue(execution.getCoverage().getResult()*100.0 + "%");
         getCell(sheet, "B4").setCellValue("STATEMENT");
         for (TestCase testCase : testCases) {
             export(testCase);
@@ -136,11 +127,13 @@ public class Exporter {
         File reportFolder = new File(workspace.getAbsolutePath() + "/report");
         if (reportFolder.mkdir()) {
             System.out.println("Create report folder successful");
-        } else System.out.println("Report folder is existed");
+        }
+        else System.out.println("Report folder is existed");
         File reportFunctionFolder = new File(reportFolder.getAbsolutePath() + "/" + functionNode.getName());
         if (reportFunctionFolder.mkdir()) {
             System.out.println("Create report Function folder successful");
-        } else System.out.println("Instrument folder is existed");
+        }
+        else System.out.println("Instrument folder is existed");
         String output = functionNode.getName() + "_" /*+ new Random().nextInt()*/ + ".xlsx";
         System.out.println("Exporting to " + output);
         try {
@@ -188,7 +181,7 @@ public class Exporter {
         }
         String content = "";
         for (CfgNode node : cfgNodes) {
-            content += "==>" + node.getContentReport() + "\n";
+            content += "==>" + node.getContentReport()+ "\n";
         }
         System.out.println(content);
         String addr = "B" + String.valueOf(rowNum + 1);
@@ -247,7 +240,8 @@ public class Exporter {
             if (dataNode instanceof NormalDataNode) {
                 inCell.setCellValue(((NormalDataNode) dataNode).getValue());
                 inActualCell.setCellValue(((NormalDataNode) dataNode).getValue());
-            } else if (dataNode instanceof ReturnDataNode) {
+            }
+            else if (dataNode instanceof ReturnDataNode) {
                 inCell.setCellValue(((ReturnDataNode) dataNode).getValue());
                 inActualCell.setCellValue(((ReturnDataNode) dataNode).getValue());
             }

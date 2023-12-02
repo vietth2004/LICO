@@ -25,12 +25,12 @@ import java.util.stream.StreamSupport;
 
 public final class StreamUtils {
 
-    private StreamUtils() {
-    }
+	private StreamUtils() {
+	}
 
-    @Nonnull
-    public static <T> Stream<T> stream(@Nonnull Iterable<T> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
+	@Nonnull
+	public static <T> Stream<T> stream(@Nonnull Iterable<T> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false);
+	}
 
 }

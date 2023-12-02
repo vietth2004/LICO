@@ -19,49 +19,49 @@
 package mrmathami.count;
 
 public abstract class AbstractCounter implements Countable {
-    private int count;
+	private int count;
 
-    public AbstractCounter(int count) {
-        this.count = count;
-    }
+	public AbstractCounter(int count) {
+		this.count = count;
+	}
 
-    @Override
-    public final int getCount() {
-        return count;
-    }
+	@Override
+	public final int getCount() {
+		return count;
+	}
 
-    @Override
-    public final int setCount(int count) {
-        final int oldCount = this.count;
-        this.count = count;
-        return oldCount;
-    }
+	@Override
+	public final int setCount(int count) {
+		final int oldCount = this.count;
+		this.count = count;
+		return oldCount;
+	}
 
-    @Override
-    public final int increaseCount() {
-        final int oldCount = this.count;
-        this.count += 1;
-        return oldCount;
-    }
+	@Override
+	public final int increaseCount() {
+		final int oldCount = this.count;
+		this.count += 1;
+		return oldCount;
+	}
 
-    @Override
-    public final int decreaseCount() {
-        final int oldCount = this.count;
-        this.count -= 1;
-        return oldCount;
-    }
+	@Override
+	public final int decreaseCount() {
+		final int oldCount = this.count;
+		this.count -= 1;
+		return oldCount;
+	}
 
-    @Override
-    public final int addCount(int value) {
-        final int oldCount = this.count;
-        this.count += value;
-        return oldCount;
-    }
+	@Override
+	public final int addCount(int value) {
+		final int oldCount = this.count;
+		this.count += value;
+		return oldCount;
+	}
 
-    @Override
-    public final int subtractCount(int value) {
-        final int oldCount = this.count;
-        this.count -= value;
-        return oldCount;
-    }
+	@Override
+	public final int subtractCount(int value) {
+		final int oldCount = this.count;
+		this.count -= value;
+		return oldCount;
+	}
 }

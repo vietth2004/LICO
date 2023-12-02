@@ -8,24 +8,24 @@ public class SquareRootWithNewtonRaphsonTestMethod {
     @Test
     void testfor1() {
         Assertions.assertEquals(
-                1,
-                SquareRootWithNewtonRaphsonMethod.squareRoot(1)
+            1,
+            SquareRootWithNewtonRaphsonMethod.squareRoot(1)
         );
     }
 
     @Test
     void testfor2() {
         Assertions.assertEquals(
-                1.414213562373095,
-                SquareRootWithNewtonRaphsonMethod.squareRoot(2)
+            1.414213562373095,
+            SquareRootWithNewtonRaphsonMethod.squareRoot(2)
         );
     }
 
     @Test
     void testfor625() {
         Assertions.assertEquals(
-                25.0,
-                SquareRootWithNewtonRaphsonMethod.squareRoot(625)
+            25.0,
+            SquareRootWithNewtonRaphsonMethod.squareRoot(625)
         );
     }
 }

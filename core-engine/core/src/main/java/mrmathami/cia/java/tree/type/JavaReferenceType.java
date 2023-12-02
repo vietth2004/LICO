@@ -26,24 +26,24 @@ import java.util.List;
 
 public interface JavaReferenceType extends JavaType {
 
-    //region Basic Getter
+	//region Basic Getter
 
-    @Nonnull
-    @Override
-    default String getEntityClass() {
-        return "JavaReferenceType";
-    }
+	@Nonnull
+	@Override
+	default String getEntityClass() {
+		return "JavaReferenceType";
+	}
 
-    //endregion Basic Getter
+	//endregion Basic Getter
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nullable
-    JavaNode getNode();
+	@Nullable
+	JavaNode getNode();
 
-    @Nonnull
-    List<? extends JavaType> getArguments();
+	@Nonnull
+	List<? extends JavaType> getArguments();
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
 }

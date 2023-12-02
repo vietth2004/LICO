@@ -36,20 +36,20 @@ public class JavaType {
 
         this.annotates = Utility.convertAnnotates(abstractType.getAnnotates());
 
-        if (abstractType instanceof SimpleType) {
-            if (((SimpleType) abstractType).getInnerType() != null) {
+        if(abstractType instanceof SimpleType) {
+            if(((SimpleType) abstractType).getInnerType()!= null) {
                 innerType = new JavaType(((SimpleType) abstractType).getInnerType());
             }
         }
 
-        if (abstractType instanceof ReferenceType) {
+        if(abstractType instanceof ReferenceType) {
             this.arguments = Utility.convertArguments(((ReferenceType) abstractType).getArguments());
-            if (((ReferenceType) abstractType).getNode() != null) {
+            if(((ReferenceType) abstractType).getNode() != null) {
                 this.node = new Node(((ReferenceType) abstractType).getNode());
             }
         }
 
-        if (abstractType instanceof SyntheticType) {
+        if(abstractType instanceof SyntheticType) {
             this.bounds = Utility.convertArguments(((SyntheticType) abstractType).getBounds());
         }
     }

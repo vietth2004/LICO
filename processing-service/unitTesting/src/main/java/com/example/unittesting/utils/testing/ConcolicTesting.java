@@ -12,6 +12,7 @@ import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedPath;
 import core.dataStructure.MarkedPathV2;
+import core.dataStructure.MarkedStatement;
 import core.dataStructure.Path;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
@@ -29,11 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static core.testDriver.Utils.createRandomTestData;
-import static core.testDriver.Utils.getParameterClasses;
-import static core.testDriver.Utils.getParameterNames;
-import static core.testDriver.Utils.getParameterValue;
-import static core.testDriver.Utils.writeDataToFile;
+import static core.testDriver.Utils.*;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

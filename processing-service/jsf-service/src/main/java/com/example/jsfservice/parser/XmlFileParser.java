@@ -11,11 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
 import java.io.File;
@@ -133,7 +129,7 @@ public class XmlFileParser implements IParser, IPathParser, Callable {
         if (parent instanceof XmlTagNode)
             nodeName = parent.getName() + ">" + domNode.getNodeName();
         else if (parent instanceof XmlFileNode)
-            if (nodeName != null) node.setName(domNode.getNodeName());
+        if (nodeName != null) node.setName(domNode.getNodeName());
 
         node.setTagName(domNode.getNodeName());
         node.setFullyQualifiedName(parent.getFullyQualifiedName() + ">" + node.getTagName());

@@ -14,6 +14,7 @@ import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.project.JavaProjectSnapshot;
 import mrmathami.cia.java.project.JavaProjectSnapshotComparison;
 import mrmathami.cia.java.tree.node.JavaMethodNode;
+import mrmathami.cia.java.tree.type.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -88,10 +89,10 @@ public class VersionCompare {
         List<Pair<Integer, Integer>> changedNodesBind = new ArrayList<>();
 
         //add unchanged nodes
-        for (mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
+        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getUnchangedNodes()) {
-            if (javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
-                if (!((JavaMethodNode) javaNode.getA()).getReturnType().getDescription().equals(((JavaMethodNode) javaNode.getB()).getReturnType().getDescription())) {
+            if(javaNode.getA() instanceof JavaMethodNode && javaNode.getB() instanceof JavaMethodNode) {
+                if(!((JavaMethodNode) javaNode.getA()).getReturnType().getDescription().equals(((JavaMethodNode) javaNode.getB()).getReturnType().getDescription())) {
                     changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
                 }
             } else {
@@ -100,19 +101,19 @@ public class VersionCompare {
         }
 
         //add changed nodes
-        for (mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
+        for(mrmathami.utils.Pair<mrmathami.cia.java.tree.node.JavaNode, mrmathami.cia.java.tree.node.JavaNode> javaNode
                 : snapshotComparison.getChangedNodes()) {
             changedNodes.add(new JavaNode(javaNode.getA(), "changed"));
             changedNodesBind.add(new Pair<>(javaNode.getA().getId(), javaNode.getB().getId()));
         }
 
         //add added nodes
-        for (mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getAddedNodes()) {
             addedNodes.add(new JavaNode(javaNode, "added"));
         }
 
         //add removed nodes
-        for (mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
+        for(mrmathami.cia.java.tree.node.JavaNode javaNode : snapshotComparison.getRemovedNodes()) {
             logger.info(javaNode.getUniqueName());
             logger.info("Parent: " + javaNode.getParent().getUniqueName() + ": " + javaNode.getParent().getId());
             logger.info("\n");
@@ -134,8 +135,8 @@ public class VersionCompare {
         for (Pair<Integer, JavaNode> node : deletedNodes) {
             int parentId = node.first();
             int newParentId;
-            for (Pair<Integer, Integer> bind : changedNodesBind) {
-                if (parentId == bind.second()) {
+            for(Pair<Integer, Integer> bind : changedNodesBind) {
+                if(parentId == bind.second()) {
                     newParentId = bind.first();
                     addNode(rootNode, node.second(), newParentId, bindId);
                 }
@@ -144,7 +145,7 @@ public class VersionCompare {
     }
 
     private void addNode(JavaNode rootNode, JavaNode addedNode, int parentId, int bindId) {
-        if (rootNode.getId() == parentId) {
+        if(rootNode.getId() == parentId) {
             bindId(addedNode, bindId);
             rootNode.addChildren(addedNode);
         } else {
@@ -161,8 +162,8 @@ public class VersionCompare {
         addedNode.setId(bindId + addedNode.getId());
         addedNode.setStatus("deleted");
 
-        for (Object childNode : addedNode.getChildren()) {
-            if (childNode instanceof JavaNode) {
+        for(Object childNode : addedNode.getChildren()) {
+            if(childNode instanceof JavaNode) {
                 bindId((JavaNode) childNode, bindId);
             }
         }

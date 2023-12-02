@@ -9,7 +9,7 @@ public abstract class NumberLiteralNode extends LiteralNode {
     public static NumberLiteralNode executeNumberLiteral(NumberLiteral numberLiteral) {
         String tokenValue = numberLiteral.getToken();
 
-        if (isIntegerValue(tokenValue)) {
+        if(isIntegerValue(tokenValue)) {
             IntegerLiteralNode integerLiteralNode = new IntegerLiteralNode();
             integerLiteralNode.setTokenValue(tokenValue);
             return integerLiteralNode;

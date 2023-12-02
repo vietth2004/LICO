@@ -47,7 +47,7 @@ public class HammingDistanceTest {
     @Test
     public void checkForLongDataBits() {
         String senderBits = "10010101101010000100110100", receiverBits =
-                "00110100001011001100110101";
+            "00110100001011001100110101";
         int answer = hd.getHammingDistanceBetweenBits(senderBits, receiverBits);
         Assertions.assertThat(answer).isEqualTo(7);
     }
@@ -57,13 +57,13 @@ public class HammingDistanceTest {
         String senderBits = "100010", receiverBits = "00011";
 
         Exception ex = org.junit.jupiter.api.Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    int answer = hd.getHammingDistanceBetweenBits(
-                            senderBits,
-                            receiverBits
-                    );
-                }
+            IllegalArgumentException.class,
+            () -> {
+                int answer = hd.getHammingDistanceBetweenBits(
+                    senderBits,
+                    receiverBits
+                );
+            }
         );
 
         Assertions.assertThat(ex.getMessage()).contains("bits should be same");
@@ -72,7 +72,7 @@ public class HammingDistanceTest {
     @Test
     public void checkForLongDataBitsSame() {
         String senderBits = "10010101101010000100110100", receiverBits =
-                "10010101101010000100110100";
+            "10010101101010000100110100";
         int answer = hd.getHammingDistanceBetweenBits(senderBits, receiverBits);
         Assertions.assertThat(answer).isEqualTo(0);
     }

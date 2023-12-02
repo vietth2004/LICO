@@ -2,8 +2,7 @@
 
 Stack is an ADT (abstract data type) that acts like a list of objects but there is a difference.
 
-Stack works on the principle of _LIFO_ (Last In First Out), it means that the last item added to the stack will be the
-first item to be removed.
+Stack works on the principle of _LIFO_ (Last In First Out), it means that the last item added to the stack will be the first item to be removed.
 
 Stack is based on two methods (functions)-
 

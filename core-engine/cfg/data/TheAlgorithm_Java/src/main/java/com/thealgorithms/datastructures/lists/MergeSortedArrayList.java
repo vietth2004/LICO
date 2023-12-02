@@ -37,9 +37,9 @@ public class MergeSortedArrayList {
      * @param listC the result list after merging
      */
     public static void merge(
-            List<Integer> listA,
-            List<Integer> listB,
-            List<Integer> listC
+        List<Integer> listA,
+        List<Integer> listB,
+        List<Integer> listC
     ) {
         int pa = 0;
         /* the index of listA */

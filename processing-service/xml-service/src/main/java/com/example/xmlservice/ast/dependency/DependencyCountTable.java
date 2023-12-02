@@ -1,6 +1,7 @@
 package com.example.xmlservice.ast.dependency;
 
 import java.io.Serializable;
+import mrmathami.cia.java.tree.dependency.JavaDependency;
 
 public class DependencyCountTable implements Serializable {
     private Integer USE = 0;

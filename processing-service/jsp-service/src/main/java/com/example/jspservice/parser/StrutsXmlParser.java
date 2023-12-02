@@ -88,7 +88,6 @@ public class StrutsXmlParser extends XmlFileParser {
     /**
      * Find secondary struts configuration file which declared in <include> tag in struts.xml
      * Recursion to parse included node!
-     *
      * @param root
      * @param entry
      * @return null if secondary configuration file not found, a StrutsConfigurationNode instance if success

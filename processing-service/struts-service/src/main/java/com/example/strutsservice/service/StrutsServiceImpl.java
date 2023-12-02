@@ -1,6 +1,7 @@
 package com.example.strutsservice.service;
 
 import com.example.strutsservice.analyzer.ActionDependencyAnalyzer;
+import com.example.strutsservice.analyzer.ResultDepsAnalyzer;
 import com.example.strutsservice.analyzer.StrutAnalyzer;
 import com.example.strutsservice.ast.dependency.Dependency;
 import com.example.strutsservice.ast.node.JavaNode;
@@ -14,7 +15,7 @@ import java.util.List;
 
 
 @Service
-public class StrutsServiceImpl implements StrutsService {
+public class StrutsServiceImpl implements StrutsService{
 
 
     @Override

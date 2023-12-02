@@ -1,7 +1,8 @@
 package com.example.jspservice.dom.Jsp;
 
-import com.example.jspservice.dom.Element;
 import com.example.jspservice.dom.Node;
+
+import com.example.jspservice.dom.Element;
 import com.example.jspservice.dom.Xml.XmlFileNode;
 import com.example.jspservice.dom.Xml.XmlTagNode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,9 +23,7 @@ public class StrutsElement extends Element implements IStrutsElement {
 
     }
 
-    public StrutsElement(XmlTagNode tagNode) {
-        this.tagNode = tagNode;
-    }
+    public StrutsElement(XmlTagNode tagNode) {this.tagNode = tagNode;}
 
     public String getName() {
         return name;

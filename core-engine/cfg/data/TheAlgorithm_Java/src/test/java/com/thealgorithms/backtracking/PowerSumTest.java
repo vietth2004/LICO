@@ -1,7 +1,5 @@
 package com.thealgorithms.backtracking;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
 public class PowerSumTest {
@@ -19,12 +17,12 @@ public class PowerSumTest {
         int result = powerSum.powSum(100, 2);
         assertEquals(3, result);
     }
-
+  
     @Test
     void testNumberHundredAndPowerThree() {
         PowerSum powerSum = new PowerSum();
         int result = powerSum.powSum(100, 3);
         assertEquals(1, result);
     }
-
+    
 }

@@ -34,78 +34,77 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractParameterizedModifiedAnnotatedNode extends AbstractModifiedAnnotatedNode
-        implements JavaParameterizedNode {
+		implements JavaParameterizedNode {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private transient List<AbstractType> typeParameters = List.of();
-
-
-    public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-                                                      @Nonnull String simpleName) {
-        super(sourceFile, parent, simpleName);
-    }
-
-    public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-                                                      @Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
-        super(sourceFile, parent, simpleName, uniqueNameSuffix);
-    }
+	@Nonnull private transient List<AbstractType> typeParameters = List.of();
 
 
-    //region Getter & Setter
+	public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+			@Nonnull String simpleName) {
+		super(sourceFile, parent, simpleName);
+	}
 
-    @Nonnull
-    @Override
-    public final List<AbstractType> getTypeParameters() {
-        return isFrozen() ? typeParameters : Collections.unmodifiableList(typeParameters);
-    }
+	public AbstractParameterizedModifiedAnnotatedNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+			@Nonnull String simpleName, @Nonnull String uniqueNameSuffix) {
+		super(sourceFile, parent, simpleName, uniqueNameSuffix);
+	}
 
-    public final void setTypeParameters(@Nonnull List<AbstractType> typeParameters) {
-        assertNonFrozen();
-        this.typeParameters = typeParameters;
-    }
 
-    //endregion Getter & Setter
+	//region Getter & Setter
 
-    //region Serialization Helper
+	@Nonnull
+	@Override
+	public final List<AbstractType> getTypeParameters() {
+		return isFrozen() ? typeParameters : Collections.unmodifiableList(typeParameters);
+	}
 
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        this.typeParameters = List.copyOf(typeParameters);
-        for (final AbstractType typeParameter : typeParameters) typeParameter.internalFreeze(map);
-        return false;
-    }
+	public final void setTypeParameters(@Nonnull List<AbstractType> typeParameters) {
+		assertNonFrozen();
+		this.typeParameters = typeParameters;
+	}
 
-    private void writeObject(@Nonnull ObjectOutputStream outputStream)
-            throws IOException, UnsupportedOperationException {
-        assertFrozen();
-        outputStream.defaultWriteObject();
-        outputStream.writeObject(typeParameters);
-    }
+	//endregion Getter & Setter
 
-    @SuppressWarnings("unchecked")
-    private void readObject(@Nonnull ObjectInputStream inputStream)
-            throws IOException, ClassNotFoundException, ClassCastException {
-        inputStream.defaultReadObject();
-        this.typeParameters = (List<AbstractType>) inputStream.readObject();
-    }
+	//region Serialization Helper
 
-    //endregion Serialization Helper
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		this.typeParameters = List.copyOf(typeParameters);
+		for (final AbstractType typeParameter : typeParameters) typeParameter.internalFreeze(map);
+		return false;
+	}
 
-    //region Jsonify
+	private void writeObject(@Nonnull ObjectOutputStream outputStream)
+			throws IOException, UnsupportedOperationException {
+		assertFrozen();
+		outputStream.defaultWriteObject();
+		outputStream.writeObject(typeParameters);
+	}
 
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (!typeParameters.isEmpty()) {
-            builder.append(", \"typeParameters\": [");
-            internalArrayToReferenceJson(builder, indentation, typeParameters);
-            builder.append('\n').append(indentation).append(']');
-        }
-    }
+	@SuppressWarnings("unchecked")
+	private void readObject(@Nonnull ObjectInputStream inputStream)
+			throws IOException, ClassNotFoundException, ClassCastException {
+		inputStream.defaultReadObject();
+		this.typeParameters = (List<AbstractType>) inputStream.readObject();
+	}
 
-    //endregion Jsonify
+	//endregion Serialization Helper
+
+	//region Jsonify
+
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (!typeParameters.isEmpty()) {
+			builder.append(", \"typeParameters\": [");
+			internalArrayToReferenceJson(builder, indentation, typeParameters);
+			builder.append('\n').append(indentation).append(']');
+		}
+	}
+
+	//endregion Jsonify
 
 }

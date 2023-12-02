@@ -14,10 +14,10 @@ class LiouvilleLambdaFunctionTest {
 
         //when
         Exception exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    LiouvilleLambdaFunction.liouvilleLambda(number);
-                }
+            IllegalArgumentException.class,
+            () -> {
+                LiouvilleLambdaFunction.liouvilleLambda(number);
+            }
         );
         String actualMessage = exception.getMessage();
 
@@ -33,10 +33,10 @@ class LiouvilleLambdaFunctionTest {
 
         //when
         Exception exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    LiouvilleLambdaFunction.liouvilleLambda(number);
-                }
+            IllegalArgumentException.class,
+            () -> {
+                LiouvilleLambdaFunction.liouvilleLambda(number);
+            }
         );
         String actualMessage = exception.getMessage();
 

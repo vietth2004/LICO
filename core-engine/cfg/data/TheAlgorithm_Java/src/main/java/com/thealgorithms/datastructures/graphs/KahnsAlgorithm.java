@@ -11,7 +11,6 @@ import java.util.Set;
 /**
  * An algorithm that sorts a graph in toplogical order.
  */
-
 /**
  * A class that represents the adjaceny list of a graph
  */
@@ -27,7 +26,7 @@ class AdjacencyList<E extends Comparable<E>> {
      * This function adds an Edge to the adjaceny list
      *
      * @param from , the vertex the edge is from
-     * @param to,  the vertex the edge is going to
+     * @param to, the vertex the edge is going to
      */
     void addEdge(E from, E to) {
         try {

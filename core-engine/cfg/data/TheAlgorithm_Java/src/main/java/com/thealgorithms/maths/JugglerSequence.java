@@ -36,9 +36,9 @@ public class JugglerSequence {
                 temp = (int) Math.floor(Math.sqrt(n));
             } else {
                 temp =
-                        (int) Math.floor(
-                                Math.sqrt(n) * Math.sqrt(n) * Math.sqrt(n)
-                        );
+                    (int) Math.floor(
+                        Math.sqrt(n) * Math.sqrt(n) * Math.sqrt(n)
+                    );
             }
             n = temp;
             seq.add(n + "");

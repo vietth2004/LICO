@@ -21,7 +21,7 @@ public class PrefixExpressionNode extends OperationExpressionNode {
 
         Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
 
-        if (operator.equals(PrefixExpression.Operator.INCREMENT)) {
+        if(operator.equals(PrefixExpression.Operator.INCREMENT)) {
             return ctx.mkAdd(Z3Operand, ctx.mkInt(1));
         } else if (operator.equals(PrefixExpression.Operator.DECREMENT)) {
             return ctx.mkSub(Z3Operand, ctx.mkInt(1));
@@ -50,7 +50,7 @@ public class PrefixExpressionNode extends OperationExpressionNode {
     public static ExpressionNode executePrefixExpressionNode(PrefixExpressionNode prefixExpressionNode, MemoryModel memoryModel) {
         ExpressionNode operand = prefixExpressionNode.operand;
         PrefixExpression.Operator operator = prefixExpressionNode.operator;
-        if (operand.isLiteralNode()) {
+        if(operand.isLiteralNode()) {
             LiteralNode literalResult = LiteralNode.analyzeOnePrefixLiteral(operator, (LiteralNode) operand);
             return literalResult;
         } else {
@@ -60,12 +60,12 @@ public class PrefixExpressionNode extends OperationExpressionNode {
             // PAUSE executing
 
             // RE_ASSIGN
-            if (operand instanceof NameNode && (operator.equals(PrefixExpression.Operator.INCREMENT)
+            if(operand instanceof NameNode && (operator.equals(PrefixExpression.Operator.INCREMENT)
                     || operator.equals(PrefixExpression.Operator.DECREMENT))) {
                 String key = NameNode.getStringNameNode((NameNode) operand);
                 AstNode value = memoryModel.getValue(key);
 
-                if (value instanceof LiteralNode) {
+                if(value instanceof LiteralNode) {
                     memoryModel.assignVariable(key, LiteralNode.analyzeOnePrefixLiteral(operator, (LiteralNode) value));
                 } else if (value instanceof OperationExpressionNode) {
                     PrefixExpressionNode newValue = new PrefixExpressionNode();
@@ -103,7 +103,7 @@ public class PrefixExpressionNode extends OperationExpressionNode {
     }
 
     public static boolean isBitwiseOperator(PrefixExpression.Operator operator) {
-        if (operator.equals(PrefixExpression.Operator.COMPLEMENT)) {
+        if(operator.equals(PrefixExpression.Operator.COMPLEMENT)) {
             return true;
         }
         return false;

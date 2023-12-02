@@ -15,8 +15,7 @@ public class FindPath {
     private final int DEPTH = 1;
     private CfgNode currentDuplicateNode;
 
-    private FindPath() {
-    }
+    private FindPath() {}
 
     public FindPath(CfgNode beginNode, CfgNode middleNode, CfgNode endNode) {
         findPath(beginNode, middleNode);
@@ -24,7 +23,7 @@ public class FindPath {
         path = null;
         findPath(middleNode.getAfterStatementNode(), endNode);
         Path lastHaft = path;
-        if (lastHaft != null) {
+        if(lastHaft != null) {
             firstHaft.getCurrentLast().setNext(lastHaft.getCurrentFirst());
         }
         path = firstHaft;
@@ -77,13 +76,13 @@ public class FindPath {
 //    }
 
     private void findPath(CfgNode beginNode, CfgNode endNode) {
-        if (beginNode == null || path != null) return;
+        if(beginNode == null || path != null) return;
 
         // Add a path to the list of path if the node is endNode
-        if (beginNode == endNode) {
+        if(beginNode == endNode) {
             currentPath.add(beginNode);
             path = new Path();
-            for (CfgNode node : currentPath) {
+            for(CfgNode node : currentPath) {
                 path.addLast(node);
             }
             return;
@@ -92,21 +91,21 @@ public class FindPath {
         } else {
             int duplicateNode = numberOfDuplicateNode(beginNode);
             currentPath.add(beginNode);
-            if (beginNode instanceof CfgBoolExprNode) {
+            if(beginNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) beginNode;
 
                 // CfgBoolExprNode has 2 child node is trueNode and falseNode
-                if (duplicateNode < DEPTH) {
+                if(duplicateNode < DEPTH) {
                     findPath(boolExprNode.getTrueNode(), endNode);
                 }
                 CfgNode falseNode = boolExprNode.getFalseNode();
                 falseNode.setIsFalseNode(true);
                 findPath(falseNode, endNode);
 
-            } else if (beginNode instanceof CfgForEachExpressionNode) {
+            } else if(beginNode instanceof CfgForEachExpressionNode) {
 
                 // CfgForEachExpressionNode has 2 child node is hasElementNode and noMoreElementNode
-                if (duplicateNode < DEPTH) {
+                if(duplicateNode < DEPTH) {
                     findPath(((CfgForEachExpressionNode) beginNode).getHasElementAfterNode(), endNode);
                 }
                 findPath(((CfgForEachExpressionNode) beginNode).getNoMoreElementAfterNode(), endNode);
@@ -123,8 +122,8 @@ public class FindPath {
 
     private int numberOfDuplicateNode(CfgNode node) {
         int duplicateNode = 0;
-        for (CfgNode nodeI : currentPath) {
-            if (nodeI == node) duplicateNode++;
+        for(CfgNode nodeI : currentPath) {
+            if(nodeI == node) duplicateNode++;
         }
         return duplicateNode;
     }

@@ -26,7 +26,7 @@ public final class MarkedPath {
         int i = 0;
         while (rootNode != null && i < markedStatements.size()) {
             // Kiểm tra những CfgNode không có content
-            if (rootNode.getContent().equals("")) {
+            if(rootNode.getContent().equals("")) {
                 rootNode.setMarked(true);
                 rootNode = rootNode.getAfterStatementNode();
                 continue;
@@ -61,7 +61,7 @@ public final class MarkedPath {
             rootNode = rootNode.getAfterStatementNode();
         }
         while (rootNode != null) {
-            if (rootNode.getContent().equals("")) {
+            if(rootNode.getContent().equals("")) {
                 rootNode.setMarked(true);
                 rootNode = rootNode.getAfterStatementNode();
             }

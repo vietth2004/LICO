@@ -21,7 +21,7 @@ public class Project extends NamedEntity {
     @Column(name = "user")
     private String user;
 
-    @Column(name = "language")
+    @Column(name="language")
     private String language;
 
     public Project() {

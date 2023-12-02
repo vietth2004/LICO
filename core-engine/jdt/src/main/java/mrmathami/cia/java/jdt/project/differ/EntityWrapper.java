@@ -23,32 +23,30 @@ import mrmathami.cia.java.tree.JavaIdentifiedEntity;
 
 final class EntityWrapper {
 
-    @Nonnull
-    private final EntityMatcher matcher;
-    @Nonnull
-    private final JavaIdentifiedEntity entity;
-    private final int matchCode;
-    private final boolean identicalMatch;
+	@Nonnull private final EntityMatcher matcher;
+	@Nonnull private final JavaIdentifiedEntity entity;
+	private final int matchCode;
+	private final boolean identicalMatch;
 
-    EntityWrapper(@Nonnull EntityMatcher matcher, @Nonnull JavaIdentifiedEntity entity,
-                  int matchCode, boolean identicalMatch) {
-        this.matcher = matcher;
-        this.entity = entity;
-        this.matchCode = matchCode;
-        this.identicalMatch = identicalMatch;
-    }
+	EntityWrapper(@Nonnull EntityMatcher matcher, @Nonnull JavaIdentifiedEntity entity,
+			int matchCode, boolean identicalMatch) {
+		this.matcher = matcher;
+		this.entity = entity;
+		this.matchCode = matchCode;
+		this.identicalMatch = identicalMatch;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof EntityWrapper)) return false;
-        final EntityWrapper wrapper = (EntityWrapper) object;
-        return matchCode == wrapper.matchCode && matcher.match(entity, wrapper.entity, identicalMatch);
-    }
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+		if (!(object instanceof EntityWrapper)) return false;
+		final EntityWrapper wrapper = (EntityWrapper) object;
+		return matchCode == wrapper.matchCode && matcher.match(entity, wrapper.entity, identicalMatch);
+	}
 
-    @Override
-    public int hashCode() {
-        return matchCode;
-    }
+	@Override
+	public int hashCode() {
+		return matchCode;
+	}
 
 }

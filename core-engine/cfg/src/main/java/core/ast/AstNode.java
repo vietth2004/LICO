@@ -4,16 +4,12 @@ import core.ast.Expression.ExpressionNode;
 import core.ast.Statement.StatementNode;
 import core.ast.VariableDeclaration.VariableDeclarationNode;
 import core.dataStructure.MemoryModel;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Dimension;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.VariableDeclaration;
+import org.eclipse.jdt.core.dom.*;
 
 public abstract class AstNode {
 
     public static AstNode executeASTNode(ASTNode astNode, MemoryModel memoryModel) {
-        if (astNode instanceof Expression) {
+        if(astNode instanceof Expression) {
             return ExpressionNode.executeExpression((Expression) astNode, memoryModel);
         } else if (astNode instanceof Statement) {
             return StatementNode.executeStatement((Statement) astNode, memoryModel);

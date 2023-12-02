@@ -14,8 +14,8 @@ final class SortUtils {
      * Helper method for swapping places in array
      *
      * @param array The array which elements we want to swap
-     * @param idx   index of the first element
-     * @param idy   index of the second element
+     * @param idx index of the first element
+     * @param idy index of the second element
      */
     static <T> boolean swap(T[] array, int idx, int idy) {
         T swap = array[idx];
@@ -66,10 +66,10 @@ final class SortUtils {
      */
     static void print(List<?> toPrint) {
         toPrint
-                .stream()
-                .map(Object::toString)
-                .map(str -> str + " ")
-                .forEach(System.out::print);
+            .stream()
+            .map(Object::toString)
+            .map(str -> str + " ")
+            .forEach(System.out::print);
 
         System.out.println();
     }
@@ -86,12 +86,13 @@ final class SortUtils {
     /**
      * Swaps all position from {
      *
-     * @param left}  to @{
+     * @param left} to @{
      * @param right} for {
      * @param array}
-     * @param array  is an array
-     * @param left   is a left flip border of the array
-     * @param right  is a right flip border of the array
+     *
+     * @param array is an array
+     * @param left is a left flip border of the array
+     * @param right is a right flip border of the array
      */
     static <T extends Comparable<T>> void flip(T[] array, int left, int right) {
         while (left <= right) {

@@ -30,7 +30,7 @@ public class StrutsEmulator extends XWorkEmulator {
     }
 
 
-    protected Dispatcher initDispatcher() {
+    protected Dispatcher initDispatcher()  {
         Dispatcher du = initDispatcher(null, null);
         configurationManager = du.getConfigurationManager();
         configuration = configurationManager.getConfiguration();

@@ -1,13 +1,18 @@
 package core.cfg;
 
-public class CfgBeginForEachNode extends CfgNode {
+import core.node.Node;
+
+public class CfgBeginForEachNode extends CfgNode
+{
     private CfgEndBlockNode endBlockNode = null;
 
-    public CfgEndBlockNode getEndBlockNode() {
+    public CfgEndBlockNode getEndBlockNode()
+    {
         return endBlockNode;
     }
 
-    public void setEndBlockNode(CfgEndBlockNode endBlockNode) {
+    public void setEndBlockNode(CfgEndBlockNode endBlockNode)
+    {
         this.endBlockNode = endBlockNode;
     }
 }

@@ -14,15 +14,15 @@ import java.util.List;
  * Arrangement: 3 "...Q..", "Q.....", "....Q.", ".Q....", ".....Q", "..Q..."
  * <p>
  * Arrangement: 4 "....Q.", "..Q...", "Q.....", ".....Q", "...Q..", ".Q...."
- * <p>
+ *
  * Solution: Brute Force approach:
- * <p>
+ *
  * Generate all possible arrangement to place N queens on N*N board. Check each
  * board if queens are placed safely. If it is safe, include arrangement in
  * solution set. Otherwise ignore it
- * <p>
+ *
  * Optimized solution: This can be solved using backtracking in below steps
- * <p>
+ *
  * Start with first column and place queen on first row Try placing queen in a
  * row on second column If placing second queen in second column attacks any of
  * the previous queens, change the row in second column otherwise move to next
@@ -48,12 +48,12 @@ public class NQueens {
         getSolution(queens, arrangements, new int[queens], 0);
         if (arrangements.isEmpty()) {
             System.out.println(
-                    "There is no way to place " +
-                            queens +
-                            " queens on board of size " +
-                            queens +
-                            "x" +
-                            queens
+                "There is no way to place " +
+                queens +
+                " queens on board of size " +
+                queens +
+                "x" +
+                queens
             );
         } else {
             System.out.println("Arrangement for placing " + queens + " queens");
@@ -67,16 +67,16 @@ public class NQueens {
     /**
      * This is backtracking function which tries to place queen recursively
      *
-     * @param boardSize:   size of chess board
-     * @param solutions:   this holds all possible arrangements
-     * @param columns:     columns[i] = rowId where queen is placed in ith column.
+     * @param boardSize: size of chess board
+     * @param solutions: this holds all possible arrangements
+     * @param columns: columns[i] = rowId where queen is placed in ith column.
      * @param columnIndex: This is the column in which queen is being placed
      */
     private static void getSolution(
-            int boardSize,
-            List<List<String>> solutions,
-            int[] columns,
-            int columnIndex
+        int boardSize,
+        List<List<String>> solutions,
+        int[] columns,
+        int columnIndex
     ) {
         if (columnIndex == boardSize) {
             // this means that all queens have been placed
@@ -106,15 +106,15 @@ public class NQueens {
      * This function checks if queen can be placed at row = rowIndex in column =
      * columnIndex safely
      *
-     * @param columns:     columns[i] = rowId where queen is placed in ith column.
-     * @param rowIndex:    row in which queen has to be placed
+     * @param columns: columns[i] = rowId where queen is placed in ith column.
+     * @param rowIndex: row in which queen has to be placed
      * @param columnIndex: column in which queen is being placed
      * @return true: if queen can be placed safely false: otherwise
      */
     private static boolean isPlacedCorrectly(
-            int[] columns,
-            int rowIndex,
-            int columnIndex
+        int[] columns,
+        int rowIndex,
+        int columnIndex
     ) {
         for (int i = 0; i < columnIndex; i++) {
             int diff = Math.abs(columns[i] - rowIndex);

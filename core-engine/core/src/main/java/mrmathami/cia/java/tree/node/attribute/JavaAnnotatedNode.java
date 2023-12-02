@@ -26,11 +26,11 @@ import java.util.List;
 
 public interface JavaAnnotatedNode extends JavaNode {
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nonnull
-    List<? extends JavaAnnotate> getAnnotates();
+	@Nonnull
+	List<? extends JavaAnnotate> getAnnotates();
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
 }

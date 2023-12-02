@@ -1,4 +1,4 @@
 package core.testdata.structure_datanode;
 
-public class StructDataNode extends AbtractableDataNode {
+public class StructDataNode extends AbtractableDataNode{
 }

@@ -27,31 +27,31 @@ import java.util.Set;
 
 public interface JavaProjectSnapshotComparison {
 
-    @Nonnull
-    String getName();
+	@Nonnull
+	String getName();
 
-    @Nonnull
-    JavaProjectSnapshot getPreviousSnapshot();
+	@Nonnull
+	JavaProjectSnapshot getPreviousSnapshot();
 
-    @Nonnull
-    JavaProjectSnapshot getCurrentSnapshot();
+	@Nonnull
+	JavaProjectSnapshot getCurrentSnapshot();
 
-    @Nonnull
-    Set<JavaNode> getRemovedNodes();
+	@Nonnull
+	Set<JavaNode> getRemovedNodes();
 
-    @Nonnull
-    Set<JavaNode> getAddedNodes();
+	@Nonnull
+	Set<JavaNode> getAddedNodes();
 
-    @Nonnull
-    Set<Pair<JavaNode, JavaNode>> getChangedNodes();
+	@Nonnull
+	Set<Pair<JavaNode, JavaNode>> getChangedNodes();
 
-    @Nonnull
-    Set<Pair<JavaNode, JavaNode>> getUnchangedNodes();
+	@Nonnull
+	Set<Pair<JavaNode, JavaNode>> getUnchangedNodes();
 
-    @Nonnull
-    JavaDependencyWeightTable getDependencyImpactTable();
+	@Nonnull
+	JavaDependencyWeightTable getDependencyImpactTable();
 
-    @Nonnull
-    JavaNodeWeightTable getNodeImpactTable();
+	@Nonnull
+	JavaNodeWeightTable getNodeImpactTable();
 
 }

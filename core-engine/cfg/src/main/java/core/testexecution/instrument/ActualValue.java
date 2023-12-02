@@ -29,7 +29,7 @@ public class ActualValue {
     private File actualFolder;
     private String tracePath;
     private CfgNode cfgNode;
-    private Map<String, String> mapActualValue;
+    private Map<String,String> mapActualValue;
 
 
     private SFunctionNode functionNode;
@@ -128,34 +128,40 @@ public class ActualValue {
         File workspace = new File(new File(projectPath).getParentFile().getAbsolutePath() + "/JGT-workspace");
         if (workspace.mkdir()) {
             System.out.println("Create workspace successful");
-        } else System.out.println("Workspace is existed");
+        }
+        else System.out.println("Workspace is existed");
         File instrumentFolder = new File(workspace.getAbsolutePath() + "/instrument");
         if (instrumentFolder.mkdir()) {
             System.out.println("Create instrument folder successful");
-        } else System.out.println("Instrument folder is existed");
+        }
+        else System.out.println("Instrument folder is existed");
         File instrumentFunctionFolder = new File(instrumentFolder.getAbsolutePath() + "/" + functionNode.getName());
         if (instrumentFunctionFolder.mkdir()) {
             System.out.println("Create instrument Function folder successful");
-        } else System.out.println("Instrument folder is existed");
+        }
+        else System.out.println("Instrument folder is existed");
         setInstrumentFolder(instrumentFunctionFolder);
 
         File actualFolder = new File(instrumentFunctionFolder.getAbsolutePath() + "/" + "actual");
         if (actualFolder.mkdir()) {
             System.out.println("Create instrument actual folder successful");
-        } else System.out.println("Instrument actual folder is existed");
+        }
+        else System.out.println("Instrument actual folder is existed");
         setActualFolder(actualFolder);
 
         File clone = new File(actualFolder.getAbsolutePath() + "/" + SearchInSTree.getJavaFileNode(functionNode).getName());
         if (clone.createNewFile()) {
             System.out.println("Create instrument function successful");
-        } else System.out.println("Instrument function is existed");
+        }
+        else System.out.println("Instrument function is existed");
         setActualPath(clone.getAbsolutePath());
 
         File trace = new File(actualFolder.getAbsolutePath() + "/" + SearchInSTree.getJavaFileNode(functionNode).getName()
                 /*+ new Random().nextInt()*/ + ".tracepath");
         if (trace.createNewFile()) {
             System.out.println("Create trace function successful");
-        } else System.out.println("trace function is existed");
+        }
+        else System.out.println("trace function is existed");
         setTracePath(trace.getAbsolutePath());
         Utils.writeToFile("", this.tracePath);
     }
@@ -175,8 +181,7 @@ public class ActualValue {
         for (DataNode node : subProgramDataNode.getChildren()) {
             argInstrumentActualValue += getActualInstrumentForDataNode(node) + "\n";
         }
-        if (!argInstrumentActualValue.equals(""))
-            argInstrumentActualValue = argInstrumentActualValue.substring(0, argInstrumentActualValue.lastIndexOf("\n"));
+        if (!argInstrumentActualValue.equals("")) argInstrumentActualValue = argInstrumentActualValue.substring(0, argInstrumentActualValue.lastIndexOf("\n"));
 
         String returnType = functionNode.getAst().getReturnType();
         if (returnType.equals("")) {
@@ -207,10 +212,10 @@ public class ActualValue {
 
         String s2 = "}";
         String main = s1 + body + s2;
-        for (int i = cloneContent.length() - 1; i >= 0; i--) {
+        for (int i = cloneContent.length()-1; i >=0; i--) {
             if (cloneContent.charAt(i) == '}') {
                 String tmp1 = cloneContent.substring(0, i);
-                String tmp2 = cloneContent.substring(i, cloneContent.length() - 1);
+                String tmp2 = cloneContent.substring(i, cloneContent.length()-1);
                 cloneContent = tmp1 + TAB + main + "\n" + tmp2;
                 break;
             }
@@ -218,9 +223,9 @@ public class ActualValue {
         int importindex = SearchInSTree.getJavaFileNode(functionNode).getCfg().getStartPosition();
         if (importindex == 0) {
             cloneContent = Utils.importFileLibrary() + "\n" + cloneContent;
-        } else {
+        }else {
             String tmp1 = cloneContent.substring(0, importindex);
-            String tmp2 = cloneContent.substring(importindex, cloneContent.length() - 1);
+            String tmp2 = cloneContent.substring(importindex, cloneContent.length()-1);
             cloneContent = tmp1 + Utils.importFileLibrary() + "\n" + tmp2;
         }
         //todo: finish intrument actual value for test case

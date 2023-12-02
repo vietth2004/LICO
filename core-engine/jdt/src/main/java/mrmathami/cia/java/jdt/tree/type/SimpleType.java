@@ -24,44 +24,44 @@ import mrmathami.cia.java.tree.type.JavaSimpleType;
 
 public final class SimpleType extends AbstractType implements JavaSimpleType {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nullable
-    private AbstractType innerType;
-
-
-    public SimpleType(@Nonnull String description) {
-        super(description);
-    }
+	@Nullable
+	private AbstractType innerType;
 
 
-    //region Getter & Setter
+	public SimpleType(@Nonnull String description) {
+		super(description);
+	}
 
-    @Nullable
-    @Override
-    public AbstractType getInnerType() {
-        return innerType;
-    }
 
-    public void setInnerType(@Nullable AbstractType innerType) {
-        assertNonFrozen();
-        this.innerType = innerType;
-    }
+	//region Getter & Setter
 
-    //endregion Getter & Setter
+	@Nullable
+	@Override
+	public AbstractType getInnerType() {
+		return innerType;
+	}
 
-    //region Jsonify
+	public void setInnerType(@Nullable AbstractType innerType) {
+		assertNonFrozen();
+		this.innerType = innerType;
+	}
 
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (innerType != null) {
-            builder.append(", \"innerType\": { ");
-            innerType.internalToReferenceJson(builder);
-            builder.append(" }");
-        }
-    }
+	//endregion Getter & Setter
 
-    //endregion Jsonify
+	//region Jsonify
+
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (innerType != null) {
+			builder.append(", \"innerType\": { ");
+			innerType.internalToReferenceJson(builder);
+			builder.append(" }");
+		}
+	}
+
+	//endregion Jsonify
 
 }

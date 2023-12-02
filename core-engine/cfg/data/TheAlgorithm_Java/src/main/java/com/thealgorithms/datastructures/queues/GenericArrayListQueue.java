@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * This class implements a GenericArrayListQueue.
- * <p>
+ *
  * A GenericArrayListQueue data structure functions the same as any
  * specific-typed queue. The GenericArrayListQueue holds elements of types
  * to-be-specified at runtime. The elements that are added first are the first

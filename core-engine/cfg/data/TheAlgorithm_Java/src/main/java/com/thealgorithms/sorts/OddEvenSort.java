@@ -56,8 +56,8 @@ public class OddEvenSort {
      * Helper function to swap two array values.
      *
      * @param arr the array contains elements
-     * @param i   the first index to be swapped
-     * @param j   the second index to be swapped
+     * @param i the first index to be swapped
+     * @param j the second index to be swapped
      */
     private static void swap(int[] arr, int i, int j) {
         int temp = arr[i];

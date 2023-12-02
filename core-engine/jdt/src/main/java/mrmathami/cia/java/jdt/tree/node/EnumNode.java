@@ -35,89 +35,87 @@ import java.util.Map;
 
 public final class EnumNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaEnumNode {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nullable
-    private final String binaryName;
-    @Nonnull
-    private transient List<AbstractType> implementsInterfaces = List.of();
+	@Nullable private final String binaryName;
+	@Nonnull private transient List<AbstractType> implementsInterfaces = List.of();
 
 
-    public EnumNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
-                    @Nonnull String simpleName, @Nullable String binaryName) {
-        super(sourceFile, parent, simpleName);
-        checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
-                InterfaceNode.class, PackageNode.class, RootNode.class);
+	public EnumNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent,
+			@Nonnull String simpleName, @Nullable String binaryName) {
+		super(sourceFile, parent, simpleName);
+		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class,
+				InterfaceNode.class, PackageNode.class, RootNode.class);
 
-        this.binaryName = binaryName;
-    }
+		this.binaryName = binaryName;
+	}
 
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nullable
-    @Override
-    public String getBinaryName() {
-        return binaryName;
-    }
+	@Nullable
+	@Override
+	public String getBinaryName() {
+		return binaryName;
+	}
 
-    @Nonnull
-    @Override
-    public List<AbstractType> getImplementsInterfaces() {
-        return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
-    }
+	@Nonnull
+	@Override
+	public List<AbstractType> getImplementsInterfaces() {
+		return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
+	}
 
-    public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
-        assertNonFrozen();
-        this.implementsInterfaces = implementsInterfaces;
-    }
+	public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
+		assertNonFrozen();
+		this.implementsInterfaces = implementsInterfaces;
+	}
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
-    //region Serialization Helper
+	//region Serialization Helper
 
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        this.implementsInterfaces = List.copyOf(implementsInterfaces);
-        for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
-        return false;
-    }
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		this.implementsInterfaces = List.copyOf(implementsInterfaces);
+		for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
+		return false;
+	}
 
-    private void writeObject(@Nonnull ObjectOutputStream outputStream)
-            throws IOException, UnsupportedOperationException {
-        assertFrozen();
-        outputStream.defaultWriteObject();
-        outputStream.writeObject(implementsInterfaces);
-    }
+	private void writeObject(@Nonnull ObjectOutputStream outputStream)
+			throws IOException, UnsupportedOperationException {
+		assertFrozen();
+		outputStream.defaultWriteObject();
+		outputStream.writeObject(implementsInterfaces);
+	}
 
-    @SuppressWarnings("unchecked")
-    private void readObject(@Nonnull ObjectInputStream inputStream)
-            throws IOException, ClassNotFoundException, ClassCastException {
-        inputStream.defaultReadObject();
-        this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
-    }
+	@SuppressWarnings("unchecked")
+	private void readObject(@Nonnull ObjectInputStream inputStream)
+			throws IOException, ClassNotFoundException, ClassCastException {
+		inputStream.defaultReadObject();
+		this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
+	}
 
-    //endregion Serialization Helper
+	//endregion Serialization Helper
 
-    //region Jsonify
+	//region Jsonify
 
-    @Override
-    protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-        super.internalToReferenceJsonStart(builder);
-        builder.append(", \"binaryName\": \"").append(binaryName).append('"');
-    }
+	@Override
+	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+		super.internalToReferenceJsonStart(builder);
+		builder.append(", \"binaryName\": \"").append(binaryName).append('"');
+	}
 
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (!implementsInterfaces.isEmpty()) {
-            builder.append(", \"implementsInterfaces\": [");
-            internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
-            builder.append('\n').append(indentation).append(']');
-        }
-    }
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (!implementsInterfaces.isEmpty()) {
+			builder.append(", \"implementsInterfaces\": [");
+			internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
+			builder.append('\n').append(indentation).append(']');
+		}
+	}
 
-    //endregion Jsonify
+	//endregion Jsonify
 
 }

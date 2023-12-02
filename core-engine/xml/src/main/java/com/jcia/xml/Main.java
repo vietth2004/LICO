@@ -1,21 +1,21 @@
 package com.jcia.xml;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
 import com.jcia.xml.dom.Node;
 import com.jcia.xml.parser.XmlFileParser;
 import com.jcia.xml.utils.Helper.FileHelper;
 import com.jcia.xml.utils.Helper.StringHelper;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Main {
 
@@ -32,14 +32,14 @@ public class Main {
          */
         List<Future<Node>> xmlNodeFutures = new ArrayList<>();
         paths.forEach(x -> {
-            if (StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))) {
+            if(StringHelper.SUPPORTED_EXTENSIONS.contains(FileHelper.getFileExtension(x.toString()))){
                 Future<Node> future = null;
                 future = THREADPOOL_FIXED_SIZE.submit(new XmlFileParser(x.toString()));
                 xmlNodeFutures.add(future);
             }
         });
 
-        for (Future<Node> future : xmlNodeFutures) {
+        for(Future<Node> future : xmlNodeFutures) {
             Node parsedNode = future.get();
             xmlNodes.add(parsedNode);
         }

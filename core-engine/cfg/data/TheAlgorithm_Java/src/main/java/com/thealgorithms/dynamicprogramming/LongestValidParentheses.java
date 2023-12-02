@@ -32,9 +32,9 @@ public class LongestValidParentheses {
                     if (index >= 0 && chars[index] == '(') {
                         // ()(())
                         res[i] =
-                                res[i - 1] +
-                                        2 +
-                                        (index - 1 >= 0 ? res[index - 1] : 0);
+                            res[i - 1] +
+                            2 +
+                            (index - 1 >= 0 ? res[index - 1] : 0);
                     }
                 }
             }

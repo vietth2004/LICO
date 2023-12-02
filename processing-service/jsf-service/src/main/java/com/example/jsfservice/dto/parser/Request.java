@@ -4,6 +4,7 @@ import com.example.jsfservice.ast.dependency.Dependency;
 import com.example.jsfservice.ast.node.JavaNode;
 import com.example.jsfservice.dom.Node;
 import com.example.jsfservice.dom.Properties.PropertiesFileNode;
+import com.example.jsfservice.dom.Xml.XmlTagNode;
 
 import java.io.Serializable;
 import java.util.List;

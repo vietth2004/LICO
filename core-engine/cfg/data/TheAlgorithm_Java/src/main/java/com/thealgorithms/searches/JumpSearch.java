@@ -6,7 +6,7 @@ public class JumpSearch implements SearchAlgorithm {
 
     public static void main(String[] args) {
         JumpSearch jumpSearch = new JumpSearch();
-        Integer[] array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        Integer[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         for (int i = 0; i < array.length; i++) {
             assert jumpSearch.find(array, i) == i;
         }
@@ -18,7 +18,7 @@ public class JumpSearch implements SearchAlgorithm {
      * Jump Search algorithm implements
      *
      * @param array the array contains elements
-     * @param key   to be searched
+     * @param key to be searched
      * @return index of {@code key} if found, otherwise <tt>-1</tt>
      */
     @Override

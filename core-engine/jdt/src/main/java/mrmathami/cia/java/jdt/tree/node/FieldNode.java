@@ -31,57 +31,56 @@ import java.util.Map;
 
 public final class FieldNode extends AbstractModifiedAnnotatedNode implements JavaFieldNode {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nullable
-    private AbstractType type;
-
-
-    public FieldNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, @Nonnull String simpleName) {
-        super(sourceFile, parent, simpleName);
-        checkParent(parent, AnnotationNode.class, ClassNode.class, EnumNode.class,
-                InterfaceNode.class, MethodNode.class);
-    }
+	@Nullable private AbstractType type;
 
 
-    //region Getter & Setter
+	public FieldNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, @Nonnull String simpleName) {
+		super(sourceFile, parent, simpleName);
+		checkParent(parent, AnnotationNode.class, ClassNode.class, EnumNode.class,
+				InterfaceNode.class, MethodNode.class);
+	}
 
-    @Nullable
-    @Override
-    public AbstractType getType() {
-        return type;
-    }
 
-    public void setType(@Nullable AbstractType type) {
-        assertNonFrozen();
-        this.type = type;
-    }
+	//region Getter & Setter
 
-    //endregion Getter & Setter
+	@Nullable
+	@Override
+	public AbstractType getType() {
+		return type;
+	}
 
-    //region Serialization Helper
+	public void setType(@Nullable AbstractType type) {
+		assertNonFrozen();
+		this.type = type;
+	}
 
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        if (type != null) type.internalFreeze(map);
-        return false;
-    }
+	//endregion Getter & Setter
 
-    //endregion Serialization Helper
+	//region Serialization Helper
 
-    //region Jsonify
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		if (type != null) type.internalFreeze(map);
+		return false;
+	}
 
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (type != null) {
-            builder.append(", \"type\": { ");
-            type.internalToReferenceJson(builder);
-            builder.append(" }");
-        }
-    }
+	//endregion Serialization Helper
 
-    //endregion Jsonify
+	//region Jsonify
+
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (type != null) {
+			builder.append(", \"type\": { ");
+			type.internalToReferenceJson(builder);
+			builder.append(" }");
+		}
+	}
+
+	//endregion Jsonify
 
 }

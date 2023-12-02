@@ -3,9 +3,9 @@ package com.example.projectservice.entity;
 import javax.persistence.*;
 
 @MappedSuperclass
-public abstract class NamedEntity extends Entity {
+public abstract class NamedEntity extends Entity{
 
-    @Column(name = "name")
+    @Column(name="name")
     private String name;
 
     public NamedEntity() {

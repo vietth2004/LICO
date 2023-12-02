@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class JsfController {
 
     /**
      * Parse to xml nodes by sending project path
-     *
      * @param folderPath
      * @param javaNode
      * @return
@@ -64,8 +64,8 @@ public class JsfController {
         List<Node> xmlNodes = xmlService.parseProjectWithPath(folderPath.getPath());
         logger.info("Done parsing xml tree...");
         List<PropertiesFileNode> propFileNodes = propService.parseProjectWithPath(folderPath.getPath());
-        long after = System.nanoTime();
-        logger.info("Parsing xml nodes done in " + (after - before) / 1000000 + " ms!");
+        long after =  System.nanoTime();
+        logger.info("Parsing xml nodes done in " + (after - before)/1000000 + " ms!");
         this.xmlNodes = new ArrayList<>();
         this.propFileNodes = new ArrayList<>();
         this.xmlNodes.addAll(xmlNodes);
@@ -77,7 +77,6 @@ public class JsfController {
 
     /**
      * Analyze dependencies from java node to xml nodes
-     *
      * @param request
      * @return
      */
@@ -93,7 +92,7 @@ public class JsfController {
         long after = System.nanoTime();
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());
-        logger.info("Analyzing dependencies done in " + (after - before) / 1000000 + " ms!");
+        logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
         return new ResponseEntity<List<Dependency>>(dependencies, HttpStatus.OK);
     }
 
@@ -113,7 +112,7 @@ public class JsfController {
         long after = System.nanoTime();
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());
-        logger.info("Analyzing dependencies done in " + (after - before) / 1000000 + " ms!");
+        logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
         return new ResponseEntity<ParserResponse>(response, HttpStatus.OK);
     }
 
@@ -129,7 +128,7 @@ public class JsfController {
 
         long after = System.nanoTime();
         logger.info("Done comparing tree...");
-        logger.info("Comparing tree done in " + (after - before) / 1000000 + " ms!");
+        logger.info("Comparing tree done in " + (after - before)/1000000 + " ms!");
         return ResponseEntity.ok(response);
     }
 
@@ -148,7 +147,7 @@ public class JsfController {
         long after = System.nanoTime();
         logger.info("Done analyzing dependency...");
         logger.info("Number of dependencies: " + dependencies.size());
-        logger.info("Analyzing dependencies done in " + (after - before) / 1000000 + " ms!");
+        logger.info("Analyzing dependencies done in " + (after - before)/1000000 + " ms!");
         return new DependencyResponse(dependencies);
     }
 

@@ -23,16 +23,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-
 @Service
-public class UploadServiceImpl implements UploadService {
+public class UploadServiceImpl implements UploadService{
 
     private static int testIdCounter = 1;
     final ProjectService projectService;
 
     final JwtUtils jwtUtils;
-
     public UploadServiceImpl(ProjectService projectService, JwtUtils jwtUtils) {
         this.projectService = projectService;
         this.jwtUtils = jwtUtils;
@@ -45,7 +45,6 @@ public class UploadServiceImpl implements UploadService {
         Writer.write(path, response, "tmp-prjt");
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
     @Override
     public String buildProject(List<String> parser, MultipartFile file, String user, String project) {
         String userPath = user;
@@ -55,17 +54,16 @@ public class UploadServiceImpl implements UploadService {
         String fileName = projectService.storeFile(file, userPath, project);
         return fileName;
     }
-
     @Override
     public ResponseEntity<Object> saveDataTest(InfoMethod requestMethod) {
-        try {
+        try{
             int idmethod = requestMethod.getId();
             // Lưu chuỗi JSON vào tệp tin
             String path = requestMethod.getPath();
             int zipProjectIndex = path.indexOf(".zip.project");
             String targetDirectoryName = path.substring(0, zipProjectIndex + ".zip.project".length());
             String outputFolderPath = targetDirectoryName + File.separator;
-            File jsonFile = new File(outputFolderPath + "/tmp-prjt.json");
+            File jsonFile = new File(outputFolderPath +"/tmp-prjt.json");
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode data = objectMapper.readTree(jsonFile);
             JsonNode nodeWithId = findNode.getNodeById(idmethod, data.get("rootNode"));
@@ -86,7 +84,7 @@ public class UploadServiceImpl implements UploadService {
             for (MethodDeclaration methodDeclaration : methodDeclarations) {
                 String methodname = methodDeclaration.getSignature().asString();
                 //System.out.println(methodName);
-                if (methodname.equals(simpleName)) {
+                if(methodname.equals(simpleName)){
                     content = new StringBuilder(methodDeclaration.toString());
                 }
             }
@@ -94,12 +92,12 @@ public class UploadServiceImpl implements UploadService {
             StringBuilder parameterTypes = new StringBuilder();
             for (Parameter parameter : parameters) {
                 parameterTypes.append(parameter.getDescribe()).append("_");
-                System.out.println(parameter + "\n");
+                System.out.println(parameter +"\n");
             }
             parameterTypes.deleteCharAt(parameterTypes.length() - 1); // Xóa dấu "_" cuối cùng
 
             int testId = testIdCounter++;
-            String nameTest = name + idmethod + "_" + parameterTypes.toString() + "_" + testId;
+            String nameTest = name +idmethod + "_" + parameterTypes.toString() +"_"+testId;
             LocalDateTime localDateTime = LocalDateTime.now();
             String currentTime = localDateTime.toString();
 

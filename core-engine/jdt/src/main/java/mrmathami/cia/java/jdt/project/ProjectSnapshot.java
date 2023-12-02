@@ -28,60 +28,54 @@ import java.io.Serializable;
 
 public final class ProjectSnapshot implements JavaProjectSnapshot, Serializable {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final String name;
-    @Nonnull
-    private final JavaRootNode rootNode;
-    @Nonnull
-    private final double[] dependencyWeights;
-    @Nonnull
-    private final double[] nodeWeights;
+	@Nonnull private final String name;
+	@Nonnull private final JavaRootNode rootNode;
+	@Nonnull private final double[] dependencyWeights;
+	@Nonnull private final double[] nodeWeights;
 
-    @Nullable
-    private transient DependencyWeightTable dependencyWeightTable;
-    @Nullable
-    private transient NodeWeightTable nodeWeightTable;
+	@Nullable private transient DependencyWeightTable dependencyWeightTable;
+	@Nullable private transient NodeWeightTable nodeWeightTable;
 
 
-    public ProjectSnapshot(@Nonnull String name, @Nonnull JavaRootNode rootNode,
-                           @Nonnull double[] dependencyWeights, @Nonnull double[] nodeWeights) {
-        this.name = name;
-        this.rootNode = rootNode;
-        this.dependencyWeights = dependencyWeights;
-        this.nodeWeights = nodeWeights;
-    }
+	public ProjectSnapshot(@Nonnull String name, @Nonnull JavaRootNode rootNode,
+			@Nonnull double[] dependencyWeights, @Nonnull double[] nodeWeights) {
+		this.name = name;
+		this.rootNode = rootNode;
+		this.dependencyWeights = dependencyWeights;
+		this.nodeWeights = nodeWeights;
+	}
 
 
-    //region Getter
+	//region Getter
 
-    @Nonnull
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Nonnull
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Nonnull
-    @Override
-    public JavaRootNode getRootNode() {
-        return rootNode;
-    }
+	@Nonnull
+	@Override
+	public JavaRootNode getRootNode() {
+		return rootNode;
+	}
 
-    @Nonnull
-    @Override
-    public DependencyWeightTable getDependencyWeightTable() {
-        return dependencyWeightTable != null ? dependencyWeightTable
-                : (this.dependencyWeightTable = new DependencyWeightTable(dependencyWeights));
-    }
+	@Nonnull
+	@Override
+	public DependencyWeightTable getDependencyWeightTable() {
+		return dependencyWeightTable != null ? dependencyWeightTable
+				: (this.dependencyWeightTable = new DependencyWeightTable(dependencyWeights));
+	}
 
-    @Nonnull
-    @Override
-    public NodeWeightTable getNodeWeightTable() {
-        return nodeWeightTable != null ? nodeWeightTable
-                : (this.nodeWeightTable = new NodeWeightTable(nodeWeights, rootNode));
-    }
+	@Nonnull
+	@Override
+	public NodeWeightTable getNodeWeightTable() {
+		return nodeWeightTable != null ? nodeWeightTable
+				: (this.nodeWeightTable = new NodeWeightTable(nodeWeights, rootNode));
+	}
 
-    //endregion Getter
+	//endregion Getter
 
 }

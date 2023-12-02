@@ -27,8 +27,8 @@ public class KnapsackMemoization {
 
     // Returns the value of maximum profit using Recursive approach
     int knapSackRec(int W, int wt[],
-                    int val[], int n,
-                    int[][] dp) {
+            int val[], int n,
+            int[][] dp) {
 
         // Base condition
         if (n == 0 || W == 0) {

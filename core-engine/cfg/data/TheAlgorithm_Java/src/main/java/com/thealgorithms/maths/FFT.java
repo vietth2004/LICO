@@ -175,15 +175,14 @@ public class FFT {
      * https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
      * https://en.wikipedia.org/wiki/Cooley%E2%80%93Tukey_FFT_algorithm
      * https://cp-algorithms.com/algebra/fft.html
-     *
-     * @param x       The discrete signal which is then converted to the FFT or the
-     *                IFFT of signal x.
+     *  @param x The discrete signal which is then converted to the FFT or the
+     * IFFT of signal x.
      * @param inverse True if you want to find the inverse FFT.
      * @return
      */
     public static ArrayList<Complex> fft(
-            ArrayList<Complex> x,
-            boolean inverse
+        ArrayList<Complex> x,
+        boolean inverse
     ) {
         /* Pad the signal with zeros if necessary */
         paddingPowerOfTwo(x);
@@ -222,9 +221,9 @@ public class FFT {
 
     /* Swap the values of the signal with bit-reversal method */
     public static ArrayList<Complex> fftBitReversal(
-            int N,
-            int log2N,
-            ArrayList<Complex> x
+        int N,
+        int log2N,
+        ArrayList<Complex> x
     ) {
         int reverse;
         for (int i = 0; i < N; i++) {
@@ -238,9 +237,9 @@ public class FFT {
 
     /* Divide by N if we want the inverse FFT */
     public static ArrayList<Complex> inverseFFT(
-            int N,
-            boolean inverse,
-            ArrayList<Complex> x
+        int N,
+        boolean inverse,
+        ArrayList<Complex> x
     ) {
         if (inverse) {
             for (int i = 0; i < x.size(); i++) {
@@ -263,7 +262,7 @@ public class FFT {
      * More info: https://cp-algorithms.com/algebra/fft.html
      * https://www.geeksforgeeks.org/write-an-efficient-c-program-to-reverse-bits-of-a-number/
      *
-     * @param num   The integer you want to reverse its bits.
+     * @param num The integer you want to reverse its bits.
      * @param log2N The number of bits you want to reverse.
      * @return The reversed number
      */

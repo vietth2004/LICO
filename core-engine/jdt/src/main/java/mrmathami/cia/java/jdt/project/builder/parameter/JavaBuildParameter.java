@@ -25,26 +25,25 @@ import java.util.List;
 
 public final class JavaBuildParameter extends SnapshotBuildParameter {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final List<Path> classPaths;
-    private final boolean recoveryEnabled;
-
-
-    public JavaBuildParameter(@Nonnull List<Path> classPaths, boolean recoveryEnabled) {
-        this.classPaths = List.copyOf(classPaths);
-        this.recoveryEnabled = recoveryEnabled;
-    }
+	@Nonnull private final List<Path> classPaths;
+	private final boolean recoveryEnabled;
 
 
-    @Nonnull
-    public List<Path> getClassPaths() {
-        return classPaths;
-    }
+	public JavaBuildParameter(@Nonnull List<Path> classPaths, boolean recoveryEnabled) {
+		this.classPaths = List.copyOf(classPaths);
+		this.recoveryEnabled = recoveryEnabled;
+	}
 
-    public boolean isRecoveryEnabled() {
-        return recoveryEnabled;
-    }
+
+	@Nonnull
+	public List<Path> getClassPaths() {
+		return classPaths;
+	}
+
+	public boolean isRecoveryEnabled() {
+		return recoveryEnabled;
+	}
 
 }

@@ -73,7 +73,7 @@ class AdjacencyMatrixGraph {
         this.setNumberOfEdges(0);
         this.setAdjacency(
                 new int[givenNumberOfVertices][givenNumberOfVertices]
-        );
+            );
         for (int i = 0; i < givenNumberOfVertices; i++) {
             for (int j = 0; j < givenNumberOfVertices; j++) {
                 this.adjacency()[i][j] = AdjacencyMatrixGraph.EDGE_NONE;
@@ -103,6 +103,7 @@ class AdjacencyMatrixGraph {
      * Updates the number of edges in the graph
      *
      * @param newNumberOfEdges
+     *
      */
     private void setNumberOfEdges(int newNumberOfEdges) {
         this._numberOfEdges = newNumberOfEdges;
@@ -139,7 +140,7 @@ class AdjacencyMatrixGraph {
      * Checks if two vertices are connected by an edge
      *
      * @param from the parent vertex to check for adjacency
-     * @param to   the child vertex to check for adjacency
+     * @param to the child vertex to check for adjacency
      * @return whether or not the vertices are adjancent
      */
     private boolean adjacencyOfEdgeDoesExist(int from, int to) {
@@ -164,7 +165,7 @@ class AdjacencyMatrixGraph {
      * Checks if two vertices are connected by an edge
      *
      * @param from the parent vertex to check for adjacency
-     * @param to   the child vertex to check for adjacency
+     * @param to the child vertex to check for adjacency
      * @return whether or not the vertices are adjancent
      */
     public boolean edgeDoesExist(int from, int to) {
@@ -179,7 +180,7 @@ class AdjacencyMatrixGraph {
      * This method adds an edge to the graph between two specified vertices
      *
      * @param from the data of the vertex the edge is from
-     * @param to   the data of the vertex the edge is going to
+     * @param to the data of the vertex the edge is going to
      * @return returns true if the edge did not exist, return false if it
      * already did
      */
@@ -200,7 +201,7 @@ class AdjacencyMatrixGraph {
      * this method removes an edge from the graph between two specified vertices
      *
      * @param from the data of the vertex the edge is from
-     * @param to   the data of the vertex the edge is going to
+     * @param to the data of the vertex the edge is going to
      * @return returns false if the edge doesn't exist, returns true if the edge
      * exists and is removed
      */
@@ -246,14 +247,14 @@ class AdjacencyMatrixGraph {
      * first traversal recursively on the graph
      *
      * @param currentVertex the currently exploring vertex
-     * @param visited       the array of values denoting whether or not that vertex
-     *                      has been visited
-     * @param orderList     the list to add vertices to as they are visited
+     * @param visited the array of values denoting whether or not that vertex
+     * has been visited
+     * @param orderList the list to add vertices to as they are visited
      */
     private void depthFirstOrder(
-            int currentVertex,
-            boolean[] visited,
-            List<Integer> orderList
+        int currentVertex,
+        boolean[] visited,
+        List<Integer> orderList
     ) {
         // If this vertex has already been visited, do nothing and return
         if (visited[currentVertex]) {
@@ -268,9 +269,9 @@ class AdjacencyMatrixGraph {
         // Get the adjacency array for this vertex
         int[] adjacent = _adjacency[currentVertex];
         for (
-                int i = 0;
-                i < adjacent.length;
-                i++
+            int i = 0;
+            i < adjacent.length;
+            i++
         ) { // we are considering exploring, recurse on it // If an edge exists between the currentVertex and the vertex
             if (adjacent[i] == AdjacencyMatrixGraph.EDGE_EXIST) {
                 depthFirstOrder(i, visited, orderList);
@@ -321,9 +322,9 @@ class AdjacencyMatrixGraph {
             // check each node
             int[] adjacent = _adjacency[currentVertex];
             for (
-                    int vertex = 0;
-                    vertex < adjacent.length;
-                    vertex++
+                int vertex = 0;
+                vertex < adjacent.length;
+                vertex++
             ) { // vertex we are considering exploring, we add it to the queue // If an edge exists between the current vertex and the
                 if (adjacent[vertex] == AdjacencyMatrixGraph.EDGE_EXIST) {
                     queue.add(vertex);

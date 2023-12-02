@@ -23,11 +23,11 @@ import mrmathami.cia.java.tree.node.JavaNode;
 
 public interface JavaNodeWeightTable {
 
-    /**
-     * @param javaNode javaNode
-     * @return weight of the JavaNode
-     * @throws IllegalArgumentException if the input JavaNode doesn't belong to this tree
-     */
-    double getWeight(@Nonnull JavaNode javaNode) throws IllegalArgumentException;
+	/**
+	 * @param javaNode javaNode
+	 * @return weight of the JavaNode
+	 * @throws IllegalArgumentException if the input JavaNode doesn't belong to this tree
+	 */
+	double getWeight(@Nonnull JavaNode javaNode) throws IllegalArgumentException;
 
 }

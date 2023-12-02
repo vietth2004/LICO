@@ -231,17 +231,17 @@ class LinkOperations {
     /**
      * Insert an element at the index
      *
-     * @param x     Element to be inserted
+     * @param x Element to be inserted
      * @param index Index(from start) at which the element x to be inserted
      */
     public void insertElementByIndex(
-            int x,
-            int index,
-            DoublyLinkedList doublyLinkedList
+        int x,
+        int index,
+        DoublyLinkedList doublyLinkedList
     ) {
         if (index > size) {
             throw new IndexOutOfBoundsException(
-                    "Index: " + index + ", Size: " + size
+                "Index: " + index + ", Size: " + size
             );
         }
         if (index == 0) {
@@ -315,7 +315,7 @@ class LinkOperations {
                 current = current.next;
             } else { // If we reach the tail and the element is still not found
                 throw new RuntimeException(
-                        "The element to be deleted does not exist!"
+                    "The element to be deleted does not exist!"
                 );
             }
         }

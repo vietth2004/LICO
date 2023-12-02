@@ -1,6 +1,8 @@
 package com.example.parserservice.ast.dependency;
 
 import java.io.Serializable;
+import mrmathami.cia.java.tree.dependency.JavaDependency;
+import mrmathami.cia.java.tree.dependency.JavaDependencyCountTable;
 
 public class DependencyCountTable implements Serializable {
     private Integer USE = 0;

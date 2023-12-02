@@ -16,38 +16,38 @@ public class DecimalToAnyUsingStack {
      * Convert decimal number to another radix
      *
      * @param number the number to be converted
-     * @param radix  the radix
+     * @param radix the radix
      * @return another radix
      * @throws ArithmeticException if <tt>number</tt> or <tt>radius</tt> is
-     *                             invalid
+     * invalid
      */
     private static String convert(int number, int radix) {
         if (radix < 2 || radix > 16) {
             throw new ArithmeticException(
-                    String.format(
-                            "Invalid input -> number:%d,radius:%d",
-                            number,
-                            radix
-                    )
+                String.format(
+                    "Invalid input -> number:%d,radius:%d",
+                    number,
+                    radix
+                )
             );
         }
         char[] tables = {
-                '0',
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                'A',
-                'B',
-                'C',
-                'D',
-                'E',
-                'F',
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            'A',
+            'B',
+            'C',
+            'D',
+            'E',
+            'F',
         };
         Stack<Character> bits = new Stack<>();
         do {

@@ -47,84 +47,84 @@ import java.util.stream.StreamSupport;
 
 public final class SnapshotBuilder {
 
-    private SnapshotBuilder() {
-    }
+	private SnapshotBuilder() {
+	}
 
 
-    @Nonnull
-    private static double[] calculateWeights(@Nonnull double[] dependencyWeights,
-                                             @Nonnull List<? extends JavaNode> allNodes) {
-        final double[] nodeWeights = new double[allNodes.size()];
-        for (final JavaNode node : allNodes) {
-            double nodeWeight = 0.0;
-            for (final JavaDependencyCountTable nodeDependency : node.getDependencyFrom().values()) {
-                for (final JavaDependency dependency : JavaDependency.VALUE_LIST) {
-                    nodeWeight += dependencyWeights[dependency.ordinal()]
-                            * nodeDependency.getCount(dependency);
-                }
-            }
-            nodeWeights[node.getId()] = nodeWeight;
-        }
-        return nodeWeights;
-    }
+	@Nonnull
+	private static double[] calculateWeights(@Nonnull double[] dependencyWeights,
+			@Nonnull List<? extends JavaNode> allNodes) {
+		final double[] nodeWeights = new double[allNodes.size()];
+		for (final JavaNode node : allNodes) {
+			double nodeWeight = 0.0;
+			for (final JavaDependencyCountTable nodeDependency : node.getDependencyFrom().values()) {
+				for (final JavaDependency dependency : JavaDependency.VALUE_LIST) {
+					nodeWeight += dependencyWeights[dependency.ordinal()]
+							* nodeDependency.getCount(dependency);
+				}
+			}
+			nodeWeights[node.getId()] = nodeWeight;
+		}
+		return nodeWeights;
+	}
 
-    @Nonnull
-    private static Map<String, SourceFile> createJavaSourceFileMap(@Nonnull BuildInputSources inputSources) {
-        final Map<String, SourceFile> sourceFileMap = new TreeMap<>();
-        final Path sourcesPath = inputSources.getPath();
-        for (final BuildInputSources.InputModule inputModule : inputSources) {
-            final Path modulePath = inputModule.getPath();
-            final Module module = new Module(inputModule.getName(),
-                    RelativePath.fromPath(sourcesPath.relativize(modulePath)));
-            for (final BuildInputSources.InputSourceFile inputSourceFile : inputModule) {
-                if (inputSourceFile.getType() == JavaSourceFileType.JAVA) {
-                    final Path sourceFilePath = inputSourceFile.getPath();
-                    final SourceFile sourceFile = new SourceFile(module, inputSourceFile.getType(),
-                            RelativePath.fromPath(modulePath.relativize(sourceFilePath)));
-                    sourceFileMap.put(sourceFilePath.toString(), sourceFile);
-                }
-            }
-        }
-        return sourceFileMap;
-    }
+	@Nonnull
+	private static Map<String, SourceFile> createJavaSourceFileMap(@Nonnull BuildInputSources inputSources) {
+		final Map<String, SourceFile> sourceFileMap = new TreeMap<>();
+		final Path sourcesPath = inputSources.getPath();
+		for (final BuildInputSources.InputModule inputModule : inputSources) {
+			final Path modulePath = inputModule.getPath();
+			final Module module = new Module(inputModule.getName(),
+					RelativePath.fromPath(sourcesPath.relativize(modulePath)));
+			for (final BuildInputSources.InputSourceFile inputSourceFile : inputModule) {
+				if (inputSourceFile.getType() == JavaSourceFileType.JAVA) {
+					final Path sourceFilePath = inputSourceFile.getPath();
+					final SourceFile sourceFile = new SourceFile(module, inputSourceFile.getType(),
+							RelativePath.fromPath(modulePath.relativize(sourceFilePath)));
+					sourceFileMap.put(sourceFilePath.toString(), sourceFile);
+				}
+			}
+		}
+		return sourceFileMap;
+	}
 
-    @Nonnull
-    public static ProjectSnapshot build(@Nonnull String snapshotName,
-                                        @Nonnull JavaDependencyWeightTable dependencyWeightTable, @Nonnull BuildInputSources inputSources,
-                                        @Nonnull Set<SnapshotBuildParameter> parameters) throws JavaCiaException {
+	@Nonnull
+	public static ProjectSnapshot build(@Nonnull String snapshotName,
+			@Nonnull JavaDependencyWeightTable dependencyWeightTable, @Nonnull BuildInputSources inputSources,
+			@Nonnull Set<SnapshotBuildParameter> parameters) throws JavaCiaException {
 
-        final Map<String, SourceFile> sourceFileMap = createJavaSourceFileMap(inputSources);
-        final JavaBuildParameter javaParameter = getParameter(parameters, JavaBuildParameter.class);
-        final List<Path> classPaths = javaParameter != null ? javaParameter.getClassPaths() : List.of();
-        final boolean recoveryEnabled = javaParameter == null || javaParameter.isRecoveryEnabled();
+		final Map<String, SourceFile> sourceFileMap = createJavaSourceFileMap(inputSources);
+		final JavaBuildParameter javaParameter = getParameter(parameters, JavaBuildParameter.class);
+		final List<Path> classPaths = javaParameter != null ? javaParameter.getClassPaths() : List.of();
+		final boolean recoveryEnabled = javaParameter == null || javaParameter.isRecoveryEnabled();
 
-        final String[] sourcePathArray = sourceFileMap.keySet().toArray(String[]::new);
-        final String[] sourceEncodingArray = new String[sourcePathArray.length];
-        Arrays.fill(sourceEncodingArray, StandardCharsets.UTF_8.name());
-        final String[] classPathArray = Stream.concat(
-                StreamSupport.stream(inputSources.spliterator(), false).map(BuildInputSources.InputModule::getPath),
-                classPaths.stream()
-        ).map(Object::toString).toArray(String[]::new);
+		final String[] sourcePathArray = sourceFileMap.keySet().toArray(String[]::new);
+		final String[] sourceEncodingArray = new String[sourcePathArray.length];
+		Arrays.fill(sourceEncodingArray, StandardCharsets.UTF_8.name());
+		final String[] classPathArray = Stream.concat(
+				StreamSupport.stream(inputSources.spliterator(), false).map(BuildInputSources.InputModule::getPath),
+				classPaths.stream()
+		).map(Object::toString).toArray(String[]::new);
 
-        final JavaRootNode rootNode = JavaParser.parse(sourcePathArray, sourceEncodingArray, classPathArray,
-                sourceFileMap, recoveryEnabled);
-        long end3 = System.currentTimeMillis();
+		final JavaRootNode rootNode = JavaParser.parse(sourcePathArray, sourceEncodingArray, classPathArray,
+				sourceFileMap, recoveryEnabled);
+		long end3 = System.currentTimeMillis();
 
-        final double[] dependencyWeights = new double[JavaDependency.VALUE_LIST.size()];
-        for (final JavaDependency type : JavaDependency.VALUE_LIST) {
-            dependencyWeights[type.ordinal()] = dependencyWeightTable.getWeight(type);
-        }
+		final double[] dependencyWeights = new double[JavaDependency.VALUE_LIST.size()];
+		for (final JavaDependency type : JavaDependency.VALUE_LIST) {
+			dependencyWeights[type.ordinal()] = dependencyWeightTable.getWeight(type);
+		}
 
-        return new ProjectSnapshot(snapshotName, rootNode, dependencyWeights,
-                calculateWeights(dependencyWeights, rootNode.getAllNodes()));
-    }
+		return new ProjectSnapshot(snapshotName, rootNode, dependencyWeights,
+				calculateWeights(dependencyWeights, rootNode.getAllNodes()));
+	}
 
-    @Nullable
-    private static <E extends SnapshotBuildParameter> E getParameter(@Nonnull Set<SnapshotBuildParameter> parameters,
-                                                                     @Nonnull Class<E> parameterClass) {
-        return parameters.stream()
-                .filter(parameter -> parameter.getClass() == parameterClass)
-                .map(parameterClass::cast)
-                .findFirst().orElse(null);
-    }
+	@Nullable
+	private static <E extends SnapshotBuildParameter> E getParameter(@Nonnull Set<SnapshotBuildParameter> parameters,
+			@Nonnull Class<E> parameterClass) {
+		return parameters.stream()
+				.filter(parameter -> parameter.getClass() == parameterClass)
+				.map(parameterClass::cast)
+				.findFirst().orElse(null);
+	}
 }

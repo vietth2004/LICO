@@ -14,8 +14,7 @@ public class StrutsConfigurationNode extends XmlFileNodeDecorator {
     @JciaIgnore
     protected List<StrutsPackage> strutsPackages;
 
-    @JsonIgnore
-    @JciaIgnore
+    @JsonIgnore @JciaIgnore
     protected List<StrutsConfigurationNode> includedStrutsConfigurationNodes;
 
     public StrutsConfigurationNode() {
@@ -43,11 +42,11 @@ public class StrutsConfigurationNode extends XmlFileNodeDecorator {
         this.includedStrutsConfigurationNodes.add(strutsConfigurationNode);
     }
 
-    public void setStrutsPackages(List<StrutsPackage> list) {
+    public void setStrutsPackages(List<StrutsPackage> list){
         this.strutsPackages = list;
     }
 
-    public void setIncludedStrutsConfigurationNodes(List<StrutsConfigurationNode> list) {
+    public void setIncludedStrutsConfigurationNodes(List<StrutsConfigurationNode> list){
         this.includedStrutsConfigurationNodes = list;
     }
 }

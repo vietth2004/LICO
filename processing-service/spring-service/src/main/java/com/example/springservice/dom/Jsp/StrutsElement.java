@@ -22,9 +22,7 @@ public class StrutsElement extends Element implements IStrutsElement {
 
     }
 
-    public StrutsElement(XmlTagNode tagNode) {
-        this.tagNode = tagNode;
-    }
+    public StrutsElement(XmlTagNode tagNode) {this.tagNode = tagNode;}
 
     public String getName() {
         return name;

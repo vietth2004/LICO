@@ -1,6 +1,7 @@
 package com.example.versioncompareservice.ast.node;
 
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import mrmathami.cia.java.tree.node.JavaNode;
 
 public class Node {
     private String entityClass = new String();

@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.thealgorithms.sorts.TopologicalSort.BackEdgeException;
 import com.thealgorithms.sorts.TopologicalSort.Graph;
-
 import java.util.LinkedList;
-
 import org.junit.jupiter.api.Test;
 
 class TopologicalSortTest {
@@ -56,12 +54,12 @@ class TopologicalSortTest {
         graph.addEdge("7", "");
         graph.addEdge("8", "");
         Exception exception = assertThrows(
-                BackEdgeException.class,
-                () -> TopologicalSort.sort(graph)
+            BackEdgeException.class,
+            () -> TopologicalSort.sort(graph)
         );
         String expected =
-                "This graph contains a cycle. No linear ordering is possible. " +
-                        "Back edge: 6 -> 2";
+            "This graph contains a cycle. No linear ordering is possible. " +
+            "Back edge: 6 -> 2";
         assertEquals(exception.getMessage(), expected);
     }
 }

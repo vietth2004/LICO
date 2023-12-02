@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Gaussian {
 
     public static ArrayList<Double> gaussian(
-            int mat_size,
-            ArrayList<Double> matrix
+        int mat_size,
+        ArrayList<Double> matrix
     ) {
         ArrayList<Double> answerArray = new ArrayList<Double>();
         int i, j = 0;
@@ -28,9 +28,9 @@ public class Gaussian {
 
     // Perform Gaussian elimination
     public static double[][] gaussianElimination(
-            int mat_size,
-            int i,
-            double[][] mat
+        int mat_size,
+        int i,
+        double[][] mat
     ) {
         int step = 0;
         for (step = 0; step < mat_size - 1; step++) {
@@ -47,9 +47,9 @@ public class Gaussian {
 
     // calculate the x_1, x_2,... values of the gaussian and save it in an arraylist.
     public static ArrayList<Double> valueOfGaussian(
-            int mat_size,
-            double[][] x,
-            double[][] mat
+        int mat_size,
+        double[][] x,
+        double[][] mat
     ) {
         ArrayList<Double> answerArray = new ArrayList<Double>();
         int i, j;

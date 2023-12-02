@@ -1,7 +1,5 @@
-/**
- * Author : Siddhant Swarup Mallick
+/** Author : Siddhant Swarup Mallick
  * Github : https://github.com/siddhant2002
- * Program description - To find the New Man Shanks Prime.  Wikipedia Link - https://en.wikipedia.org/wiki/Newman%E2%80%93Shanks%E2%80%93Williams_prime
  */
 
 /** Program description - To find the New Man Shanks Prime. */

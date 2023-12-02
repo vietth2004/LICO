@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunResult {
-    //    private String coverage = "0%";
+//    private String coverage = "0%";
     private List<String> coveredStatements = new ArrayList<>();
     private boolean isMatchExpectedOutput = false;
 

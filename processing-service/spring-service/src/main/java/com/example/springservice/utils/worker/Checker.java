@@ -8,6 +8,7 @@ import com.example.springservice.resource.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Checker {
 
@@ -20,9 +21,9 @@ public class Checker {
     }
 
     public static Boolean containSpringAnnotations(JavaNode javaNode, List<String> conditionState) {
-        for (JavaAnnotation javaAnnotation : javaNode.getAnnotates()) {
-            for (String condition : conditionState) {
-                if (javaAnnotation.getName().contains(condition)) {
+        for(JavaAnnotation javaAnnotation : javaNode.getAnnotates()) {
+            for(String condition : conditionState) {
+                if(javaAnnotation.getName().contains(condition)) {
                     return true;
                 }
             }
@@ -32,10 +33,10 @@ public class Checker {
 
     public static Boolean isSpringInterface(JavaNode javaNode, List<String> interfaceList) {
 
-        if (javaNode.getEntityClass().equals("JavaInterfaceNode")) {
-            for (JavaType extendInterface : javaNode.getExtendInterfaces()) {
-                for (String interfaceName : interfaceList) {
-                    if (extendInterface.getDescribe().contains(interfaceName)) {
+        if(javaNode.getEntityClass().equals("JavaInterfaceNode")) {
+            for(JavaType extendInterface : javaNode.getExtendInterfaces()) {
+                for(String interfaceName : interfaceList) {
+                    if(extendInterface.getDescribe().contains(interfaceName)){
                         return true;
                     }
                 }
@@ -46,8 +47,8 @@ public class Checker {
 
     public static boolean isSpring(List<String> listAttributes) {
 
-        for (String attribute : listAttributes) {
-            if (Resource.SPRING_CONFIGURATION.contains(attribute)) {
+        for(String attribute : listAttributes) {
+            if(Resource.SPRING_CONFIGURATION.contains(attribute)) {
                 return true;
             }
         }

@@ -39,9 +39,9 @@ class PasswordGen {
 
         // Note that size of the password is also random
         for (
-                int i = random.nextInt(max_length - min_length) + min_length;
-                i > 0;
-                --i
+            int i = random.nextInt(max_length - min_length) + min_length;
+            i > 0;
+            --i
         ) {
             password.append(letters.get(random.nextInt(letters.size())));
         }

@@ -1,5 +1,6 @@
 package com.example.unittesting.model.coveredStatement;
 
+import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedStatement;
 
@@ -20,11 +21,11 @@ public class CoveredStatement {
     public static List<CoveredStatement> switchToCoveredStatementList(List<MarkedStatement> markedStatements) {
         List<CoveredStatement> coveredStatements = new ArrayList<>();
 
-        for (MarkedStatement markedStatement : markedStatements) {
+        for(MarkedStatement markedStatement : markedStatements) {
             CfgNode cfgNode = markedStatement.getCfgNode();
             CoveredStatement coveredStatement = new CoveredStatement(cfgNode.getContent(), cfgNode.getLineNumber());
 
-            if (markedStatement.isTrueConditionalStatement()) {
+            if(markedStatement.isTrueConditionalStatement()) {
                 coveredStatement.conditionStatus = "true";
             } else if (markedStatement.isFalseConditionalStatement()) {
                 coveredStatement.conditionStatus = "false";

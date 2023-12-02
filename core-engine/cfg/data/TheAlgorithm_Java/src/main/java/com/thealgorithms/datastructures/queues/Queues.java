@@ -2,7 +2,7 @@ package com.thealgorithms.datastructures.queues;
 
 /**
  * This implements Queues by using the class Queue.
- * <p>
+ *
  * A queue data structure functions the same as a real world queue. The elements
  * that are added first are the first to be removed. New elements are added to
  * the back/rear of the queue.
@@ -136,7 +136,7 @@ class Queue {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (int i = front; ; i = ++i % maxSize) {
+        for (int i = front;; i = ++i % maxSize) {
             sb.append(queueArray[i]).append(", ");
             if (i == rear) {
                 break;

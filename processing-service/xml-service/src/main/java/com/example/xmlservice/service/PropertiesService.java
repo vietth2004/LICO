@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 public interface PropertiesService {
 
     List<PropertiesFileNode> parseProjectWithPath(String path) throws IOException, ExecutionException, InterruptedException;
-
     List<Dependency> analyzeDependencies(List<Node> xmlNodes, List<PropertiesFileNode> propertiesFileNodes);
 
 }

@@ -46,14 +46,14 @@ public class GenericHeap<T extends Comparable<T>> {
         int rci = 2 * pi + 2;
         int mini = pi;
         if (
-                lci < this.size() &&
-                        isLarger(this.data.get(lci), this.data.get(mini)) > 0
+            lci < this.size() &&
+            isLarger(this.data.get(lci), this.data.get(mini)) > 0
         ) {
             mini = lci;
         }
         if (
-                rci < this.size() &&
-                        isLarger(this.data.get(rci), this.data.get(mini)) > 0
+            rci < this.size() &&
+            isLarger(this.data.get(rci), this.data.get(mini)) > 0
         ) {
             mini = rci;
         }

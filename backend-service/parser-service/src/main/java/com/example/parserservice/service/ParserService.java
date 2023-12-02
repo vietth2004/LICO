@@ -1,8 +1,9 @@
 package com.example.parserservice.service;
 
 import com.example.parserservice.model.Path;
-import com.example.parserservice.model.Response;
+import com.example.parserservice.model.jsf.JSFResponse;
 import com.example.parserservice.model.parser.Request;
+import com.example.parserservice.model.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

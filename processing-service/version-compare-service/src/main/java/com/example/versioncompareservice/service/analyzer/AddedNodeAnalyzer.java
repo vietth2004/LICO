@@ -27,10 +27,10 @@ public class AddedNodeAnalyzer implements Callable {
         List<Node> addedNodes = new ArrayList<>();
 
         List<Node> children = ParserUtils.getChildrenLevel1XmlFileNode(newVer);
-        for (Node node : newVer)
-            if (CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() <= 0)
+        for(Node node : newVer)
+            if(CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() <= 0)
                 addedNodes.add(node);
-        for (Node child : children) {
+        for(Node child : children) {
             addedNodes.addAll(analyzeChild(oldVer, child));
         }
         addedNodes.forEach(node -> {
@@ -42,9 +42,9 @@ public class AddedNodeAnalyzer implements Callable {
 
     public List<Node> analyzeChild(List<Node> oldVer, Node node) {
         List<Node> addedNodes = new ArrayList<>();
-        if (CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() <= 0)
+        if(CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() <= 0)
             addedNodes.add(node);
-        for (Node child : node.getChildren()) {
+        for(Node child : node.getChildren()) {
             addedNodes.addAll(analyzeChild(oldVer, child));
         }
         return addedNodes;

@@ -11,7 +11,7 @@ public class KaprekarNumbers {
 
     // Provides a list of kaprekarNumber in a range
     public static List<Long> kaprekarNumberInRange(long start, long end)
-            throws Exception {
+        throws Exception {
         long n = end - start;
         if (n < 0) throw new Exception("Invalid range");
         ArrayList<Long> list = new ArrayList<>();
@@ -35,30 +35,30 @@ public class KaprekarNumbers {
             BigInteger leftDigits2;
             if (numberSquared.toString().contains("0")) {
                 leftDigits1 =
-                        new BigInteger(
-                                numberSquared
-                                        .toString()
-                                        .substring(0, numberSquared.toString().indexOf("0"))
-                        );
+                    new BigInteger(
+                        numberSquared
+                            .toString()
+                            .substring(0, numberSquared.toString().indexOf("0"))
+                    );
             }
             leftDigits2 =
-                    new BigInteger(
-                            numberSquared
-                                    .toString()
-                                    .substring(
-                                            0,
-                                            (
-                                                    numberSquared.toString().length() -
-                                                            number.length()
-                                            )
-                                    )
-                    );
-            BigInteger rightDigits = new BigInteger(
+                new BigInteger(
                     numberSquared
-                            .toString()
-                            .substring(
-                                    numberSquared.toString().length() - number.length()
+                        .toString()
+                        .substring(
+                            0,
+                            (
+                                numberSquared.toString().length() -
+                                number.length()
                             )
+                        )
+                );
+            BigInteger rightDigits = new BigInteger(
+                numberSquared
+                    .toString()
+                    .substring(
+                        numberSquared.toString().length() - number.length()
+                    )
             );
             String x = leftDigits1.add(rightDigits).toString();
             String y = leftDigits2.add(rightDigits).toString();

@@ -161,7 +161,7 @@ class Trieac {
 
         if (comp == -1) {
             System.out.println(
-                    "No other strings found " + "with this prefix\n"
+                "No other strings found " + "with this prefix\n"
             );
         } else if (comp == 0) {
             System.out.println("No string found with" + " this prefix\n");

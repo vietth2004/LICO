@@ -2,7 +2,7 @@ package com.example.xmlservice.ast.dependency;
 
 import com.example.xmlservice.ast.node.Node;
 
-public class Pair {
+public class Pair{
     private Node node;
     private DependencyCountTable dependency;
 

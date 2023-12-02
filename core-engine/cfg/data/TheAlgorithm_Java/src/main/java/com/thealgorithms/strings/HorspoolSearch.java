@@ -54,7 +54,7 @@ public class HorspoolSearch {
      * Case sensitive version version of the algorithm
      *
      * @param pattern the pattern to be searched for (needle)
-     * @param text    the text being searched in (haystack)
+     * @param text the text being searched in (haystack)
      * @return -1 if not found or first index of the pattern in the text
      */
     public static int findFirst(String pattern, String text) {
@@ -65,7 +65,7 @@ public class HorspoolSearch {
      * Case insensitive version version of the algorithm
      *
      * @param pattern the pattern to be searched for (needle)
-     * @param text    the text being searched in (haystack)
+     * @param text the text being searched in (haystack)
      * @return -1 if not found or first index of the pattern in the text
      */
     public static int findFirstInsensitive(String pattern, String text) {
@@ -89,13 +89,13 @@ public class HorspoolSearch {
      * the first match or when the entire text has been exhausted.
      *
      * @param pattern String to be matched in the text
-     * @param text    text String
+     * @param text text String
      * @return index of first occurrence of the pattern in the text
      */
     private static int firstOccurrence(
-            String pattern,
-            String text,
-            boolean caseSensitive
+        String pattern,
+        String text,
+        boolean caseSensitive
     ) {
         shiftValues = calcShiftValues(pattern); // build the bad symbol table
         comparisons = 0; // reset comparisons
@@ -110,7 +110,7 @@ public class HorspoolSearch {
                 comparisons++;
                 char patternChar = pattern.charAt(i);
                 char textChar = text.charAt(
-                        (textIndex + i) - (pattern.length() - 1)
+                    (textIndex + i) - (pattern.length() - 1)
                 );
                 if (!charEquals(patternChar, textChar, caseSensitive)) { // bad character, shift pattern
                     textIndex += getShiftValue(text.charAt(textIndex));
@@ -132,8 +132,8 @@ public class HorspoolSearch {
     /**
      * Compares the argument characters
      *
-     * @param c1            first character
-     * @param c2            second character
+     * @param c1 first character
+     * @param c2 second character
      * @param caseSensitive boolean determining case sensitivity of comparison
      * @return truth value of the equality comparison
      */

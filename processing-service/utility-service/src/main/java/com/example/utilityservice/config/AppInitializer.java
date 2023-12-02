@@ -20,7 +20,7 @@ public class AppInitializer implements WebApplicationInitializer {
         registration.addMapping("/");
 
         File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
-        MultipartConfigElement multipartConfigElement = new MultipartConfigElement(uploadDirectory.getAbsolutePath(), 100000, 100000 * 2, 100000 / 2);
+        MultipartConfigElement multipartConfigElement = new  MultipartConfigElement(uploadDirectory.getAbsolutePath(), 100000, 100000 * 2, 100000 / 2);
 
         registration.setMultipartConfig(multipartConfigElement);
     }

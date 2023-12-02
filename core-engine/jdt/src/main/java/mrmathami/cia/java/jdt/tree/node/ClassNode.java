@@ -35,109 +35,106 @@ import java.util.Map;
 
 public final class ClassNode extends AbstractParameterizedModifiedAnnotatedNode implements JavaClassNode {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nullable
-    private final String binaryName;
-    @Nullable
-    private AbstractType extendsClass;
+	@Nullable private final String binaryName;
+	@Nullable private AbstractType extendsClass;
 
-    @Nonnull
-    private transient List<AbstractType> implementsInterfaces = List.of();
+	@Nonnull private transient List<AbstractType> implementsInterfaces = List.of();
 
 
-    public ClassNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, @Nonnull String name,
-                     @Nullable String binaryName) {
-        super(sourceFile, parent, name);
-        checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class, FieldNode.class,
-                InterfaceNode.class, MethodNode.class, PackageNode.class, RootNode.class);
+	public ClassNode(@Nullable SourceFile sourceFile, @Nonnull AbstractNode parent, @Nonnull String name,
+			@Nullable String binaryName) {
+		super(sourceFile, parent, name);
+		checkParent(parent, AbstractNode.class, ClassNode.class, EnumNode.class, FieldNode.class,
+				InterfaceNode.class, MethodNode.class, PackageNode.class, RootNode.class);
 
-        this.binaryName = binaryName;
-    }
+		this.binaryName = binaryName;
+	}
 
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nullable
-    @Override
-    public String getBinaryName() {
-        return binaryName;
-    }
+	@Nullable
+	@Override
+	public String getBinaryName() {
+		return binaryName;
+	}
 
-    @Nullable
-    @Override
-    public AbstractType getExtendsClass() {
-        return extendsClass;
-    }
+	@Nullable
+	@Override
+	public AbstractType getExtendsClass() {
+		return extendsClass;
+	}
 
-    public void setExtendsClass(@Nullable AbstractType extendsClass) {
-        assertNonFrozen();
-        this.extendsClass = extendsClass;
-    }
+	public void setExtendsClass(@Nullable AbstractType extendsClass) {
+		assertNonFrozen();
+		this.extendsClass = extendsClass;
+	}
 
-    @Nonnull
-    @Override
-    public List<AbstractType> getImplementsInterfaces() {
-        return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
-    }
+	@Nonnull
+	@Override
+	public List<AbstractType> getImplementsInterfaces() {
+		return isFrozen() ? implementsInterfaces : Collections.unmodifiableList(implementsInterfaces);
+	}
 
-    public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
-        assertNonFrozen();
-        this.implementsInterfaces = implementsInterfaces;
-    }
+	public void setImplementsInterfaces(@Nonnull List<AbstractType> implementsInterfaces) {
+		assertNonFrozen();
+		this.implementsInterfaces = implementsInterfaces;
+	}
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
-    //region Serialization Helper
+	//region Serialization Helper
 
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        this.implementsInterfaces = List.copyOf(implementsInterfaces);
-        if (extendsClass != null) extendsClass.internalFreeze(map);
-        for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
-        return false;
-    }
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		this.implementsInterfaces = List.copyOf(implementsInterfaces);
+		if (extendsClass != null) extendsClass.internalFreeze(map);
+		for (final AbstractType type : implementsInterfaces) type.internalFreeze(map);
+		return false;
+	}
 
-    private void writeObject(@Nonnull ObjectOutputStream outputStream)
-            throws IOException, UnsupportedOperationException {
-        assertFrozen();
-        outputStream.defaultWriteObject();
-        outputStream.writeObject(implementsInterfaces);
-    }
+	private void writeObject(@Nonnull ObjectOutputStream outputStream)
+			throws IOException, UnsupportedOperationException {
+		assertFrozen();
+		outputStream.defaultWriteObject();
+		outputStream.writeObject(implementsInterfaces);
+	}
 
-    @SuppressWarnings("unchecked")
-    private void readObject(@Nonnull ObjectInputStream inputStream)
-            throws IOException, ClassNotFoundException, ClassCastException {
-        inputStream.defaultReadObject();
-        this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
-    }
+	@SuppressWarnings("unchecked")
+	private void readObject(@Nonnull ObjectInputStream inputStream)
+			throws IOException, ClassNotFoundException, ClassCastException {
+		inputStream.defaultReadObject();
+		this.implementsInterfaces = (List<AbstractType>) inputStream.readObject();
+	}
 
-    //endregion Serialization Helper
+	//endregion Serialization Helper
 
-    //region Jsonify
+	//region Jsonify
 
-    @Override
-    protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
-        super.internalToReferenceJsonStart(builder);
-        builder.append(", \"binaryName\": \"").append(binaryName).append('"');
-    }
+	@Override
+	protected void internalToReferenceJsonStart(@Nonnull StringBuilder builder) {
+		super.internalToReferenceJsonStart(builder);
+		builder.append(", \"binaryName\": \"").append(binaryName).append('"');
+	}
 
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (extendsClass != null) {
-            builder.append(", \"extendsClass\": { ");
-            extendsClass.internalToReferenceJson(builder);
-            builder.append(" }");
-        }
-        if (!implementsInterfaces.isEmpty()) {
-            builder.append(", \"implementsInterfaces\": [");
-            internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
-            builder.append('\n').append(indentation).append(']');
-        }
-    }
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (extendsClass != null) {
+			builder.append(", \"extendsClass\": { ");
+			extendsClass.internalToReferenceJson(builder);
+			builder.append(" }");
+		}
+		if (!implementsInterfaces.isEmpty()) {
+			builder.append(", \"implementsInterfaces\": [");
+			internalArrayToReferenceJson(builder, indentation, implementsInterfaces);
+			builder.append('\n').append(indentation).append(']');
+		}
+	}
 
-    //endregion Jsonify
+	//endregion Jsonify
 
 }

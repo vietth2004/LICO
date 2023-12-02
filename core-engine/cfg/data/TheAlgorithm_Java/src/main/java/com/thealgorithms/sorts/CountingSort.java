@@ -23,9 +23,9 @@ class CountingSort implements SortAlgorithm {
      * This method implements the Generic Counting Sort
      *
      * @param list The list to be sorted
-     *             <p>
-     *             Sorts the list in increasing order The method uses list elements as keys
-     *             in the frequency map
+     * <p>
+     * Sorts the list in increasing order The method uses list elements as keys
+     * in the frequency map
      */
     @Override
     public <T extends Comparable<T>> List<T> sort(List<T> list) {
@@ -54,24 +54,24 @@ class CountingSort implements SortAlgorithm {
      */
     private static <T extends Comparable<T>> List<T> streamSort(List<T> list) {
         return list
-                .stream()
-                .collect(toMap(k -> k, v -> 1, (v1, v2) -> v1 + v2, TreeMap::new))
-                .entrySet()
-                .stream()
-                .flatMap(entry ->
-                        IntStream
-                                .rangeClosed(1, entry.getValue())
-                                .mapToObj(t -> entry.getKey())
-                )
-                .collect(toList());
+            .stream()
+            .collect(toMap(k -> k, v -> 1, (v1, v2) -> v1 + v2, TreeMap::new))
+            .entrySet()
+            .stream()
+            .flatMap(entry ->
+                IntStream
+                    .rangeClosed(1, entry.getValue())
+                    .mapToObj(t -> entry.getKey())
+            )
+            .collect(toList());
     }
 
     // Driver Program
     public static void main(String[] args) {
         // Integer Input
         List<Integer> unsortedInts = Stream
-                .of(4, 23, 6, 78, 1, 54, 23, 1, 9, 231, 9, 12)
-                .collect(toList());
+            .of(4, 23, 6, 78, 1, 54, 23, 1, 9, 231, 9, 12)
+            .collect(toList());
         CountingSort countingSort = new CountingSort();
 
         System.out.println("Before Sorting:");
@@ -87,8 +87,8 @@ class CountingSort implements SortAlgorithm {
 
         // String Input
         List<String> unsortedStrings = Stream
-                .of("c", "a", "e", "b", "d", "a", "f", "g", "c")
-                .collect(toList());
+            .of("c", "a", "e", "b", "d", "a", "f", "g", "c")
+            .collect(toList());
 
         System.out.println("Before Sorting:");
         print(unsortedStrings);

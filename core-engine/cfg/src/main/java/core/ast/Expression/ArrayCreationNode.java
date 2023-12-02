@@ -1,16 +1,12 @@
 package core.ast.Expression;
 
-import core.ast.AstNode;
-import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
-import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
 import core.ast.Type.ArrayTypeNode;
+import core.ast.AstNode;
+import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
+import core.ast.Expression.Literal.LiteralNode;
 import core.dataStructure.MemoryModel;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ArrayCreation;
-import org.eclipse.jdt.core.dom.ArrayType;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
 
@@ -35,10 +31,10 @@ public class ArrayCreationNode extends ExpressionNode {
                                                                     int iterateDimension, int numberOfDimensions, Type type, MemoryModel memoryModel) {
         int capacityOfDimension;
         AstNode dimension = AstNode.executeASTNode(dimensions.get(iterateDimension), memoryModel);
-        if (dimension instanceof NameNode) {
+        if(dimension instanceof NameNode) {
             dimension = NameNode.executeNameNode((NameNode) dimension, memoryModel);
         }
-        if (dimension instanceof LiteralNode) {
+        if(dimension instanceof LiteralNode) {
             capacityOfDimension = LiteralNode.changeLiteralNodeToInteger((LiteralNode) dimension);
         } else if (dimension instanceof NameNode) {
             System.out.println("SYMBOLIC CAPACITY");

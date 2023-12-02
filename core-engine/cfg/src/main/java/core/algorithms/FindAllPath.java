@@ -15,8 +15,7 @@ public class FindAllPath {
 
     private final int DEPTH = 1;
 
-    private FindAllPath() {
-    }
+    private FindAllPath() {}
 
     public FindAllPath(CfgNode cfgRootNode) {
 //        findPaths(cfgRootNode, null);
@@ -24,36 +23,36 @@ public class FindAllPath {
     }
 
     private void findPaths(CfgNode cfgNode) {
-        if (cfgNode == null) return;
+        if(cfgNode == null) return;
 
         // Add a path to the list of path if the node is endNode
-        if (cfgNode.getIsEndCfgNode()) {
+        if(cfgNode.getIsEndCfgNode()) {
             currentPath.add(cfgNode);
             Path path = new Path();
-            for (CfgNode node : currentPath) {
+            for(CfgNode node : currentPath) {
                 path.addLast(node);
             }
             paths.add(path);
             currentPath.remove(currentPath.size() - 1);
         } else {
             currentPath.add(cfgNode);
-            if (cfgNode instanceof CfgBoolExprNode) {
+            if(cfgNode instanceof CfgBoolExprNode) {
                 int duplicateNode = numberOfDuplicateNode(cfgNode);
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) cfgNode;
 
                 // CfgBoolExprNode has 2 child node is trueNode and falseNode
-                if (duplicateNode < DEPTH) {
+                if(duplicateNode < DEPTH) {
                     findPaths(boolExprNode.getTrueNode());
                 }
                 CfgNode falseNode = boolExprNode.getFalseNode();
                 falseNode.setIsFalseNode(true);
                 findPaths(falseNode);
 
-            } else if (cfgNode instanceof CfgForEachExpressionNode) {
+            } else if(cfgNode instanceof CfgForEachExpressionNode) {
                 int duplicateNode = numberOfDuplicateNode(cfgNode);
 
                 // CfgForEachExpressionNode has 2 child node is hasElementNode and noMoreElementNode
-                if (duplicateNode < DEPTH) {
+                if(duplicateNode < DEPTH) {
                     findPaths(((CfgForEachExpressionNode) cfgNode).getHasElementAfterNode());
                 }
                 findPaths(((CfgForEachExpressionNode) cfgNode).getNoMoreElementAfterNode());
@@ -114,8 +113,8 @@ public class FindAllPath {
 
     private int numberOfDuplicateNode(CfgNode node) {
         int duplicateNode = 0;
-        for (CfgNode nodeI : currentPath) {
-            if (nodeI == node) duplicateNode++;
+        for(CfgNode nodeI : currentPath) {
+            if(nodeI == node) duplicateNode++;
         }
         return duplicateNode;
     }

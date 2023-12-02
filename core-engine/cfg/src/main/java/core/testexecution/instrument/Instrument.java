@@ -103,28 +103,33 @@ public class Instrument {
         File workspace = new File(new File(projectPath).getParentFile().getAbsolutePath() + "/JGT-workspace");
         if (workspace.mkdir()) {
             System.out.println("Create workspace successful");
-        } else System.out.println("Workspace is existed");
+        }
+        else System.out.println("Workspace is existed");
         File instrumentFolder = new File(workspace.getAbsolutePath() + "/instrument");
         if (instrumentFolder.mkdir()) {
             System.out.println("Create instrument folder successful");
-        } else System.out.println("Instrument folder is existed");
+        }
+        else System.out.println("Instrument folder is existed");
         File instrumentFunctionFolder = new File(instrumentFolder.getAbsolutePath() + "/" + functionNode.getName());
         if (instrumentFunctionFolder.mkdir()) {
             System.out.println("Create instrument Function folder successful");
-        } else System.out.println("Instrument folder is existed");
+        }
+        else System.out.println("Instrument folder is existed");
         setInstrumentFolder(instrumentFunctionFolder);
 
         File clone = new File(instrumentFunctionFolder.getAbsolutePath() + "/" + SearchInSTree.getJavaFileNode(functionNode).getName());
         if (clone.createNewFile()) {
             System.out.println("Create instrument function successful");
-        } else System.out.println("Instrument function is existed");
+        }
+        else System.out.println("Instrument function is existed");
         setInstrumentPath(clone.getAbsolutePath());
 
         File testPath = new File(instrumentFunctionFolder.getAbsolutePath() + "/" + SearchInSTree.getJavaFileNode(functionNode).getName()
                 /*+ new Random().nextInt()*/ + ".testpath");
         if (testPath.createNewFile()) {
             System.out.println("Create instrument function successful");
-        } else System.out.println("Instrument function is existed");
+        }
+        else System.out.println("Instrument function is existed");
         setTestPath(testPath.getAbsolutePath());
         Utils.writeToFile("", this.testPath);
     }
@@ -157,10 +162,10 @@ public class Instrument {
 
         String s2 = "}";
         String main = s1 + body + s2;
-        for (int i = cloneContent.length() - 1; i >= 0; i--) {
+        for (int i = cloneContent.length()-1; i >=0; i--) {
             if (cloneContent.charAt(i) == '}') {
                 String tmp1 = cloneContent.substring(0, i);
-                String tmp2 = cloneContent.substring(i, cloneContent.length() - 1);
+                String tmp2 = cloneContent.substring(i, cloneContent.length()-1);
                 cloneContent = tmp1 + TAB + main + "\n" + tmp2;
                 break;
             }
@@ -168,9 +173,9 @@ public class Instrument {
         int importindex = SearchInSTree.getJavaFileNode(functionNode).getCfg().getStartPosition();
         if (importindex == 0) {
             cloneContent = Utils.importFileLibrary() + "\n" + cloneContent;
-        } else {
+        }else {
             String tmp1 = cloneContent.substring(0, importindex);
-            String tmp2 = cloneContent.substring(importindex, cloneContent.length() - 1);
+            String tmp2 = cloneContent.substring(importindex, cloneContent.length()-1);
             cloneContent = tmp1 + Utils.importFileLibrary() + "\n" + s2;
         }
         //todo: finish mark instrument
@@ -197,11 +202,13 @@ public class Instrument {
         if (functionNode.getAst().isConstructor()) {
             //example: new A(1, 2)
             str.append("new ").append(functionNode.getName());
-        } else if (functionNode.getAst().isStatic()) {
+        }
+        else if (functionNode.getAst().isStatic()) {
             //example: A.func(1, 2)
             String className = functionNode.getParent().getName();
             str.append(className).append(".").append(functionNode.getName());
-        } else if (!functionNode.getAst().isAbstract()) {
+        }
+        else if (!functionNode.getAst().isAbstract()) {
             //example: new A().func(1, 2)
             String className = functionNode.getParent().getName();
             str.append("new ").append(className).append("().");
@@ -217,7 +224,7 @@ public class Instrument {
             }
         }
         if (!tmp.equals("")) {
-            str.append(tmp.substring(0, tmp.length() - 1));
+            str.append(tmp.substring(0, tmp.length()-1));
         }
         str.append(");");
         return String.valueOf(str);

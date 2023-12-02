@@ -26,30 +26,28 @@ import java.io.Serializable;
 
 public final class Module implements JavaModule, Serializable {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final String name;
-    @Nonnull
-    private final RelativePath relativePath;
+	@Nonnull private final String name;
+	@Nonnull private final RelativePath relativePath;
 
 
-    public Module(@Nonnull String name, @Nonnull RelativePath relativePath) {
-        this.name = name;
-        this.relativePath = relativePath;
-    }
+	public Module(@Nonnull String name, @Nonnull RelativePath relativePath) {
+		this.name = name;
+		this.relativePath = relativePath;
+	}
 
 
-    @Nonnull
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Nonnull
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    @Nonnull
-    public RelativePath getRelativePath() {
-        return relativePath;
-    }
+	@Override
+	@Nonnull
+	public RelativePath getRelativePath() {
+		return relativePath;
+	}
 
 }

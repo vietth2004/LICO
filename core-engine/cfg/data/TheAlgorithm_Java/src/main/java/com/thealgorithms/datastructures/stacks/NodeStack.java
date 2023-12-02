@@ -50,8 +50,7 @@ public class NodeStack<Item> {
     /**
      * Constructors for the NodeStack.
      */
-    public NodeStack() {
-    }
+    public NodeStack() {}
 
     private NodeStack(Item item) {
         this.data = item;

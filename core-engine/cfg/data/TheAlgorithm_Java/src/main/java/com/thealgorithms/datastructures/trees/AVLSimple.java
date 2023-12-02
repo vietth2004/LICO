@@ -85,13 +85,11 @@ public class AVLSimple {
 
     private void display(Node node) {
         String str = "";
-        if (node.left != null) str += node.left.data + "=>";
-        else str +=
-                "END=>";
+        if (node.left != null) str += node.left.data + "=>"; else str +=
+            "END=>";
         str += node.data + "";
-        if (node.right != null) str += "<=" + node.right.data;
-        else str +=
-                "<=END";
+        if (node.right != null) str += "<=" + node.right.data; else str +=
+            "<=END";
         System.out.println(str);
         if (node.left != null) display(node.left);
         if (node.right != null) display(node.right);

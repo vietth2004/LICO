@@ -18,13 +18,13 @@ public class LinearCongruentialGenerator {
      *
      * @param multiplier
      * @param increment
-     * @param modulo     The maximum number that can be generated (exclusive). A
-     *                   common value is 2^32.
+     * @param modulo The maximum number that can be generated (exclusive). A
+     * common value is 2^32.
      */
     public LinearCongruentialGenerator(
-            double multiplier,
-            double increment,
-            double modulo
+        double multiplier,
+        double increment,
+        double modulo
     ) {
         this(System.currentTimeMillis(), multiplier, increment, modulo);
     }
@@ -36,14 +36,14 @@ public class LinearCongruentialGenerator {
      * @param seed
      * @param multiplier
      * @param increment
-     * @param modulo     The maximum number that can be generated (exclusive). A
-     *                   common value is 2^32.
+     * @param modulo The maximum number that can be generated (exclusive). A
+     * common value is 2^32.
      */
     public LinearCongruentialGenerator(
-            double seed,
-            double multiplier,
-            double increment,
-            double modulo
+        double seed,
+        double multiplier,
+        double increment,
+        double modulo
     ) {
         this.previousValue = seed;
         this.a = multiplier;
@@ -67,9 +67,9 @@ public class LinearCongruentialGenerator {
         // Decisive proof that the LCG works could be made by adding each number
         // generated to a Set while checking for duplicates.
         LinearCongruentialGenerator lcg = new LinearCongruentialGenerator(
-                1664525,
-                1013904223,
-                Math.pow(2.0, 32.0)
+            1664525,
+            1013904223,
+            Math.pow(2.0, 32.0)
         );
         for (int i = 0; i < 512; i++) {
             System.out.println(lcg.nextNumber());

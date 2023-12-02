@@ -17,7 +17,7 @@ public class CountWords {
 
         System.out.println("Your text has " + wordCount(str) + " word(s)");
         System.out.println(
-                "Your text has " + secondaryWordCount(str) + " word(s)"
+            "Your text has " + secondaryWordCount(str) + " word(s)"
         );
         input.close();
     }

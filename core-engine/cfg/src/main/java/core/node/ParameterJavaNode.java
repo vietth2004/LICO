@@ -41,12 +41,12 @@ public class ParameterJavaNode extends JavaNode {
                 //todo: config here
 
             }
-            case "char": {
+            case "char" : {
                 sNode = new SNormalCharNode();
                 //todo: config here
 
             }
-            case "float": {
+            case "float" : {
                 sNode = new SNormalFloatNode();
                 //todo: config here
 

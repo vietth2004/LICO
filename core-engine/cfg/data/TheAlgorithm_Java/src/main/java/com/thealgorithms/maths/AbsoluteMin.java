@@ -20,10 +20,10 @@ public class AbsoluteMin {
         };
 
         Arrays
-                .stream(numbers)
-                .skip(1)
-                .filter(number -> Math.abs(number) < Math.abs(absMinWrapper.value))
-                .forEach(number -> absMinWrapper.value = number);
+            .stream(numbers)
+            .skip(1)
+            .filter(number -> Math.abs(number) < Math.abs(absMinWrapper.value))
+            .forEach(number -> absMinWrapper.value = number);
 
         return absMinWrapper.value;
     }

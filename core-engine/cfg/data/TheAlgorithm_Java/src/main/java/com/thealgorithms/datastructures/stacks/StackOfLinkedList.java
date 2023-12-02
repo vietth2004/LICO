@@ -24,7 +24,7 @@ class StackOfLinkedList {
         assert stack.pop() == 4;
 
         System.out.println(
-                "Top element of stack currently is: " + stack.peek()
+            "Top element of stack currently is: " + stack.peek()
         );
     }
 }
@@ -121,8 +121,8 @@ class LinkedListStack {
             cur = cur.next;
         }
         return builder
-                .replace(builder.length() - 2, builder.length(), "")
-                .toString();
+            .replace(builder.length() - 2, builder.length(), "")
+            .toString();
     }
 
     /**

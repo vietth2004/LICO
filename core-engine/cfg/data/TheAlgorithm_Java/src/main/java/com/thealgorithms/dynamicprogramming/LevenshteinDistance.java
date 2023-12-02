@@ -36,12 +36,12 @@ public class LevenshteinDistance {
                     cost = 1;
                 }
                 distance_mat[i][j] =
-                        minimum(
-                                distance_mat[i - 1][j],
-                                distance_mat[i - 1][j - 1],
-                                distance_mat[i][j - 1]
-                        ) +
-                                cost;
+                    minimum(
+                        distance_mat[i - 1][j],
+                        distance_mat[i - 1][j - 1],
+                        distance_mat[i][j - 1]
+                    ) +
+                    cost;
             }
         }
         return distance_mat[len_a - 1][len_b - 1];
@@ -52,7 +52,7 @@ public class LevenshteinDistance {
         String b = ""; // enter your string here
 
         System.out.print(
-                "Levenshtein distance between " + a + " and " + b + " is: "
+            "Levenshtein distance between " + a + " and " + b + " is: "
         );
         System.out.println(calculate_distance(a, b));
     }

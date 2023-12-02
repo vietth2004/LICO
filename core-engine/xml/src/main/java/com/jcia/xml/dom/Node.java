@@ -1,20 +1,16 @@
 package com.jcia.xml.dom;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.jcia.xml.utils.Exception.JciaIgnore;
 import com.jcia.xml.utils.Helper.NodeHelper;
 import com.jcia.xml.utils.JciaData;
 import com.jcia.xml.utils.Type.ComponentType;
 import com.jcia.xml.utils.Type.Tier;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.MINIMAL_CLASS,

@@ -37,8 +37,8 @@
 
     <!-- trace - debug - info - warn - error - fatal -->
     <root level="INFO">
-        <appender-ref ref="ROLLIN"/>
-        <!--        <appender-ref ref="CONSOLE" />-->
+        <appender-ref ref="ROLLIN" />
+<!--        <appender-ref ref="CONSOLE" />-->
     </root>
 
     <logger name="root" level="ERROR"/>

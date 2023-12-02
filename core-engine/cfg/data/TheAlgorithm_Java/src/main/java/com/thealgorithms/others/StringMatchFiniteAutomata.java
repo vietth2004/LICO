@@ -3,7 +3,6 @@ package com.thealgorithms.others;
 /**
  * @author Prateek Kumar Oraon (https://github.com/prateekKrOraon)
  */
-
 import java.util.Scanner;
 
 // An implementaion of string matching using finite automata

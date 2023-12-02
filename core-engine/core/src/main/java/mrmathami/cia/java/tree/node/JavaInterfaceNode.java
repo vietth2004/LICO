@@ -28,27 +28,26 @@ import mrmathami.cia.java.tree.type.JavaType;
 import java.util.List;
 
 public interface JavaInterfaceNode extends JavaNode,
-        JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode, JavaTypeNode {
+		JavaAnnotatedNode, JavaParameterizedNode, JavaModifiedNode, JavaTypeNode {
 
-    @Nonnull
-    String OBJECT_CLASS = "JavaInterfaceNode";
+	@Nonnull String OBJECT_CLASS = "JavaInterfaceNode";
 
 
-    //region Basic Getter
+	//region Basic Getter
 
-    @Nonnull
-    @Override
-    default String getEntityClass() {
-        return OBJECT_CLASS;
-    }
+	@Nonnull
+	@Override
+	default String getEntityClass() {
+		return OBJECT_CLASS;
+	}
 
-    //endregion Basic Getter
+	//endregion Basic Getter
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nonnull
-    List<? extends JavaType> getExtendsInterfaces();
+	@Nonnull
+	List<? extends JavaType> getExtendsInterfaces();
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
 }

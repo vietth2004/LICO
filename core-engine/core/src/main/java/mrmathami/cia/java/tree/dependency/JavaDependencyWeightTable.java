@@ -25,15 +25,15 @@ import java.util.Map;
 
 public interface JavaDependencyWeightTable {
 
-    @Nonnull
-    static JavaDependencyWeightTable of(@Nonnull Map<JavaDependency, Double> map) {
-        final EnumMap<JavaDependency, Double> enumMap = new EnumMap<>(map);
-        return key -> {
-            final Double value = enumMap.get(key);
-            return value != null ? value : 0;
-        };
-    }
+	@Nonnull
+	static JavaDependencyWeightTable of(@Nonnull Map<JavaDependency, Double> map) {
+		final EnumMap<JavaDependency, Double> enumMap = new EnumMap<>(map);
+		return key -> {
+			final Double value = enumMap.get(key);
+			return value != null ? value : 0;
+		};
+	}
 
-    double getWeight(@Nonnull JavaDependency dependencyType);
+	double getWeight(@Nonnull JavaDependency dependencyType);
 
 }

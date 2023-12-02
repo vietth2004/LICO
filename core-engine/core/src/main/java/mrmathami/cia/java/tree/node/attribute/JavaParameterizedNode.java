@@ -26,11 +26,11 @@ import java.util.List;
 
 public interface JavaParameterizedNode extends JavaNode {
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nonnull
-    List<? extends JavaType> getTypeParameters();
+	@Nonnull
+	List<? extends JavaType> getTypeParameters();
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
 }

@@ -1,7 +1,6 @@
 package com.thealgorithms.strings;
 
 // Longest Palindromic Substring
-
 import java.util.Scanner;
 
 class LongestPalindromicSubstring {
@@ -13,7 +12,7 @@ class LongestPalindromicSubstring {
         System.out.print("Enter the string: ");
         str = sc.nextLine();
         System.out.println(
-                "Longest substring is : " + s.longestPalindrome(str)
+            "Longest substring is : " + s.longestPalindrome(str)
         );
     }
 }

@@ -29,19 +29,19 @@ import mrmathami.collections.ImmutableOrderedMap;
 import java.util.Map;
 
 public final class ImmutableOrderedMapTest {
-    public static Test suite() {
-        return MapTestSuiteBuilder.using(
-                        new TestStringMapGenerator() {
-                            @Override
-                            protected Map<String, String> create(Map.Entry<String, String>[] entries) {
-                                return ImmutableOrderedMap.ofEntries(entries);
-                            }
-                        })
-                .named("ImmutableOrderedMap")
-                .withFeatures(
-                        MapFeature.REJECTS_DUPLICATES_AT_CREATION,
-                        CollectionFeature.SERIALIZABLE,
-                        CollectionSize.ANY)
-                .createTestSuite();
-    }
+	public static Test suite() {
+		return MapTestSuiteBuilder.using(
+				new TestStringMapGenerator() {
+					@Override
+					protected Map<String, String> create(Map.Entry<String, String>[] entries) {
+						return ImmutableOrderedMap.ofEntries(entries);
+					}
+				})
+				.named("ImmutableOrderedMap")
+				.withFeatures(
+						MapFeature.REJECTS_DUPLICATES_AT_CREATION,
+						CollectionFeature.SERIALIZABLE,
+						CollectionSize.ANY)
+				.createTestSuite();
+	}
 }

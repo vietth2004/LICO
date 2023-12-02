@@ -22,13 +22,12 @@
 DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `account`
-(
-    `id`       varchar(255) NOT NULL,
-    `password` varchar(255) DEFAULT NULL,
-    `username` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `FK7y2xm0umcdojys1422d5walap` FOREIGN KEY (`id`) REFERENCES `user` (`id`)
+CREATE TABLE `account` (
+  `id` varchar(255) NOT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK7y2xm0umcdojys1422d5walap` FOREIGN KEY (`id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -36,12 +35,10 @@ CREATE TABLE `account`
 -- Dumping data for table `account`
 --
 
-LOCK
-TABLES `account` WRITE;
+LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
-UNLOCK
-TABLES;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `project`
@@ -50,14 +47,13 @@ TABLES;
 DROP TABLE IF EXISTS `project`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `project`
-(
-    `id`     varchar(255) NOT NULL,
-    `name`   varchar(255) DEFAULT NULL,
-    `userid` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY      `FK7phssgir0yf53ce2gfrgssase` (`userid`),
-    CONSTRAINT `FK7phssgir0yf53ce2gfrgssase` FOREIGN KEY (`userid`) REFERENCES `user` (`id`)
+CREATE TABLE `project` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `userid` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK7phssgir0yf53ce2gfrgssase` (`userid`),
+  CONSTRAINT `FK7phssgir0yf53ce2gfrgssase` FOREIGN KEY (`userid`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -65,12 +61,10 @@ CREATE TABLE `project`
 -- Dumping data for table `project`
 --
 
-LOCK
-TABLES `project` WRITE;
+LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
-UNLOCK
-TABLES;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -79,12 +73,11 @@ TABLES;
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user`
-(
-    `id`   varchar(255) NOT NULL,
-    `name` varchar(255) DEFAULT NULL,
-    `mail` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+CREATE TABLE `user` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `mail` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -92,12 +85,10 @@ CREATE TABLE `user`
 -- Dumping data for table `user`
 --
 
-LOCK
-TABLES `user` WRITE;
+LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK
-TABLES;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `version`
@@ -106,15 +97,14 @@ TABLES;
 DROP TABLE IF EXISTS `version`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `version`
-(
-    `id`        varchar(255) NOT NULL,
-    `name`      varchar(255) DEFAULT NULL,
-    `path`      varchar(255) DEFAULT NULL,
-    `projectid` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY         `FKperd8m4qvpbh2o2i4ptmvy5eo` (`projectid`),
-    CONSTRAINT `FKperd8m4qvpbh2o2i4ptmvy5eo` FOREIGN KEY (`projectid`) REFERENCES `project` (`id`)
+CREATE TABLE `version` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `projectid` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKperd8m4qvpbh2o2i4ptmvy5eo` (`projectid`),
+  CONSTRAINT `FKperd8m4qvpbh2o2i4ptmvy5eo` FOREIGN KEY (`projectid`) REFERENCES `project` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -122,12 +112,10 @@ CREATE TABLE `version`
 -- Dumping data for table `version`
 --
 
-LOCK
-TABLES `version` WRITE;
+LOCK TABLES `version` WRITE;
 /*!40000 ALTER TABLE `version` DISABLE KEYS */;
 /*!40000 ALTER TABLE `version` ENABLE KEYS */;
-UNLOCK
-TABLES;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

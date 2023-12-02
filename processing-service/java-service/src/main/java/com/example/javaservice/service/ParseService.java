@@ -1,9 +1,10 @@
 package com.example.javaservice.service;
 
 import com.example.javaservice.ast.annotation.JavaAnnotation;
-import com.example.javaservice.ast.annotation.MemberValuePair;
 import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
+import org.eclipse.jdt.core.dom.*;
+import com.example.javaservice.ast.annotation.MemberValuePair;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -30,16 +31,16 @@ public class ParseService {
 
         String packageName = cu.getPackage().getName().getFullyQualifiedName();
 
-        if (abstractNode.getEntityClass().equals("JavaClassNode")) {
-            for (Object obj : cu.types()) {
-                if (obj instanceof TypeDeclaration) {
+        if(abstractNode.getEntityClass().equals("JavaClassNode")) {
+            for(Object obj : cu.types()) {
+                if(obj instanceof TypeDeclaration) {
 //                    System.out.println(((TypeDeclaration) obj).getName());
                     javaAnnotationList.addAll(visitModifier(((TypeDeclaration) obj).modifiers()));
                 }
             }
         }
 
-        if (abstractNode.getEntityClass().equals("JavaMethodNode")) {
+        if(abstractNode.getEntityClass().equals("JavaMethodNode")) {
             int nodePos = abstractNode.getId() - abstractNode.getParent().getId() - 1;
             int id = nodePos - behindInitNode(nodePos, pos);
 
@@ -55,7 +56,7 @@ public class ParseService {
             javaAnnotationList.addAll(visitModifier(methodDeclaration.modifiers()));
         }
 
-        if (abstractNode.getEntityClass().equals("JavaFieldNode")) {
+        if(abstractNode.getEntityClass().equals("JavaFieldNode")) {
             int nodePos = abstractNode.getId() - abstractNode.getParent().getId() - 1;
             int id = nodePos - behindInitNode(nodePos, pos);
 
@@ -74,11 +75,13 @@ public class ParseService {
         return javaAnnotationList;
     }
 
-    public static String getFileContent(String filepath) throws FileNotFoundException, IOException {
+    public static String getFileContent (String filepath) throws FileNotFoundException, IOException
+    {
         BufferedReader br = new BufferedReader(new FileReader(filepath));
         StringBuilder sb = new StringBuilder();
         String line = br.readLine();
-        while (line != null) {
+        while (line != null)
+        {
             sb.append(line);
             sb.append(System.lineSeparator());
             line = br.readLine();
@@ -86,13 +89,13 @@ public class ParseService {
         return sb.toString();
     }
 
-    public static List<JavaAnnotation> visitModifier(List modifierList) {
+    public static List<JavaAnnotation> visitModifier(List modifierList){
         List<JavaAnnotation> javaAnnotationList = new ArrayList<>();
         int count = 0;
 
-        for (Object modifier : modifierList) {
+        for(Object modifier : modifierList) {
 
-            if (modifier instanceof MarkerAnnotation) {
+            if(modifier instanceof MarkerAnnotation) {
                 MarkerAnnotation annotation = (MarkerAnnotation) modifier;
                 javaAnnotationList.add(new JavaAnnotation(
                         "JavaAnnotate",
@@ -105,7 +108,7 @@ public class ParseService {
                 ++count;
             }
 
-            if (modifier instanceof SingleMemberAnnotation) {
+            if(modifier instanceof SingleMemberAnnotation) {
                 SingleMemberAnnotation annotation = (SingleMemberAnnotation) modifier;
 
                 javaAnnotationList.add(new JavaAnnotation(
@@ -119,13 +122,13 @@ public class ParseService {
                 ++count;
             }
 
-            if (modifier instanceof NormalAnnotation) {
+            if(modifier instanceof NormalAnnotation) {
 
                 NormalAnnotation annotation = (NormalAnnotation) modifier;
 
                 List<MemberValuePair> pairs = new ArrayList<>();
-                for (Object obj : ((NormalAnnotation) modifier).values()) {
-                    if (obj instanceof org.eclipse.jdt.core.dom.MemberValuePair) {
+                for(Object obj : ((NormalAnnotation) modifier).values()) {
+                    if(obj instanceof org.eclipse.jdt.core.dom.MemberValuePair) {
                         org.eclipse.jdt.core.dom.MemberValuePair memberValuePair = (org.eclipse.jdt.core.dom.MemberValuePair) obj;
                         pairs.add(new MemberValuePair(memberValuePair.getName().getIdentifier(), memberValuePair.getValue().toString()));
                     }
@@ -174,15 +177,16 @@ public class ParseService {
         String uniqueName = new String();
 
 
+
         return uniqueName;
     }
 
     public static Pair<Integer, Integer> getIdentifierPos(AbstractNode abstractNode) {
         int count = 0;
         int pos = 0;
-        if (abstractNode.getEntityClass().equals("JavaClassNode")) {
-            for (AbstractNode childNode : abstractNode.getChildren()) {
-                if (childNode.getSimpleName().equals("<init>")) {
+        if(abstractNode.getEntityClass().equals("JavaClassNode")){
+            for(AbstractNode childNode : abstractNode.getChildren()) {
+                if(childNode.getSimpleName().equals("<init>")) {
                     ++count;
                     pos = abstractNode.getId() - childNode.getId() - 1;
                 }
@@ -192,11 +196,11 @@ public class ParseService {
     }
 
     public static int behindInitNode(int nodePos, int initPos) {
-        if (initPos == 0) {
+        if(initPos == 0) {
             return 0;
         }
 
-        if (nodePos > initPos) {
+        if(nodePos > initPos) {
             return 1;
         }
 

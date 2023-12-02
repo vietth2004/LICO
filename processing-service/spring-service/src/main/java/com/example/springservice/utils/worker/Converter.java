@@ -14,10 +14,10 @@ public class Converter {
 
         List<JavaNode> springJavaNodes = new ArrayList<>();
         for (JavaNode javaNode : javaNodes) {
-            if (Checker.containSpringAnnotations(javaNode, Resource.SPRING_ANNOTATION_SIMPLE_NAME)) {
+            if(Checker.containSpringAnnotations(javaNode, Resource.SPRING_ANNOTATION_SIMPLE_NAME)) {
                 springJavaNodes.add(javaNode);
             }
-            if (Checker.isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
+            if(Checker.isSpringInterface(javaNode, Resource.SPRING_REPOSITORY_INTERFACE_SIMPLE_NAME)) {
                 springJavaNodes.add(javaNode);
             }
         }
@@ -27,7 +27,7 @@ public class Converter {
     public static List<Dependency> convertSetToList(Set<Dependency> dependencySet) {
         List<Dependency> dependencies = new ArrayList<>();
 
-        for (Dependency dependency : dependencySet) {
+        for(Dependency dependency : dependencySet) {
             dependencies.add(dependency);
         }
 

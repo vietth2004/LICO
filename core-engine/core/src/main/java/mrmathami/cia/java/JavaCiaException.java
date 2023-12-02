@@ -20,14 +20,14 @@ package mrmathami.cia.java;
 
 public class JavaCiaException extends Exception {
 
-    private static final long serialVersionUID = 3408562274810899935L;
+	private static final long serialVersionUID = 3408562274810899935L;
 
-    public JavaCiaException(String message) {
-        super(message);
-    }
+	public JavaCiaException(String message) {
+		super(message);
+	}
 
-    public JavaCiaException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public JavaCiaException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

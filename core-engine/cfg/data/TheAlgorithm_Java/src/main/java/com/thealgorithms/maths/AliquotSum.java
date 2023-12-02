@@ -23,15 +23,15 @@ public class AliquotSum {
         };
 
         IntStream
-                .iterate(1, i -> ++i)
-                .limit(number / 2)
-                .filter(i -> number % i == 0)
-                .forEach(i -> sumWrapper.value += i);
+            .iterate(1, i -> ++i)
+            .limit(number / 2)
+            .filter(i -> number % i == 0)
+            .forEach(i -> sumWrapper.value += i);
 
         return sumWrapper.value;
     }
-
-    /**
+    
+     /**
      * Function to calculate the aliquot sum of an integer number
      *
      * @param n a positive integer

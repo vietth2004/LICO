@@ -33,7 +33,7 @@ public class Rotation {
      * array time complexity: O(n) space complexity: O(1)
      *
      * @param values given character array
-     * @param n      the total characters to be moved
+     * @param n the total characters to be moved
      */
     public static void rotation(char[] values, int n) {
         reverse(values, 0, n - 1);
@@ -45,8 +45,8 @@ public class Rotation {
      * Reverse character array
      *
      * @param values character array
-     * @param from   begin index of given array
-     * @param to     end index of given array
+     * @param from begin index of given array
+     * @param to end index of given array
      */
     public static void reverse(char[] values, int from, int to) {
         while (from < to) {

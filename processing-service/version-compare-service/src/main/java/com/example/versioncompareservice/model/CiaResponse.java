@@ -1,5 +1,6 @@
 package com.example.versioncompareservice.model;
 
+import java.util.List;
 import java.util.Set;
 
 public class CiaResponse {

@@ -10,24 +10,24 @@ public class ReverseStringRecursiveTest {
     @Test
     void shouldAcceptWhenEmptyStringIsPassed() {
         String expected = "";
-        String reversed = stringRecursive.reverse("");
+        String reversed  = stringRecursive.reverse("");
 
-        assertEquals(expected, reversed);
+        assertEquals(expected,reversed);
     }
 
     @Test
     void shouldAcceptNotWhenWhenSingleCharacterIsPassed() {
         String expected = "a";
-        String reversed = stringRecursive.reverse("a");
+        String reversed  = stringRecursive.reverse("a");
 
-        assertEquals(expected, reversed);
+        assertEquals(expected,reversed);
     }
 
     @Test
     void shouldAcceptWhenStringIsPassed() {
         String expected = "dlroWolleH";
-        String reversed = stringRecursive.reverse("HelloWorld");
+        String reversed  = stringRecursive.reverse("HelloWorld");
 
-        assertEquals(expected, reversed);
+        assertEquals(expected,reversed);
     }
 }

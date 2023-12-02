@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConcolicTestResult {
-    //    private String fullCoverage = "0%";
+//    private String fullCoverage = "0%";
 //    private List<String> fullCoveredStatements = new ArrayList<>();
     private List<ConcolicTestData> fullTestData = new ArrayList<>();
 

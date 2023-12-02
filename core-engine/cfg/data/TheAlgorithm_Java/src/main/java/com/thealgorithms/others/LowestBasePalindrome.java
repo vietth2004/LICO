@@ -30,10 +30,10 @@ public class LowestBasePalindrome {
             }
         }
         System.out.println(
-                n + " is a palindrome in base " + lowestBasePalindrome(n)
+            n + " is a palindrome in base " + lowestBasePalindrome(n)
         );
         System.out.println(
-                base2base(Integer.toString(n), 10, lowestBasePalindrome(n))
+            base2base(Integer.toString(n), 10, lowestBasePalindrome(n))
         );
         in.close();
     }

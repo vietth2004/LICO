@@ -2,23 +2,13 @@ package core.ast.Expression.Literal;
 
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
+import core.ast.Expression.OperationExpression.InfixExpressionNode;
 import core.ast.Expression.Literal.NumberLiteral.DoubleLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
-import core.ast.Expression.OperationExpression.InfixExpressionNode;
 import core.ast.Expression.OperationExpression.PrefixExpressionNode;
 import core.dataStructure.MemoryModel;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.BooleanLiteral;
-import org.eclipse.jdt.core.dom.CharacterLiteral;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jdt.core.dom.NullLiteral;
-import org.eclipse.jdt.core.dom.NumberLiteral;
-import org.eclipse.jdt.core.dom.PostfixExpression;
-import org.eclipse.jdt.core.dom.PrefixExpression;
-import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.TypeLiteral;
+import org.eclipse.jdt.core.dom.*;
 
 public abstract class LiteralNode extends ExpressionNode {
 

@@ -20,7 +20,7 @@ public class CharacterLiteralNode extends LiteralNode {
 
     public static CharacterLiteralNode[] createCharacterLiteralInitializationArray(int capacity) {
         CharacterLiteralNode[] array = new CharacterLiteralNode[capacity];
-        for (int i = 0; i < capacity; i++) {
+        for(int i = 0; i < capacity; i++) {
             array[i] = new CharacterLiteralNode();
         }
         return array;

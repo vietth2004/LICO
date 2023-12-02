@@ -5,7 +5,6 @@ package com.thealgorithms.datastructures.trees;
  *
  * @author Dheeraj Kumar Barnwal (https://github.com/dheeraj92)
  */
-
 import java.util.Scanner;
 
 public class TrieImp {

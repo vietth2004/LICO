@@ -21,8 +21,8 @@ public class BinomialCoefficient {
      */
 
     public static int binomialCoefficient(
-            int totalObjects,
-            int numberOfObjects
+        int totalObjects,
+        int numberOfObjects
     ) {
         // Base Case
         if (numberOfObjects > totalObjects) {
@@ -36,8 +36,8 @@ public class BinomialCoefficient {
 
         // Recursive Call
         return (
-                binomialCoefficient(totalObjects - 1, numberOfObjects - 1) +
-                        binomialCoefficient(totalObjects - 1, numberOfObjects)
+            binomialCoefficient(totalObjects - 1, numberOfObjects - 1) +
+            binomialCoefficient(totalObjects - 1, numberOfObjects)
         );
     }
 }

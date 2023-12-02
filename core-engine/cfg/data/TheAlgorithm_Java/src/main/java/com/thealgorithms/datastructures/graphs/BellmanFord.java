@@ -3,7 +3,7 @@ package com.thealgorithms.datastructures.graphs;
 import java.util.*;
 
 class BellmanFord /*Implementation of Bellman ford to detect negative cycles. Graph accepts inputs in form of edges which have
-start vertex, end vertex and weights. Vertices should be labelled with a number between 0 and total number of vertices-1,both inclusive*/ {
+start vertex, end vertex and weights. Vertices should be labelled with a number between 0 and total number of vertices-1,both inclusive*/{
 
     int vertex, edge;
     private Edge edges[];
@@ -34,7 +34,7 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
 
     /**
      * @param p[] Parent array which shows updates in edges
-     * @param i   Current vertex under consideration
+     * @param i Current vertex under consideration
      */
     void printPath(int p[], int i) {
         if (p[i] == -1) { // Found the path back to parent
@@ -74,8 +74,8 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
         for (i = 0; i < v - 1; i++) {
             for (j = 0; j < e; j++) {
                 if (
-                        (int) dist[arr[j].u] != Integer.MAX_VALUE &&
-                                dist[arr[j].v] > dist[arr[j].u] + arr[j].w
+                    (int) dist[arr[j].u] != Integer.MAX_VALUE &&
+                    dist[arr[j].v] > dist[arr[j].u] + arr[j].w
                 ) {
                     dist[arr[j].v] = dist[arr[j].u] + arr[j].w; // Update
                     p[arr[j].v] = arr[j].u;
@@ -85,8 +85,8 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
         // Final cycle for negative checking
         for (j = 0; j < e; j++) {
             if (
-                    (int) dist[arr[j].u] != Integer.MAX_VALUE &&
-                            dist[arr[j].v] > dist[arr[j].u] + arr[j].w
+                (int) dist[arr[j].u] != Integer.MAX_VALUE &&
+                dist[arr[j].v] > dist[arr[j].u] + arr[j].w
             ) {
                 neg = 1;
                 System.out.println("Negative cycle");
@@ -110,8 +110,8 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
 
     /**
      * @param source Starting vertex
-     * @param end    Ending vertex
-     * @param Edge   Array of edges
+     * @param end Ending vertex
+     * @param Edge Array of edges
      */
     public void show(int source, int end, Edge arr[]) { // be created by using addEdge() method and passed by calling getEdgeArray() method // Just shows results of computation, if graph is passed to it. The graph should
         int i, j, v = vertex, e = edge, neg = 0;
@@ -126,8 +126,8 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
         for (i = 0; i < v - 1; i++) {
             for (j = 0; j < e; j++) {
                 if (
-                        (int) dist[arr[j].u] != Integer.MAX_VALUE &&
-                                dist[arr[j].v] > dist[arr[j].u] + arr[j].w
+                    (int) dist[arr[j].u] != Integer.MAX_VALUE &&
+                    dist[arr[j].v] > dist[arr[j].u] + arr[j].w
                 ) {
                     dist[arr[j].v] = dist[arr[j].u] + arr[j].w; // Update
                     p[arr[j].v] = arr[j].u;
@@ -137,8 +137,8 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
         // Final cycle for negative checking
         for (j = 0; j < e; j++) {
             if (
-                    (int) dist[arr[j].u] != Integer.MAX_VALUE &&
-                            dist[arr[j].v] > dist[arr[j].u] + arr[j].w
+                (int) dist[arr[j].u] != Integer.MAX_VALUE &&
+                dist[arr[j].v] > dist[arr[j].u] + arr[j].w
             ) {
                 neg = 1;
                 System.out.println("Negative cycle");

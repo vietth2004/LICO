@@ -3,12 +3,12 @@
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%d{yyyy-MM-dd HH:mm:ss} [%X{sessionID}] [%X{username}] %-5p %c{1}:%L - %m%n"/>
+                    pattern ="%d{yyyy-MM-dd HH:mm:ss} [%X{sessionID}] [%X{username}] %-5p %c{1}:%L - %m%n"/>
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com.opensymphony" level="OFF"/>
-        <Logger name="org.apache" level="OFF"/>
+        <Logger name = "com.opensymphony" level = "OFF"/>
+        <Logger name = "org.apache" level = "OFF"/>
 
         <Root level="debug" additivity="false">
             <AppenderRef ref="console" level="debug"/>

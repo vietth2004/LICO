@@ -52,31 +52,31 @@ public class KaprekarNumbersTest {
     void testForRangeOfNumber() {
         try {
             List<Long> rangedNumbers = KaprekarNumbers.kaprekarNumberInRange(
-                    1,
-                    100000
+                1,
+                100000
             );
             long[] allTheNumbers = {
-                    1,
-                    9,
-                    45,
-                    55,
-                    99,
-                    297,
-                    703,
-                    999,
-                    2223,
-                    2728,
-                    4950,
-                    5050,
-                    7272,
-                    7777,
-                    9999,
-                    17344,
-                    22222,
-                    77778,
-                    82656,
-                    95121,
-                    99999,
+                1,
+                9,
+                45,
+                55,
+                99,
+                297,
+                703,
+                999,
+                2223,
+                2728,
+                4950,
+                5050,
+                7272,
+                7777,
+                9999,
+                17344,
+                22222,
+                77778,
+                82656,
+                95121,
+                99999,
             };
             for (long i : allTheNumbers) {
                 assert rangedNumbers.contains(i);

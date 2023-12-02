@@ -1,54 +1,23 @@
 package com.example.springservice.tiles.parser;
 
-import org.apache.commons.digester.BeanPropertySetterRule;
-import org.apache.commons.digester.CallMethodRule;
-import org.apache.commons.digester.CallParamRule;
-import org.apache.commons.digester.FactoryCreateRule;
-import org.apache.commons.digester.ObjectCreateRule;
-import org.apache.commons.digester.ParserFeatureSetterFactory;
-import org.apache.commons.digester.SetNestedPropertiesRule;
-import org.apache.commons.digester.SetNextRule;
-import org.apache.commons.digester.SetPropertiesRule;
-import org.apache.commons.digester.SetPropertyRule;
-import org.apache.commons.digester.SetRootRule;
-import org.apache.commons.digester.SetTopRule;
+import org.apache.commons.digester.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Schema;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
+import java.util.*;
 
 /**
+ *
  * Created by cuong on 5/17/2017.
  */
 public class JciaDigester extends Digester {
@@ -319,9 +288,7 @@ public class JciaDigester extends Digester {
      */
     protected Substitutor substitutor;
 
-    /**
-     * Stacks used for interrule communication, indexed by name String
-     */
+    /** Stacks used for interrule communication, indexed by name String */
     private HashMap<String, Stack<Object>> stacksByName = new HashMap<String, Stack<Object>>();
 
     /**
@@ -397,7 +364,7 @@ public class JciaDigester extends Digester {
      * when required.
      *
      * @param classLoader The new class loader to use, or <code>null</code>
-     *                    to revert to the standard rules
+     *  to revert to the standard rules
      */
     public void setClassLoader(ClassLoader classLoader) {
 
@@ -449,7 +416,8 @@ public class JciaDigester extends Digester {
      * Set the debugging detail level of our currently enabled logger.
      *
      * @param debug New debugging detail level (0=off, increasing integers
-     *              for more detail)
+     *  for more detail)
+     *
      * @deprecated This method now has no effect at all. Digester uses
      * the apache jakarta comons-logging library; see the documentation
      * for that library for more information.
@@ -507,12 +475,13 @@ public class JciaDigester extends Digester {
      * for information about the standard SAX2 feature flags.
      *
      * @param feature Name of the feature to inquire about
-     * @throws ParserConfigurationException if a parser configuration error
-     *                                      occurs
-     * @throws SAXNotRecognizedException    if the property name is
-     *                                      not recognized
-     * @throws SAXNotSupportedException     if the property name is
-     *                                      recognized but not supported
+     *
+     * @exception ParserConfigurationException if a parser configuration error
+     *  occurs
+     * @exception SAXNotRecognizedException if the property name is
+     *  not recognized
+     * @exception SAXNotSupportedException if the property name is
+     *  recognized but not supported
      */
     public boolean getFeature(String feature)
             throws ParserConfigurationException, SAXNotRecognizedException,
@@ -533,13 +502,14 @@ public class JciaDigester extends Digester {
      * directly or indirectly.
      *
      * @param feature Name of the feature to set the status for
-     * @param value   The new value for this feature
-     * @throws ParserConfigurationException if a parser configuration error
-     *                                      occurs
-     * @throws SAXNotRecognizedException    if the property name is
-     *                                      not recognized
-     * @throws SAXNotSupportedException     if the property name is
-     *                                      recognized but not supported
+     * @param value The new value for this feature
+     *
+     * @exception ParserConfigurationException if a parser configuration error
+     *  occurs
+     * @exception SAXNotRecognizedException if the property name is
+     *  not recognized
+     * @exception SAXNotSupportedException if the property name is
+     *  recognized but not supported
      */
     public void setFeature(String feature, boolean value)
             throws ParserConfigurationException, SAXNotRecognizedException,
@@ -584,8 +554,8 @@ public class JciaDigester extends Digester {
     /**
      * Sets the logger used for logging SAX-related information.
      * <strong>Note</strong> the output is finely grained.
-     *
      * @param saxLog Log, not null
+     *
      * @since 1.6
      */
     public void setSAXLogger(Log saxLog) {
@@ -630,7 +600,9 @@ public class JciaDigester extends Digester {
      * functionality additionally requires namespace-awareness.
      *
      * @return The XInclude-aware flag
+     *
      * @see #getNamespaceAware()
+     *
      * @since 2.0
      */
     public boolean getXIncludeAware() {
@@ -645,7 +617,9 @@ public class JciaDigester extends Digester {
      * requires namespace-awareness.
      *
      * @param xincludeAware The new XInclude-aware flag
+     *
      * @see #setNamespaceAware(boolean)
+     *
      * @since 2.0
      */
     public void setXIncludeAware(boolean xincludeAware) {
@@ -657,10 +631,9 @@ public class JciaDigester extends Digester {
 
     /**
      * Set the publid id of the current file being parse.
-     *
      * @param publicId the DTD/Schema public's id.
      */
-    public void setPublicId(String publicId) {
+    public void setPublicId(String publicId){
         this.publicId = publicId;
     }
 
@@ -692,8 +665,8 @@ public class JciaDigester extends Digester {
      * added <code>Rule</code> objects.
      *
      * @param ruleNamespaceURI Namespace URI that must match on all
-     *                         subsequently added rules, or <code>null</code> for matching
-     *                         regardless of the current namespace URI
+     *  subsequently added rules, or <code>null</code> for matching
+     *  regardless of the current namespace URI
      */
     public void setRuleNamespaceURI(String ruleNamespaceURI) {
 
@@ -757,10 +730,11 @@ public class JciaDigester extends Digester {
      * for information about the standard SAX2 properties.
      *
      * @param property Property name to be retrieved
-     * @throws SAXNotRecognizedException if the property name is
-     *                                   not recognized
-     * @throws SAXNotSupportedException  if the property name is
-     *                                   recognized but not supported
+     *
+     * @exception SAXNotRecognizedException if the property name is
+     *  not recognized
+     * @exception SAXNotSupportedException if the property name is
+     *  recognized but not supported
      */
     public Object getProperty(String property)
             throws SAXNotRecognizedException, SAXNotSupportedException {
@@ -777,11 +751,12 @@ public class JciaDigester extends Digester {
      * for information about the standard SAX2 properties.
      *
      * @param property Property name to be set
-     * @param value    Property value to be set
-     * @throws SAXNotRecognizedException if the property name is
-     *                                   not recognized
-     * @throws SAXNotSupportedException  if the property name is
-     *                                   recognized but not supported
+     * @param value Property value to be set
+     *
+     * @exception SAXNotRecognizedException if the property name is
+     *  not recognized
+     * @exception SAXNotSupportedException if the property name is
+     *  recognized but not supported
      */
     public void setProperty(String property, Object value)
             throws SAXNotRecognizedException, SAXNotSupportedException {
@@ -796,7 +771,7 @@ public class JciaDigester extends Digester {
      * be able to use digester in Weblogic 6.0.
      *
      * @deprecated Use getXMLReader() instead, which can throw a
-     * SAXException if the reader cannot be instantiated
+     *  SAXException if the reader cannot be instantiated
      */
     public XMLReader getReader() {
 
@@ -843,9 +818,9 @@ public class JciaDigester extends Digester {
     /**
      * Return the XML Schema URI used for validating an XML instance.
      *
+     * @deprecated Use {@link Schema} for validation instead.
      * @see #getXMLSchema()
      * @see #setXMLSchema(Schema)
-     * @deprecated Use {@link Schema} for validation instead.
      */
     public String getSchema() {
 
@@ -882,11 +857,11 @@ public class JciaDigester extends Digester {
      * parameter to the Digester constructor.
      *
      * @param schemaLocation a URI to the schema.
+     * @deprecated Use {@link Schema} for validation instead.
      * @see #getXMLSchema()
      * @see #setXMLSchema(Schema)
-     * @deprecated Use {@link Schema} for validation instead.
      */
-    public void setSchema(String schemaLocation) {
+    public void setSchema(String schemaLocation){
 
         this.schemaLocation = schemaLocation;
 
@@ -896,9 +871,9 @@ public class JciaDigester extends Digester {
     /**
      * Return the XML Schema language used when parsing.
      *
+     * @deprecated Use {@link Schema} for validation instead.
      * @see #getXMLSchema()
      * @see #setXMLSchema(Schema)
-     * @deprecated Use {@link Schema} for validation instead.
      */
     public String getSchemaLanguage() {
 
@@ -911,11 +886,11 @@ public class JciaDigester extends Digester {
      * Set the XML Schema language used when parsing. By default, we use W3C.
      *
      * @param schemaLanguage a URI to the schema language.
+     * @deprecated Use {@link Schema} for validation instead.
      * @see #getXMLSchema()
      * @see #setXMLSchema(Schema)
-     * @deprecated Use {@link Schema} for validation instead.
      */
-    public void setSchemaLanguage(String schemaLanguage) {
+    public void setSchemaLanguage(String schemaLanguage){
 
         this.schemaLanguage = schemaLanguage;
 
@@ -926,6 +901,7 @@ public class JciaDigester extends Digester {
      * Return the XML Schema used when parsing.
      *
      * @return The {@link Schema} instance in use.
+     *
      * @since 2.0
      */
     public Schema getXMLSchema() {
@@ -939,9 +915,10 @@ public class JciaDigester extends Digester {
      * Set the XML Schema to be used when parsing.
      *
      * @param schema The {@link Schema} instance to use.
+     *
      * @since 2.0
      */
-    public void setXMLSchema(Schema schema) {
+    public void setXMLSchema(Schema schema){
 
         this.schema = schema;
 
@@ -999,21 +976,20 @@ public class JciaDigester extends Digester {
 
     /**
      * Return the XMLReader to be used for parsing the input document.
-     * <p>
+     *
      * FIX ME: there is a bug in JAXP/XERCES that prevent the use of a
      * parser that contains a schema with a DTD.
-     *
-     * @throws SAXException if no XMLReader can be instantiated
+     * @exception SAXException if no XMLReader can be instantiated
      */
     public XMLReader getXMLReader() throws SAXException {
-        if (reader == null) {
+        if (reader == null){
             reader = getParser().getXMLReader();
         }
 
         reader.setDTDHandler(this);
         reader.setContentHandler(this);
 
-        if (entityResolver == null) {
+        if (entityResolver == null){
             reader.setEntityResolver(this);
         } else {
             reader.setEntityResolver(entityResolver);
@@ -1025,7 +1001,6 @@ public class JciaDigester extends Digester {
 
     /**
      * Gets the <code>Substitutor</code> used to convert attributes and body text.
-     *
      * @return Substitutor, null if not substitutions are to be performed.
      */
     public Substitutor getSubstitutor() {
@@ -1034,9 +1009,8 @@ public class JciaDigester extends Digester {
 
     /**
      * Sets the <code>Substitutor</code> to be used to convert attributes and body text.
-     *
      * @param substitutor the Substitutor to be used to convert attributes and body text
-     *                    or null if not substitution of these values is to be performed.
+     * or null if not substitution of these values is to be performed.
      */
     public void setSubstitutor(Substitutor substitutor) {
         this.substitutor = substitutor;
@@ -1112,7 +1086,8 @@ public class JciaDigester extends Digester {
      * Get the most current namespaces for all prefixes.
      *
      * @return Map A map with namespace prefixes as keys and most current
-     * namespace URIs for the corresponding prefixes as values
+     *             namespace URIs for the corresponding prefixes as values
+     *
      * @since 1.8
      */
     public Map<String, String> getCurrentNamespaces() {
@@ -1141,9 +1116,10 @@ public class JciaDigester extends Digester {
      * an XML element.
      *
      * @param buffer The characters from the XML document
-     * @param start  Starting offset into the buffer
+     * @param start Starting offset into the buffer
      * @param length Number of characters from the buffer
-     * @throws SAXException if a parsing error is to be reported
+     *
+     * @exception SAXException if a parsing error is to be reported
      */
     public void characters(char buffer[], int start, int length)
             throws SAXException {
@@ -1166,7 +1142,7 @@ public class JciaDigester extends Digester {
     /**
      * Process notification of the end of the document being reached.
      *
-     * @throws SAXException if a parsing error is to be reported
+     * @exception SAXException if a parsing error is to be reported
      */
     public void endDocument() throws SAXException {
 
@@ -1202,13 +1178,13 @@ public class JciaDigester extends Digester {
      * Process notification of the end of an XML element being reached.
      *
      * @param namespaceURI - The Namespace URI, or the empty string if the
-     *                     element has no Namespace URI or if Namespace processing is not
-     *                     being performed.
-     * @param localName    - The local name (without prefix), or the empty
-     *                     string if Namespace processing is not being performed.
-     * @param qName        - The qualified XML 1.0 name (with prefix), or the
-     *                     empty string if qualified names are not available.
-     * @throws SAXException if a parsing error is to be reported
+     *   element has no Namespace URI or if Namespace processing is not
+     *   being performed.
+     * @param localName - The local name (without prefix), or the empty
+     *   string if Namespace processing is not being performed.
+     * @param qName - The qualified XML 1.0 name (with prefix), or the
+     *   empty string if qualified names are not available.
+     * @exception SAXException if a parsing error is to be reported
      */
     public void endElement(String namespaceURI, String localName,
                            String qName) throws SAXException {
@@ -1242,7 +1218,7 @@ public class JciaDigester extends Digester {
         if ((rules != null) && (rules.size() > 0)) {
             String bodyText = this.bodyText.toString();
             Substitutor substitutor = getSubstitutor();
-            if (substitutor != null) {
+            if (substitutor!= null) {
                 bodyText = substitutor.substitute(bodyText);
             }
             for (int i = 0; i < rules.size(); i++) {
@@ -1307,7 +1283,8 @@ public class JciaDigester extends Digester {
      * Process notification that a namespace prefix is going out of scope.
      *
      * @param prefix Prefix that is going out of scope
-     * @throws SAXException if a parsing error is to be reported
+     *
+     * @exception SAXException if a parsing error is to be reported
      */
     public void endPrefixMapping(String prefix) throws SAXException {
 
@@ -1336,9 +1313,10 @@ public class JciaDigester extends Digester {
      * an XML element.
      *
      * @param buffer The characters from the XML document
-     * @param start  Starting offset into the buffer
-     * @param len    Number of characters from the buffer
-     * @throws SAXException if a parsing error is to be reported
+     * @param start Starting offset into the buffer
+     * @param len Number of characters from the buffer
+     *
+     * @exception SAXException if a parsing error is to be reported
      */
     public void ignorableWhitespace(char buffer[], int start, int len)
             throws SAXException {
@@ -1357,8 +1335,9 @@ public class JciaDigester extends Digester {
      * Process notification of a processing instruction that was encountered.
      *
      * @param target The processing instruction target
-     * @param data   The processing instruction data (if any)
-     * @throws SAXException if a parsing error is to be reported
+     * @param data The processing instruction data (if any)
+     *
+     * @exception SAXException if a parsing error is to be reported
      */
     public void processingInstruction(String target, String data)
             throws SAXException {
@@ -1409,7 +1388,8 @@ public class JciaDigester extends Digester {
      * Process notification of a skipped entity.
      *
      * @param name Name of the skipped entity
-     * @throws SAXException if a parsing error is to be reported
+     *
+     * @exception SAXException if a parsing error is to be reported
      */
     public void skippedEntity(String name) throws SAXException {
 
@@ -1425,7 +1405,7 @@ public class JciaDigester extends Digester {
     /**
      * Process notification of the beginning of the document being reached.
      *
-     * @throws SAXException if a parsing error is to be reported
+     * @exception SAXException if a parsing error is to be reported
      */
     public void startDocument() throws SAXException {
 
@@ -1444,14 +1424,14 @@ public class JciaDigester extends Digester {
      * Process notification of the start of an XML element being reached.
      *
      * @param namespaceURI The Namespace URI, or the empty string if the element
-     *                     has no Namespace URI or if Namespace processing is not being performed.
-     * @param localName    The local name (without prefix), or the empty
-     *                     string if Namespace processing is not being performed.
-     * @param qName        The qualified name (with prefix), or the empty
-     *                     string if qualified names are not available.\
-     * @param list         The attributes attached to the element. If there are
-     *                     no attributes, it shall be an empty Attributes object.
-     * @throws SAXException if a parsing error is to be reported
+     *   has no Namespace URI or if Namespace processing is not being performed.
+     * @param localName The local name (without prefix), or the empty
+     *   string if Namespace processing is not being performed.
+     * @param qName The qualified name (with prefix), or the empty
+     *   string if qualified names are not available.\
+     * @param list The attributes attached to the element. If there are
+     *   no attributes, it shall be an empty Attributes object.
+     * @exception SAXException if a parsing error is to be reported
      */
     public void startElement(String namespaceURI, String localName,
                              String qName, Attributes list)
@@ -1499,7 +1479,7 @@ public class JciaDigester extends Digester {
         matches.push(rules);
         if ((rules != null) && (rules.size() > 0)) {
             Substitutor substitutor = getSubstitutor();
-            if (substitutor != null) {
+            if (substitutor!= null) {
                 list = substitutor.substitute(list);
             }
             for (int i = 0; i < rules.size(); i++) {
@@ -1538,9 +1518,10 @@ public class JciaDigester extends Digester {
     /**
      * Process notification that a namespace prefix is coming in to scope.
      *
-     * @param prefix       Prefix that is being declared
+     * @param prefix Prefix that is being declared
      * @param namespaceURI Corresponding namespace URI being mapped to
-     * @throws SAXException if a parsing error is to be reported
+     *
+     * @exception SAXException if a parsing error is to be reported
      */
     public void startPrefixMapping(String prefix, String namespaceURI)
             throws SAXException {
@@ -1566,7 +1547,7 @@ public class JciaDigester extends Digester {
     /**
      * Receive notification of a notation declaration event.
      *
-     * @param name     The notation name
+     * @param name The notation name
      * @param publicId The public identifier (if any)
      * @param systemId The system identifier (if any)
      */
@@ -1583,7 +1564,7 @@ public class JciaDigester extends Digester {
     /**
      * Receive notification of an unparsed entity declaration event.
      *
-     * @param name     The unparsed entity name
+     * @param name The unparsed entity name
      * @param publicId The public identifier (if any)
      * @param systemId The system identifier (if any)
      * @param notation The name of the associated notation
@@ -1605,20 +1586,18 @@ public class JciaDigester extends Digester {
      * Set the <code>EntityResolver</code> used by SAX when resolving
      * public id and system id.
      * This must be called before the first call to <code>parse()</code>.
-     *
      * @param entityResolver a class that implement the <code>EntityResolver</code> interface.
      */
-    public void setEntityResolver(EntityResolver entityResolver) {
+    public void setEntityResolver(EntityResolver entityResolver){
         this.entityResolver = entityResolver;
     }
 
 
     /**
      * Return the Entity Resolver used by the SAX parser.
-     *
      * @return Return the Entity Resolver used by the SAX parser.
      */
-    public EntityResolver getEntityResolver() {
+    public EntityResolver getEntityResolver(){
         return entityResolver;
     }
 
@@ -1627,7 +1606,9 @@ public class JciaDigester extends Digester {
      *
      * @param publicId The public identifier of the entity being referenced
      * @param systemId The system identifier of the entity being referenced
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception SAXException if a parsing exception occurs
+     *
      */
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException {
@@ -1644,7 +1625,8 @@ public class JciaDigester extends Digester {
      * error handler (if any).
      *
      * @param exception The error information
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception SAXException if a parsing exception occurs
      */
     public void error(SAXParseException exception) throws SAXException {
 
@@ -1663,7 +1645,8 @@ public class JciaDigester extends Digester {
      * supplied error handler (if any).
      *
      * @param exception The fatal error information
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception SAXException if a parsing exception occurs
      */
     public void fatalError(SAXParseException exception) throws SAXException {
 
@@ -1682,7 +1665,8 @@ public class JciaDigester extends Digester {
      * error handler (if any).
      *
      * @param exception The warning information
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception SAXException if a parsing exception occurs
      */
     public void warning(SAXParseException exception) throws SAXException {
         if (errorHandler != null) {
@@ -1730,8 +1714,9 @@ public class JciaDigester extends Digester {
      * the root element from the object stack (if any).
      *
      * @param file File containing the XML data to be parsed
-     * @throws IOException  if an input/output error occurs
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception SAXException if a parsing exception occurs
      */
     public Object parse(File file) throws IOException, SAXException {
 
@@ -1747,14 +1732,14 @@ public class JciaDigester extends Digester {
         return (root);
 
     }
-
     /**
      * Parse the content of the specified input source using this Digester.
      * Returns the root element from the object stack (if any).
      *
      * @param input Input source containing the XML data to be parsed
-     * @throws IOException  if an input/output error occurs
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception SAXException if a parsing exception occurs
      */
     public Object parse(InputSource input) throws IOException, SAXException {
 
@@ -1775,8 +1760,9 @@ public class JciaDigester extends Digester {
      * Returns the root element from the object stack (if any).
      *
      * @param input Input stream containing the XML data to be parsed
-     * @throws IOException  if an input/output error occurs
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception SAXException if a parsing exception occurs
      */
     public Object parse(InputStream input) throws IOException, SAXException {
 
@@ -1798,8 +1784,9 @@ public class JciaDigester extends Digester {
      * Returns the root element from the object stack (if any).
      *
      * @param reader Reader containing the XML data to be parsed
-     * @throws IOException  if an input/output error occurs
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception SAXException if a parsing exception occurs
      */
     public Object parse(Reader reader) throws IOException, SAXException {
 
@@ -1821,8 +1808,9 @@ public class JciaDigester extends Digester {
      * Returns the root element from the object stack (if any).
      *
      * @param uri URI containing the XML data to be parsed
-     * @throws IOException  if an input/output error occurs
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception SAXException if a parsing exception occurs
      */
     public Object parse(String uri) throws IOException, SAXException {
 
@@ -1844,8 +1832,10 @@ public class JciaDigester extends Digester {
      * Returns the root element from the object stack (if any).
      *
      * @param url URL containing the XML data to be parsed
-     * @throws IOException  if an input/output error occurs
-     * @throws SAXException if a parsing exception occurs
+     *
+     * @exception IOException if an input/output error occurs
+     * @exception SAXException if a parsing exception occurs
+     *
      * @since 1.8
      */
     public Object parse(URL url) throws IOException, SAXException {
@@ -1881,9 +1871,9 @@ public class JciaDigester extends Digester {
      * <code>EntityResolver</code> has been set. (Setting a custom
      * <code>EntityResolver</code> overrides the internal implementation.)
      * </p>
-     *
-     * @param publicId  Public identifier of the DTD to be resolved
+     * @param publicId Public identifier of the DTD to be resolved
      * @param entityURL The URL to use for reading this DTD
+     *
      * @since 1.8
      */
     public void register(String publicId, URL entityURL) {
@@ -1900,7 +1890,7 @@ public class JciaDigester extends Digester {
      * <p>Convenience method that registers the string version of an entity URL
      * instead of a URL version.</p>
      *
-     * @param publicId  Public identifier of the entity to be resolved
+     * @param publicId Public identifier of the entity to be resolved
      * @param entityURL The URL to use for reading this entity
      */
     public void register(String publicId, String entityURL) {
@@ -1981,6 +1971,7 @@ public class JciaDigester extends Digester {
      * from the string version of a URL.</p>
      *
      * @param url URL for which to create an <code>InputSource</code>
+     *
      * @since 1.8
      */
     public InputSource createInputSourceFromURL(String url)
@@ -1999,7 +1990,7 @@ public class JciaDigester extends Digester {
      * This method sets the <code>Digester</code> property on the rule.</p>
      *
      * @param pattern Element matching pattern
-     * @param rule    Rule to be registered
+     * @param rule Rule to be registered
      */
     public void addRule(String pattern, Rule rule) {
 
@@ -2049,7 +2040,7 @@ public class JciaDigester extends Digester {
     /**
      * Add a "bean property setter" rule for the specified parameters.
      *
-     * @param pattern      Element matching pattern
+     * @param pattern Element matching pattern
      * @param propertyName Name of property to set
      * @see BeanPropertySetterRule
      */
@@ -2064,7 +2055,7 @@ public class JciaDigester extends Digester {
     /**
      * Add an "call method" rule for a method which accepts no arguments.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to be called
      * @see CallMethodRule
      */
@@ -2079,10 +2070,10 @@ public class JciaDigester extends Digester {
     /**
      * Add an "call method" rule for the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to be called
      * @param paramCount Number of expected parameters (or zero
-     *                   for a single parameter from the body of this element)
+     *  for a single parameter from the body of this element)
      * @see CallMethodRule
      */
     public void addCallMethod(String pattern, String methodName,
@@ -2101,15 +2092,15 @@ public class JciaDigester extends Digester {
      * method, unless <code>paramTypes</code> is null or empty, in this
      * case the rule will call the specified method with no arguments.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to be called
      * @param paramCount Number of expected parameters (or zero
-     *                   for a single parameter from the body of this element)
+     *  for a single parameter from the body of this element)
      * @param paramTypes Set of Java class names for the types
-     *                   of the expected parameters
-     *                   (if you wish to use a primitive type, specify the corresonding
-     *                   Java wrapper class instead, such as <code>java.lang.Boolean</code>
-     *                   for a <code>boolean</code> parameter)
+     *  of the expected parameters
+     *  (if you wish to use a primitive type, specify the corresonding
+     *  Java wrapper class instead, such as <code>java.lang.Boolean</code>
+     *  for a <code>boolean</code> parameter)
      * @see CallMethodRule
      */
     public void addCallMethod(String pattern, String methodName,
@@ -2131,14 +2122,14 @@ public class JciaDigester extends Digester {
      * method, unless <code>paramTypes</code> is null or empty, in this
      * case the rule will call the specified method with no arguments.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to be called
      * @param paramCount Number of expected parameters (or zero
-     *                   for a single parameter from the body of this element)
+     *  for a single parameter from the body of this element)
      * @param paramTypes The Java class names of the arguments
-     *                   (if you wish to use a primitive type, specify the corresonding
-     *                   Java wrapper class instead, such as <code>java.lang.Boolean</code>
-     *                   for a <code>boolean</code> parameter)
+     *  (if you wish to use a primitive type, specify the corresonding
+     *  Java wrapper class instead, such as <code>java.lang.Boolean</code>
+     *  for a <code>boolean</code> parameter)
      * @see CallMethodRule
      */
     public void addCallMethod(String pattern, String methodName,
@@ -2156,9 +2147,9 @@ public class JciaDigester extends Digester {
     /**
      * Add a "call parameter" rule for the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param paramIndex Zero-relative parameter index to set
-     *                   (from the body of this element)
+     *  (from the body of this element)
      * @see CallParamRule
      */
     public void addCallParam(String pattern, int paramIndex) {
@@ -2172,11 +2163,11 @@ public class JciaDigester extends Digester {
     /**
      * Add a "call parameter" rule for the specified parameters.
      *
-     * @param pattern       Element matching pattern
-     * @param paramIndex    Zero-relative parameter index to set
-     *                      (from the specified attribute)
+     * @param pattern Element matching pattern
+     * @param paramIndex Zero-relative parameter index to set
+     *  (from the specified attribute)
      * @param attributeName Attribute whose value is used as the
-     *                      parameter value
+     *  parameter value
      * @see CallParamRule
      */
     public void addCallParam(String pattern, int paramIndex,
@@ -2194,7 +2185,7 @@ public class JciaDigester extends Digester {
      * or from the current element body text.
      *
      * @param paramIndex The zero-relative parameter number
-     * @param fromStack  Should the call parameter be taken from the top of the stack?
+     * @param fromStack Should the call parameter be taken from the top of the stack?
      * @see CallParamRule
      */
     public void addCallParam(String pattern, int paramIndex, boolean fromStack) {
@@ -2210,7 +2201,7 @@ public class JciaDigester extends Digester {
      *
      * @param paramIndex The zero-relative parameter number
      * @param stackIndex set the call parameter to the stackIndex'th object down the stack,
-     *                   where 0 is the top of the stack, 1 the next element down and so on
+     * where 0 is the top of the stack, 1 the next element down and so on
      * @see CallMethodRule
      */
     public void addCallParam(String pattern, int paramIndex, int stackIndex) {
@@ -2225,11 +2216,11 @@ public class JciaDigester extends Digester {
      * <code>Digester</code> matching path.
      * This is sometimes useful when using rules that support wildcards.
      *
-     * @param pattern    the pattern that this rule should match
+     * @param pattern the pattern that this rule should match
      * @param paramIndex The zero-relative parameter number
      * @see CallMethodRule
      */
-    public void addCallParamPath(String pattern, int paramIndex) {
+    public void addCallParamPath(String pattern,int paramIndex) {
         addRule(pattern, new PathCallParamRule(paramIndex));
     }
 
@@ -2247,9 +2238,10 @@ public class JciaDigester extends Digester {
      * type, according to the usual type-conversion rules).
      *
      * @param paramIndex The zero-relative parameter number
-     * @param paramObj   Any arbitrary object to be passed to the target
-     *                   method.
+     * @param paramObj Any arbitrary object to be passed to the target
+     * method.
      * @see CallMethodRule
+     *
      * @since 1.6
      */
     public void addObjectParam(String pattern, int paramIndex,
@@ -2264,7 +2256,7 @@ public class JciaDigester extends Digester {
      * Add a "factory create" rule for the specified parameters.
      * Exceptions thrown during the object creation process will be propagated.
      *
-     * @param pattern   Element matching pattern
+     * @param pattern Element matching pattern
      * @param className Java class name of the object creation factory class
      * @see FactoryCreateRule
      */
@@ -2280,7 +2272,7 @@ public class JciaDigester extends Digester {
      * Exceptions thrown during the object creation process will be propagated.
      *
      * @param pattern Element matching pattern
-     * @param clazz   Java class of the object creation factory class
+     * @param clazz Java class of the object creation factory class
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(String pattern, Class<?> clazz) {
@@ -2294,10 +2286,10 @@ public class JciaDigester extends Digester {
      * Add a "factory create" rule for the specified parameters.
      * Exceptions thrown during the object creation process will be propagated.
      *
-     * @param pattern       Element matching pattern
-     * @param className     Java class name of the object creation factory class
+     * @param pattern Element matching pattern
+     * @param className Java class name of the object creation factory class
      * @param attributeName Attribute name which, if present, overrides the
-     *                      value specified by <code>className</code>
+     *  value specified by <code>className</code>
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(String pattern, String className,
@@ -2312,10 +2304,10 @@ public class JciaDigester extends Digester {
      * Add a "factory create" rule for the specified parameters.
      * Exceptions thrown during the object creation process will be propagated.
      *
-     * @param pattern       Element matching pattern
-     * @param clazz         Java class of the object creation factory class
+     * @param pattern Element matching pattern
+     * @param clazz Java class of the object creation factory class
      * @param attributeName Attribute name which, if present, overrides the
-     *                      value specified by <code>className</code>
+     *  value specified by <code>className</code>
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(String pattern, Class<?> clazz,
@@ -2330,9 +2322,9 @@ public class JciaDigester extends Digester {
      * Add a "factory create" rule for the specified parameters.
      * Exceptions thrown during the object creation process will be propagated.
      *
-     * @param pattern         Element matching pattern
+     * @param pattern Element matching pattern
      * @param creationFactory Previously instantiated ObjectCreationFactory
-     *                        to be utilized
+     *  to be utilized
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(String pattern,
@@ -2345,10 +2337,10 @@ public class JciaDigester extends Digester {
     /**
      * Add a "factory create" rule for the specified parameters.
      *
-     * @param pattern                Element matching pattern
-     * @param className              Java class name of the object creation factory class
+     * @param pattern Element matching pattern
+     * @param className Java class name of the object creation factory class
      * @param ignoreCreateExceptions when <code>true</code> any exceptions thrown during
-     *                               object creation will be ignored.
+     * object creation will be ignored.
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(
@@ -2366,10 +2358,10 @@ public class JciaDigester extends Digester {
     /**
      * Add a "factory create" rule for the specified parameters.
      *
-     * @param pattern                Element matching pattern
-     * @param clazz                  Java class of the object creation factory class
+     * @param pattern Element matching pattern
+     * @param clazz Java class of the object creation factory class
      * @param ignoreCreateExceptions when <code>true</code> any exceptions thrown during
-     *                               object creation will be ignored.
+     * object creation will be ignored.
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(
@@ -2387,12 +2379,12 @@ public class JciaDigester extends Digester {
     /**
      * Add a "factory create" rule for the specified parameters.
      *
-     * @param pattern                Element matching pattern
-     * @param className              Java class name of the object creation factory class
-     * @param attributeName          Attribute name which, if present, overrides the
-     *                               value specified by <code>className</code>
+     * @param pattern Element matching pattern
+     * @param className Java class name of the object creation factory class
+     * @param attributeName Attribute name which, if present, overrides the
+     *  value specified by <code>className</code>
      * @param ignoreCreateExceptions when <code>true</code> any exceptions thrown during
-     *                               object creation will be ignored.
+     * object creation will be ignored.
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(
@@ -2411,12 +2403,12 @@ public class JciaDigester extends Digester {
     /**
      * Add a "factory create" rule for the specified parameters.
      *
-     * @param pattern                Element matching pattern
-     * @param clazz                  Java class of the object creation factory class
-     * @param attributeName          Attribute name which, if present, overrides the
-     *                               value specified by <code>className</code>
+     * @param pattern Element matching pattern
+     * @param clazz Java class of the object creation factory class
+     * @param attributeName Attribute name which, if present, overrides the
+     *  value specified by <code>className</code>
      * @param ignoreCreateExceptions when <code>true</code> any exceptions thrown during
-     *                               object creation will be ignored.
+     * object creation will be ignored.
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(
@@ -2435,11 +2427,11 @@ public class JciaDigester extends Digester {
     /**
      * Add a "factory create" rule for the specified parameters.
      *
-     * @param pattern                Element matching pattern
-     * @param creationFactory        Previously instantiated ObjectCreationFactory
-     *                               to be utilized
+     * @param pattern Element matching pattern
+     * @param creationFactory Previously instantiated ObjectCreationFactory
+     *  to be utilized
      * @param ignoreCreateExceptions when <code>true</code> any exceptions thrown during
-     *                               object creation will be ignored.
+     * object creation will be ignored.
      * @see FactoryCreateRule
      */
     public void addFactoryCreate(String pattern,
@@ -2455,7 +2447,7 @@ public class JciaDigester extends Digester {
     /**
      * Add an "object create" rule for the specified parameters.
      *
-     * @param pattern   Element matching pattern
+     * @param pattern Element matching pattern
      * @param className Java class name to be created
      * @see ObjectCreateRule
      */
@@ -2471,7 +2463,7 @@ public class JciaDigester extends Digester {
      * Add an "object create" rule for the specified parameters.
      *
      * @param pattern Element matching pattern
-     * @param clazz   Java class to be created
+     * @param clazz Java class to be created
      * @see ObjectCreateRule
      */
     public void addObjectCreate(String pattern, Class<?> clazz) {
@@ -2485,10 +2477,10 @@ public class JciaDigester extends Digester {
     /**
      * Add an "object create" rule for the specified parameters.
      *
-     * @param pattern       Element matching pattern
-     * @param className     Default Java class name to be created
+     * @param pattern Element matching pattern
+     * @param className Default Java class name to be created
      * @param attributeName Attribute name that optionally overrides
-     *                      the default Java class name to be created
+     *  the default Java class name to be created
      * @see ObjectCreateRule
      */
     public void addObjectCreate(String pattern, String className,
@@ -2503,10 +2495,10 @@ public class JciaDigester extends Digester {
     /**
      * Add an "object create" rule for the specified parameters.
      *
-     * @param pattern       Element matching pattern
+     * @param pattern Element matching pattern
      * @param attributeName Attribute name that optionally overrides
-     * @param clazz         Default Java class to be created
-     *                      the default Java class name to be created
+     * @param clazz Default Java class to be created
+     *  the default Java class name to be created
      * @see ObjectCreateRule
      */
     public void addObjectCreate(String pattern,
@@ -2522,6 +2514,7 @@ public class JciaDigester extends Digester {
      * Adds an {@link SetNestedPropertiesRule}.
      *
      * @param pattern register the rule with this pattern
+     *
      * @since 1.6
      */
     public void addSetNestedProperties(String pattern) {
@@ -2532,9 +2525,10 @@ public class JciaDigester extends Digester {
     /**
      * Adds an {@link SetNestedPropertiesRule}.
      *
-     * @param pattern      register the rule with this pattern
-     * @param elementName  elment name that a property maps to
+     * @param pattern register the rule with this pattern
+     * @param elementName elment name that a property maps to
      * @param propertyName property name of the element mapped from
+     *
      * @since 1.6
      */
     public void addSetNestedProperties(String pattern, String elementName, String propertyName) {
@@ -2545,9 +2539,10 @@ public class JciaDigester extends Digester {
     /**
      * Adds an {@link SetNestedPropertiesRule}.
      *
-     * @param pattern       register the rule with this pattern
-     * @param elementNames  elment names that (in order) map to properties
+     * @param pattern register the rule with this pattern
+     * @param elementNames elment names that (in order) map to properties
      * @param propertyNames property names that (in order) elements are mapped to
+     *
      * @since 1.6
      */
     public void addSetNestedProperties(String pattern, String[] elementNames, String[] propertyNames) {
@@ -2559,7 +2554,7 @@ public class JciaDigester extends Digester {
     /**
      * Add a "set next" rule for the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to call on the parent element
      * @see SetNextRule
      */
@@ -2574,12 +2569,12 @@ public class JciaDigester extends Digester {
     /**
      * Add a "set next" rule for the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to call on the parent element
-     * @param paramType  Java class name of the expected parameter type
-     *                   (if you wish to use a primitive type, specify the corresonding
-     *                   Java wrapper class instead, such as <code>java.lang.Boolean</code>
-     *                   for a <code>boolean</code> parameter)
+     * @param paramType Java class name of the expected parameter type
+     *  (if you wish to use a primitive type, specify the corresonding
+     *  Java wrapper class instead, such as <code>java.lang.Boolean</code>
+     *  for a <code>boolean</code> parameter)
      * @see SetNextRule
      */
     public void addSetNext(String pattern, String methodName,
@@ -2594,7 +2589,7 @@ public class JciaDigester extends Digester {
     /**
      * Add {@link SetRootRule} with the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to call on the root object
      * @see SetRootRule
      */
@@ -2609,9 +2604,9 @@ public class JciaDigester extends Digester {
     /**
      * Add {@link SetRootRule} with the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to call on the root object
-     * @param paramType  Java class name of the expected parameter type
+     * @param paramType Java class name of the expected parameter type
      * @see SetRootRule
      */
     public void addSetRoot(String pattern, String methodName,
@@ -2639,9 +2634,9 @@ public class JciaDigester extends Digester {
      * Add a "set properties" rule with a single overridden parameter.
      * See {@link SetPropertiesRule#SetPropertiesRule(String attributeName, String propertyName)}
      *
-     * @param pattern       Element matching pattern
+     * @param pattern Element matching pattern
      * @param attributeName map this attribute
-     * @param propertyName  to this property
+     * @param propertyName to this property
      * @see SetPropertiesRule
      */
     public void addSetProperties(
@@ -2658,15 +2653,15 @@ public class JciaDigester extends Digester {
      * Add a "set properties" rule with overridden parameters.
      * See {@link SetPropertiesRule#SetPropertiesRule(String [] attributeNames, String [] propertyNames)}
      *
-     * @param pattern        Element matching pattern
+     * @param pattern Element matching pattern
      * @param attributeNames names of attributes with custom mappings
-     * @param propertyNames  property names these attributes map to
+     * @param propertyNames property names these attributes map to
      * @see SetPropertiesRule
      */
     public void addSetProperties(
             String pattern,
-            String[] attributeNames,
-            String[] propertyNames) {
+            String [] attributeNames,
+            String [] propertyNames) {
 
         addRule(pattern,
                 new SetPropertiesRule(attributeNames, propertyNames));
@@ -2678,8 +2673,8 @@ public class JciaDigester extends Digester {
      * Add a "set property" rule for the specified parameters.
      *
      * @param pattern Element matching pattern
-     * @param name    Attribute name containing the property name to be set
-     * @param value   Attribute name containing the property value to set
+     * @param name Attribute name containing the property name to be set
+     * @param value Attribute name containing the property value to set
      * @see SetPropertyRule
      */
     public void addSetProperty(String pattern, String name, String value) {
@@ -2693,7 +2688,7 @@ public class JciaDigester extends Digester {
     /**
      * Add a "set top" rule for the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to call on the parent element
      * @see SetTopRule
      */
@@ -2708,12 +2703,12 @@ public class JciaDigester extends Digester {
     /**
      * Add a "set top" rule for the specified parameters.
      *
-     * @param pattern    Element matching pattern
+     * @param pattern Element matching pattern
      * @param methodName Method name to call on the parent element
-     * @param paramType  Java class name of the expected parameter type
-     *                   (if you wish to use a primitive type, specify the corresonding
-     *                   Java wrapper class instead, such as <code>java.lang.Boolean</code>
-     *                   for a <code>boolean</code> parameter)
+     * @param paramType Java class name of the expected parameter type
+     *  (if you wish to use a primitive type, specify the corresonding
+     *  Java wrapper class instead, such as <code>java.lang.Boolean</code>
+     *  for a <code>boolean</code> parameter)
      * @see SetTopRule
      */
     public void addSetTop(String pattern, String methodName,
@@ -2777,7 +2772,7 @@ public class JciaDigester extends Digester {
      * is out of range, return <code>null</code>.
      *
      * @param n Index of the desired element, where 0 is the top of the stack,
-     *          1 is the next element down, and so on.
+     *  1 is the next element down, and so on.
      */
     public Object peek(int n) {
 
@@ -2838,7 +2833,8 @@ public class JciaDigester extends Digester {
      * If no stack already exists with the given name then one will be created.
      *
      * @param stackName the name of the stack onto which the object should be pushed
-     * @param value     the Object to be pushed onto the named stack.
+     * @param value the Object to be pushed onto the named stack.
+     *
      * @since 1.6
      */
     public void push(String stackName, Object value) {
@@ -2864,6 +2860,7 @@ public class JciaDigester extends Digester {
      * @return the top <code>Object</code> on the stack or or null if the stack is either
      * empty or has not been created yet
      * @throws EmptyStackException if the named stack is empty
+     *
      * @since 1.6
      */
     public Object pop(String stackName) {
@@ -2896,6 +2893,7 @@ public class JciaDigester extends Digester {
      * @return the top <code>Object</code> on the stack or null if the stack is either
      * empty or has not been created yet
      * @throws EmptyStackException if the named stack is empty
+     *
      * @since 1.6
      */
     public Object peek(String stackName) {
@@ -2910,16 +2908,17 @@ public class JciaDigester extends Digester {
      * if no objects have been pushed onto it yet.</p>
      *
      * @param stackName the name of the stack to be peeked
-     * @param n         Index of the desired element, where 0 is the top of the stack,
-     *                  1 is the next element down, and so on.
+     * @param n Index of the desired element, where 0 is the top of the stack,
+     *  1 is the next element down, and so on.
      * @return the specified <code>Object</code> on the stack.
      * @throws EmptyStackException if the named stack is empty
+     *
      * @since 1.6
      */
     public Object peek(String stackName, int n) {
         Object result = null;
         Stack<Object> namedStack = stacksByName.get(stackName);
-        if (namedStack == null) {
+        if (namedStack == null ) {
             if (log.isDebugEnabled()) {
                 log.debug("Stack '" + stackName + "' is empty");
             }
@@ -2939,16 +2938,16 @@ public class JciaDigester extends Digester {
      * <p>Is the stack with the given name empty?</p>
      * <p><strong>Note:</strong> a stack is considered empty
      * if no objects have been pushed onto it yet.</p>
-     *
      * @param stackName the name of the stack whose emptiness
-     *                  should be evaluated
+     * should be evaluated
      * @return true if the given stack if empty
+     *
      * @since 1.6
      */
     public boolean isEmpty(String stackName) {
         boolean result = true;
         Stack<Object> namedStack = stacksByName.get(stackName);
-        if (namedStack != null) {
+        if (namedStack != null ) {
             result = namedStack.isEmpty();
         }
         return result;
@@ -2978,7 +2977,7 @@ public class JciaDigester extends Digester {
      * after parsing has completed.
      *
      * @return the root object that has been created after parsing
-     * or null if the digester has not parsed any XML yet.
+     *  or null if the digester has not parsed any XML yet.
      */
     public Object getRoot() {
         return root;
@@ -3105,8 +3104,9 @@ public class JciaDigester extends Digester {
      * is preferred.
      *
      * @param match The current match position
+     *
      * @deprecated Call <code>match()</code> on the <code>Rules</code>
-     * implementation returned by <code>getRules()</code>
+     *  implementation returned by <code>getRules()</code>
      */
     List<Rule> getRules(String match) {
 
@@ -3143,7 +3143,7 @@ public class JciaDigester extends Digester {
      * See {@link #params}.</p>
      *
      * @param n Index of the desired element, where 0 is the top of the stack,
-     *          1 is the next element down, and so on.
+     *  1 is the next element down, and so on.
      */
     public Object peekParams(int n) {
 

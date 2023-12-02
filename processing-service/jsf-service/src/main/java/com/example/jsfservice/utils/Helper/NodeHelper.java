@@ -11,7 +11,6 @@ public class NodeHelper {
         }
         return node;
     }
-
     public static Node getFileNode(Node node) {
         if (node == null || node instanceof FileNode)
             return node;

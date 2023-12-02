@@ -4,7 +4,7 @@ import com.thealgorithms.datastructures.trees.BinaryTree.Node;
 
 /**
  * Given a sorted array. Create a balanced binary search tree from it.
- * <p>
+ *
  * Steps: 1. Find the middle element of array. This will act as root 2. Use the
  * left half recursively to create left subtree 3. Use the right half
  * recursively to create right subtree
@@ -12,10 +12,10 @@ import com.thealgorithms.datastructures.trees.BinaryTree.Node;
 public class CreateBSTFromSortedArray {
 
     public static void main(String[] args) {
-        test(new int[]{});
-        test(new int[]{1, 2, 3});
-        test(new int[]{1, 2, 3, 4, 5});
-        test(new int[]{1, 2, 3, 4, 5, 6, 7});
+        test(new int[] {});
+        test(new int[] { 1, 2, 3 });
+        test(new int[] { 1, 2, 3, 4, 5 });
+        test(new int[] { 1, 2, 3, 4, 5, 6, 7 });
     }
 
     private static void test(int[] array) {

@@ -14,8 +14,8 @@ public class FibonacciSearch implements SearchAlgorithm {
 
     /**
      * @param array is a sorted array where the element has to be searched
-     * @param key   is an element whose position has to be found
-     * @param <T>   is any comparable type
+     * @param key is an element whose position has to be found
+     * @param <T> is any comparable type
      * @return index of the element
      */
     @Override
@@ -59,7 +59,7 @@ public class FibonacciSearch implements SearchAlgorithm {
 
     // Driver Program
     public static void main(String[] args) {
-        Integer[] integers = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
+        Integer[] integers = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 };
 
         int size = integers.length;
         Integer shouldBeFound = 128;
@@ -67,14 +67,14 @@ public class FibonacciSearch implements SearchAlgorithm {
         int atIndex = fsearch.find(integers, shouldBeFound);
 
         System.out.println(
-                "Should be found: " +
-                        shouldBeFound +
-                        ". Found " +
-                        integers[atIndex] +
-                        " at index " +
-                        atIndex +
-                        ". An array length " +
-                        size
+            "Should be found: " +
+            shouldBeFound +
+            ". Found " +
+            integers[atIndex] +
+            " at index " +
+            atIndex +
+            ". An array length " +
+            size
         );
     }
 }

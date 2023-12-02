@@ -1,6 +1,8 @@
 package com.thealgorithms.datastructures.queues;
 
 
+
+
 /**
  * This class implements a PriorityQueue.
  *

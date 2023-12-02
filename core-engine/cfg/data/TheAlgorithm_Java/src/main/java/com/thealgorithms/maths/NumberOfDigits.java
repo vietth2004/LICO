@@ -7,15 +7,15 @@ public class NumberOfDigits {
 
     public static void main(String[] args) {
         int[] numbers = {
-                0,
-                12,
-                123,
-                1234,
-                -12345,
-                123456,
-                1234567,
-                12345678,
-                123456789,
+            0,
+            12,
+            123,
+            1234,
+            -12345,
+            123456,
+            1234567,
+            12345678,
+            123456789,
         };
         for (int i = 0; i < numbers.length; ++i) {
             assert numberOfDigits(numbers[i]) == i + 1;
@@ -48,8 +48,8 @@ public class NumberOfDigits {
      */
     private static int numberOfDigitsFast(int number) {
         return number == 0
-                ? 1
-                : (int) Math.floor(Math.log10(Math.abs(number)) + 1);
+            ? 1
+            : (int) Math.floor(Math.log10(Math.abs(number)) + 1);
     }
 
     /**

@@ -1,7 +1,5 @@
-/**
- * Author : Siddhant Swarup Mallick
+/** Author : Siddhant Swarup Mallick
  * Github : https://github.com/siddhant2002
- * Program description - To sort the LinkList as per sorting technique
  */
 
 /** Program description - To sort the LinkList as per sorting technique */
@@ -47,8 +45,8 @@ public class LinkListSort {
                 // array b is sorted and it will return true when checked with sorted list
                 LinkListSort uu = new LinkListSort();
                 return uu.compare(a, b);
-            // The given array and the expected array is checked if both are same then true
-            // is displayed else false is displayed
+                // The given array and the expected array is checked if both are same then true
+                // is displayed else false is displayed
             case 2:
                 Node start1 = null, prev1 = null, fresh1, ptr1;
                 for (int i1 = 0; i1 < a.length; i1++) {
@@ -72,8 +70,8 @@ public class LinkListSort {
                 LinkListSort uu1 = new LinkListSort();
                 // array b is not sorted and it will return false when checked with sorted list
                 return uu1.compare(a, b);
-            // The given array and the expected array is checked if both are same then true
-            // is displayed else false is displayed
+                // The given array and the expected array is checked if both are same then true
+                // is displayed else false is displayed
             case 3:
                 Task2 mm = new Task2();
                 Node start2 = null, prev2 = null, fresh2, ptr2;
@@ -98,8 +96,8 @@ public class LinkListSort {
                 // array b is sorted and it will return true when checked with sorted list
                 LinkListSort uu2 = new LinkListSort();
                 return uu2.compare(a, b);
-            // The given array and the expected array is checked if both are same then true
-            // is displayed else false is displayed
+                // The given array and the expected array is checked if both are same then true
+                // is displayed else false is displayed
             default:
                 // default is used incase user puts a unauthorized value
                 System.out.println("Wrong choice");

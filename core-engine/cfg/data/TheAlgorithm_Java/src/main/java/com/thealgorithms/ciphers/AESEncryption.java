@@ -30,10 +30,10 @@ public class AESEncryption {
 
         System.out.println("Original Text:" + plainText);
         System.out.println(
-                "AES Key (Hex Form):" + bytesToHex(secKey.getEncoded())
+            "AES Key (Hex Form):" + bytesToHex(secKey.getEncoded())
         );
         System.out.println(
-                "Encrypted Text (Hex Form):" + bytesToHex(cipherText)
+            "Encrypted Text (Hex Form):" + bytesToHex(cipherText)
         );
         System.out.println("Descrypted Text:" + decryptedText);
     }
@@ -46,7 +46,7 @@ public class AESEncryption {
      * @throws NoSuchAlgorithmException (from KeyGenrator)
      */
     public static SecretKey getSecretEncryptionKey()
-            throws NoSuchAlgorithmException {
+        throws NoSuchAlgorithmException {
         KeyGenerator aesKeyGenerator = KeyGenerator.getInstance("AES");
         aesKeyGenerator.init(128); // The AES key size in number of bits
         return aesKeyGenerator.generateKey();
@@ -56,14 +56,14 @@ public class AESEncryption {
      * Encrypts plainText in AES using the secret key
      *
      * @return byteCipherText (The encrypted text)
-     * @throws NoSuchPaddingException    (from Cipher)
-     * @throws NoSuchAlgorithmException  (from Cipher)
-     * @throws InvalidKeyException       (from Cipher)
-     * @throws BadPaddingException       (from Cipher)
+     * @throws NoSuchPaddingException (from Cipher)
+     * @throws NoSuchAlgorithmException (from Cipher)
+     * @throws InvalidKeyException (from Cipher)
+     * @throws BadPaddingException (from Cipher)
      * @throws IllegalBlockSizeException (from Cipher)
      */
     public static byte[] encryptText(String plainText, SecretKey secKey)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         // AES defaults to AES/ECB/PKCS5Padding in Java 7
         aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
         aesCipher.init(Cipher.ENCRYPT_MODE, secKey);

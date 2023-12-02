@@ -12,7 +12,7 @@ public class StrutsResultType extends ResultTypeConfig implements IStrutsElement
 
     private ResultTypeConfig resultTypeConfig;
     private Node treeNode;
-
+    
     public StrutsResultType(Node treeNode, ResultTypeConfig resultTypeConfig) {
         super("", "");
         this.treeNode = treeNode;

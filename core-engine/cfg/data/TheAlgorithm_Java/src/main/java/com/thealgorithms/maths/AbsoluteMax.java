@@ -20,10 +20,10 @@ public class AbsoluteMax {
         };
 
         Arrays
-                .stream(numbers)
-                .skip(1)
-                .filter(number -> Math.abs(number) > Math.abs(absMaxWrapper.value))
-                .forEach(number -> absMaxWrapper.value = number);
+            .stream(numbers)
+            .skip(1)
+            .filter(number -> Math.abs(number) > Math.abs(absMaxWrapper.value))
+            .forEach(number -> absMaxWrapper.value = number);
 
         return absMaxWrapper.value;
     }

@@ -71,14 +71,14 @@ public class HashMapCuckooHashing {
 
         if (isFull()) {
             System.out.println(
-                    "Hash table is full, lengthening & rehashing table"
+                "Hash table is full, lengthening & rehashing table"
             );
             reHashTableIncreasesTableSize();
         }
 
         if (checkTableContainsKey(key)) {
             throw new IllegalArgumentException(
-                    "Key already inside, no duplicates allowed"
+                "Key already inside, no duplicates allowed"
             );
         }
 
@@ -87,8 +87,8 @@ public class HashMapCuckooHashing {
             hash = hashFunction1(key);
 
             if (
-                    (buckets[hash] == null) ||
-                            Objects.equals(buckets[hash], AVAILABLE)
+                (buckets[hash] == null) ||
+                Objects.equals(buckets[hash], AVAILABLE)
             ) {
                 buckets[hash] = wrappedInt;
                 size++;
@@ -117,7 +117,7 @@ public class HashMapCuckooHashing {
             wrappedInt = temp;
         }
         System.out.println(
-                "Infinite loop occurred, lengthening & rehashing table"
+            "Infinite loop occurred, lengthening & rehashing table"
         );
         reHashTableIncreasesTableSize();
         insertKey2HashTable(key);
@@ -126,6 +126,7 @@ public class HashMapCuckooHashing {
     /**
      * creates new HashMapCuckooHashing object, then inserts each of the elements in the previous table to it with its new hash functions.
      * then refers current array to new table.
+     *
      */
     public void reHashTableIncreasesTableSize() {
         HashMapCuckooHashing newT = new HashMapCuckooHashing(tableSize * 2);
@@ -164,7 +165,7 @@ public class HashMapCuckooHashing {
             return;
         }
         throw new IllegalArgumentException(
-                "Key " + key + " already inside, no duplicates allowed"
+            "Key " + key + " already inside, no duplicates allowed"
         );
     }
 
@@ -177,7 +178,7 @@ public class HashMapCuckooHashing {
                 System.out.println("Bucket " + i + ": Empty");
             } else {
                 System.out.println(
-                        "Bucket " + i + ": " + buckets[i].toString()
+                    "Bucket " + i + ": " + buckets[i].toString()
                 );
             }
         }
@@ -202,11 +203,10 @@ public class HashMapCuckooHashing {
 
         hash = hashFunction2(key);
         if (
-                !Objects.equals(buckets[hash], wrappedInt)
+            !Objects.equals(buckets[hash], wrappedInt)
         ) throw new IllegalArgumentException(
-                "Key " + key + " not found in table"
-        );
-        else {
+            "Key " + key + " not found in table"
+        ); else {
             return hash;
         }
     }
@@ -219,14 +219,14 @@ public class HashMapCuckooHashing {
      */
     public boolean checkTableContainsKey(int key) {
         return (
-                (
-                        buckets[hashFunction1(key)] != null &&
-                                buckets[hashFunction1(key)].equals(key)
-                ) ||
-                        (
-                                buckets[hashFunction2(key)] != null &&
-                                        buckets[hashFunction2(key)] == key
-                        )
+            (
+                buckets[hashFunction1(key)] != null &&
+                buckets[hashFunction1(key)].equals(key)
+            ) ||
+            (
+                buckets[hashFunction2(key)] != null &&
+                buckets[hashFunction2(key)] == key
+            )
         );
     }
 
@@ -238,8 +238,8 @@ public class HashMapCuckooHashing {
         double factor = (double) size / tableSize;
         if (factor > .7) {
             System.out.printf(
-                    "Load factor is %.2f , rehashing table\n",
-                    factor
+                "Load factor is %.2f , rehashing table\n",
+                factor
             );
             reHashTableIncreasesTableSize();
         }

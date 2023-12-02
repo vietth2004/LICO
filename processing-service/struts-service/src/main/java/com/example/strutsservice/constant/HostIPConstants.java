@@ -4,20 +4,7 @@ import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.example.strutsservice.constant.HostConstant.API_GATEWAY;
-import static com.example.strutsservice.constant.HostConstant.CIA_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.FILE_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.GITHUB_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.JAVA_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.JSF_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.PARSER_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.PROJECT_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.SPRING_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.STRUT_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.USER_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.UTEST_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.UTILITY_SERVICE;
-import static com.example.strutsservice.constant.HostConstant.VERSION_COMPARE_SERVICE;
+import static com.example.strutsservice.constant.HostConstant.*;
 
 @Component
 public class HostIPConstants {
@@ -76,8 +63,7 @@ public class HostIPConstants {
     public String getStrutServiceIp() {
         return eurekaClient.getApplication(STRUT_SERVICE).getInstances().get(0).getIPAddr();
     }
-
-    public String getUnitTestingIP() {
-        return eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
+    public String getUnitTestingIP(){
+        return  eurekaClient.getApplication(UTEST_SERVICE).getInstances().get(0).getIPAddr();
     }
 }

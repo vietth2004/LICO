@@ -20,7 +20,7 @@ class InterpolationSearch {
 
     /**
      * @param array is a sorted array
-     * @param key   is a value what shoulb be found in the array
+     * @param key is a value what shoulb be found in the array
      * @return an index if the array contains the key unless -1
      */
     public int find(int array[], int key) {
@@ -33,11 +33,11 @@ class InterpolationSearch {
             // Probing the position with keeping
             // uniform distribution in mind.
             int pos =
-                    start +
-                            (
-                                    ((end - start) / (array[end] - array[start])) *
-                                            (key - array[start])
-                            );
+                start +
+                (
+                    ((end - start) / (array[end] - array[start])) *
+                    (key - array[start])
+                );
 
             // Condition of target found
             if (array[pos] == key) {
@@ -61,10 +61,10 @@ class InterpolationSearch {
         int size = 100;
         int maxElement = 100000;
         int[] integers = IntStream
-                .generate(() -> r.nextInt(maxElement))
-                .limit(size)
-                .sorted()
-                .toArray();
+            .generate(() -> r.nextInt(maxElement))
+            .limit(size)
+            .sorted()
+            .toArray();
 
         // the element that should be found
         Integer shouldBeFound = integers[r.nextInt(size - 1)];
@@ -73,22 +73,22 @@ class InterpolationSearch {
         int atIndex = search.find(integers, shouldBeFound);
 
         System.out.println(
-                String.format(
-                        "Should be found: %d. Found %d at index %d. An array length %d",
-                        shouldBeFound,
-                        integers[atIndex],
-                        atIndex,
-                        size
-                )
+            String.format(
+                "Should be found: %d. Found %d at index %d. An array length %d",
+                shouldBeFound,
+                integers[atIndex],
+                atIndex,
+                size
+            )
         );
 
         int toCheck = Arrays.binarySearch(integers, shouldBeFound);
         System.out.println(
-                format(
-                        "Found by system method at an index: %d. Is equal: %b",
-                        toCheck,
-                        toCheck == atIndex
-                )
+            format(
+                "Found by system method at an index: %d. Is equal: %b",
+                toCheck,
+                toCheck == atIndex
+            )
         );
     }
 }

@@ -15,7 +15,7 @@ public class ParseInteger {
      * @param s the string
      * @return the integer value represented by the argument in decimal.
      * @throws NumberFormatException if the {@code string} does not contain a
-     *                               parsable integer.
+     * parsable integer.
      */
     public static int parseInt(String s) {
         if (s == null || s.length() == 0) {
@@ -25,9 +25,9 @@ public class ParseInteger {
         boolean isPositive = s.charAt(0) == '+';
         int number = 0;
         for (
-                int i = isNegative ? 1 : isPositive ? 1 : 0, length = s.length();
-                i < length;
-                ++i
+            int i = isNegative ? 1 : isPositive ? 1 : 0, length = s.length();
+            i < length;
+            ++i
         ) {
             if (!Character.isDigit(s.charAt(i))) {
                 throw new NumberFormatException("s=" + s);

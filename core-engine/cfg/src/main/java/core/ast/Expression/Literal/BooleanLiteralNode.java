@@ -19,7 +19,7 @@ public class BooleanLiteralNode extends LiteralNode {
 
     public static BooleanLiteralNode[] createBooleanLiteralInitializationArray(int capacity) {
         BooleanLiteralNode[] array = new BooleanLiteralNode[capacity];
-        for (int i = 0; i < capacity; i++) {
+        for(int i = 0; i < capacity; i++) {
             array[i] = new BooleanLiteralNode();
         }
         return array;

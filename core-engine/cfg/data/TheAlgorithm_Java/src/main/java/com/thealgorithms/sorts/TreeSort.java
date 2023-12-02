@@ -3,7 +3,6 @@ package com.thealgorithms.sorts;
 import static com.thealgorithms.sorts.SortUtils.print;
 
 import com.thealgorithms.datastructures.trees.BSTRecursiveGeneric;
-
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
  * <p>
  * Tree Sort: A sorting algorithm which constructs a Binary Search Tree using
  * the unsorted data and then outputs the data by inorder traversal of the tree.
- * <p>
+ *
  * Reference: https://en.wikipedia.org/wiki/Tree_sort
  * </p>
  *
@@ -53,7 +52,7 @@ public class TreeSort implements SortAlgorithm {
     }
 
     private <T extends Comparable<T>> List<T> doTreeSortList(
-            List<T> unsortedList
+        List<T> unsortedList
     ) {
         // create a generic BST tree
         BSTRecursiveGeneric<T> tree = new BSTRecursiveGeneric<T>();
@@ -72,7 +71,7 @@ public class TreeSort implements SortAlgorithm {
 
         // ==== Integer Array =======
         System.out.println("Testing for Integer Array....");
-        Integer[] a = {3, -7, 45, 1, 343, -5, 2, 9};
+        Integer[] a = { 3, -7, 45, 1, 343, -5, 2, 9 };
         System.out.print(String.format("%-10s", "unsorted: "));
         print(a);
         a = treeSort.sort(a);
@@ -93,14 +92,14 @@ public class TreeSort implements SortAlgorithm {
         // ==== String Array =======
         System.out.println("Testing for String Array....");
         String[] b = {
-                "banana",
-                "berry",
-                "orange",
-                "grape",
-                "peach",
-                "cherry",
-                "apple",
-                "pineapple",
+            "banana",
+            "berry",
+            "orange",
+            "grape",
+            "peach",
+            "cherry",
+            "apple",
+            "pineapple",
         };
         System.out.print(String.format("%-10s", "unsorted: "));
         print(b);
@@ -112,14 +111,14 @@ public class TreeSort implements SortAlgorithm {
         // ==== String List =======
         System.out.println("Testing for String List....");
         List<String> stringList = List.of(
-                "banana",
-                "berry",
-                "orange",
-                "grape",
-                "peach",
-                "cherry",
-                "apple",
-                "pineapple"
+            "banana",
+            "berry",
+            "orange",
+            "grape",
+            "peach",
+            "cherry",
+            "apple",
+            "pineapple"
         );
         System.out.print(String.format("%-10s", "unsorted: "));
         print(stringList);

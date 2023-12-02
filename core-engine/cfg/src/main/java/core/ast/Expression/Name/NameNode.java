@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.SimpleName;
 public abstract class NameNode extends ExpressionNode {
 
     public static ExpressionNode executeName(Name name, MemoryModel memoryModel) {
-        if (name instanceof SimpleName) {
+        if(name instanceof SimpleName) {
             return SimpleNameNode.executeSimpleName((SimpleName) name, memoryModel);
         } else { /*name instanceof QualifiedName*/
             return QualifiedNameNode.executeQualifiedName((QualifiedName) name, memoryModel);
@@ -17,7 +17,7 @@ public abstract class NameNode extends ExpressionNode {
     }
 
     public static ExpressionNode executeNameNode(NameNode nameNode, MemoryModel memoryModel) {
-        if (nameNode instanceof SimpleNameNode) {
+        if(nameNode instanceof SimpleNameNode) {
             return SimpleNameNode.executeSimpleNameNode((SimpleNameNode) nameNode, memoryModel);
         } else { /*nameNode instanceof QualifiedNameNode*/
             return QualifiedNameNode.executeQualifiedNameNode((QualifiedNameNode) nameNode, memoryModel);
@@ -25,7 +25,7 @@ public abstract class NameNode extends ExpressionNode {
     }
 
     public static String getStringName(Name name) {
-        if (name instanceof SimpleName) {
+        if(name instanceof SimpleName) {
             return SimpleNameNode.getStringSimpleName((SimpleName) name);
         } else { /*name instanceof QualifiedName*/
             return QualifiedNameNode.getStringQualifiedName((QualifiedName) name);
@@ -33,7 +33,7 @@ public abstract class NameNode extends ExpressionNode {
     }
 
     public static String getStringNameNode(NameNode nameNode) {
-        if (nameNode instanceof SimpleNameNode) {
+        if(nameNode instanceof SimpleNameNode) {
             return SimpleNameNode.getStringSimpleNameNode((SimpleNameNode) nameNode);
         } else { // nameNode instanceof QualifiedNameNode
             return QualifiedNameNode.getStringQualifiedNameNode((QualifiedNameNode) nameNode);

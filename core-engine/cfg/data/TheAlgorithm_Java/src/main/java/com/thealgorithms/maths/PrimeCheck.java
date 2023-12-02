@@ -13,7 +13,7 @@ public class PrimeCheck {
             System.out.println("algo1 verify that " + n + " is a prime number");
         } else {
             System.out.println(
-                    "algo1 verify that " + n + " is not a prime number"
+                "algo1 verify that " + n + " is not a prime number"
             );
         }
 
@@ -21,7 +21,7 @@ public class PrimeCheck {
             System.out.println("algo2 verify that " + n + " is a prime number");
         } else {
             System.out.println(
-                    "algo2 verify that " + n + " is not a prime number"
+                "algo2 verify that " + n + " is not a prime number"
             );
         }
         scanner.close();
@@ -70,11 +70,10 @@ public class PrimeCheck {
 
     /**
      * *
-     *
      * @param a basis
      * @param b exponent
      * @param c modulo
-     * @return (a ^ b) mod c
+     * @return (a^b) mod c
      */
     private static long modPow(long a, long b, long c) {
         long res = 1;

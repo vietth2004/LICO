@@ -23,19 +23,19 @@ import mrmathami.cia.java.utils.RelativePath;
 
 public interface JavaSourceFile {
 
-    @Nonnull
-    JavaModule getModule();
+	@Nonnull
+	JavaModule getModule();
 
-    @Nonnull
-    JavaSourceFileType getType();
+	@Nonnull
+	JavaSourceFileType getType();
 
-    @Nonnull
-    RelativePath getRelativePath();
+	@Nonnull
+	RelativePath getRelativePath();
 
-    @Nonnull
-    default String getName() {
-        // note: if this throw IndexOutOfBound, something seriously wrong happened in JavaNodes
-        return getRelativePath().getComponent(-1);
-    }
+	@Nonnull
+	default String getName() {
+		// note: if this throw IndexOutOfBound, something seriously wrong happened in JavaNodes
+		return getRelativePath().getComponent(-1);
+	}
 
 }

@@ -41,7 +41,7 @@
 
     <!-- trace - debug - info - warn - error - fatal -->
     <root level="INFO">
-        <appender-ref ref="ROLLIN"/>
+        <appender-ref ref="ROLLIN" />
         <!--        <appender-ref ref="CONSOLE" />-->
     </root>
 

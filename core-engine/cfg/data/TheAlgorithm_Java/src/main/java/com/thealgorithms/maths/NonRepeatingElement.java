@@ -22,9 +22,9 @@ public class NonRepeatingElement {
         int arr[] = new int[n];
 
         System.out.println(
-                "Enter " +
-                        n +
-                        " elements in the array. NOTE: Only 2 elements should not repeat"
+            "Enter " +
+            n +
+            " elements in the array. NOTE: Only 2 elements should not repeat"
         );
         for (i = 0; i < n; i++) {
             arr[i] = sc.nextInt();
@@ -54,7 +54,7 @@ public class NonRepeatingElement {
         }
 
         System.out.println(
-                "The two non repeating elements are " + num1 + " and " + num2
+            "The two non repeating elements are " + num1 + " and " + num2
         );
     }
     /* 

@@ -2,10 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CFG4J_Test {
-    public CFG4J_Test() {
+public class CFG4J_Test
+{
+    public CFG4J_Test()
+    {
     }
-
     public static int BinaryPower(int a, int p) {
         int res = 1;
         while (p > 0) {
@@ -96,7 +97,6 @@ public class CFG4J_Test {
         return -1;
         /* not found */
     }
-
     public <T extends Comparable<T>> int FibonacciSearch(T[] array, T key) {
         int fibMinus1 = 1;
         int fibMinus2 = 0;
@@ -135,9 +135,12 @@ public class CFG4J_Test {
         return -1;
     }
 
-    public <T extends Comparable<T>> int LinearSearch(T[] array, T value) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].compareTo(value) == 0) {
+    public <T extends Comparable<T>> int LinearSearch(T[] array, T value)
+    {
+        for (int i = 0; i < array.length; i++)
+        {
+            if (array[i].compareTo(value) == 0)
+            {
                 return i;
             }
         }
@@ -145,7 +148,8 @@ public class CFG4J_Test {
     }
 
 
-    public void foo(char a, int b, int c, int d) {
+    public void foo(char a, int b, int c, int d)
+    {
         int i = 0;
         int j = 0;
 
@@ -156,7 +160,8 @@ public class CFG4J_Test {
         for (
                 String str :
                 list
-        ) {
+        )
+        {
             System.out.println("str = " + str);
             int i = 5 + 10;
         }
@@ -226,7 +231,8 @@ public class CFG4J_Test {
 ////        return f;
 //    }
 
-    public bool LeapYear() {
+    public bool LeapYear()
+    {
         // If a year is multiple of 400,
         // then it is a leap year
         if (year % 400 == 0) {
@@ -249,17 +255,17 @@ public class CFG4J_Test {
     }
 
     public void testForEachLoop(ArrayList<String> s) {
-        for (String i : s) {
+        for(String i : s) {
             System.out.println("hi" + i);
             System.out.println("bye" + i);
         }
     }
 
     public void testIf(int x) {
-        if (x == 10) {
+        if(x == 10) {
             System.out.println("hi");
         }
-        if (x == 100) {
+        if(x == 100){
             System.out.println("100");
         } else if (x == 1000) {
             System.out.println(1000);

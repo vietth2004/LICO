@@ -23,8 +23,8 @@ public class MagicSquare {
 
         for (int i = 2; i <= num * num; i++) {
             if (
-                    magic_square[(row_num - 1 + num) % num][(col_num + 1) % num] ==
-                            0
+                magic_square[(row_num - 1 + num) % num][(col_num + 1) % num] ==
+                0
             ) {
                 row_num = (row_num - 1 + num) % num;
                 col_num = (col_num + 1) % num;

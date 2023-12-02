@@ -3,8 +3,10 @@ package com.thealgorithms.misc;
 import java.util.Scanner;
 
 /**
+ *
+ *
  * <h1>Find the Transpose of Matrix!</h1>
- * <p>
+ *
  * Simply take input from the user and print the matrix before the transpose and
  * after the transpose.
  *

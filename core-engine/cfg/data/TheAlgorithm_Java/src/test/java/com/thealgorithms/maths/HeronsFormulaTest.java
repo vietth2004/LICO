@@ -18,16 +18,16 @@ public class HeronsFormulaTest {
     @Test
     void test3() {
         Assertions.assertEquals(
-                HeronsFormula.Herons(1, 1, 1),
-                0.4330127018922193
+            HeronsFormula.Herons(1, 1, 1),
+            0.4330127018922193
         );
     }
 
     @Test
     void test4() {
         Assertions.assertEquals(
-                HeronsFormula.Herons(4, 5, 8),
-                8.181534085976786
+            HeronsFormula.Herons(4, 5, 8),
+            8.181534085976786
         );
     }
 }

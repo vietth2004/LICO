@@ -21,7 +21,7 @@ public class Converter {
     @Nonnull
     public static List<JavaNode> convertAbstractNode(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();
-        for (AbstractNode node : abstractNodeList) {
+        for(AbstractNode node : abstractNodeList) {
             javaNodeList.add(new JavaNode(node, true));
         }
 
@@ -31,7 +31,7 @@ public class Converter {
     @Nonnull
     public static List<JavaNode> convertToAllNodes(List<AbstractNode> abstractNodeList) {
         List<JavaNode> javaNodeList = new ArrayList<>();
-        for (AbstractNode node : abstractNodeList) {
+        for(AbstractNode node : abstractNodeList) {
             javaNodeList.add(new JavaNode(node, false));
         }
 
@@ -41,7 +41,7 @@ public class Converter {
     @Nonnull
     public static List<Integer> convertChildren(List<AbstractNode> abstractNodeList) {
         List<Integer> javaNodeList = new ArrayList<>();
-        for (AbstractNode node : abstractNodeList) {
+        for(AbstractNode node : abstractNodeList) {
             javaNodeList.add(node.getId());
         }
 
@@ -51,7 +51,7 @@ public class Converter {
     @Nonnull
     public static List<Node> convertNode(List<AbstractNode> abstractNodeList) {
         List<Node> children = new ArrayList<>();
-        for (AbstractNode node : abstractNodeList) {
+        for(AbstractNode node : abstractNodeList) {
             children.add(new Node(node));
         }
 
@@ -61,7 +61,7 @@ public class Converter {
     @Nonnull
     public static List convertMap(Map<AbstractNode, mrmathami.cia.java.jdt.tree.dependency.DependencyCountTable> nodeList) {
         List<Pair> javaNodeList = new ArrayList<>();
-        for (AbstractNode node : nodeList.keySet()) {
+        for(AbstractNode node : nodeList.keySet()) {
             DependencyCountTable dependencyCountTable = new DependencyCountTable(nodeList.get(node));
             javaNodeList.add(new Pair(new Node(node), dependencyCountTable));
         }
@@ -72,7 +72,7 @@ public class Converter {
     public static List<String> convertModifiers(Set modifierSet) {
         List<String> modifierList = new ArrayList<>();
 
-        for (Object obj : modifierSet) {
+        for(Object obj : modifierSet) {
             modifierList.add(obj.toString());
         }
 
@@ -82,7 +82,7 @@ public class Converter {
     public static List<JavaAnnotation> convertAnnotates(List<Annotate> annotates) {
         List<JavaAnnotation> javaAnnotationList = new ArrayList<>();
 
-        for (Annotate annotate : annotates) {
+        for(Annotate annotate : annotates) {
             javaAnnotationList.add(new JavaAnnotation(annotate));
         }
         return javaAnnotationList;
@@ -91,7 +91,7 @@ public class Converter {
     public static List<JavaType> convertParameters(List<AbstractType> parameters) {
         List<JavaType> javaTypeList = new ArrayList<>();
 
-        for (AbstractType parameter : parameters) {
+        for(AbstractType parameter : parameters) {
             javaTypeList.add(new JavaType(parameter));
         }
 
@@ -101,7 +101,7 @@ public class Converter {
     public static List<JavaType> convertArguments(List<AbstractType> argumentList) {
         List<JavaType> arguments = new ArrayList<>();
 
-        for (AbstractType abstractType : argumentList) {
+        for(AbstractType abstractType : argumentList) {
             arguments.add(new JavaType(abstractType));
         }
 

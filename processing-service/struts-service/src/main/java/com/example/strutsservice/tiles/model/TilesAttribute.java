@@ -34,7 +34,7 @@ public class TilesAttribute extends Attribute implements ITilesElement {
     public static TilesAttribute createTemplateAttribute(String template, String templateExpression, String templateType, String role) {
         TilesAttribute templateAttribute = createTemplateAttribute(template);
         templateAttribute.setRole(role);
-        if (templateType != null) {
+        if(templateType != null) {
             templateAttribute.setRenderer(templateType);
         }
 

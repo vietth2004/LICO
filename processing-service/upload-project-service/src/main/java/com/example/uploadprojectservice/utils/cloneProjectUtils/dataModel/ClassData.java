@@ -16,16 +16,16 @@ public class ClassData {
     }
 
     public ClassData(TypeDeclaration typeDeclaration) {
-        if (typeDeclaration.isInterface()) {
+        if(typeDeclaration.isInterface()) {
             typeOfClass = "interface";
         } else {
             typeOfClass = "class";
         }
         className = typeDeclaration.getName().getIdentifier();
-        if (typeDeclaration.getSuperclassType() != null) {
+        if(typeDeclaration.getSuperclassType() != null) {
             superClassName = typeDeclaration.getSuperclassType().toString();
         }
-        if (typeDeclaration.superInterfaceTypes().size() != 0) {
+        if(typeDeclaration.superInterfaceTypes().size() != 0) {
             List interfaceList = typeDeclaration.superInterfaceTypes();
             superInterfaceName = new ArrayList<>();
             for (int i = 0; i < interfaceList.size(); i++) {

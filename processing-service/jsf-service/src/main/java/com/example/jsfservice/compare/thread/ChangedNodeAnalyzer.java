@@ -29,16 +29,16 @@ public class ChangedNodeAnalyzer implements Callable {
         Set<Node> changedNodes = new HashSet<>();
 
         List<Node> children = ParserUtils.getChildrenLevel1XmlFileNode(newVer);
-        for (Node node : newVer)
-            if (CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
+        for(Node node : newVer)
+            if(CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
                 List<Node> found = CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName());
                 found.forEach(el -> {
-                    if (!node.toString().equals(el.toString())) {
+                    if(!node.toString().equals(el.toString())) {
                         changedNodes.add(node);
                     }
                 });
             }
-        for (Node child : children) {
+        for(Node child : children) {
             changedNodes.addAll(analyzeChild(oldVer, child));
         }
         changedNodes.forEach(node -> {
@@ -50,15 +50,15 @@ public class ChangedNodeAnalyzer implements Callable {
 
     public Set<Node> analyzeChild(List<Node> oldVer, Node node) {
         Set<Node> changedNodes = new HashSet<>();
-        if (CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
+        if(CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0){
             List<Node> found = CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName());
             found.forEach(el -> {
-                if (!node.toString().equals(el.toString())) {
+                if(!node.toString().equals(el.toString())) {
                     changedNodes.add(node);
                 }
             });
         }
-        for (Node child : node.getChildren()) {
+        for(Node child : node.getChildren()) {
             changedNodes.addAll(analyzeChild(oldVer, child));
         }
         return changedNodes;

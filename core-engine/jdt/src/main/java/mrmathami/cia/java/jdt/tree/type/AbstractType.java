@@ -32,90 +32,88 @@ import java.util.Map;
 
 public abstract class AbstractType extends AbstractIdentifiedEntity implements JavaType {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final String description;
-    @Nonnull
-    private transient List<Annotate> annotates = List.of();
+	@Nonnull private final String description;
+	@Nonnull private transient List<Annotate> annotates = List.of();
 
 
-    public AbstractType(@Nonnull String description) {
-        this.description = description;
-    }
+	public AbstractType(@Nonnull String description) {
+		this.description = description;
+	}
 
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nonnull
-    @Override
-    public final String getDescription() {
-        return description;
-    }
+	@Nonnull
+	@Override
+	public final String getDescription() {
+		return description;
+	}
 
-    @Nonnull
-    @Override
-    public final List<Annotate> getAnnotates() {
-        return isFrozen() ? annotates : Collections.unmodifiableList(annotates);
-    }
+	@Nonnull
+	@Override
+	public final List<Annotate> getAnnotates() {
+		return isFrozen() ? annotates : Collections.unmodifiableList(annotates);
+	}
 
-    public final void setAnnotates(@Nonnull List<Annotate> annotates) {
-        assertNonFrozen();
-        this.annotates = annotates;
-    }
+	public final void setAnnotates(@Nonnull List<Annotate> annotates) {
+		assertNonFrozen();
+		this.annotates = annotates;
+	}
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
-    //region Serialization Helper
+	//region Serialization Helper
 
-    @Override
-    public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
-        if (super.internalFreeze(map)) return true;
-        this.annotates = List.copyOf(annotates);
-        for (final Annotate annotate : annotates) annotate.internalFreeze(map);
-        return false;
-    }
+	@Override
+	public boolean internalFreeze(@Nonnull Map<String, List<AbstractIdentifiedEntity>> map) {
+		if (super.internalFreeze(map)) return true;
+		this.annotates = List.copyOf(annotates);
+		for (final Annotate annotate : annotates) annotate.internalFreeze(map);
+		return false;
+	}
 
-    private void writeObject(@Nonnull ObjectOutputStream outputStream)
-            throws IOException, UnsupportedOperationException {
-        assertFrozen();
-        outputStream.defaultWriteObject();
-        outputStream.writeObject(annotates);
-    }
+	private void writeObject(@Nonnull ObjectOutputStream outputStream)
+			throws IOException, UnsupportedOperationException {
+		assertFrozen();
+		outputStream.defaultWriteObject();
+		outputStream.writeObject(annotates);
+	}
 
-    @SuppressWarnings("unchecked")
-    private void readObject(@Nonnull ObjectInputStream inputStream)
-            throws IOException, ClassNotFoundException, ClassCastException {
-        inputStream.defaultReadObject();
-        this.annotates = (List<Annotate>) inputStream.readObject();
-    }
+	@SuppressWarnings("unchecked")
+	private void readObject(@Nonnull ObjectInputStream inputStream)
+			throws IOException, ClassNotFoundException, ClassCastException {
+		inputStream.defaultReadObject();
+		this.annotates = (List<Annotate>) inputStream.readObject();
+	}
 
-    //endregion Serialization Helper
+	//endregion Serialization Helper
 
-    //region Jsonify
+	//region Jsonify
 
-    @Override
-    protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
-        super.internalToReferenceJsonEnd(builder);
-        builder.append(", \"describe\": \"").append(description).append('"');
-    }
+	@Override
+	protected void internalToReferenceJsonEnd(@Nonnull StringBuilder builder) {
+		super.internalToReferenceJsonEnd(builder);
+		builder.append(", \"describe\": \"").append(description).append('"');
+	}
 
-    @Override
-    protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
-        super.internalToJsonStart(builder, indentation);
-        if (!annotates.isEmpty()) {
-            builder.append(", \"annotates\": [");
-            internalArrayToJson(builder, indentation, false, annotates);
-            builder.append('\n').append(indentation).append(']');
-        }
-    }
+	@Override
+	protected void internalToJsonStart(@Nonnull StringBuilder builder, @Nonnull String indentation) {
+		super.internalToJsonStart(builder, indentation);
+		if (!annotates.isEmpty()) {
+			builder.append(", \"annotates\": [");
+			internalArrayToJson(builder, indentation, false, annotates);
+			builder.append('\n').append(indentation).append(']');
+		}
+	}
 
-    //endregion Jsonify
+	//endregion Jsonify
 
-    @Nonnull
-    @Override
-    public final String toString() {
-        return description;
-    }
+	@Nonnull
+	@Override
+	public final String toString() {
+		return description;
+	}
 
 }

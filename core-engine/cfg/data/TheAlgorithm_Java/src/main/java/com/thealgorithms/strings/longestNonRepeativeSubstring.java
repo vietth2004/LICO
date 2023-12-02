@@ -13,9 +13,9 @@ class longestNonRepeativeSubstring {
 
             // adding key to map if not present
             if (!map.containsKey(temp)) map.put(temp, 0);
-                // checking if the first value is the dublicate value
+            // checking if the first value is the dublicate value
             else if (s.charAt(start) == temp) start++;
-                // checking if the previous value is dublicate value
+            // checking if the previous value is dublicate value
             else if (s.charAt(i - 1) == temp) {
                 if (max < map.size()) max = map.size();
                 map = new HashMap<>();

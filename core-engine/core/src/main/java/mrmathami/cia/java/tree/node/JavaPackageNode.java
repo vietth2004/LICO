@@ -25,32 +25,31 @@ import mrmathami.cia.java.project.JavaSourceFile;
 import mrmathami.cia.java.tree.node.attribute.JavaAnnotatedNode;
 
 public interface JavaPackageNode extends JavaNode,
-        JavaAnnotatedNode {
+		JavaAnnotatedNode {
 
-    @Nonnull
-    String OBJECT_CLASS = "JavaPackageNode";
+	@Nonnull String OBJECT_CLASS = "JavaPackageNode";
 
 
-    //region Basic Getter
+	//region Basic Getter
 
-    @Nonnull
-    @Override
-    default String getEntityClass() {
-        return OBJECT_CLASS;
-    }
+	@Nonnull
+	@Override
+	default String getEntityClass() {
+		return OBJECT_CLASS;
+	}
 
-    @Nullable
-    @Override
-    default JavaSourceFile getSourceFile() {
-        return null;
-    }
+	@Nullable
+	@Override
+	default JavaSourceFile getSourceFile() {
+		return null;
+	}
 
-    @Nullable
-    @Override
-    default JavaModule getModule() {
-        return null;
-    }
+	@Nullable
+	@Override
+	default JavaModule getModule() {
+		return null;
+	}
 
-    //endregion Basic Getter
+	//endregion Basic Getter
 
 }

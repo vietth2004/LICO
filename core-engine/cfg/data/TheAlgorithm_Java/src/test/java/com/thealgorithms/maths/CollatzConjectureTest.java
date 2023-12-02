@@ -3,7 +3,6 @@ package com.thealgorithms.maths;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -29,20 +28,20 @@ class CollatzConjectureTest {
     @Test
     void collatzConjecture() {
         final List<Integer> expected = List.of(
-                35,
-                106,
-                53,
-                160,
-                80,
-                40,
-                20,
-                10,
-                5,
-                16,
-                8,
-                4,
-                2,
-                1
+            35,
+            106,
+            53,
+            160,
+            80,
+            40,
+            20,
+            10,
+            5,
+            16,
+            8,
+            4,
+            2,
+            1
         );
         assertIterableEquals(expected, cConjecture.collatzConjecture(35));
     }
@@ -50,12 +49,12 @@ class CollatzConjectureTest {
     @Test
     void sequenceOfNotNaturalFirstNumber() {
         assertThrows(
-                IllegalArgumentException.class,
-                () -> cConjecture.collatzConjecture(0)
+            IllegalArgumentException.class,
+            () -> cConjecture.collatzConjecture(0)
         );
         assertThrows(
-                IllegalArgumentException.class,
-                () -> cConjecture.collatzConjecture(-1)
+            IllegalArgumentException.class,
+            () -> cConjecture.collatzConjecture(-1)
         );
     }
 }

@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Configuration;
 public class APIGatewayConfig {
 
     @Bean
-    public RouteLocator gatewayRoutes(RouteLocatorBuilder routeLocatorBuilder) {
+    public RouteLocator gatewayRoutes(RouteLocatorBuilder routeLocatorBuilder)
+    {
         return routeLocatorBuilder.routes()
                 .route("cia-service", rt -> rt.path("/api/cia-service/**")
                         .uri("http://localhost:6001/"))
@@ -39,7 +40,7 @@ public class APIGatewayConfig {
                         .uri("http://localhost:7020/"))
                 .route("unit-testing-service", rt -> rt.path("/api/unit-testing-service/**")
                         .uri("http://localhost:8006/"))
-                .route("upload-project-service", rt -> rt.path("/api/upload-project-service/**")
+                .route("upload-project-service",rt -> rt.path("/api/upload-project-service/**")
                         .uri("http://localhost:8020/"))
                 .build();
 

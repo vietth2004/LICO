@@ -8,7 +8,7 @@ import java.util.List;
  *
  * <p>
  * A recursive implementation of generic type BST.
- * <p>
+ *
  * Reference: https://en.wikipedia.org/wiki/Binary_search_tree
  * </p>
  *
@@ -45,7 +45,7 @@ public class BSTRecursiveGeneric<T extends Comparable<T>> {
         assert !integerTree.find(9) : "9 was just deleted from BST";
         integerTree.remove(1);
         assert !integerTree.find(
-                1
+            1
         ) : "Since 1 was not present so find deleting would do no change";
         integerTree.add(20);
         integerTree.add(70);
@@ -69,7 +69,7 @@ public class BSTRecursiveGeneric<T extends Comparable<T>> {
         assert !stringTree.find("date") : "date was just deleted from BST";
         stringTree.remove("boy");
         assert !stringTree.find(
-                "boy"
+            "boy"
         ) : "Since boy was not present so deleting would do no change";
         stringTree.add("india");
         stringTree.add("hills");
@@ -123,7 +123,7 @@ public class BSTRecursiveGeneric<T extends Comparable<T>> {
      * Recursive insertion of value in BST.
      *
      * @param node to check if the data can be inserted in current node or its
-     *             subtree
+     * subtree
      * @param data the value to be inserted
      * @return the modified value of the root parameter after insertion
      */
@@ -196,7 +196,7 @@ public class BSTRecursiveGeneric<T extends Comparable<T>> {
      * Recursively traverse the tree using inorder traversal and keep adding
      * elements to argument list.
      *
-     * @param node       the root node
+     * @param node the root node
      * @param sortedList the list to add the srted elements into
      */
     private void inOrderSort(Node<T> node, List<T> sortedList) {

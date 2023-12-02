@@ -1,19 +1,20 @@
 package com.example.javaservice.ast.node;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.javaservice.ast.annotation.JavaAnnotation;
 import com.example.javaservice.ast.dependency.Pair;
 import com.example.javaservice.ast.type.JavaType;
 import com.example.javaservice.ast.utility.Utility;
+
 import mrmathami.cia.java.jdt.tree.node.AbstractNode;
 import mrmathami.cia.java.jdt.tree.node.InterfaceNode;
 import mrmathami.cia.java.jdt.tree.node.MethodNode;
 import mrmathami.cia.java.jdt.tree.node.RootNode;
 import mrmathami.cia.java.jdt.tree.node.attribute.AbstractAnnotatedNode;
 import mrmathami.cia.java.tree.node.attribute.JavaModifiedNode;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class JavaNode extends Node implements Serializable {
@@ -160,14 +161,14 @@ public class JavaNode extends Node implements Serializable {
         this.annotatesWithValue = annotatesWithValue;
     }
 
-    private void setupProperties(AbstractNode abstractNode) {
+    private void setupProperties (AbstractNode abstractNode) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
         }
 
         if (abstractNode instanceof AbstractAnnotatedNode) {
             this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
-            try {
+            try{
 //                System.out.println("No Need: " + this.path);
                 this.annotatesWithValue = Utility.convertAnnotates(abstractNode, this.path);
             } catch (Exception e) {
@@ -186,14 +187,14 @@ public class JavaNode extends Node implements Serializable {
         }
     }
 
-    private void setupProperties(AbstractNode abstractNode, String path) {
+    private void setupProperties (AbstractNode abstractNode, String path) {
         if (abstractNode instanceof MethodNode) {
             this.parameters = Utility.convertParameters(((MethodNode) abstractNode).getParameters());
         }
 
         if (abstractNode instanceof AbstractAnnotatedNode) {
             this.annotates = Utility.convertAnnotates(((AbstractAnnotatedNode) abstractNode).getAnnotates());
-            try {
+            try{
                 this.annotatesWithValue = Utility.convertAnnotates(abstractNode, path);
             } catch (Exception e) {
                 this.annotatesWithValue = new ArrayList();

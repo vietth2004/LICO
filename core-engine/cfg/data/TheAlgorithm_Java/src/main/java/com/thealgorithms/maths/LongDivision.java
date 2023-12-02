@@ -7,7 +7,7 @@
 package com.thealgorithms.maths;
 
 public class LongDivision {
-    public static int divide(int dividend, int divisor) {
+public static int divide(int dividend, int divisor) {
         long new_dividend_1 = dividend;
         long new_divisor_1 = divisor;
 
@@ -54,7 +54,7 @@ public class LongDivision {
             }
             if (!(part_1 == 0)) {
                 remainder = String.valueOf(part_1);
-            } else {
+            }else{
                 remainder = "";
             }
 

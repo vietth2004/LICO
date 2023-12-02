@@ -3,7 +3,6 @@ package com.thealgorithms.searches;
 import static java.lang.String.format;
 
 import com.thealgorithms.devutils.searches.SearchAlgorithm;
-
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -26,8 +25,8 @@ class BinarySearch implements SearchAlgorithm {
 
     /**
      * @param array is an array where the element should be found
-     * @param key   is an element which should be found
-     * @param <T>   is any comparable type
+     * @param key is an element which should be found
+     * @param <T> is any comparable type
      * @return index of the element
      */
     @Override
@@ -39,16 +38,16 @@ class BinarySearch implements SearchAlgorithm {
      * This method implements the Generic Binary Search
      *
      * @param array The array to make the binary search
-     * @param key   The number you are looking for
-     * @param left  The lower bound
+     * @param key The number you are looking for
+     * @param left The lower bound
      * @param right The upper bound
      * @return the location of the key
      */
     private <T extends Comparable<T>> int search(
-            T array[],
-            T key,
-            int left,
-            int right
+        T array[],
+        T key,
+        int left,
+        int right
     ) {
         if (right < left) {
             return -1; // this means that the key not found
@@ -75,11 +74,11 @@ class BinarySearch implements SearchAlgorithm {
         int maxElement = 100000;
 
         Integer[] integers = IntStream
-                .generate(() -> r.nextInt(maxElement))
-                .limit(size)
-                .sorted()
-                .boxed()
-                .toArray(Integer[]::new);
+            .generate(() -> r.nextInt(maxElement))
+            .limit(size)
+            .sorted()
+            .boxed()
+            .toArray(Integer[]::new);
 
         // The element that should be found
         int shouldBeFound = integers[r.nextInt(size - 1)];
@@ -88,22 +87,22 @@ class BinarySearch implements SearchAlgorithm {
         int atIndex = search.find(integers, shouldBeFound);
 
         System.out.println(
-                format(
-                        "Should be found: %d. Found %d at index %d. An array length %d",
-                        shouldBeFound,
-                        integers[atIndex],
-                        atIndex,
-                        size
-                )
+            format(
+                "Should be found: %d. Found %d at index %d. An array length %d",
+                shouldBeFound,
+                integers[atIndex],
+                atIndex,
+                size
+            )
         );
 
         int toCheck = Arrays.binarySearch(integers, shouldBeFound);
         System.out.println(
-                format(
-                        "Found by system method at an index: %d. Is equal: %b",
-                        toCheck,
-                        toCheck == atIndex
-                )
+            format(
+                "Found by system method at an index: %d. Is equal: %b",
+                toCheck,
+                toCheck == atIndex
+            )
         );
     }
 }

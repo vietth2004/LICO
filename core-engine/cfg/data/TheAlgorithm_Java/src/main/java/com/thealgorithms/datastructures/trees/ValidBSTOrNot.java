@@ -41,8 +41,8 @@ public class ValidBSTOrNot {
     tightening the min/max constraints */
         // Allow only distinct values
         return (
-                isBSTUtil(node.left, min, node.data - 1) &&
-                        isBSTUtil(node.right, node.data + 1, max)
+            isBSTUtil(node.left, min, node.data - 1) &&
+            isBSTUtil(node.right, node.data + 1, max)
         );
     }
 }

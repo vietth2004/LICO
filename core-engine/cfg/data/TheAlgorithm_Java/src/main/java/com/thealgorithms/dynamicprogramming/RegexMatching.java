@@ -5,8 +5,8 @@ package com.thealgorithms.dynamicprogramming;
  * algorithm that finds if wildcard is matched with text. The matching should
  * cover the entire text ?-> matches single characters *-> match the sequence of
  * characters
+ *
  */
-
 /**
  * For calculation of Time and Space Complexity. Let N be length of src and M be
  * length of pat
@@ -53,10 +53,10 @@ public class RegexMatching {
     // Method 2: Using Recursion and breaking string using virtual index
     // Time Complexity=0(2^(N+M)) Space Complexity=Recursion Extra Space
     static boolean regexRecursion(
-            String src,
-            String pat,
-            int svidx,
-            int pvidx
+        String src,
+        String pat,
+        int svidx,
+        int pvidx
     ) {
         if (src.length() == svidx && pat.length() == pvidx) {
             return true;
@@ -91,11 +91,11 @@ public class RegexMatching {
     // Method 3: Top-Down DP(Memoization)
     // Time Complexity=0(N*M) Space Complexity=0(N*M)+Recursion Extra Space
     static boolean regexRecursion(
-            String src,
-            String pat,
-            int svidx,
-            int pvidx,
-            int[][] strg
+        String src,
+        String pat,
+        int svidx,
+        int pvidx,
+        int[][] strg
     ) {
         if (src.length() == svidx && pat.length() == pvidx) {
             return true;
@@ -171,8 +171,8 @@ public class RegexMatching {
         System.out.println("Method 1: " + regexRecursion(src, pat));
         System.out.println("Method 2: " + regexRecursion(src, pat, 0, 0));
         System.out.println(
-                "Method 3: " +
-                        regexRecursion(src, pat, 0, 0, new int[src.length()][pat.length()])
+            "Method 3: " +
+            regexRecursion(src, pat, 0, 0, new int[src.length()][pat.length()])
         );
         System.out.println("Method 4: " + regexBU(src, pat));
     }

@@ -1,6 +1,7 @@
 package core.ast.Expression;
 
 import core.ast.AstNode;
+import core.ast.Expression.ExpressionNode;
 
 public class ArrayNode extends ExpressionNode {
     private AstNode[] array = new AstNode[0];

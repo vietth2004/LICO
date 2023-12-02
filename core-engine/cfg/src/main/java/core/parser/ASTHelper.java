@@ -2,59 +2,10 @@ package core.parser;
 
 //import com.sun.istack.internal.NotNull;
 
-import core.cfg.CfgBeginBlockNode;
-import core.cfg.CfgBeginDoNode;
-import core.cfg.CfgBeginForEachNode;
-import core.cfg.CfgBeginForNode;
-import core.cfg.CfgBeginSwitchNode;
-import core.cfg.CfgBlockNode;
-import core.cfg.CfgBoolExprNode;
-import core.cfg.CfgBreakStatementNode;
-import core.cfg.CfgContinueStatementNode;
-import core.cfg.CfgDoStatementBlockNode;
-import core.cfg.CfgEndBlockNode;
-import core.cfg.CfgExpressionNode;
-import core.cfg.CfgForEachExpressionNode;
-import core.cfg.CfgForEachStatementBlockNode;
-import core.cfg.CfgForStatementBlockNode;
-import core.cfg.CfgIfStatementBlockNode;
-import core.cfg.CfgNode;
-import core.cfg.CfgNormalNode;
-import core.cfg.CfgReturnStatementNode;
-import core.cfg.CfgStartNode;
-import core.cfg.CfgSwitchStatementBlockNode;
-import core.cfg.CfgWhileStatementBlockNode;
+import core.ast.Expression.OperationExpression.InfixExpressionNode;
+import core.cfg.*;
 import core.utils.Utils;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ArrayType;
-import org.eclipse.jdt.core.dom.Assignment;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BreakStatement;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ContinueStatement;
-import org.eclipse.jdt.core.dom.DoStatement;
-import org.eclipse.jdt.core.dom.EnhancedForStatement;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.ForStatement;
-import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.ParameterizedType;
-import org.eclipse.jdt.core.dom.PostfixExpression;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.SwitchCase;
-import org.eclipse.jdt.core.dom.SwitchStatement;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.WhileStatement;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -494,7 +445,7 @@ public class ASTHelper {
             }
         }
 
-        if (previousCaseNode != null) previousCaseNode.setFalseNode(cfgEndBlockNode);
+        if(previousCaseNode != null) previousCaseNode.setFalseNode(cfgEndBlockNode);
 
         endNodeStack.pop();
 

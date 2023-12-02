@@ -29,16 +29,16 @@ public class UnchangedNodeAnalyzer implements Callable {
         Set<Node> unchangedNodes = new HashSet<>();
 
         List<Node> children = ParserUtils.getChildrenLevel1XmlFileNode(newVer);
-        for (Node node : newVer)
-            if (CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
+        for(Node node : newVer)
+            if(CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
                 List<Node> found = CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName());
                 found.forEach(el -> {
-                    if (node.toString().equals(el.toString())) {
+                    if(node.toString().equals(el.toString())) {
                         unchangedNodes.add(node);
                     }
                 });
             }
-        for (Node child : children) {
+        for(Node child : children) {
             unchangedNodes.addAll(analyzeChild(oldVer, child));
         }
         unchangedNodes.forEach(node -> {
@@ -50,15 +50,15 @@ public class UnchangedNodeAnalyzer implements Callable {
 
     public Set<Node> analyzeChild(List<Node> oldVer, Node node) {
         Set<Node> unchangedNodes = new HashSet<>();
-        if (CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
+        if(CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName()).size() > 0) {
             List<Node> found = CompareUtils.searchByFullyQualifiedName(oldVer, node.getFullyQualifiedName());
             found.forEach(el -> {
-                if (node.toString().equals(el.toString())) {
+                if(node.toString().equals(el.toString())) {
                     unchangedNodes.add(node);
                 }
             });
         }
-        for (Node child : node.getChildren()) {
+        for(Node child : node.getChildren()) {
             unchangedNodes.addAll(analyzeChild(oldVer, child));
         }
         return unchangedNodes;

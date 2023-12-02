@@ -14,11 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cuong on 4/7/2017.
@@ -35,16 +31,16 @@ public class JciaStrutsXmlConfigurationProvider extends JciaXmlConfigurationProv
     /**
      * Constructs the configuration provider
      *
-     * @param filename       The filename to look for
+     * @param filename The filename to look for
      * @param errorIfMissing If we should throw an exception if the file can't be found
-     * @param ctx            Our ServletContext
+     * @param ctx Our ServletContext
      */
     public JciaStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx, String classPath) {
         super(filename, errorIfMissing, classPath);
         this.servletContext = ctx;
         this.filename = filename;
-        reloadKey = "configurationReload-" + filename;
-        Map<String, String> dtdMappings = new HashMap<String, String>(getDtdMappings());
+        reloadKey = "configurationReload-"+filename;
+        Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");
@@ -122,7 +118,7 @@ public class JciaStrutsXmlConfigurationProvider extends JciaXmlConfigurationProv
             try {
                 url = file.toURI().toURL();
             } catch (MalformedURLException e) {
-                throw new IOException("Unable to convert " + file + " to a URL");
+                throw new IOException("Unable to convert "+file+" to a URL");
             }
         }
         return url;
@@ -143,6 +139,6 @@ public class JciaStrutsXmlConfigurationProvider extends JciaXmlConfigurationProv
     }
 
     public String toString() {
-        return ("Struts XML configuration provider (" + filename + ")");
+        return ("Struts XML configuration provider ("+filename+")");
     }
 }

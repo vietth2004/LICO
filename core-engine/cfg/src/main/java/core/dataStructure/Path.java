@@ -1,7 +1,7 @@
 package core.dataStructure;
 
 import core.ast.additionalNodes.Node;
-import core.cfg.CfgNode;
+import core.cfg.*;
 
 public class Path {
 

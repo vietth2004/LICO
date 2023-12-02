@@ -11,12 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -70,9 +65,9 @@ public class PropertiesFileParser implements IParser, IPathParser, Callable {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.length() > 0) {
+                if(line.length() > 0) {
                     try {
-                        if (line.charAt(0) != 35) {
+                        if(line.charAt(0) != 35) {
                             PropertiesNode propertiesNode = new PropertiesNode();
                             propertiesNode.setName(line.split("=")[0]);
                             propertiesNode.setValue(line.split("=")[1]);

@@ -2,8 +2,10 @@ package com.example.parserservice.util.worker;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.ast.dependency.DependencyCountTable;
+import com.example.parserservice.ast.dependency.OrientedDependency;
 import com.example.parserservice.ast.dependency.Pair;
 import com.example.parserservice.ast.node.JavaNode;
+import com.example.parserservice.dom.Node;
 import com.example.parserservice.model.Response;
 import com.example.parserservice.model.parser.Request;
 import com.example.parserservice.model.parser.Resource;
@@ -97,20 +99,20 @@ public class Getter {
         List propNodes = request.getPropertiesNodes();
 
         for (String parser : parserList) {
-            if (Resource.PARSER.contains(parser)) {
+            if(Resource.PARSER.contains(parser)) {
 
                 List<Dependency> dependencyList = Requester.getDependencies(parser, request);
 
                 if (dependencyList.size() > 0) {
-                    if (parser.equals("spring-parser")) {
+                    if(parser.equals("spring-parser")){
                         dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "SPRING");
                     }
 
-                    if (parser.equals("jsf-parser")) {
+                    if(parser.equals("jsf-parser")){
                         dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "JSF");
                     }
 
-                    if (parser.equals("struts-parser")) {
+                    if(parser.equals("struts-parser")){
                         dependencies = Wrapper.wrapDependency(dependencies, dependencyList, "STRUTS");
                     }
                 }
@@ -121,7 +123,7 @@ public class Getter {
 
         return
                 new Response(javaNode, dependencies, javaNodes,
-                        nodes, jspNodes, propNodes,
-                        javaNodes.size(), path, xmlNodes);
+                            nodes, jspNodes, propNodes,
+                            javaNodes.size(), path, xmlNodes);
     }
 }

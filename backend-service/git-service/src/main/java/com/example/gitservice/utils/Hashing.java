@@ -2,10 +2,7 @@ package com.example.gitservice.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.SequenceInputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Comparator;

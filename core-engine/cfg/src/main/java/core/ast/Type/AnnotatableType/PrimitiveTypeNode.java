@@ -2,9 +2,9 @@ package core.ast.Type.AnnotatableType;
 
 import core.ast.Expression.Literal.BooleanLiteralNode;
 import core.ast.Expression.Literal.CharacterLiteralNode;
-import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.DoubleLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
+import core.ast.Expression.Literal.LiteralNode;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 
 public class PrimitiveTypeNode extends AnnotatableTypeNode {

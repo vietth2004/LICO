@@ -13,11 +13,7 @@ import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.dataStructure.MemoryModel;
 import core.variable.Variable;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jdt.core.dom.ParenthesizedExpression;
-import org.eclipse.jdt.core.dom.PostfixExpression;
-import org.eclipse.jdt.core.dom.PrefixExpression;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
 
@@ -38,26 +34,26 @@ public abstract class OperationExpressionNode extends ExpressionNode {
 //    }
 
     public static Expr createZ3Expression(ExpressionNode operand, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
-        if (operand instanceof InfixExpressionNode) {
+        if(operand instanceof InfixExpressionNode) {
             return InfixExpressionNode.createZ3Expression((InfixExpressionNode) operand, ctx, vars, memoryModel);
-        } else if (operand instanceof PostfixExpressionNode) {
+        } else if(operand instanceof PostfixExpressionNode) {
             return PostfixExpressionNode.createZ3Expression((PostfixExpressionNode) operand, ctx, vars, memoryModel);
-        } else if (operand instanceof PrefixExpressionNode) {
+        } else if(operand instanceof PrefixExpressionNode) {
             return PrefixExpressionNode.createZ3Expression((PrefixExpressionNode) operand, ctx, vars, memoryModel);
-        } else if (operand instanceof ParenthesizedExpressionNode) {
+        } else if(operand instanceof ParenthesizedExpressionNode) {
             return ParenthesizedExpressionNode.createZ3Expression((ParenthesizedExpressionNode) operand, ctx, vars, memoryModel);
-        } else if (operand instanceof NameNode) {
+        } else if(operand instanceof NameNode) {
             return createZ3Variable((NameNode) operand, ctx, vars, memoryModel);
-        } else if (operand instanceof LiteralNode) {
-            if (operand instanceof NumberLiteralNode) {
-                if (operand instanceof IntegerLiteralNode) {
+        } else if(operand instanceof LiteralNode) {
+            if(operand instanceof NumberLiteralNode) {
+                if(operand instanceof IntegerLiteralNode) {
                     return ctx.mkInt(((IntegerLiteralNode) operand).getIntegerValue());
                 } else { // operand instanceof DoubleLiteralNode
                     return ctx.mkReal(((DoubleLiteralNode) operand).getTokenValue());
                 }
-            } else if (operand instanceof BooleanLiteralNode) {
+            } else if(operand instanceof BooleanLiteralNode) {
                 return ctx.mkBool(((BooleanLiteralNode) operand).getValue());
-            } else if (operand instanceof CharacterLiteralNode) {
+            } else if(operand instanceof CharacterLiteralNode) {
                 return ctx.mkInt(((CharacterLiteralNode) operand).getCharacterValue());
             } else {
                 throw new RuntimeException("Invalid Literal");
@@ -69,11 +65,11 @@ public abstract class OperationExpressionNode extends ExpressionNode {
 
     private static Expr createZ3Variable(NameNode variableName, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
         String stringName = NameNode.getStringNameNode(variableName);
-        Expr variable = Variable.createZ3Variable(memoryModel.getVariable(stringName), ctx);
+        Expr variable =  Variable.createZ3Variable(memoryModel.getVariable(stringName), ctx);
 
         //Check duplicate and add to vars
         int variableIndex = getDuplicateVariableIndex(variable.toString(), vars);
-        if (variableIndex != -1) {
+        if(variableIndex != -1) {
             vars.set(variableIndex, variable);
         } else {
             vars.add(variable);
@@ -83,8 +79,8 @@ public abstract class OperationExpressionNode extends ExpressionNode {
     }
 
     public static int getDuplicateVariableIndex(String var, List<Expr> vars) {
-        for (int i = 0; i < vars.size(); i++) {
-            if (var.equals(vars.get(i).toString())) {
+        for(int i = 0; i < vars.size(); i++) {
+            if(var.equals(vars.get(i).toString())) {
                 return i;
             }
         }

@@ -2,6 +2,8 @@ package com.example.parserservice.util.worker;
 
 import com.example.parserservice.ast.dependency.Dependency;
 import com.example.parserservice.constant.HostIPConstants;
+import com.example.parserservice.dom.Properties.PropertiesFileNode;
+import com.example.parserservice.dom.Properties.PropertiesNode;
 import com.example.parserservice.model.FrameworkRequest;
 import com.example.parserservice.model.cia.CiaRequest;
 import com.example.parserservice.model.cia.CiaResponse;
@@ -38,7 +40,7 @@ public class Requester {
 
         List<Dependency> dependencies = new ArrayList();
 
-        if (parser.equals("spring-parser")) {
+        if(parser.equals("spring-parser")) {
 
             DependencyResponse springs = restTemplate.postForObject(
                     "http://localhost:7003/api/spring-service/dependency/spring" //spring-service
@@ -48,7 +50,7 @@ public class Requester {
             dependencies.addAll(springs.getAllDependencies());
         }
 
-        if (parser.equals("struts-parser")) {
+        if(parser.equals("struts-parser")) {
             DependencyResponse struts = restTemplate.postForObject(
                     "http://localhost:7007/api/struts-service/dependency/struts", //struts-service
                     new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes()),
@@ -57,7 +59,7 @@ public class Requester {
             dependencies.addAll(struts.getAllDependencies());
         }
 
-        if (parser.equals("jsf-parser")) {
+        if(parser.equals("jsf-parser")) {
             DependencyResponse jsf = restTemplate.postForObject(
                     "http://localhost:7004/api/jsf-service/dependency/jsf/new", //jsf-service
                     new FrameworkRequest(request.getJavaNodes(), request.getXmlNodes(), request.getJspNodes(), request.getPropertiesNodes()),

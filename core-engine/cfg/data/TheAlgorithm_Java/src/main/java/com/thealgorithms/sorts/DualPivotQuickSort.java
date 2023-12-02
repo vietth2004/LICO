@@ -2,7 +2,7 @@ package com.thealgorithms.sorts;
 
 /**
  * Dual Pivot Quick Sort Algorithm
- *
+ * 
  * @author Debasish Biswas (https://github.com/debasishbsws) *
  * @see SortAlgorithm
  */
@@ -81,7 +81,7 @@ public class DualPivotQuickSort implements SortAlgorithm {
         swap(array, right, great);
 
         // return the pivots' indices
-        return new int[]{less, great};
+        return new int[] { less, great };
     }
 
     private static <T extends Comparable<T>> void swap(T[] array, int left, int right) {
@@ -96,7 +96,7 @@ public class DualPivotQuickSort implements SortAlgorithm {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Integer array[] = {24, 8, -42, 75, -29, -77, 38, 57};
+        Integer array[] = { 24, 8, -42, 75, -29, -77, 38, 57 };
         DualPivotQuickSort dualPivotQuickSort = new DualPivotQuickSort();
         dualPivotQuickSort.sort(array);
         for (int i = 0; i < array.length; i++) {

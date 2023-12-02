@@ -27,7 +27,7 @@ public class FordFulkerson {
         capacity[4][5] = 17;
 
         System.out.println(
-                "Max capacity in networkFlow : " + networkFlow(0, 5)
+            "Max capacity in networkFlow : " + networkFlow(0, 5)
         );
     }
 
@@ -47,8 +47,8 @@ public class FordFulkerson {
                 q.poll();
                 for (int there = 0; there < V; ++there) {
                     if (
-                            capacity[here][there] - flow[here][there] > 0 &&
-                                    parent.get(there) == -1
+                        capacity[here][there] - flow[here][there] > 0 &&
+                        parent.get(there) == -1
                     ) {
                         q.add(there);
                         parent.set(there, here);
@@ -64,10 +64,10 @@ public class FordFulkerson {
             StringBuilder sb = new StringBuilder();
             for (int p = sink; p != source; p = parent.get(p)) {
                 amount =
-                        Math.min(
-                                capacity[parent.get(p)][p] - flow[parent.get(p)][p],
-                                amount
-                        );
+                    Math.min(
+                        capacity[parent.get(p)][p] - flow[parent.get(p)][p],
+                        amount
+                    );
                 sb.append(p + "-");
             }
             sb.append(source);

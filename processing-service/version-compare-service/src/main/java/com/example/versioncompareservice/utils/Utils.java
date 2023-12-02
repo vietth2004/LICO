@@ -46,11 +46,11 @@ public class Utils {
                                        List<JavaNode> changedNodes,
                                        List<JavaNode> addedNodes) {
 
-        for (JavaNode javaNode : changedNodes) {
+        for(JavaNode javaNode : changedNodes) {
             changeStatus(rootNode, javaNode, "changed");
         }
 
-        for (JavaNode javaNode : addedNodes) {
+        for(JavaNode javaNode : addedNodes) {
             changeStatus(rootNode, javaNode, "added");
         }
 
@@ -58,15 +58,15 @@ public class Utils {
     }
 
     private static void changeStatus(JavaNode javaNode, JavaNode statusNode, String status) {
-        if (javaNode.getUniqueName().equals(statusNode.getUniqueName())) {
+        if(javaNode.getUniqueName().equals(statusNode.getUniqueName())) {
             System.out.println(status);
             System.out.println(javaNode.getUniqueName() + " " + javaNode.getId());
             System.out.println(statusNode.getUniqueName() + " " + statusNode.getId());
             System.out.println();
             javaNode.setStatus(status);
         } else {
-            for (Object childNode : javaNode.getChildren()) {
-                if (childNode instanceof JavaNode) {
+            for(Object childNode: javaNode.getChildren()) {
+                if(childNode instanceof JavaNode) {
                     changeStatus((JavaNode) childNode, statusNode, status);
                 }
             }

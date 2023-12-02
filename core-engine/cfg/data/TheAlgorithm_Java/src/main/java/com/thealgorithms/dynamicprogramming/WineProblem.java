@@ -8,6 +8,7 @@ package com.thealgorithms.dynamicprogramming;
  * sell all wines but you have to sell one wine per year. One more constraint on
  * each year you are allowed to sell either leftmost or rightmost wine on the
  * shelf. You are not allowed to reorder. You have to find the maximum profit
+ *
  */
 public class WineProblem {
 
@@ -74,11 +75,11 @@ public class WineProblem {
     }
 
     public static void main(String[] args) {
-        int[] arr = {2, 3, 5, 1, 4};
+        int[] arr = { 2, 3, 5, 1, 4 };
         System.out.println("Method 1: " + WPRecursion(arr, 0, arr.length - 1));
         System.out.println(
-                "Method 2: " +
-                        WPTD(arr, 0, arr.length - 1, new int[arr.length][arr.length])
+            "Method 2: " +
+            WPTD(arr, 0, arr.length - 1, new int[arr.length][arr.length])
         );
         System.out.println("Method 3: " + WPBU(arr));
     }

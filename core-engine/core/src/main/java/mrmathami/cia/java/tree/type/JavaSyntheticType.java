@@ -24,21 +24,21 @@ import java.util.List;
 
 public interface JavaSyntheticType extends JavaType {
 
-    //region Basic Getter
+	//region Basic Getter
 
-    @Nonnull
-    @Override
-    default String getEntityClass() {
-        return "JavaSyntheticType";
-    }
+	@Nonnull
+	@Override
+	default String getEntityClass() {
+		return "JavaSyntheticType";
+	}
 
-    //endregion Basic Getter
+	//endregion Basic Getter
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nonnull
-    List<? extends JavaType> getBounds();
+	@Nonnull
+	List<? extends JavaType> getBounds();
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
 }

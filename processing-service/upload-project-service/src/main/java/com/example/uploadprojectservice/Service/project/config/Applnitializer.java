@@ -9,7 +9,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import java.io.File;
 
-public class Applnitializer implements WebApplicationInitializer {
+public class Applnitializer implements WebApplicationInitializer{
     @Override
     public void onStartup(ServletContext servletContext) {
         final AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
@@ -19,7 +19,7 @@ public class Applnitializer implements WebApplicationInitializer {
         registration.addMapping("/");
 
         File uploadDirectory = new File(System.getProperty("java.io.tmpdir"));
-        MultipartConfigElement multipartConfigElement = new MultipartConfigElement(uploadDirectory.getAbsolutePath(), 100000, 100000 * 2, 100000 / 2);
+        MultipartConfigElement multipartConfigElement = new  MultipartConfigElement(uploadDirectory.getAbsolutePath(), 100000, 100000 * 2, 100000 / 2);
 
         registration.setMultipartConfig(multipartConfigElement);
     }

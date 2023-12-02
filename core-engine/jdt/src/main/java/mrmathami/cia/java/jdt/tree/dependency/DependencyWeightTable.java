@@ -28,64 +28,63 @@ import java.util.Arrays;
 
 public final class DependencyWeightTable implements JavaDependencyWeightTable, Serializable {
 
-    private static final long serialVersionUID = -1L;
+	private static final long serialVersionUID = -1L;
 
-    @Nonnull
-    private final double[] weights;
-
-
-    public DependencyWeightTable(@Nonnull double[] weights) {
-        assert weights.length == JavaDependency.VALUE_LIST.size() : "Invalid length for weights.";
-        this.weights = weights;
-    }
+	@Nonnull private final double[] weights;
 
 
-    @Override
-    public double getWeight(@Nonnull JavaDependency dependencyType) {
-        return weights[dependencyType.ordinal()];
-    }
+	public DependencyWeightTable(@Nonnull double[] weights) {
+		assert weights.length == JavaDependency.VALUE_LIST.size() : "Invalid length for weights.";
+		this.weights = weights;
+	}
 
 
-    @Override
-    public boolean equals(@Nullable Object object) {
-        if (this == object) return true;
-        if (object instanceof DependencyWeightTable)
-            return Arrays.equals(weights, ((DependencyWeightTable) object).weights);
-        if (object instanceof JavaDependencyWeightTable) {
-            final JavaDependencyWeightTable dependency = (JavaDependencyWeightTable) object;
-            for (int i = 0; i < weights.length; i++) {
-                if (dependency.getWeight(JavaDependency.VALUE_LIST.get(i)) != weights[i]) return false;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(weights);
-    }
+	@Override
+	public double getWeight(@Nonnull JavaDependency dependencyType) {
+		return weights[dependencyType.ordinal()];
+	}
 
 
-    @Nonnull
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        toString(builder);
-        return builder.toString();
-    }
+	@Override
+	public boolean equals(@Nullable Object object) {
+		if (this == object) return true;
+		if (object instanceof DependencyWeightTable)
+			return Arrays.equals(weights, ((DependencyWeightTable) object).weights);
+		if (object instanceof JavaDependencyWeightTable) {
+			final JavaDependencyWeightTable dependency = (JavaDependencyWeightTable) object;
+			for (int i = 0; i < weights.length; i++) {
+				if (dependency.getWeight(JavaDependency.VALUE_LIST.get(i)) != weights[i]) return false;
+			}
+		}
+		return false;
+	}
 
-    public void toString(@Nonnull StringBuilder builder) {
-        final double[] weights = this.weights;
-        builder.append('{');
-        boolean innerNext = false;
-        for (int i = 0; i < weights.length; i++) {
-            if (weights[i] != 0) {
-                builder.append(innerNext ? ", \"" : " \"")
-                        .append(JavaDependency.VALUE_LIST.get(i)).append("\": ").append(weights[i]);
-                innerNext = true;
-            }
-        }
-        builder.append(innerNext ? " }" : "}");
-    }
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(weights);
+	}
+
+
+	@Nonnull
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		toString(builder);
+		return builder.toString();
+	}
+
+	public void toString(@Nonnull StringBuilder builder) {
+		final double[] weights = this.weights;
+		builder.append('{');
+		boolean innerNext = false;
+		for (int i = 0; i < weights.length; i++) {
+			if (weights[i] != 0) {
+				builder.append(innerNext ? ", \"" : " \"")
+						.append(JavaDependency.VALUE_LIST.get(i)).append("\": ").append(weights[i]);
+				innerNext = true;
+			}
+		}
+		builder.append(innerNext ? " }" : "}");
+	}
 
 }

@@ -18,17 +18,17 @@ public class FindMaxRecursion {
         }
 
         assert max(array, array.length) ==
-                Arrays.stream(array).max().getAsInt();
+        Arrays.stream(array).max().getAsInt();
         assert max(array, 0, array.length - 1) ==
-                Arrays.stream(array).max().getAsInt();
+        Arrays.stream(array).max().getAsInt();
     }
 
     /**
      * Get max of array using divide and conquer algorithm
      *
      * @param array contains elements
-     * @param low   the index of the first element
-     * @param high  the index of the last element
+     * @param low the index of the first element
+     * @param high the index of the last element
      * @return max of {@code array}
      */
     public static int max(int[] array, int low, int high) {
@@ -48,12 +48,12 @@ public class FindMaxRecursion {
      * Get max of array using recursion algorithm
      *
      * @param array contains elements
-     * @param len   length of given array
+     * @param len length of given array
      * @return max value of {@code array}
      */
     public static int max(int[] array, int len) {
         return len == 1
-                ? array[0]
-                : Math.max(max(array, len - 1), array[len - 1]);
+            ? array[0]
+            : Math.max(max(array, len - 1), array[len - 1]);
     }
 }

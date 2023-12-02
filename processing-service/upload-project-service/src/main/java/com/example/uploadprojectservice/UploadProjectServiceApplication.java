@@ -11,17 +11,17 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties({
-        FileStorageProperties.class
+		FileStorageProperties.class
 })
 @OpenAPIDefinition(
-        info = @Info(title = "Upload Project", version = "1.0.0"),
-        servers = {@Server(url = "http://localhost:8020"), @Server(url = "http://locahost:8005/api/upload-project-service")},
-        tags = {@Tag(name = "upload-project-controller", description = "This is the Service Upload-Project description")}
+		info = @Info(title = "Upload Project", version = "1.0.0"),
+		servers = {@Server(url = "http://localhost:8020"), @Server(url = "http://locahost:8005/api/upload-project-service")},
+		tags = {@Tag(name = "upload-project-controller", description = "This is the Service Upload-Project description")}
 )
 public class UploadProjectServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(UploadProjectServiceApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(UploadProjectServiceApplication.class, args);
+	}
 
 }

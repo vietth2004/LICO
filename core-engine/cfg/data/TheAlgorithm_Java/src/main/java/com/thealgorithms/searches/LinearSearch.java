@@ -1,7 +1,6 @@
 package com.thealgorithms.searches;
 
 import com.thealgorithms.devutils.searches.SearchAlgorithm;
-
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -44,9 +43,9 @@ public class LinearSearch implements SearchAlgorithm {
         int size = 200;
         int maxElement = 100;
         Integer[] integers = Stream
-                .generate(() -> r.nextInt(maxElement))
-                .limit(size)
-                .toArray(Integer[]::new);
+            .generate(() -> r.nextInt(maxElement))
+            .limit(size)
+            .toArray(Integer[]::new);
 
         // the element that should be found
         Integer shouldBeFound = integers[r.nextInt(size - 1)];
@@ -55,13 +54,13 @@ public class LinearSearch implements SearchAlgorithm {
         int atIndex = search.find(integers, shouldBeFound);
 
         System.out.println(
-                String.format(
-                        "Should be found: %d. Found %d at index %d. An array length %d",
-                        shouldBeFound,
-                        integers[atIndex],
-                        atIndex,
-                        size
-                )
+            String.format(
+                "Should be found: %d. Found %d at index %d. An array length %d",
+                shouldBeFound,
+                integers[atIndex],
+                atIndex,
+                size
+            )
         );
     }
 }

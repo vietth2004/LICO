@@ -68,7 +68,7 @@ public class TopKWords {
 
         // we change the map to list for convenient sort
         List<Map.Entry<String, Integer>> list = new ArrayList<>(
-                dictionary.entrySet()
+            dictionary.entrySet()
         );
 
         // sort by lambda valueComparator

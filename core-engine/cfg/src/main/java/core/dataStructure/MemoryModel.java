@@ -56,7 +56,7 @@ public class MemoryModel { // ONLY FOR PRIMITIVE TYPES!!!!
 
     public Variable getVariable(String name) {
         for (Map.Entry<Variable, AstNode> set : S.entrySet()) {
-            if (set.getKey().getName().equals(name)) {
+            if(set.getKey().getName().equals(name)) {
                 return set.getKey();
             }
         }

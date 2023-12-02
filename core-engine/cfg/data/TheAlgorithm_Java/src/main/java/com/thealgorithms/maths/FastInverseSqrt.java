@@ -1,7 +1,5 @@
-/**
- * Author : Siddhant Swarup Mallick
+/** Author : Siddhant Swarup Mallick
  * Github : https://github.com/siddhant2002
- * Program description - To find out the inverse square root of the given number Wikipedia Link - https://en.wikipedia.org/wiki/Fast_inverse_square_root
  */
 
 /** Program description - To find out the inverse square root of the given number*/

@@ -61,7 +61,7 @@ public class NextSmallerElement {
     }
 
     public static void main(String[] args) {
-        int[] input = {2, 7, 3, 5, 4, 6, 8};
+        int[] input = { 2, 7, 3, 5, 4, 6, 8 };
         int[] result = findNextSmallerElements(input);
         System.out.println(Arrays.toString(result));
     }

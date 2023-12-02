@@ -1,9 +1,9 @@
 package core.utils;
 
-import core.node.FileNode;
-import core.node.Node;
 import core.structureTree.SNode;
 import core.structureTree.structureNode.SFunctionNode;
+import core.node.FileNode;
+import core.node.Node;
 
 import java.util.ArrayList;
 import java.util.List;

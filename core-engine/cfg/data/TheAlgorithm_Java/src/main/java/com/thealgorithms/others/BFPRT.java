@@ -56,9 +56,9 @@ public class BFPRT {
     /**
      * wikipedia: https://en.wikipedia.org/wiki/Median_of_medians .
      *
-     * @param arr   an array.
+     * @param arr an array.
      * @param begin begin num.
-     * @param end   end num.
+     * @param end end num.
      * @return median of medians.
      */
     public static int medianOfMedians(int[] arr, int begin, int end) {
@@ -67,7 +67,7 @@ public class BFPRT {
         int[] mArr = new int[num / 5 + offset];
         for (int i = 0; i < mArr.length; i++) {
             mArr[i] =
-                    getMedian(arr, begin + i * 5, Math.min(end, begin + i * 5 + 4));
+                getMedian(arr, begin + i * 5, Math.min(end, begin + i * 5 + 4));
         }
         return bfprt(mArr, 0, mArr.length - 1, mArr.length / 2);
     }
@@ -121,25 +121,25 @@ public class BFPRT {
 
     public static void main(String[] args) {
         int[] arr = {
-                11,
-                9,
-                1,
-                3,
-                9,
-                2,
-                2,
-                5,
-                6,
-                5,
-                3,
-                5,
-                9,
-                7,
-                2,
-                5,
-                5,
-                1,
-                9,
+            11,
+            9,
+            1,
+            3,
+            9,
+            2,
+            2,
+            5,
+            6,
+            5,
+            3,
+            5,
+            9,
+            7,
+            2,
+            5,
+            5,
+            1,
+            9,
         };
         int[] minK = getMinKNumsByBFPRT(arr, 5);
         System.out.println(Arrays.toString(minK));

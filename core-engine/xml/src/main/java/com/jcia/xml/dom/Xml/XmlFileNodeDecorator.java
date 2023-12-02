@@ -1,9 +1,9 @@
 package com.jcia.xml.dom.Xml;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jcia.xml.dom.Node;
 import com.jcia.xml.utils.Type.ComponentType;
 import com.jcia.xml.utils.Type.Tier;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.w3c.dom.Document;
 
 import java.util.List;

@@ -26,28 +26,27 @@ import java.util.List;
 
 public interface JavaType extends JavaIdentifiedEntity {
 
-    @Nonnull
-    String ID_CLASS = "JavaType";
+	@Nonnull String ID_CLASS = "JavaType";
 
 
-    //region Basic Getter
+	//region Basic Getter
 
-    @Nonnull
-    @Override
-    default String getIdClass() {
-        return ID_CLASS;
-    }
+	@Nonnull
+	@Override
+	default String getIdClass() {
+		return ID_CLASS;
+	}
 
-    //endregion Basic Getter
+	//endregion Basic Getter
 
-    //region Getter & Setter
+	//region Getter & Setter
 
-    @Nonnull
-    String getDescription();
+	@Nonnull
+	String getDescription();
 
-    @Nonnull
-    List<? extends JavaAnnotate> getAnnotates();
+	@Nonnull
+	List<? extends JavaAnnotate> getAnnotates();
 
-    //endregion Getter & Setter
+	//endregion Getter & Setter
 
 }

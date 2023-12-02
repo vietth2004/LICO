@@ -1,6 +1,8 @@
 package com.thealgorithms.others;
 
 /**
+ *
+ *
  * <h2>Shortest job first.</h2>
  *
  * <p>
@@ -14,7 +16,6 @@ package com.thealgorithms.others;
  * @author shivg7706
  * @since 2018/10/27
  */
-
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -53,7 +54,7 @@ class Schedule {
         System.out.print("Enter the no. of processes: ");
         noOfProcess = in.nextInt();
         System.out.println(
-                "Enter the arrival, burst and priority of processes"
+            "Enter the arrival, burst and priority of processes"
         );
         for (int i = 0; i < noOfProcess; i++) {
             Process p = new Process();
@@ -77,12 +78,12 @@ class Schedule {
 
     void startScheduling() {
         processes.sort(
-                new Comparator<Process>() {
-                    @Override
-                    public int compare(Process a, Process b) {
-                        return a.arrivalTime - b.arrivalTime;
-                    }
+            new Comparator<Process>() {
+                @Override
+                public int compare(Process a, Process b) {
+                    return a.arrivalTime - b.arrivalTime;
                 }
+            }
         );
 
         while (!(arrivals.size() == 0 && remainingProcess.size() == 0)) {
@@ -93,22 +94,22 @@ class Schedule {
             }
 
             remainingProcess.sort(
-                    new Comparator<Process>() {
-                        private int alpha = 6;
-                        private int beta = 1;
+                new Comparator<Process>() {
+                    private int alpha = 6;
+                    private int beta = 1;
 
-                        @Override
-                        public int compare(Process a, Process b) {
-                            int aRem = a.remainingTime;
-                            int bRem = b.remainingTime;
-                            int aprior = a.priority;
-                            int bprior = b.priority;
-                            return (
-                                    (alpha * aRem + beta * aprior) -
-                                            (alpha * bRem + beta * bprior)
-                            );
-                        }
+                    @Override
+                    public int compare(Process a, Process b) {
+                        int aRem = a.remainingTime;
+                        int bRem = b.remainingTime;
+                        int aprior = a.priority;
+                        int bprior = b.priority;
+                        return (
+                            (alpha * aRem + beta * aprior) -
+                            (alpha * bRem + beta * bprior)
+                        );
                     }
+                }
             );
 
             int k = timeElapsed(timer);
@@ -130,7 +131,7 @@ class Schedule {
         for (int i = 0; i < completed.size(); i++) {
             int pid = remainingProcess.get(completed.get(i)).pid;
             processes.get(pid).waitTime =
-                    remainingProcess.get(completed.get(i)).waitTime;
+                remainingProcess.get(completed.get(i)).waitTime;
             remainingProcess.remove(remainingProcess.get(completed.get(i)));
         }
     }
@@ -165,23 +166,23 @@ class Schedule {
 
         for (int i = 0; i < noOfProcess; i++) {
             processes.get(i).turnAroundTime =
-                    processes.get(i).waitTime + processes.get(i).burstTime;
+                processes.get(i).waitTime + processes.get(i).burstTime;
 
             waitTimeTot += processes.get(i).waitTime;
             tatTime += processes.get(i).turnAroundTime;
 
             System.out.println(
-                    "Process no.: " +
-                            i +
-                            " Wait time: " +
-                            processes.get(i).waitTime +
-                            " Turn Around Time: " +
-                            processes.get(i).turnAroundTime
+                "Process no.: " +
+                i +
+                " Wait time: " +
+                processes.get(i).waitTime +
+                " Turn Around Time: " +
+                processes.get(i).turnAroundTime
             );
         }
 
         System.out.println(
-                "Average Waiting Time: " + waitTimeTot / noOfProcess
+            "Average Waiting Time: " + waitTimeTot / noOfProcess
         );
         System.out.println("Average TAT Time: " + tatTime / noOfProcess);
         System.out.println("Throughput: " + (float) noOfProcess / (timer - 1));

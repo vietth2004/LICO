@@ -25,15 +25,14 @@ public class ParserUtils {
 
     /**
      * Recalculate id in all xml nodes by total javaNods
-     *
      * @param javaTotalNodesId
      * @param nodes
      */
-    public static void reCalculateXmlNodesId(int javaTotalNodesId, List<Node> nodes) {
+    public static void reCalculateXmlNodesId(int javaTotalNodesId, List<Node> nodes){
         nodes.forEach(node -> {
             int id = node.getId();
             node.setId(id += javaTotalNodesId);
-            if (node.getChildren().size() > 0) {
+            if(node.getChildren().size() > 0) {
                 reCalculateXmlNodesId(javaTotalNodesId, node.getChildren());
             }
         });
@@ -41,7 +40,6 @@ public class ParserUtils {
 
     /**
      * flat nested java rootNode to array of java node
-     *
      * @param rootNode
      * @return
      */
@@ -49,8 +47,8 @@ public class ParserUtils {
         List<JavaNode> nodes = new ArrayList<>();
         nodes.add(rootNode);
 
-        if (rootNode.getChildren().size() > 0) {
-            for (Object child : rootNode.getChildren()) {
+        if(rootNode.getChildren().size() > 0) {
+            for(Object child : rootNode.getChildren()) {
                 JavaNode childNode = null;
             }
         }
@@ -60,7 +58,6 @@ public class ParserUtils {
 
     /**
      * find all bean by 2 annotation @Named and @ManagedBean
-     *
      * @param javaNodes
      * @return
      */
@@ -68,10 +65,10 @@ public class ParserUtils {
         List<JavaNode> jsfBeans = new ArrayList<>();
         javaNodes.forEach(
                 node -> {
-                    if (node != null) {
-                        if (checkNodeIsBean(node, JsfConstants.NAMED_NODE))
+                    if(node != null) {
+                        if(checkNodeIsBean(node, JsfConstants.NAMED_NODE))
                             jsfBeans.add(node);
-                        if (checkNodeIsBean(node, JsfConstants.MANAGED_BEAN_NODE))
+                        if(checkNodeIsBean(node, JsfConstants.MANAGED_BEAN_NODE))
                             jsfBeans.add(node);
                     }
                 }
@@ -82,7 +79,6 @@ public class ParserUtils {
     /**
      * find all Injected javaNode
      * (defined by 2 annotation @ManagedProperty and @Inject)
-     *
      * @param javaNodes
      * @return
      */
@@ -90,9 +86,9 @@ public class ParserUtils {
         List<JavaNode> jsfBeanInjection = new ArrayList<>();
         javaNodes.forEach(
                 node -> {
-                    if (checkNodeIsBean(node, JsfConstants.INJECT_NODE))
+                    if(checkNodeIsBean(node, JsfConstants.INJECT_NODE))
                         jsfBeanInjection.add(node);
-                    if (checkNodeIsBean(node, JsfConstants.MANAGED_PROPERTY_NODE))
+                    if(checkNodeIsBean(node, JsfConstants.MANAGED_PROPERTY_NODE))
                         jsfBeanInjection.add(node);
                 }
         );
@@ -101,18 +97,17 @@ public class ParserUtils {
 
     /**
      * find bean name in annotation using regex pattern of name: #{...}
-     *
      * @param node
      * @return
      */
     public static String findBeanName(JavaNode node) {
-        if (node.getAnnotates().size() > 0) {
-            for (Object obj : node.getAnnotates()) {
-                if (obj instanceof JavaAnnotation) {
-                    if (((JavaAnnotation) obj).getMemberValuePair().size() > 0) {
-                        for (Object pair : ((JavaAnnotation) obj).getMemberValuePair()) {
-                            if (pair instanceof MemberValuePair) {
-                                if (((MemberValuePair) pair).getKey().equals("name")) {
+        if(node.getAnnotates().size() > 0) {
+            for(Object obj : node.getAnnotates()) {
+                if(obj instanceof JavaAnnotation) {
+                    if(((JavaAnnotation) obj).getMemberValuePair().size() > 0) {
+                        for(Object pair : ((JavaAnnotation) obj).getMemberValuePair()) {
+                            if(pair instanceof MemberValuePair) {
+                                if(((MemberValuePair) pair).getKey().equals("name")){
                                     return ((MemberValuePair) pair).getValue().replaceAll("[^a-zA-Z0-9]", "");
                                 }
                             }
@@ -127,15 +122,14 @@ public class ParserUtils {
     /**
      * find name of bean injected to javaNode
      * (defined by 2 annotations: @ManagedProperty and @Inject)
-     *
      * @param node
      * @return
      */
     public static String findBeanInjectionName(JavaNode node) {
-        for (Object obj : node.getAnnotates()) {
-            if (obj instanceof JavaAnnotation) {
-                if (((JavaAnnotation) obj).getMemberValuePair().size() > 0) {
-                    for (MemberValuePair pair : ((JavaAnnotation) obj).getMemberValuePair()) {
+        for(Object obj : node.getAnnotates()){
+            if(obj instanceof JavaAnnotation) {
+                if(((JavaAnnotation) obj).getMemberValuePair().size() > 0) {
+                    for(MemberValuePair pair : ((JavaAnnotation) obj).getMemberValuePair()) {
                         if (pair.getKey().equals("value")) {
                             return pair.getValue().replaceAll("[^a-zA-Z0-9]", "");
                         }
@@ -148,16 +142,15 @@ public class ParserUtils {
 
     /**
      * Check if node is bean
-     *
      * @param node
      * @param criteria (@Named, @ManagedBean, @Inject, @ManagedProperty)
      * @return
      */
     public static boolean checkNodeIsBean(JavaNode node, String criteria) {
         if (node.getAnnotates() != null) {
-            for (Object obj : node.getAnnotates()) {
-                if (obj instanceof JavaAnnotation) {
-                    if (((JavaAnnotation) obj).getName().endsWith(criteria))
+            for(Object obj : node.getAnnotates()) {
+                if(obj instanceof JavaAnnotation) {
+                    if(((JavaAnnotation) obj).getName().endsWith(criteria))
                         return true;
                 }
             }
@@ -169,7 +162,6 @@ public class ParserUtils {
      * Get all jsf bean nodes
      * If annotation has no attribute
      * Then bean's name is set to camel case of class
-     *
      * @param javaNode
      * @return
      */
@@ -180,7 +172,7 @@ public class ParserUtils {
                 node -> {
                     JsfBeanNode bean = new JsfBeanNode();
                     bean.setValue(node);
-                    if (findBeanName(node) != null)
+                    if(findBeanName(node) != null)
                         bean.setBeanName(findBeanName(node));
                     else
                         bean.setBeanName(Character.toLowerCase(node.getSimpleName().charAt(0)) + node.getSimpleName().substring(1));
@@ -192,7 +184,6 @@ public class ParserUtils {
 
     /**
      * filter all .xhtml file
-     *
      * @param nodes
      * @return
      */
@@ -208,14 +199,13 @@ public class ParserUtils {
 
     /**
      * filter all children XmlTagNode of XmlFileNode
-     *
      * @param xmlFileNodes
      * @return
      */
     public static List<Node> getChildrenLevel1XmlFileNode(List<Node> xmlFileNodes) {
         List<Node> nodes = new ArrayList<>();
-        for (Node node : xmlFileNodes) {
-            if (node instanceof XmlFileNode) {
+        for(Node node : xmlFileNodes) {
+            if(node instanceof XmlFileNode) {
                 nodes.addAll(node.getChildren());
             }
         }
@@ -224,21 +214,20 @@ public class ParserUtils {
 
     /**
      * filter all value match pattern #{...} by using  regex
-     *
      * @param node
      * @return
      */
     public static Set<XmlBeanInjectionNode> filterTagNode(Node node) {
         Set<XmlBeanInjectionNode> nodes = new HashSet<>();
         Pattern pattern = Pattern.compile(JsfConstants.JSF_BEAN_TAG_INJECT_PATTERN);
-        if (node instanceof XmlTagNode) {
+        if(node instanceof XmlTagNode) {
 
             /**
              * analyze injected bean in node's attributes
              */
-            for (String value : ((XmlTagNode) node).getAttributes().values()) {
+            for(String value : ((XmlTagNode) node).getAttributes().values())  {
                 Matcher matcher = pattern.matcher(value);
-                if (matcher.matches()) {
+                if(matcher.matches()){
                     XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
                     beanInjectionNode.setBeanInjection(value.replaceAll("[^a-zA-Z0-9\\-.\\[\\]]", ""));
                     beanInjectionNode.setValue(node);
@@ -249,7 +238,7 @@ public class ParserUtils {
             /**
              * analyze injected bean in node's content
              */
-            if (((XmlTagNode) node).getContent() != null) {
+            if(((XmlTagNode) node).getContent() != null){
                 Matcher matcherContent = pattern.matcher(((XmlTagNode) node).getContent());
                 if (matcherContent.matches()) {
                     XmlBeanInjectionNode beanInjectionNode = new XmlBeanInjectionNode();
@@ -258,7 +247,7 @@ public class ParserUtils {
                     nodes.add(beanInjectionNode);
                 }
             }
-            for (Node child : node.getChildren()) {
+            for(Node child : node.getChildren()) {
                 nodes.addAll(filterTagNode(child));
             }
         }
@@ -267,7 +256,6 @@ public class ParserUtils {
 
     /**
      * get all custom beans config from faces-config.xml file
-     *
      * @param tagNode
      * @param nodes
      * @return
@@ -275,16 +263,16 @@ public class ParserUtils {
     public static Set<JsfBeanNode> filterBeanFromFacesConfig(Node tagNode, List<JavaNode> nodes) {
         Set<JsfBeanNode> jsfBeanNodes = new HashSet<>();
 
-        if (tagNode instanceof XmlTagNode) {
-            if (((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
+        if(tagNode instanceof XmlTagNode) {
+            if(((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
                 JsfBeanNode beanNode = new JsfBeanNode();
-                if (prepareBeanNodeValue(tagNode, nodes) != null) {
+                if(prepareBeanNodeValue(tagNode, nodes) != null) {
                     beanNode.setValue(prepareBeanNodeValue(tagNode, nodes));
                     beanNode.setBeanName(prepareBeanNodeName(tagNode));
                     jsfBeanNodes.add(beanNode);
                 }
             }
-            for (Node child : tagNode.getChildren()) {
+            for(Node child : tagNode.getChildren()) {
                 jsfBeanNodes.addAll(filterBeanFromFacesConfig(child, nodes));
             }
         }
@@ -294,7 +282,6 @@ public class ParserUtils {
 
     /**
      * get all custom beans config from faces-config.xml file
-     *
      * @param tagNode
      * @param propsNode
      * @return
@@ -302,14 +289,14 @@ public class ParserUtils {
     public static Set<PropsBeanNode> filterPropBeanFromFacesConfig(Node tagNode, List<PropertiesFileNode> propsNode) {
         Set<PropsBeanNode> propBeanNodes = new HashSet<>();
 
-        if (tagNode instanceof XmlTagNode) {
-            if (((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
+        if(tagNode instanceof XmlTagNode) {
+            if(((XmlTagNode) tagNode).getTagName().equals(JsfConstants.JSF_RESOURCE_BUNDLE_TAG)) {
                 PropsBeanNode beanNode = new PropsBeanNode();
                 beanNode.setBeanName(prepareBeanNodeName(tagNode));
                 beanNode.setValue(preparePropBeanNodeValue(tagNode, propsNode));
                 propBeanNodes.add(beanNode);
             }
-            for (Node child : tagNode.getChildren()) {
+            for(Node child : tagNode.getChildren()) {
                 propBeanNodes.addAll(filterPropBeanFromFacesConfig(child, propsNode));
             }
         }
@@ -319,19 +306,18 @@ public class ParserUtils {
     /**
      * get value for beanNode
      * value from base-name tagNode, child of resource-bundle tagNode
-     *
      * @param node
      * @param nodes
      * @return
      */
     public static JavaNode prepareBeanNodeValue(Node node, List<JavaNode> nodes) {
         JavaNode beanNode = new JavaNode();
-        for (Node child : node.getChildren()) {
+        for(Node child : node.getChildren()) {
             if (child instanceof XmlTagNode) {
                 String tagName = ((XmlTagNode) child).getTagName();
-                if (tagName.equals(JsfConstants.JSF_BASE_NAME_TAG)) {
+                if(tagName.equals(JsfConstants.JSF_BASE_NAME_TAG)) {
                     JavaNode value = findJavaNodeByName(nodes, ((XmlTagNode) child).getContent());
-                    if (value != null)
+                    if(value != null)
                         return value;
                 }
             }
@@ -341,7 +327,6 @@ public class ParserUtils {
 
     /**
      * Get java node by name
-     *
      * @param nodes
      * @param name
      * @return
@@ -351,24 +336,23 @@ public class ParserUtils {
                 .stream()
                 .filter(node -> node.getUniqueName().equals(name))
                 .collect(Collectors.toList());
-        if (!result.isEmpty()) return result.get(0);
+        if(!result.isEmpty()) return result.get(0);
         //TODO: Need to fix this one, some bean has not defined with uniquename, so I cant get bean for it
         return null;
     }
 
     /**
      * get value from bean node
-     *
      * @param node
      * @param propsFileNodes
      * @return
      */
     public static PropertiesFileNode preparePropBeanNodeValue(Node node, List<PropertiesFileNode> propsFileNodes) {
         PropsBeanNode beanNode = new PropsBeanNode();
-        for (Node child : node.getChildren()) {
-            if (child instanceof XmlTagNode) {
+        for(Node child : node.getChildren()) {
+            if(child instanceof XmlTagNode) {
                 String tagName = ((XmlTagNode) child).getTagName();
-                if (tagName.equals(JsfConstants.JSF_BASE_NAME_TAG)) {
+                if(tagName.equals(JsfConstants.JSF_BASE_NAME_TAG)) {
                     PropertiesFileNode value = findPropsFileNodeByName(propsFileNodes, ((XmlTagNode) child).getContent());
                     return value;
                 }
@@ -379,7 +363,6 @@ public class ParserUtils {
 
     /**
      * find PropertiesFileNode by passed name
-     *
      * @param propsFileNodes
      * @param name
      * @return
@@ -389,21 +372,20 @@ public class ParserUtils {
                 .stream()
                 .filter(node -> node.getFullyQualifiedName().contains(name))
                 .collect(Collectors.toList());
-        if (!result.isEmpty()) return result.get(0);
+        if(!result.isEmpty()) return result.get(0);
         return new PropertiesFileNode();
     }
 
     /**
      * get name for beanNode
      * value from var tagNode, child of resource-bundle tagNode
-     *
      * @param node
      * @return
      */
     public static String prepareBeanNodeName(Node node) {
-        for (Node child : node.getChildren()) {
-            if (child instanceof XmlTagNode) {
-                if (((XmlTagNode) child).getTagName().equals("var")) {
+        for(Node child : node.getChildren()) {
+            if(child instanceof XmlTagNode) {
+                if(((XmlTagNode) child).getTagName().equals("var")) {
                     return ((XmlTagNode) child).getContent();
                 }
             }

@@ -3,10 +3,10 @@ package com.thealgorithms.dynamicprogramming;
 import java.util.Scanner;
 
 /**
- * @author [Syed] (https://github.com/roeticvampire)
  * @file @brief Implements [Palindrome
  * Partitioning](https://leetcode.com/problems/palindrome-partitioning-ii/)
  * algorithm, giving you the minimum number of partitions you need to make
+ *
  * @details palindrome partitioning uses dynamic programming and goes to all the
  * possible partitions to find the minimum you are given a string and you need
  * to give minimum number of partitions needed to divide it into a number of
@@ -15,6 +15,7 @@ import java.util.Scanner;
  * complexity O(n^2) For example: example 1:- String : "nitik" Output : 2 => "n
  * | iti | k" For example: example 2:- String : "ababbbabbababa" Output : 3 =>
  * "aba | b | bbabb | ababa"
+ * @author [Syed] (https://github.com/roeticvampire)
  */
 public class PalindromicPartitioning {
 
@@ -48,8 +49,8 @@ public class PalindromicPartitioning {
                     isPalindrome[i][j] = (word.charAt(i) == word.charAt(j));
                 } else {
                     if (
-                            (word.charAt(i) == word.charAt(j)) &&
-                                    isPalindrome[i + 1][j - 1]
+                        (word.charAt(i) == word.charAt(j)) &&
+                        isPalindrome[i + 1][j - 1]
                     ) {
                         isPalindrome[i][j] = true;
                     } else {
@@ -67,8 +68,8 @@ public class PalindromicPartitioning {
                 minCuts[i] = Integer.MAX_VALUE;
                 for (j = 0; j < i; j++) {
                     if (
-                            isPalindrome[j + 1][i] == true &&
-                                    1 + minCuts[j] < minCuts[i]
+                        isPalindrome[j + 1][i] == true &&
+                        1 + minCuts[j] < minCuts[i]
                     ) {
                         minCuts[i] = 1 + minCuts[j];
                     }
@@ -89,10 +90,10 @@ public class PalindromicPartitioning {
         // ans stores the final minimal cut count needed for partitioning
         int ans = minimalpartitions(word);
         System.out.println(
-                "The minimum cuts needed to partition \"" +
-                        word +
-                        "\" into palindromes is " +
-                        ans
+            "The minimum cuts needed to partition \"" +
+            word +
+            "\" into palindromes is " +
+            ans
         );
         input.close();
     }

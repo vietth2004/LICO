@@ -3,7 +3,7 @@ package com.example.springservice.ast.dependency;
 
 import com.example.springservice.ast.node.Node;
 
-public class Pair {
+public class Pair{
     private Node node;
     private DependencyCountTable dependency;
 

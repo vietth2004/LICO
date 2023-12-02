@@ -1,8 +1,8 @@
 package com.example.jsfservice.dom.Jsp;
 
-import com.example.jsfservice.dom.FileNode;
 import com.example.jsfservice.utils.Exception.JciaIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.jsfservice.dom.FileNode;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
@@ -13,14 +13,11 @@ public class JspFileNode extends FileNode {
     @JsonIgnore
     @JciaIgnore
     private Document document;
-    @JsonIgnore
-    @JciaIgnore
+    @JsonIgnore @JciaIgnore
     private List<ActionJsp> listAction;
-    @JsonIgnore
-    @JciaIgnore
+    @JsonIgnore @JciaIgnore
     private List<OgnlJsp> listOgnl;
-    @JsonIgnore
-    @JciaIgnore
+    @JsonIgnore @JciaIgnore
     private List<IncludeJsp> listRelativePathJspInclude;
 
     public JspFileNode() {
@@ -47,11 +44,10 @@ public class JspFileNode extends FileNode {
         this.listOgnl.add(listOgnl);
     }
 
-    public List<IncludeJsp> getListRelativePathJspInclude() {
+    public List<IncludeJsp> getListRelativePathJspInclude(){
         return this.listRelativePathJspInclude;
     }
-
-    public void addRelativePathJspInclude(IncludeJsp path) {
+    public void addRelativePathJspInclude(IncludeJsp path){
         this.listRelativePathJspInclude.add(path);
     }
 
@@ -63,15 +59,15 @@ public class JspFileNode extends FileNode {
         this.document = document;
     }
 
-    public void setListAction(List<ActionJsp> list) {
+    public void setListAction(List<ActionJsp> list){
         this.listAction = list;
     }
 
-    public void setListOgnl(List<OgnlJsp> list) {
+    public void setListOgnl(List<OgnlJsp> list){
         this.listOgnl = list;
     }
 
-    public void setListRelativePathJspInclude(List<IncludeJsp> list) {
+    public void setListRelativePathJspInclude(List<IncludeJsp> list){
         this.listRelativePathJspInclude = list;
     }
 

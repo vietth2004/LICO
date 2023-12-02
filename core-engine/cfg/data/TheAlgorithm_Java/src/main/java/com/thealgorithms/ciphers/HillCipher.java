@@ -158,7 +158,7 @@ public class HillCipher {
     static void validateDeterminant(int[][] keyMatrix, int n) {
         if (determinant(keyMatrix, n) % 26 == 0) {
             System.out.println(
-                    "Invalid key, as determinant = 0. Program Terminated"
+                "Invalid key, as determinant = 0. Program Terminated"
             );
             return;
         }

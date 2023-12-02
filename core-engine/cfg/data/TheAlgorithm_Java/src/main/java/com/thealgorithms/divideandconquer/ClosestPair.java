@@ -77,9 +77,9 @@ public final class ClosestPair {
     /**
      * xPartition function: arrange x-axis.
      *
-     * @param a     (IN Parameter) array of points <br>
+     * @param a (IN Parameter) array of points <br>
      * @param first (IN Parameter) first point <br>
-     * @param last  (IN Parameter) last point <br>
+     * @param last (IN Parameter) last point <br>
      * @return pivot index
      */
     public int xPartition(final Location[] a, final int first, final int last) {
@@ -104,9 +104,9 @@ public final class ClosestPair {
     /**
      * yPartition function: arrange y-axis.
      *
-     * @param a     (IN Parameter) array of points <br>
+     * @param a (IN Parameter) array of points <br>
      * @param first (IN Parameter) first point <br>
-     * @param last  (IN Parameter) last point <br>
+     * @param last (IN Parameter) last point <br>
      * @return pivot index
      */
     public int yPartition(final Location[] a, final int first, final int last) {
@@ -131,14 +131,14 @@ public final class ClosestPair {
     /**
      * xQuickSort function: //x-axis Quick Sorting.
      *
-     * @param a     (IN Parameter) array of points <br>
+     * @param a (IN Parameter) array of points <br>
      * @param first (IN Parameter) first point <br>
-     * @param last  (IN Parameter) last point <br>
+     * @param last (IN Parameter) last point <br>
      */
     public void xQuickSort(
-            final Location[] a,
-            final int first,
-            final int last
+        final Location[] a,
+        final int first,
+        final int last
     ) {
         if (first < last) {
             int q = xPartition(a, first, last); // pivot
@@ -150,14 +150,14 @@ public final class ClosestPair {
     /**
      * yQuickSort function: //y-axis Quick Sorting.
      *
-     * @param a     (IN Parameter) array of points <br>
+     * @param a (IN Parameter) array of points <br>
      * @param first (IN Parameter) first point <br>
-     * @param last  (IN Parameter) last point <br>
+     * @param last (IN Parameter) last point <br>
      */
     public void yQuickSort(
-            final Location[] a,
-            final int first,
-            final int last
+        final Location[] a,
+        final int first,
+        final int last
     ) {
         if (first < last) {
             int q = yPartition(a, first, last); // pivot
@@ -169,7 +169,7 @@ public final class ClosestPair {
     /**
      * closestPair function: find closest pair.
      *
-     * @param a        (IN Parameter) array stored before divide <br>
+     * @param a (IN Parameter) array stored before divide <br>
      * @param indexNum (IN Parameter) number coordinates divideArray <br>
      * @return minimum distance <br>
      */
@@ -187,11 +187,11 @@ public final class ClosestPair {
         System.arraycopy(divideArray, 0, leftArray, 0, divideX);
         // divide-right array
         System.arraycopy(
-                divideArray,
-                divideX,
-                rightArray,
-                0,
-                indexNum - divideX
+            divideArray,
+            divideX,
+            rightArray,
+            0,
+            indexNum - divideX
         );
 
         double minLeftArea; // Minimum length of left array

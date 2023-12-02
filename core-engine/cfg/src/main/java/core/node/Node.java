@@ -1,8 +1,8 @@
 package core.node;
 
+import core.cfg.CfgNode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import core.cfg.CfgNode;
 import core.structureTree.SNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 

@@ -2,7 +2,7 @@ package com.example.ciaservice.ast;
 
 import java.util.List;
 
-public class JavaNode extends Node {
+public class JavaNode extends Node{
 
     private List<Pair> dependencyTo;
 
