@@ -1,6 +1,8 @@
 package core.dataStructure;
 
+import core.ast.additionalNodes.Node;
 import core.cfg.CfgBoolExprNode;
+import core.cfg.CfgForEachExpressionNode;
 import core.cfg.CfgNode;
 
 import java.util.ArrayList;
@@ -17,6 +19,29 @@ public final class MarkedPath {
         tmpAdd(statement, isTrueCondition, isFalseCondition);
         if (!isTrueCondition && !isFalseCondition) return true;
         return !isFalseCondition;
+    }
+
+    public static int getTotalStatement(CfgNode cfgNode, CfgNode duplicateNode) {
+        if(cfgNode == null || cfgNode.getIsEndCfgNode()) {
+            return 0;
+        }
+        int plusStatement = 0;
+        if(!cfgNode.getContent().equals("")) {
+            plusStatement++;
+        }
+
+        if(cfgNode instanceof CfgBoolExprNode) {
+            if(cfgNode == duplicateNode) {
+                return 0;
+            }
+            CfgBoolExprNode boolExprNode = (CfgBoolExprNode) cfgNode;
+            return plusStatement + getTotalStatement(boolExprNode.getTrueNode(), cfgNode) + getTotalStatement(boolExprNode.getFalseNode(), cfgNode);
+        } else if(cfgNode instanceof CfgForEachExpressionNode) {
+            CfgForEachExpressionNode forEachExpressionNode = (CfgForEachExpressionNode) cfgNode;
+            return plusStatement + getTotalStatement(forEachExpressionNode.getHasElementAfterNode(), cfgNode) + getTotalStatement(forEachExpressionNode.getNoMoreElementAfterNode(), cfgNode);
+        } else {
+            return plusStatement + getTotalStatement(cfgNode.getAfterStatementNode(), duplicateNode);
+        }
     }
 
     public static List<MarkedStatement> markPathToCFG(CfgNode rootNode) {
@@ -70,6 +95,33 @@ public final class MarkedPath {
         reset();
         return result;
 //        return coveredStatements;
+    }
+
+    public static List<MarkedStatement> isPathActuallyCovered(Path path) {
+        int i = 0;
+        Node currentNode = path.getCurrentFirst();
+        while (currentNode != null && i < markedStatements.size()) {
+            CfgNode cfgNode = currentNode.getData();
+            if(cfgNode.getContent().equals("")) {
+                currentNode = currentNode.getNext();
+                continue;
+            }
+
+            if(!cfgNode.getContent().equals(markedStatements.get(i).getStatement())) {
+                reset();
+                return null;
+            } else {
+                markedStatements.get(i).setCfgNode(cfgNode);
+            }
+
+            // Updater
+            i++;
+            currentNode = currentNode.getNext();
+        }
+
+        List<MarkedStatement> result = markedStatements;
+        reset();
+        return result;
     }
 
     public static List<String> getMarkedStatementsStringList() {
@@ -152,7 +204,7 @@ public final class MarkedPath {
         markedStatements.add(markedStatement);
     }
 
-    public static CfgNode findUncoverStatement(CfgNode rootNode, CfgNode duplicateNode) {
+    public static CfgNode findUncoveredStatement(CfgNode rootNode, CfgNode duplicateNode) {
         if (rootNode == null || !rootNode.isMarked()) {
             return rootNode;
         }
@@ -161,13 +213,13 @@ public final class MarkedPath {
 
             if (boolExprNode != duplicateNode) {
                 duplicateNode = boolExprNode;
-                return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
+                return findUncoveredStatement(boolExprNode.getTrueNode(), duplicateNode);
             } else {
-                return findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
+                return findUncoveredStatement(boolExprNode.getFalseNode(), duplicateNode);
             }
         }
 
-        return findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
+        return findUncoveredStatement(rootNode.getAfterStatementNode(), duplicateNode);
     }
 
     public static CfgNode findUncoveredBranch(CfgNode rootNode, CfgNode duplicateNode) {

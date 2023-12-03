@@ -11,8 +11,6 @@ import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedPath;
-import core.dataStructure.MarkedPathV2;
-import core.dataStructure.MarkedStatement;
 import core.dataStructure.Path;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
@@ -45,7 +43,6 @@ public class ConcolicTesting {
     }
 
     private static StringBuilder report;
-    private static ConcolicTestResult testResult;
     private static CompilationUnit compilationUnit;
     private static String fullyClonedClassName;
     private static ArrayList<ASTNode> funcAstNodeList;
@@ -66,33 +63,51 @@ public class ConcolicTesting {
         setupCfgTree();
         setupParameters(methodName);
 
-        ConcolicTestResult testResult = testingWithStatementAndBranchCoverage(coverage);
+        if(coverage == Coverage.STATEMENT || coverage == Coverage.BRANCH) {
+            return testingWithStatementAndBranchCoverage(coverage);
+        } else {
+            return testingWithPathCoverage();
+        }
+    }
+
+    private static ConcolicTestResult testingWithPathCoverage() throws InvocationTargetException, IllegalAccessException {
+        ConcolicTestResult testResult = new ConcolicTestResult();
+
+        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+        System.out.println(paths.size());
+
+        for (int i = 0; i < paths.size(); i++) {
+            new SymbolicExecution(paths.get(i), parameters);
+
+            Object[] evaluatedValues = getParameterValue(parameterClasses);
+            long startRunTestTime = System.nanoTime();
+            Object output = method.invoke(parameterClasses, evaluatedValues);
+            long endRunTestTime = System.nanoTime();
+            double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+            List<CoveredStatement> coveredStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.isPathActuallyCovered(paths.get(i)));
+
+            testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements, output, runTestDuration));
+        }
 
         return testResult;
     }
 
-    private static void testingWithPathCoverage(Class<?>[] parameterClasses) throws InvocationTargetException, IllegalAccessException {
-        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
-        for (int i = 0; i < paths.size(); i++) {
-
-            SymbolicExecution execution = new SymbolicExecution(paths.get(i), parameters);
-
-            method.invoke(parameterClasses, getParameterValue(parameterClasses));
-            if (!MarkedPathV2.check(paths.get(i))) {
-                System.out.println("Path is not covered");
-            }
-        }
-    }
-
     private static ConcolicTestResult testingWithStatementAndBranchCoverage(Coverage coverage) throws InvocationTargetException, IllegalAccessException {
+        ConcolicTestResult testResult = new ConcolicTestResult();
         Object[] evaluatedValues = createRandomTestData(parameterClasses);
+
+        long startRunTestTime = System.nanoTime();
         Object output = method.invoke(parameterClasses, evaluatedValues);
-        List<CoveredStatement> pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgBeginNode));
+        long endRunTestTime = System.nanoTime();
+        double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+
+        List<CoveredStatement> coveredStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgBeginNode));
         report.append("STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter ").append(Arrays.toString(parameterClasses)).append(": ");
         report.append(Arrays.toString(evaluatedValues)).append("\n");
-        report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(pathStatements).append("\n");
+        report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(coveredStatements).append("\n");
 
-        testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, pathStatements, output));
+        testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements, output, runTestDuration));
+
 
         boolean isTestedSuccessfully = true;
         int i = 5;
@@ -105,7 +120,6 @@ public class ConcolicTesting {
 
             SymbolicExecution solution = new SymbolicExecution(newPath, parameters);
 
-
             if (solution.getModel() == null) {
                 isTestedSuccessfully = false;
                 break;
@@ -115,13 +129,18 @@ public class ConcolicTesting {
             report.append("STEP ").append(i++).append(": Thực thi tượng trưng đường thi hành và sinh test data tương ứng: ");
             report.append(Arrays.toString(evaluatedValues)).append("\n");
 
+
+            startRunTestTime = System.nanoTime();
             output = method.invoke(parameterClasses, evaluatedValues);
-            pathStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgBeginNode));
+            endRunTestTime = System.nanoTime();
+            runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+
+            coveredStatements = CoveredStatement.switchToCoveredStatementList(MarkedPath.markPathToCFG(cfgBeginNode));
 
             report.append("STEP ").append(i++).append(": Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: ");
-            report.append(pathStatements).append("\n");
+            report.append(coveredStatements).append("\n");
 
-            testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, pathStatements, output));
+            testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements, output, runTestDuration));
 
             uncoveredNode = findUncoverNode(cfgBeginNode, coverage);
             System.out.println("Uncovered Node: " + uncoveredNode);
@@ -140,7 +159,7 @@ public class ConcolicTesting {
     private static CfgNode findUncoverNode(CfgNode cfgNode, Coverage coverage) {
         switch (coverage) {
             case STATEMENT:
-                return MarkedPath.findUncoverStatement(cfgNode, null);
+                return MarkedPath.findUncoveredStatement(cfgNode, null);
             case BRANCH:
                 return MarkedPath.findUncoveredBranch(cfgNode, null);
             default:
@@ -149,7 +168,6 @@ public class ConcolicTesting {
     }
 
     private static void setup(String path, String className, String methodName) throws IOException {
-        testResult = new ConcolicTestResult();
         report = new StringBuilder();
 
         // Parse File

@@ -23,6 +23,9 @@ public class ASTHelper {
     private static Stack<CfgNode> conditionNodeStack = new Stack<>(); // for continue statements
     private static CfgEndBlockNode endCfgNode = null; // for return statements
 
+    private static int totalStatement;
+    private static int totalBranch;
+
     public static String getFullyQualifiedName(Type type, CompilationUnit cu) {
         if (type.isParameterizedType()) {
             ParameterizedType parameterizedType = (ParameterizedType) type;

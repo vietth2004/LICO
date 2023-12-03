@@ -114,7 +114,7 @@ public class TestExecution {
                     for (String line : linesTestPath) {
                         int start = Utils.getStartValueOfLineInTestPath(line);
                         CfgNode finderCFG = CFGUtils.findCFGNodeByStart(rootCFG, start);
-                        if (finderCFG != null) finderCFG.setVisited(true);
+                        if (finderCFG != null) finderCFG.setMarked(true);
                     }
                 } catch (IOException e) {
                     System.out.println("Fail to read test path content.");

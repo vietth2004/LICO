@@ -37,11 +37,11 @@ public class FindAllPath {
         } else {
             currentPath.add(cfgNode);
             if(cfgNode instanceof CfgBoolExprNode) {
-                int duplicateNode = numberOfDuplicateNode(cfgNode);
+                int numberOfDuplicateNode = numberOfDuplicateNode(cfgNode);
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) cfgNode;
 
                 // CfgBoolExprNode has 2 child node is trueNode and falseNode
-                if(duplicateNode < DEPTH) {
+                if(numberOfDuplicateNode < DEPTH) {
                     findPaths(boolExprNode.getTrueNode());
                 }
                 CfgNode falseNode = boolExprNode.getFalseNode();

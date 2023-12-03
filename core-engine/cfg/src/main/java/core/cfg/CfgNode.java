@@ -13,22 +13,17 @@ public class CfgNode
 {
     private int startPosition;
     private int endPosition;
-
     private int lineNumber;
-
     private CfgNode beforeStatementNode;//Lenh ngay truoc
     private CfgNode afterStatementNode;//Lenh ngay sau
     private boolean isBeginCfgNode = false; //Nut dau CFG (nút giả)
     private boolean isEndCfgNode = false; //Nut cuoi CFG (nút giả)
-
     private boolean isFalseNode = false; //Nut false cua cau lenh dieu kien
-
     private String content = "";
-
     private boolean isMarked = false;
-
     private ASTNode ast;
-
+    private CfgNode parent;
+    private List<CfgNode> children = new ArrayList<>();
     public CfgNode(ASTNode ast)
     {
         this.ast = ast;
@@ -80,10 +75,6 @@ public class CfgNode
         this.endPosition = endPosition;
     }
 
-    private CfgNode parent;
-    private List<CfgNode> children = new ArrayList<>();
-    private boolean isVisited = false;
-
     public String getContent()
     {
         return content;
@@ -117,16 +108,6 @@ public class CfgNode
     public void setChildren(List<CfgNode> children)
     {
         this.children = children;
-    }
-
-    public boolean isVisited()
-    {
-        return isVisited;
-    }
-
-    public void setVisited(boolean visited)
-    {
-        isVisited = visited;
     }
 
     public boolean isFalseNode() {

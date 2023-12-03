@@ -57,7 +57,7 @@ public class TestCoverage {
         int countPass = 0;
         for (IEvaluateCoverage node : totalList) {
             if (node instanceof CfgNode) {
-                if (((CfgNode) node).isVisited()) countPass++;
+                if (((CfgNode) node).isMarked()) countPass++;
             }
         }
         setTotalNode(totalList.size());
