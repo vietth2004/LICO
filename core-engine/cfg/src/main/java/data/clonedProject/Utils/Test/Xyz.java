@@ -32,6 +32,8 @@ return false;
 }
 }
 
+public static final int booleanleapYearintyearTotalStatement = 7;
+public static final int booleanleapYearintyearTotalBranch = 6;
 public static int abs(int x)
 {
 if (((x < 0) && MarkedPath.markOneStatement("x < 0", true, false)) || MarkedPath.markOneStatement("x < 0", false, true))
@@ -45,4 +47,7 @@ return x;
 }
 }
 
+public static final int intabsintxTotalStatement = 3;
+public static final int intabsintxTotalBranch = 2;
+public static final int XyzTotalStatement = 10;
 }

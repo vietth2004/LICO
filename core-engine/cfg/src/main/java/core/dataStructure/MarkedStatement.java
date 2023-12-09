@@ -6,7 +6,6 @@ public class MarkedStatement {
     private String statement;
     private boolean isTrueConditionalStatement;
     private boolean isFalseConditionalStatement;
-
     private CfgNode cfgNode;
 
     public MarkedStatement(String statement, boolean isTrueConditionalStatement, boolean isFalseConditionalStatement) {

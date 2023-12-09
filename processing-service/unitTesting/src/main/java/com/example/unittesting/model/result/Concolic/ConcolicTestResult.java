@@ -4,32 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConcolicTestResult {
-//    private String fullCoverage = "0%";
-//    private List<String> fullCoveredStatements = new ArrayList<>();
     private List<ConcolicTestData> fullTestData = new ArrayList<>();
-
-//    public void setFullCoverage(String fullCoverage) {
-//        this.fullCoverage = fullCoverage;
-//    }
-//
-//    public void addToFullCoveredStatements(String statement) {
-//        fullCoveredStatements.add(statement);
-//    }
+    private double fullCoverage = 0;
 
     public void addToFullTestData(ConcolicTestData testData) {
         fullTestData.add(testData);
     }
 
-//    public String getFullCoverage() {
-//        return fullCoverage;
-//    }
-//
-//    public List<String> getFullCoveredStatements() {
-//        return fullCoveredStatements;
-//    }
-
     public List<ConcolicTestData> getFullTestData() {
         return fullTestData;
+    }
+
+    public double getFullCoverage() {
+        return fullCoverage;
+    }
+
+    public void setFullCoverage(double fullCoverage) {
+        this.fullCoverage = (double) Math.round(fullCoverage * 100) / 100;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class FindAllPath {
     private List<Path> paths = new ArrayList<>();
     private List<CfgNode> currentPath = new ArrayList<>();
 
-    private final int DEPTH = 1;
+    private final int DEPTH = 2;
 
     private FindAllPath() {}
 

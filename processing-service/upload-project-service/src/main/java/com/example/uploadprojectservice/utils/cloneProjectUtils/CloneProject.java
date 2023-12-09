@@ -11,6 +11,19 @@ import java.util.List;
 
 public final class CloneProject {
 
+    private static int totalFunctionStatement;
+    private static int totalClassStatement;
+    private static int totalFunctionBranch;
+    private enum CoverageType {
+        STATEMENT,
+        BRANCH
+    }
+
+    private enum BoundaryType {
+        CLASS,
+        FUNCTION
+    }
+
     public static String getJavaDirPath(String originDir) {
         File dir = new File(originDir);
 
@@ -42,6 +55,7 @@ public final class CloneProject {
                 createCloneDirectory(cloneDirectoryPath, dirName);
                 cloneProject(directoryPath + "\\" + dirName, cloneDirectoryPath + "\\" + dirName);
             } else if (file.isFile() && file.getName().endsWith("java")) {
+                totalClassStatement = 0;
                 String fileName = file.getName();
                 createCloneFile(cloneDirectoryPath, fileName);
                 CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(directoryPath + "\\" + fileName);
@@ -128,6 +142,7 @@ public final class CloneProject {
 
         // Class type (interface/class) and class name
         ClassData classData = classDataArr[0];
+
         result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
 
         //Extensions
@@ -165,12 +180,42 @@ public final class CloneProject {
         compilationUnit.accept(methodsVisitor);
 
         for (ASTNode astNode : methods) {
-            result.append(createCloneMethod((MethodDeclaration) astNode));
+            totalFunctionStatement = 0;
+            totalFunctionBranch = 0;
+            MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
+            result.append(createCloneMethod(methodDeclaration));
+            result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
+            result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
         }
+
+        result.append(createTotalClassStatementVariable(classData));
 
         result.append("}");
 
         return result.toString();
+    }
+
+    private static String createTotalFunctionCoverageVariable(MethodDeclaration methodDeclaration, int totalStatement, CoverageType coverageType) {
+        StringBuilder result = new StringBuilder();
+        result.append(methodDeclaration.getReturnType2());
+        result.append(methodDeclaration.getName());
+        for (int i = 0; i < methodDeclaration.parameters().size(); i++) {
+            result.append(methodDeclaration.parameters().get(i));
+        }
+        if(coverageType == CoverageType.STATEMENT) {
+            result.append("TotalStatement");
+        } else if (coverageType == CoverageType.BRANCH){
+            result.append("TotalBranch");
+        } else {
+            throw new RuntimeException("Invalid Coverage");
+        }
+        return "public static final int ".concat(result.toString().replace(" ", "").replace(".", "").concat(" = " + totalStatement + ";\n"));
+    }
+
+    private static String createTotalClassStatementVariable(ClassData classData) {
+        StringBuilder result = new StringBuilder();
+        result.append(classData.getClassName()).append("TotalStatement");
+        return "public static final int ".concat(result.toString().replace(" ", "").replace(".", "").concat(" = " + totalClassStatement + ";\n"));
     }
 
     private static String createCloneMethod(MethodDeclaration method) {
@@ -339,6 +384,8 @@ public final class CloneProject {
         }
 
         result.append("MarkedPath.markOneStatement(\"").append(newStatement).append("\", false, false)").append(markMethodSeparator).append("\n");
+        totalFunctionStatement++;
+        totalClassStatement++;
 
         return result.toString();
     }
@@ -361,6 +408,9 @@ public final class CloneProject {
             result.append("((").append(condition).append(") && MarkedPath.markOneStatement(\"").append(condition).append("\", true, false))");
             result.append(" || MarkedPath.markOneStatement(\"").append(condition).append("\", false, true)");
         }
+        totalFunctionStatement++;
+        totalClassStatement++;
+        totalFunctionBranch += 2;
 
         return result.toString();
     }

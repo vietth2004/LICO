@@ -2,18 +2,30 @@ Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách AS
 Duyệt danh sách ASTNode để tìm hàm cần kiểm thử
 CONCOLIC TEST REPORT
 Hàm thực hiện:
-public static int abs(int x){
-  if (x < 0)   return -x;
- else   return x;
+public boolean isPerfectNumber(int number){
+  if (number <= 0) {
+    return false;
+  }
+  int sum=0;
+  for (int i=1; i < number; i++) {
+    if (number % i == 0) {
+      sum+=i;
+    }
+  }
+  return sum == number;
 }
 
 STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter [int]: [8]
-STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 x < 0 false, 2 return x;
+STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 number <= 0 false, 4 int sum=0;
+ , 5 int i=1 , 5 i < number true, 6 number % i == 0 true, 7 sum+=i;
+ , 5 i++ , 5 i < number true, 6 number % i == 0 true, 7 sum+=i;
+ , 5 i++ , 5 i < number true, 6 number % i == 0 false, 5 i++ , 5 i < number true, 6 number % i == 0 true, 7 sum+=i;
+ , 5 i++ , 5 i < number true, 6 number % i == 0 false, 5 i++ , 5 i < number true, 6 number % i == 0 false, 5 i++ , 5 i < number true, 6 number % i == 0 false, 5 i++ , 5 i < number false, 10 return sum == number;
  ]
-STEP 5: Tìm node chưa được phủ: CFGNode{, content='return -x;
+STEP 5: Tìm node chưa được phủ: CFGNode{, content='return false;
 ', isRootNode=false, isEndNode=false}
 STEP 6: Sinh đường thi hành từ node chưa được phủ đấy
-STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [-1]
-STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 x < 0 true, 1 return -x;
+STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [0]
+STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 number <= 0 true, 2 return false;
  ]
 STEP 9Kết thúc việc kiểm thử

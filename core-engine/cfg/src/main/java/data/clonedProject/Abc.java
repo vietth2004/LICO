@@ -43,4 +43,7 @@ return result;
 }
 }
 
+public static final int doubleintPowdoublenumberintindexTotalStatement = 14;
+public static final int doubleintPowdoublenumberintindexTotalBranch = 8;
+public static final int AbcTotalStatement = 14;
 }

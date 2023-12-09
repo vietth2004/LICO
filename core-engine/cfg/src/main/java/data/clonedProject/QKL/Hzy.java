@@ -17,4 +17,7 @@ MarkedPath.markOneStatement("return result;\n", false, false);
 return result;
 }
 
+public static final int intfactorialintnTotalStatement = 6;
+public static final int intfactorialintnTotalBranch = 2;
+public static final int HzyTotalStatement = 6;
 }

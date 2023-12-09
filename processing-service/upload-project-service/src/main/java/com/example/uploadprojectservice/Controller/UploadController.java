@@ -62,10 +62,10 @@ public class UploadController {
             CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\ClonedProject");
 
             //rerun and rebuild
-            Process p = Runtime.getRuntime().exec("cmd /c start scripts\\cfgBuild.bat");
-            Thread.sleep(25000);
-            Runtime.getRuntime().exec("cmd /c start cfgRun.bat");
-            Thread.sleep(15000);
+//            Process p = Runtime.getRuntime().exec("cmd /c start scripts\\cfgBuild.bat");
+//            Thread.sleep(25000);
+//            Runtime.getRuntime().exec("cmd /c start cfgRun.bat");
+//            Thread.sleep(15000);
 
             path += "\\tmp-prjt.json";
             File jsonFile = new File(path);
