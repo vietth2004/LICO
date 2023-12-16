@@ -25,6 +25,75 @@ public final class MarkedPath {
         return !isFalseCondition;
     }
 
+    private static void addNewStatementToPath(String statement, boolean isTrueCondition, boolean isFalseCondition) {
+        MarkedStatement markedStatement = new MarkedStatement(statement, isTrueCondition, isFalseCondition);
+        markedStatements.add(markedStatement);
+    }
+
+    public static void setMarkedStatements(List<MarkedStatement> markedStatements) {
+        MarkedPath.markedStatements = markedStatements;
+    }
+
+    private static void reset() {
+        markedStatements = new ArrayList<>();
+    }
+
+    public static void markPathToCFGV2(CfgNode rootNode, List<MarkedStatement> markedStatements) {
+        totalCoveredBranch = 0;
+        totalCoveredStatement = 0;
+
+        int i = 0;
+        while (rootNode != null && i < markedStatements.size()) {
+            // Kiểm tra những CfgNode không có content
+            if (rootNode.getContent().equals("")) {
+                rootNode.setMarked(true);
+                rootNode = rootNode.getAfterStatementNode();
+                continue;
+            }
+
+            MarkedStatement markedStatement = markedStatements.get(i);
+            if (rootNode.getContent().equals(markedStatement.getStatement())) {
+                if (!rootNode.isMarked()) {
+                    totalCoveredStatement++;
+                    fullTestSuiteCoveredStatements.add(rootNode.getContent());
+                }
+                rootNode.setMarked(true);
+                markedStatement.setCfgNode(rootNode);
+            } else {
+                return;
+            }
+
+            if (rootNode instanceof CfgBoolExprNode) {
+                CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
+                if (markedStatement.isFalseConditionalStatement()) {
+                    if(!boolExprNode.isFalseMarked()) {
+                        totalCoveredBranch++;
+                    }
+                    boolExprNode.setFalseMarked(true);
+                    rootNode = boolExprNode.getFalseNode();
+                } else if (markedStatement.isTrueConditionalStatement()) {
+                    if(!boolExprNode.isTrueMarked()) {
+                        totalCoveredBranch++;
+                    }
+                    boolExprNode.setTrueMarked(true);
+                    rootNode = boolExprNode.getTrueNode();
+                }
+                i++;
+                continue;
+            }
+
+            // Updater
+            i++;
+            rootNode = rootNode.getAfterStatementNode();
+        }
+        while (rootNode != null) {
+            if (rootNode.getContent().equals("")) {
+                rootNode.setMarked(true);
+                rootNode = rootNode.getAfterStatementNode();
+            }
+        }
+    }
+
     public static List<MarkedStatement> markPathToCFG(CfgNode rootNode) {
 //        List<CfgNode> coveredStatements = new ArrayList<>();
         List<MarkedStatement> result = markedStatements;
@@ -208,15 +277,6 @@ public final class MarkedPath {
 //        CfgNode cfgNode =  findUncoveredNode(rootNode.getAfterStatementNode(), duplicateNode);
 //        return cfgNode;
 //    }
-
-    private static void reset() {
-        markedStatements = new ArrayList<>();
-    }
-
-    public static void addNewStatementToPath(String statement, boolean isTrueCondition, boolean isFalseCondition) {
-        MarkedStatement markedStatement = new MarkedStatement(statement, isTrueCondition, isFalseCondition);
-        markedStatements.add(markedStatement);
-    }
 
     public static CfgNode findUncoveredStatement(CfgNode rootNode, CfgNode duplicateNode) {
         if (rootNode == null || !rootNode.isMarked()) {

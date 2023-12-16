@@ -1,6 +1,5 @@
 package com.example.unittesting.model.coveredStatement;
 
-import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedStatement;
 

@@ -2,6 +2,7 @@ package com.example.unittesting.controller;
 
 import com.example.unittesting.Sevice.UTestService;
 
+import com.example.unittesting.UnitTestingApplication;
 import com.example.unittesting.utils.testing.ConcolicTesting;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -21,7 +22,6 @@ public class UTestController {
 
     public UTestController(UTestService utestService) {
         this.utestService = utestService;
-
     }
 
     @GetMapping("/is-running")

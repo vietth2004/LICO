@@ -11,9 +11,12 @@ import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedPath;
+import core.dataStructure.MarkedStatement;
 import core.dataStructure.Path;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
+import core.testDriver.TestDriverGenerator;
+import core.testDriver.TestDriverRunner;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
@@ -56,14 +59,14 @@ public class ConcolicTesting {
     private ConcolicTesting() {
     }
 
-    public static ConcolicTestResult runFullConcolic(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
+    public static ConcolicTestResult runFullConcolic(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
 
         setup(path, className, methodName);
         setupCfgTree();
         setupParameters(methodName);
 
         if(coverage == Coverage.STATEMENT || coverage == Coverage.BRANCH) {
-            return testingWithStatementAndBranchCoverage(coverage);
+            return testingWithStatementAndBranchCoverageV2(coverage);
         } else {
             return testingWithPathCoverage();
         }
@@ -108,7 +111,7 @@ public class ConcolicTesting {
         report.append("STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter ").append(Arrays.toString(parameterClasses)).append(": ");
         report.append(Arrays.toString(evaluatedValues)).append("\n");
         report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(coveredStatements).append("\n");
-        
+
         testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements,
                 output, runTestDuration, calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
@@ -144,6 +147,71 @@ public class ConcolicTesting {
             report.append(coveredStatements).append("\n");
 
             testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements, output, runTestDuration, calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
+
+            uncoveredNode = findUncoverNode(cfgBeginNode, coverage);
+            System.out.println("Uncovered Node: " + uncoveredNode);
+        }
+
+        System.out.println(MarkedPath.getFullTestSuiteTotalCoveredStatements() / (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, Coverage.STATEMENT)).get(null));
+
+        report.append("STEP ").append(i).append("Kết thúc việc kiểm thử");
+
+        writeDataToFile(report.toString(), "core-engine/cfg/src/main/java/data/report.txt");
+
+        if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
+        else System.out.println("Test fail due to UNSATISFIABLE constraint");
+
+        testResult.setFullCoverage(calculateFullTestSuiteCoverage());
+
+        return testResult;
+    }
+
+    private static ConcolicTestResult testingWithStatementAndBranchCoverageV2(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException {
+        ConcolicTestResult testResult = new ConcolicTestResult();
+        Object[] evaluatedValues = createRandomTestData(parameterClasses);
+
+        String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) testFunc, evaluatedValues);
+        List<MarkedStatement> markedStatements = TestDriverRunner.runTestDriver(testDriver);
+        MarkedPath.markPathToCFGV2(cfgBeginNode, markedStatements);
+
+        List<CoveredStatement> coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
+        report.append("STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter ").append(Arrays.toString(parameterClasses)).append(": ");
+        report.append(Arrays.toString(evaluatedValues)).append("\n");
+        report.append("STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: ").append(coveredStatements).append("\n");
+
+        testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements,
+                TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
+
+        boolean isTestedSuccessfully = true;
+        int i = 5;
+
+        for (CfgNode uncoveredNode = findUncoverNode(cfgBeginNode, coverage); uncoveredNode != null; ) {
+            report.append("STEP ").append(i++).append(": Tìm node chưa được phủ: ").append(uncoveredNode).append("\n");
+
+            Path newPath = (new FindPath(cfgBeginNode, uncoveredNode, cfgEndNode)).getPath();
+            report.append("STEP ").append(i++).append(": Sinh đường thi hành từ node chưa được phủ đấy\n");
+
+            SymbolicExecution solution = new SymbolicExecution(newPath, parameters);
+
+            if (solution.getModel() == null) {
+                isTestedSuccessfully = false;
+                break;
+            }
+
+            evaluatedValues = getParameterValue(parameterClasses);
+            report.append("STEP ").append(i++).append(": Thực thi tượng trưng đường thi hành và sinh test data tương ứng: ");
+            report.append(Arrays.toString(evaluatedValues)).append("\n");
+
+            testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) testFunc, evaluatedValues);
+            markedStatements = TestDriverRunner.runTestDriver(testDriver);
+            MarkedPath.markPathToCFGV2(cfgBeginNode, markedStatements);
+
+            coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
+
+            report.append("STEP ").append(i++).append(": Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: ");
+            report.append(coveredStatements).append("\n");
+
+            testResult.addToFullTestData(new ConcolicTestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements, TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
             uncoveredNode = findUncoverNode(cfgBeginNode, coverage);
             System.out.println("Uncovered Node: " + uncoveredNode);
