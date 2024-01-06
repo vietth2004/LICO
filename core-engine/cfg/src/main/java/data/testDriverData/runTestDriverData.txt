@@ -1,3 +1,2 @@
-int a=0, b=1, c, i;
-===false===false---end---n == 0===true===false---end---return a;
-===false===false---end---1.8236===0
+a == b===false===true---end---a > b===false===true---end---a < b===true===false---end---return -1;
+===false===false---end---1.8809===-1

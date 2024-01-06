@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -58,8 +59,16 @@ public class UploadController {
             String javaDirPath = CloneProject.getJavaDirPath(path);
             if(javaDirPath.equals("")) throw new RuntimeException("Invalid project");
 
+            long startRunTestTime = System.nanoTime();
             // Clone Project
             CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\ClonedProject");
+            long endRunTestTime = System.nanoTime();
+
+            double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+
+            System.out.println("clone time " + runTestDuration);
+
+            restartUnitTestingService();
 
             //rerun and rebuild
 //            Process p = Runtime.getRuntime().exec("cmd /c start scripts\\cfgBuild.bat");
@@ -82,6 +91,15 @@ public class UploadController {
             throw new IllegalArgumentException("File is null");
         }
     }
+
+    private static void restartUnitTestingService()
+    {
+        final String uri = "http://localhost:8006/api/unit-testing-service/restartService";
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getForObject(uri, String.class);
+    }
+
     @GetMapping(value = "/view-tree")
     public ResponseEntity<Object> NodeTree(@RequestParam String nameProject) {
 

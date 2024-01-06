@@ -24,9 +24,9 @@ public class UTestController {
         this.utestService = utestService;
     }
 
-    @GetMapping("/is-running")
-    public String running() {
-        return "Hi there, I am still alive";
+    @GetMapping("/restartService")
+    public void restartService() {
+        UnitTestingApplication.restart();
     }
 
     @GetMapping(value = "/unit")
@@ -50,6 +50,9 @@ public class UTestController {
                 break;
             case "path":
                 coverage = ConcolicTesting.Coverage.PATH;
+                break;
+            case "mcdc":
+                coverage = ConcolicTesting.Coverage.MCDC;
                 break;
             default:
                 throw new RuntimeException("Invalid coverage type");

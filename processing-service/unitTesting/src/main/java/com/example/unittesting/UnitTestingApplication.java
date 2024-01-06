@@ -1,6 +1,5 @@
 package com.example.unittesting;
 
-import com.netflix.discovery.shared.Application;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
@@ -8,7 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -22,8 +20,30 @@ import org.springframework.context.ConfigurableApplicationContext;
 )
 public class UnitTestingApplication {
 
+    private static ConfigurableApplicationContext context;
+
     public static void main(String[] args) {
-        SpringApplication.run(UnitTestingApplication.class, args);
+        context = SpringApplication.run(UnitTestingApplication.class, args);
+        System.out.println(context);
+    }
+
+    public static void restart() {
+        ApplicationArguments args = context.getBean(ApplicationArguments.class);
+
+        Thread thread = new Thread(() -> {
+            long startRunTestTime = System.nanoTime();
+            context.close();
+            context = SpringApplication.run(UnitTestingApplication.class, args.getSourceArgs());
+            long endRunTestTime = System.nanoTime();
+
+            double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+
+            System.out.println("restart time :" + runTestDuration);
+
+        });
+
+        thread.setDaemon(false);
+        thread.start();
     }
 
 }

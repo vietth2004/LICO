@@ -2,47 +2,30 @@ Parse toàn bộ các hàm trong class cần kiểm thử thành 1 danh sách AS
 Duyệt danh sách ASTNode để tìm hàm cần kiểm thử
 CONCOLIC TEST REPORT
 Hàm thực hiện:
-public static int fibonacci(int n){
-  int a=0, b=1, c, i;
-  if (n == 0)   return a;
-  for (i=2; i <= n; i++) {
-    c=a + b;
-    a=b;
-    b=c;
+public int sum(int a,int b){
+  if (a == b)   return 0;
+  if (a > b) {
+    return 1;
   }
-  return b;
+ else   if (a < b) {
+    return -1;
+  }
+  return 2;
 }
 
-STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter [int]: [8]
-STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 int a=0, b=1, c, i;
- , 2 n == 0 false, 4 i=2 , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n true, 5 c=a + b;
- , 6 a=b;
- , 7 b=c;
- , 4 i++ , 4 i <= n false, 9 return b;
+STEP 3: Sinh dữ liệu ngẫu nhiên cho các parameter [int, int]: [8, 8]
+STEP 4: Chạy dữ liệu ngẫu nhiên đấy, lưu những câu lệnh đã được chạy qua: [1 a == b true, 1 return 0;
  ]
-STEP 5: Tìm node chưa được phủ: CFGNode{, content='return a;
-', isRootNode=false, isEndNode=false}
+STEP 5: Tìm node chưa được phủ: CFGNode{null, isRootNode=false, isEndNode=false}
 STEP 6: Sinh đường thi hành từ node chưa được phủ đấy
-STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [0]
-STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 int a=0, b=1, c, i;
- , 2 n == 0 true, 3 return a;
+STEP 7: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [0, -1]
+STEP 8: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 a == b false, 3 a > b true, 4 return 1;
  ]
-STEP 9Kết thúc việc kiểm thử
+STEP 9: Tìm node chưa được phủ: CFGNode{, content='a < b', isRootNode=false, isEndNode=false}
+STEP 10: Sinh đường thi hành từ node chưa được phủ đấy
+STEP 11: Thực thi tượng trưng đường thi hành và sinh test data tương ứng: [0, 1]
+STEP 12: Đánh dấu những câu lệnh (node) đã chạy qua sau khi thực hiện chạy hàm với dữ liệu vừa được sinh: [1 a == b false, 3 a > b false, 5 a < b true, 6 return -1;
+ ]
+STEP 13: Tìm node chưa được phủ: CFGNode{null, isRootNode=false, isEndNode=false}
+STEP 14: Sinh đường thi hành từ node chưa được phủ đấy
+STEP 15Kết thúc việc kiểm thử

@@ -25,11 +25,12 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static core.testDriver.Utils.*;
 
@@ -40,6 +41,7 @@ public class ConcolicTesting {
     public enum Coverage {
         STATEMENT,
         BRANCH,
+        MCDC,
         PATH
     }
 
@@ -59,14 +61,44 @@ public class ConcolicTesting {
     private ConcolicTesting() {
     }
 
+    private static long totalUsedMem = 0;
+    private static long tickCount = 0;
+
     public static ConcolicTestResult runFullConcolic(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
 
         setup(path, className, methodName);
-        setupCfgTree();
+        setupCfgTree(coverage);
         setupParameters(methodName);
 
-        if(coverage == Coverage.STATEMENT || coverage == Coverage.BRANCH) {
-            return testingWithStatementAndBranchCoverageV2(coverage);
+        if(coverage == Coverage.STATEMENT || coverage == Coverage.BRANCH || coverage == Coverage.MCDC) {
+
+            totalUsedMem = 0;
+            tickCount = 0;
+            Timer T = new Timer(true);
+
+            TimerTask memoryTask = new TimerTask(){
+                @Override
+                public void run(){
+                    totalUsedMem += (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
+                    tickCount += 1;
+                }
+            };
+
+            T.scheduleAtFixedRate(memoryTask, 0, 1); //0 delay and 5 ms tick
+
+            long startRunTestTime = System.nanoTime();
+            ConcolicTestResult result = testingWithStatement_Branch_MCDCCoverageV2(coverage);
+            long endRunTestTime = System.nanoTime();
+
+            double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+
+            System.out.println("run time: " + runTestDuration);
+
+            float usedMem = ((float)totalUsedMem)/tickCount/1024/1024;
+            System.out.print("used mem = ");
+            System.out.printf("%.2f", usedMem);
+            System.out.println(" MB");
+            return result;
         } else {
             return testingWithPathCoverage();
         }
@@ -152,8 +184,6 @@ public class ConcolicTesting {
             System.out.println("Uncovered Node: " + uncoveredNode);
         }
 
-        System.out.println(MarkedPath.getFullTestSuiteTotalCoveredStatements() / (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, Coverage.STATEMENT)).get(null));
-
         report.append("STEP ").append(i).append("Kết thúc việc kiểm thử");
 
         writeDataToFile(report.toString(), "core-engine/cfg/src/main/java/data/report.txt");
@@ -166,7 +196,7 @@ public class ConcolicTesting {
         return testResult;
     }
 
-    private static ConcolicTestResult testingWithStatementAndBranchCoverageV2(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException {
+    private static ConcolicTestResult testingWithStatement_Branch_MCDCCoverageV2(Coverage coverage) throws IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException {
         ConcolicTestResult testResult = new ConcolicTestResult();
         Object[] evaluatedValues = createRandomTestData(parameterClasses);
 
@@ -217,8 +247,6 @@ public class ConcolicTesting {
             System.out.println("Uncovered Node: " + uncoveredNode);
         }
 
-        System.out.println(MarkedPath.getFullTestSuiteTotalCoveredStatements() / (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, Coverage.STATEMENT)).get(null));
-
         report.append("STEP ").append(i).append("Kết thúc việc kiểm thử");
 
         writeDataToFile(report.toString(), "core-engine/cfg/src/main/java/data/report.txt");
@@ -234,9 +262,9 @@ public class ConcolicTesting {
     private static CfgNode findUncoverNode(CfgNode cfgNode, Coverage coverage) {
         switch (coverage) {
             case STATEMENT:
-                return MarkedPath.findUncoveredStatement(cfgNode, null);
+                return MarkedPath.findUncoveredStatement(cfgNode);
             case BRANCH:
-                return MarkedPath.findUncoveredBranch(cfgNode, null);
+                return MarkedPath.findUncoveredBranch(cfgNode);
             default:
                 throw new RuntimeException("Invalid coverage type");
         }
@@ -312,7 +340,7 @@ public class ConcolicTesting {
         fullyClonedClassName = "data.clonedProject." + packetName + className;
     }
 
-    private static void setupCfgTree() {
+    private static void setupCfgTree(Coverage coverage) {
         Block functionBlock = Utils.getFunctionBlock(testFunc);
 
         cfgBeginNode = new CfgNode();
@@ -330,7 +358,17 @@ public class ConcolicTesting {
         block.setBeforeStatementNode(cfgBeginNode);
         block.setAfterStatementNode(cfgEndNode);
 
-        ASTHelper.generateCFG(block, compilationUnit, firstLine);
+        ASTHelper.generateCFG(block, compilationUnit, firstLine, setupCoverage(coverage));
+    }
+
+    private static ASTHelper.Coverage setupCoverage(Coverage coverage) {
+        switch (coverage) {
+            case STATEMENT: return ASTHelper.Coverage.STATEMENT;
+            case BRANCH: return ASTHelper.Coverage.BRANCH;
+            case PATH: return ASTHelper.Coverage.PATH;
+            case MCDC: return ASTHelper.Coverage.MCDC;
+            default: throw new RuntimeException("Invalid coverage");
+        }
     }
 
     private static String getTotalFunctionCoverageVariableName(MethodDeclaration methodDeclaration, Coverage coverage) {
