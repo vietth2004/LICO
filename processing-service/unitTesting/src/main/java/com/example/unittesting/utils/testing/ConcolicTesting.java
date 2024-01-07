@@ -68,7 +68,8 @@ public class ConcolicTesting {
 
         setup(path, className, methodName);
         setupCfgTree(coverage);
-        setupParameters(methodName);
+//        setupParameters(methodName);
+        setUpParametersV2(methodName);
 
         if(coverage == Coverage.STATEMENT || coverage == Coverage.BRANCH || coverage == Coverage.MCDC) {
 
@@ -87,7 +88,7 @@ public class ConcolicTesting {
             T.scheduleAtFixedRate(memoryTask, 0, 1); //0 delay and 5 ms tick
 
             long startRunTestTime = System.nanoTime();
-            ConcolicTestResult result = testingWithStatement_Branch_MCDCCoverageV2(coverage);
+            ConcolicTestResult result = testingWithStatementAndBranchCoverage(coverage);
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
@@ -328,6 +329,14 @@ public class ConcolicTesting {
         parameterClasses = getParameterClasses(parameters);
         parameterNames = getParameterNames(parameters);
         method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
+    }
+
+    private static void setUpParametersV2(String methodName) throws ClassNotFoundException, NoSuchMethodException {
+        parameters = ((MethodDeclaration) testFunc).parameters();
+        parameterClasses = getParameterClasses(parameters);
+        parameterNames = getParameterNames(parameters);
+        createCloneMethod((MethodDeclaration) testFunc, compilationUnit);
+        method = Class.forName("data.CloneFile").getDeclaredMethod(methodName, parameterClasses);
     }
 
     private static void setupFullyClonedClassName(String className) {
