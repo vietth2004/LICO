@@ -257,11 +257,13 @@ public final class CloneProject {
 
     private static String generateCodeForBlock(Block block) {
         StringBuilder result = new StringBuilder();
-        List<ASTNode> statements = block.statements();
 
         result.append("{\n");
-        for (int i = 0; i < statements.size(); i++) {
-            result.append(generateCodeForOneStatement(statements.get(i), ";"));
+        if(block != null) {
+            List<ASTNode> statements = block.statements();
+            for (int i = 0; i < statements.size(); i++) {
+                result.append(generateCodeForOneStatement(statements.get(i), ";"));
+            }
         }
         result.append("}\n");
 
@@ -391,29 +393,37 @@ public final class CloneProject {
     }
 
     private static String generateCodeForCondition(Expression condition) {
-        StringBuilder result = new StringBuilder();
-
-        if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
-            InfixExpression infixCondition = (InfixExpression) condition;
-
-            result.append("(").append(generateCodeForCondition(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
-            result.append(generateCodeForCondition(infixCondition.getRightOperand())).append(")");
-
-            List<ASTNode> extendedOperands = infixCondition.extendedOperands();
-            for (ASTNode operand : extendedOperands) {
-                result.append(" ").append(infixCondition.getOperator()).append(" ");
-                result.append("(").append(generateCodeForCondition((Expression) operand)).append(")");
-            }
-        } else {
-            result.append("((").append(condition).append(") && MarkedPath.markOneStatement(\"").append(condition).append("\", true, false))");
-            result.append(" || MarkedPath.markOneStatement(\"").append(condition).append("\", false, true)");
-        }
         totalFunctionStatement++;
         totalClassStatement++;
         totalFunctionBranch += 2;
-
-        return result.toString();
+        return "((" + condition + ") && MarkedPath.markOneStatement(\"" + condition + "\", true, false))" +
+                " || MarkedPath.markOneStatement(\"" + condition + "\", false, true)";
     }
+
+//    private static String generateCodeForCondition(Expression condition) {
+//        StringBuilder result = new StringBuilder();
+//
+//        if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
+//            InfixExpression infixCondition = (InfixExpression) condition;
+//
+//            result.append("(").append(generateCodeForCondition(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
+//            result.append(generateCodeForCondition(infixCondition.getRightOperand())).append(")");
+//
+//            List<ASTNode> extendedOperands = infixCondition.extendedOperands();
+//            for (ASTNode operand : extendedOperands) {
+//                result.append(" ").append(infixCondition.getOperator()).append(" ");
+//                result.append("(").append(generateCodeForCondition((Expression) operand)).append(")");
+//            }
+//        } else {
+//            result.append("((").append(condition).append(") && MarkedPath.markOneStatement(\"").append(condition).append("\", true, false))");
+//            result.append(" || MarkedPath.markOneStatement(\"").append(condition).append("\", false, true)");
+//            totalFunctionStatement++;
+//            totalClassStatement++;
+//            totalFunctionBranch += 2;
+//        }
+//
+//        return result.toString();
+//    }
 
     private static boolean isSeparableOperator(InfixExpression.Operator operator) {
         return operator.equals(InfixExpression.Operator.CONDITIONAL_OR) ||

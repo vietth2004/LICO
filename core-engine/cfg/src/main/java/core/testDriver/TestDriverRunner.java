@@ -2,6 +2,7 @@ package core.testDriver;
 
 import core.cmd.CommandLine;
 import core.dataStructure.MarkedStatement;
+import core.testexecution.TestExecutionManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -42,7 +43,6 @@ public final class TestDriverRunner {
                 result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement));
             }
         }
-
         return result;
     }
 

@@ -228,17 +228,17 @@ public class ASTHelper {
 
             LinkCurrentNode(beforeNode, currentNode, afterNode);
 
-            CfgBoolExprNode beginIfNode = generateCFGFromIfASTNodeForMCDCCoverage((CfgIfStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+//            CfgBoolExprNode beginIfNode = generateCFGFromIfASTNodeForMCDCCoverage((CfgIfStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
 
-//            CfgBoolExprNode beginIfNode = null;
-//
-//            if(coverage == Coverage.BRANCH || coverage == Coverage.STATEMENT || coverage == Coverage.PATH) {
-//                beginIfNode = generateCFGFromIfASTNodeForBranch_Statement_PathCoverage((CfgIfStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
-//            } else if (coverage == Coverage.MCDC) {
-//                beginIfNode = generateCFGFromIfASTNodeForMCDCCoverage((CfgIfStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
-//            } else {
-//                throw new RuntimeException("Invalid coverage!");
-//            }
+            CfgBoolExprNode beginIfNode = null;
+
+            if(coverage == Coverage.BRANCH || coverage == Coverage.STATEMENT || coverage == Coverage.PATH) {
+                beginIfNode = generateCFGFromIfASTNodeForBranch_Statement_PathCoverage((CfgIfStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else if (coverage == Coverage.MCDC) {
+                beginIfNode = generateCFGFromIfASTNodeForMCDCCoverage((CfgIfStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else {
+                throw new RuntimeException("Invalid coverage!");
+            }
 
             return beginIfNode;
         } else if (statement instanceof ForStatement) {

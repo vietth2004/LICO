@@ -61,14 +61,14 @@ public class UploadController {
 
             long startRunTestTime = System.nanoTime();
             // Clone Project
-            CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\ClonedProject");
+            CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\clonedProject");
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 
             System.out.println("clone time " + runTestDuration);
 
-            restartUnitTestingService();
+//            restartUnitTestingService();
 
             //rerun and rebuild
 //            Process p = Runtime.getRuntime().exec("cmd /c start scripts\\cfgBuild.bat");

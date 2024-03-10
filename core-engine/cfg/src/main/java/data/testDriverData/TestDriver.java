@@ -19,37 +19,35 @@ writer.close();
 e.printStackTrace();
 }
 }
-public static int sum(int a, int b)
+public static int fibonacci(int n)
 {
-if (((a == b) && mark("a == b", true, false)) || mark("a == b", false, true))
+mark("int a=0, b=1, c, i;\n", false, false);
+int a=0, b=1, c, i;
+if (((n == 0) && mark("n == 0", true, false)) || mark("n == 0", false, true))
 {
-mark("return 0;\n", false, false);
-return 0;
+mark("return a;\n", false, false);
+return a;
 }
-if (((a > b) && mark("a > b", true, false)) || mark("a > b", false, true))
+mark("i=2", false, false);
+for (i=2; ((i <= n) && mark("i <= n", true, false)) || mark("i <= n", false, true); mark("i++", false, false),
+i++) {
 {
-{
-mark("return 1;\n", false, false);
-return 1;
-}
-}
-else {
-if (((a < b) && mark("a < b", true, false)) || mark("a < b", false, true))
-{
-{
-mark("return -1;\n", false, false);
-return -1;
-}
+mark("c=a + b;\n", false, false);
+c=a + b;
+mark("a=b;\n", false, false);
+a=b;
+mark("b=c;\n", false, false);
+b=c;
 }
 }
-mark("return 2;\n", false, false);
-return 2;
+mark("return b;\n", false, false);
+return b;
 }
 
 public static void main(String[] args) {
 writeDataToFile("", "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", false);
 long startRunTestTime = System.nanoTime();
-Object output = sum(0, 1);
+Object output = fibonacci(0);
 long endRunTestTime = System.nanoTime();
 double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 writeDataToFile(runTestDuration + "===" + output, "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", true);

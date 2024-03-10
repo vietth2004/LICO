@@ -21,19 +21,21 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class UnitTestingApplication {
 
     private static ConfigurableApplicationContext context;
+    private static String[] args;
 
     public static void main(String[] args) {
+        UnitTestingApplication.args = args;
         context = SpringApplication.run(UnitTestingApplication.class, args);
         System.out.println(context);
     }
 
     public static void restart() {
-        ApplicationArguments args = context.getBean(ApplicationArguments.class);
+//        ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
             long startRunTestTime = System.nanoTime();
             context.close();
-            context = SpringApplication.run(UnitTestingApplication.class, args.getSourceArgs());
+            context = SpringApplication.run(UnitTestingApplication.class, args);
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;

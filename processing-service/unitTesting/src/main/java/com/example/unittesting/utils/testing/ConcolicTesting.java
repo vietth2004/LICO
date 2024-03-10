@@ -25,9 +25,6 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -68,8 +65,8 @@ public class ConcolicTesting {
 
         setup(path, className, methodName);
         setupCfgTree(coverage);
-//        setupParameters(methodName);
-        setUpParametersV2(methodName);
+        setupParameters(methodName);
+//        setUpParametersV2(methodName);
 
         if(coverage == Coverage.STATEMENT || coverage == Coverage.BRANCH || coverage == Coverage.MCDC) {
 
@@ -88,7 +85,7 @@ public class ConcolicTesting {
             T.scheduleAtFixedRate(memoryTask, 0, 1); //0 delay and 5 ms tick
 
             long startRunTestTime = System.nanoTime();
-            ConcolicTestResult result = testingWithStatementAndBranchCoverage(coverage);
+            ConcolicTestResult result = testingWithStatement_Branch_MCDCCoverageV2(coverage);
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
@@ -201,7 +198,7 @@ public class ConcolicTesting {
         ConcolicTestResult testResult = new ConcolicTestResult();
         Object[] evaluatedValues = createRandomTestData(parameterClasses);
 
-        String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) testFunc, evaluatedValues);
+        String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) testFunc, evaluatedValues, getCoverageType(coverage));
         List<MarkedStatement> markedStatements = TestDriverRunner.runTestDriver(testDriver);
         MarkedPath.markPathToCFGV2(cfgBeginNode, markedStatements);
 
@@ -233,7 +230,7 @@ public class ConcolicTesting {
             report.append("STEP ").append(i++).append(": Thực thi tượng trưng đường thi hành và sinh test data tương ứng: ");
             report.append(Arrays.toString(evaluatedValues)).append("\n");
 
-            testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) testFunc, evaluatedValues);
+            testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) testFunc, evaluatedValues, getCoverageType(coverage));
             markedStatements = TestDriverRunner.runTestDriver(testDriver);
             MarkedPath.markPathToCFGV2(cfgBeginNode, markedStatements);
 
@@ -367,10 +364,10 @@ public class ConcolicTesting {
         block.setBeforeStatementNode(cfgBeginNode);
         block.setAfterStatementNode(cfgEndNode);
 
-        ASTHelper.generateCFG(block, compilationUnit, firstLine, setupCoverage(coverage));
+        ASTHelper.generateCFG(block, compilationUnit, firstLine, getCoverageType(coverage));
     }
 
-    private static ASTHelper.Coverage setupCoverage(Coverage coverage) {
+    private static ASTHelper.Coverage getCoverageType(Coverage coverage) {
         switch (coverage) {
             case STATEMENT: return ASTHelper.Coverage.STATEMENT;
             case BRANCH: return ASTHelper.Coverage.BRANCH;
