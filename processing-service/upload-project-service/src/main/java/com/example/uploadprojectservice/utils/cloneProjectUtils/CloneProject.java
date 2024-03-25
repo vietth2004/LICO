@@ -1,16 +1,21 @@
 package com.example.uploadprojectservice.utils.cloneProjectUtils;
 
 import com.example.uploadprojectservice.utils.cloneProjectUtils.dataModel.ClassData;
+import core.FilePath;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import org.apache.commons.io.FileUtils;
 
 public final class CloneProject {
-
     private static int totalFunctionStatement;
     private static int totalClassStatement;
     private static int totalFunctionBranch;
@@ -18,11 +23,7 @@ public final class CloneProject {
         STATEMENT,
         BRANCH
     }
-
-    private enum BoundaryType {
-        CLASS,
-        FUNCTION
-    }
+    private static StringBuilder command;
 
     public static String getJavaDirPath(String originDir) {
         File dir = new File(originDir);
@@ -30,7 +31,7 @@ public final class CloneProject {
         if (!dir.isDirectory()) {
             throw new RuntimeException("Invalid Dir");
         }
-        for(File file : dir.listFiles()) {
+        for(File file : Objects.requireNonNull(dir.listFiles())) {
             if(file.isDirectory()) {
                 if(file.getName().equals("java")) {
                     return file.getPath();
@@ -41,57 +42,77 @@ public final class CloneProject {
                 }
             }
         }
-
         return "";
     }
-    public static void cloneProject(String directoryPath, String cloneDirectoryPath) throws IOException {
-        deleteFilesInDirectory(cloneDirectoryPath);
 
-        File[] files = getFilesInDirectory(directoryPath);
+    public static void cloneProject(String originalDirPath, String destinationDirPath) throws IOException, InterruptedException {
+        command = new StringBuilder("javac -d " + FilePath.targetClassesFolderPath + " ");
+        iCloneProject(originalDirPath, destinationDirPath);
+        System.out.println(command);
+
+        Process p = Runtime.getRuntime().exec(command.toString());
+        System.out.println(p.waitFor());
+
+        if(p.waitFor() != 0) {
+            System.out.println("Can't compile project");
+            throw new RuntimeException("Can't compile project");
+        }
+    }
+
+    private static void iCloneProject(String originalDirPath, String destinationDirPath) throws IOException {
+        deleteFilesInDirectory(destinationDirPath);
+        boolean existJavaFile = false;
+
+        File[] files = getFilesInDirectory(originalDirPath);
 
         for (File file : files) {
             if (file.isDirectory()) {
                 String dirName = file.getName();
-                createCloneDirectory(cloneDirectoryPath, dirName);
-                cloneProject(directoryPath + "\\" + dirName, cloneDirectoryPath + "\\" + dirName);
+                createCloneDirectory(destinationDirPath, dirName);
+                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName);
             } else if (file.isFile() && file.getName().endsWith("java")) {
+                existJavaFile = true;
                 totalClassStatement = 0;
                 String fileName = file.getName();
-                createCloneFile(cloneDirectoryPath, fileName);
-                CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(directoryPath + "\\" + fileName);
-                String sourceCode = createCloneSourceCode(compilationUnit);
-                writeDataToFile(sourceCode, cloneDirectoryPath + "\\" + fileName);
+                createCloneFile(destinationDirPath, fileName);
+                CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(originalDirPath + "\\" + fileName);
+                String sourceCode = createCloneSourceCode(compilationUnit, originalDirPath + "\\" + fileName);
+                writeDataToFile(sourceCode, destinationDirPath + "\\" + fileName);
             }
         }
+
+        if (existJavaFile) {
+            command.append(destinationDirPath).append("\\*.java ");
+        }
     }
+
 
     private static File[] getFilesInDirectory(String directoryPath) {
         File directory = new File(directoryPath);
 
         if (!directory.isDirectory()) {
-            throw new RuntimeException("Invalid Dir");
+            throw new RuntimeException("Invalid Dir: " + directory.getPath());
         }
 
         return directory.listFiles();
     }
 
-    private static void deleteFilesInDirectory(String directoryPath) {
-        File[] files = getFilesInDirectory(directoryPath);
-        for (File file : files) {
-            if (file.isDirectory()) {
-                deleteFilesInDirectory(file.getPath());
-            }
-            file.delete();
+    public static void deleteFilesInDirectory(String directoryPath) throws IOException {
+        if(Files.exists(Path.of(directoryPath))) {
+            FileUtils.cleanDirectory(new File(directoryPath));
+        } else {
+            FileUtils.forceMkdir(new File(directoryPath));
         }
     }
 
-    private static void createCloneDirectory(String parent, String child) {
+    public static void createCloneDirectory(String parent, String child) {
         File newDirectory = new File(parent, child);
 
         boolean created = newDirectory.mkdir();
 
         if (!created) {
             System.out.println("Existed Dir");
+//            deleteFilesInDirectory(newDirectory.getPath());
         }
     }
 
@@ -114,7 +135,7 @@ public final class CloneProject {
         }
     }
 
-    private static String createCloneSourceCode(CompilationUnit compilationUnit) {
+    private static String createCloneSourceCode(CompilationUnit compilationUnit, String filePath) {
         StringBuilder result = new StringBuilder();
 
         //Packet
@@ -128,20 +149,21 @@ public final class CloneProject {
         for (ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
             result.append(iImport);
         }
-        result.append("import core.dataStructure.MarkedPath;\n");
+        result.append("import java.io.FileWriter;\n");
 
-        final ClassData[] classDataArr = {new ClassData()};
+//        final ClassData[] classDataArr = {new ClassData()};
+        List<ClassData> classDataArr = new ArrayList<>();
         ASTVisitor classVisitor = new ASTVisitor() {
             @Override
             public boolean visit(TypeDeclaration node) {
-                classDataArr[0] = new ClassData(node);
+                classDataArr.add(new ClassData(node));
                 return true;
             }
         };
         compilationUnit.accept(classVisitor);
 
         // Class type (interface/class) and class name
-        ClassData classData = classDataArr[0];
+        ClassData classData = classDataArr.get(0);
 
         result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
 
@@ -164,15 +186,35 @@ public final class CloneProject {
 
         result.append(" {\n");
 
+        result.append(classData.getFields());
+
+        result.append("private static void writeDataToFile(String data, String path, boolean append) {\n" +
+                "try {\n" +
+                "FileWriter writer = new FileWriter(path, append);\n" +
+                "writer.write(data);\n" +
+                "writer.close();\n" +
+                "} catch (Exception e) {\n" +
+                "e.printStackTrace();\n" +
+                "}\n" +
+                "}\n" +
+                "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition) {\n" +
+                "StringBuilder markResult = new StringBuilder();\n" +
+                "markResult.append(statement).append(\"===\");\n" +
+                "markResult.append(isTrueCondition).append(\"===\");\n" +
+                "markResult.append(isFalseCondition).append(\"---end---\");\n" +
+                "writeDataToFile(markResult.toString(), \"" + FilePath.concreteExecuteResultPath + "\", true);\n" +
+                "if (!isTrueCondition && !isFalseCondition) return true;\n" +
+                "return !isFalseCondition;\n" +
+                "}\n");
 
         List<ASTNode> methods = new ArrayList<>();
         ASTVisitor methodsVisitor = new ASTVisitor() {
             @Override
             public boolean visit(TypeDeclaration node) {
                 for (MethodDeclaration method : node.getMethods()) {
-                    if (!method.isConstructor()) {
-                        methods.add(method);
-                    }
+//                    if (!method.isConstructor()) {
+                    methods.add(method);
+//                    }
                 }
                 return true;
             }
@@ -209,19 +251,31 @@ public final class CloneProject {
         } else {
             throw new RuntimeException("Invalid Coverage");
         }
-        return "public static final int ".concat(result.toString().replace(" ", "").replace(".", "").concat(" = " + totalStatement + ";\n"));
+        return "public static final int ".concat(reformatVariableName(result.toString())).concat(" = " + totalStatement + ";\n");
+    }
+
+    private static String reformatVariableName(String name) {
+        return name.replace(" ", "").replace(".", "")
+                .replace("[", "").replace("]", "")
+                .replace("<", "").replace(">", "")
+                .replace(",", "");
     }
 
     private static String createTotalClassStatementVariable(ClassData classData) {
         StringBuilder result = new StringBuilder();
         result.append(classData.getClassName()).append("TotalStatement");
-        return "public static final int ".concat(result.toString().replace(" ", "").replace(".", "").concat(" = " + totalClassStatement + ";\n"));
+        return "public static final int ".concat(reformatVariableName(result.toString())).concat(" = " + totalClassStatement + ";\n");
     }
 
     private static String createCloneMethod(MethodDeclaration method) {
         StringBuilder cloneMethod = new StringBuilder();
 
-        cloneMethod.append("public static ").append(method.getReturnType2()).append(" ").append(method.getName()).append("(");
+        List<ASTNode> modifiers = method.modifiers();
+        for(ASTNode modifier : modifiers) {
+            cloneMethod.append(modifier).append(" ");
+        }
+
+        cloneMethod.append(method.getReturnType2() != null ? method.getReturnType2() : "").append(" ").append(method.getName()).append("(");
         List<ASTNode> parameters = method.parameters();
         for (int i = 0; i < parameters.size(); i++) {
             cloneMethod.append(parameters.get(i));
@@ -385,7 +439,7 @@ public final class CloneProject {
             newStatement.append(charAt);
         }
 
-        result.append("MarkedPath.markOneStatement(\"").append(newStatement).append("\", false, false)").append(markMethodSeparator).append("\n");
+        result.append("mark(\"").append(newStatement).append("\", false, false)").append(markMethodSeparator).append("\n");
         totalFunctionStatement++;
         totalClassStatement++;
 
@@ -396,40 +450,8 @@ public final class CloneProject {
         totalFunctionStatement++;
         totalClassStatement++;
         totalFunctionBranch += 2;
-        return "((" + condition + ") && MarkedPath.markOneStatement(\"" + condition + "\", true, false))" +
-                " || MarkedPath.markOneStatement(\"" + condition + "\", false, true)";
-    }
-
-//    private static String generateCodeForCondition(Expression condition) {
-//        StringBuilder result = new StringBuilder();
-//
-//        if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
-//            InfixExpression infixCondition = (InfixExpression) condition;
-//
-//            result.append("(").append(generateCodeForCondition(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
-//            result.append(generateCodeForCondition(infixCondition.getRightOperand())).append(")");
-//
-//            List<ASTNode> extendedOperands = infixCondition.extendedOperands();
-//            for (ASTNode operand : extendedOperands) {
-//                result.append(" ").append(infixCondition.getOperator()).append(" ");
-//                result.append("(").append(generateCodeForCondition((Expression) operand)).append(")");
-//            }
-//        } else {
-//            result.append("((").append(condition).append(") && MarkedPath.markOneStatement(\"").append(condition).append("\", true, false))");
-//            result.append(" || MarkedPath.markOneStatement(\"").append(condition).append("\", false, true)");
-//            totalFunctionStatement++;
-//            totalClassStatement++;
-//            totalFunctionBranch += 2;
-//        }
-//
-//        return result.toString();
-//    }
-
-    private static boolean isSeparableOperator(InfixExpression.Operator operator) {
-        return operator.equals(InfixExpression.Operator.CONDITIONAL_OR) ||
-                operator.equals(InfixExpression.Operator.OR) ||
-                operator.equals(InfixExpression.Operator.CONDITIONAL_AND) ||
-                operator.equals(InfixExpression.Operator.AND);
+        return "((" + condition + ") && mark(\"" + condition + "\", true, false))" +
+                " || mark(\"" + condition + "\", false, true)";
     }
 
     private static void writeDataToFile(String data, String path) {

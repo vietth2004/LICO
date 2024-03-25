@@ -1,17 +1,17 @@
-package com.example.unittesting.model.result.Concolic;
+package core.testResult.result.autoTestResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcolicTestResult {
-    private List<ConcolicTestData> fullTestData = new ArrayList<>();
+public class TestResult {
+    private List<TestData> fullTestData = new ArrayList<>();
     private double fullCoverage = 0;
 
-    public void addToFullTestData(ConcolicTestData testData) {
+    public void addToFullTestData(TestData testData) {
         fullTestData.add(testData);
     }
 
-    public List<ConcolicTestData> getFullTestData() {
+    public List<TestData> getFullTestData() {
         return fullTestData;
     }
 

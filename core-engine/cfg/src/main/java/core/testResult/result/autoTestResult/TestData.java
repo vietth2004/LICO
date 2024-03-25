@@ -1,13 +1,13 @@
-package com.example.unittesting.model.result.Concolic;
+package core.testResult.result.autoTestResult;
 
-import com.example.unittesting.model.coveredStatement.CoveredStatement;
+import core.testResult.coveredStatement.CoveredStatement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcolicTestData {
+public class TestData {
     private List<CoveredStatement> coveredStatements = new ArrayList<>();
-    private List<ConcolicParameterData> parameterDataList = new ArrayList<>();
+    private List<ParameterData> parameterDataList = new ArrayList<>();
     private Object output;
     private double executeTime;
     private double sourceCodeCoverage;
@@ -15,14 +15,14 @@ public class ConcolicTestData {
     private double requiredCoverage;
     private String status;
 
-    public ConcolicTestData(List<String> names, Class<?>[] types, Object[] values, List<CoveredStatement> coveredStatements,
-                            Object output, double executeTime, double requiredCoverage, double functionCoverage, double sourceCodeCoverage) {
+    public TestData(List<String> names, Class<?>[] types, Object[] values, List<CoveredStatement> coveredStatements,
+                    Object output, double executeTime, double requiredCoverage, double functionCoverage, double sourceCodeCoverage) {
         if(names.size() != types.length || types.length != values.length) {
             throw new RuntimeException("Invalid");
         }
 
         for(int i = 0; i < names.size(); i++) {
-            this.addToParameterDataList(new ConcolicParameterData(names.get(i), types[i].toString(), values[i].toString()));
+            this.addToParameterDataList(new ParameterData(names.get(i), types[i].toString(), values[i].toString()));
         }
 
         this.coveredStatements = coveredStatements;
@@ -42,7 +42,7 @@ public class ConcolicTestData {
         coveredStatements.add(statement);
     }
 
-    public void addToParameterDataList(ConcolicParameterData parameterData) {
+    public void addToParameterDataList(ParameterData parameterData) {
         parameterDataList.add(parameterData);
     }
 
@@ -50,7 +50,7 @@ public class ConcolicTestData {
         return coveredStatements;
     }
 
-    public List<ConcolicParameterData> getParameterDataList() {
+    public List<ParameterData> getParameterDataList() {
         return parameterDataList;
     }
 

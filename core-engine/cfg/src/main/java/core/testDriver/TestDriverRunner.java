@@ -1,5 +1,6 @@
 package core.testDriver;
 
+import core.FilePath;
 import core.cmd.CommandLine;
 import core.dataStructure.MarkedStatement;
 import core.testexecution.TestExecutionManager;
@@ -18,10 +19,10 @@ public final class TestDriverRunner {
     }
 
     public static List<MarkedStatement> runTestDriver(String testDriver) throws IOException, InterruptedException {
-        writeDataToFile(testDriver, "core-engine/cfg/src/main/java/data/testDriverData/TestDriver.java");
+        writeDataToFile(testDriver, FilePath.testDriverPath);
 
-        CommandLine.executeCommand("javac core-engine/cfg/src/main/java/data/testDriverData/TestDriver.java");
-        CommandLine.executeCommand("java core-engine/cfg/src/main/java/data/testDriverData/TestDriver.java");
+        CommandLine.executeCommand("javac " + FilePath.testDriverPath);
+        CommandLine.executeCommand("java " + FilePath.testDriverPath);
 
         return getMarkedStatement();
     }

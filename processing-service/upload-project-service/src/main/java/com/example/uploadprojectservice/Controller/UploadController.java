@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import core.FilePath;
 import io.swagger.v3.oas.annotations.Operation;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -61,20 +62,14 @@ public class UploadController {
 
             long startRunTestTime = System.nanoTime();
             // Clone Project
-            CloneProject.cloneProject(javaDirPath, "core-engine\\cfg\\src\\main\\java\\data\\clonedProject");
+            CloneProject.cloneProject(javaDirPath, FilePath.clonedProjectPath);
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 
             System.out.println("clone time " + runTestDuration);
 
-//            restartUnitTestingService();
 
-            //rerun and rebuild
-//            Process p = Runtime.getRuntime().exec("cmd /c start scripts\\cfgBuild.bat");
-//            Thread.sleep(25000);
-//            Runtime.getRuntime().exec("cmd /c start cfgRun.bat");
-//            Thread.sleep(15000);
 
             path += "\\tmp-prjt.json";
             File jsonFile = new File(path);
@@ -90,14 +85,6 @@ public class UploadController {
         } else {
             throw new IllegalArgumentException("File is null");
         }
-    }
-
-    private static void restartUnitTestingService()
-    {
-        final String uri = "http://localhost:8006/api/unit-testing-service/restartService";
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getForObject(uri, String.class);
     }
 
     @GetMapping(value = "/view-tree")

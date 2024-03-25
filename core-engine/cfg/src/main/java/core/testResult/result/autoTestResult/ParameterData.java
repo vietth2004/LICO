@@ -1,14 +1,14 @@
-package com.example.unittesting.model.result.Concolic;
+package core.testResult.result.autoTestResult;
 
-public class ConcolicParameterData {
+public class ParameterData {
     private String name;
     private String type;
     private String value;
 
-    public ConcolicParameterData() {
+    public ParameterData() {
     }
 
-    public ConcolicParameterData(String name, String type, String value) {
+    public ParameterData(String name, String type, String value) {
         this.name = name;
         this.type = type;
         this.value = value;

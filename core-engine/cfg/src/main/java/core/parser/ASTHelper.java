@@ -65,7 +65,8 @@ public class ASTHelper {
     protected static String getFullyQualifiedTypeName(ArrayType arrayType, CompilationUnit cu) {
         String result = "";
         result += getFullyQualifiedTypeName(arrayType.getElementType().toString(), cu);
-        for (Object dimen : arrayType.dimensions()) {
+        for (Object dimen : arrayType.dimensions())
+        {
             result += dimen.toString();
         }
         return result;

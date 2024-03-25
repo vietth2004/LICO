@@ -231,7 +231,7 @@ public class CFG4J_Test
 ////        return f;
 //    }
 
-    public bool LeapYear()
+    public bool LeapYear(int year)
     {
         // If a year is multiple of 400,
         // then it is a leap year

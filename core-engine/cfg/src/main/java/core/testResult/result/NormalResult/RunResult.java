@@ -1,4 +1,4 @@
-package com.example.unittesting.model.result.NormalResult;
+package core.testResult.result.NormalResult;
 
 import java.util.ArrayList;
 import java.util.List;

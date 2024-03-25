@@ -1,8 +1,6 @@
 package com.example.unittesting.model;
 
 public class Request {
-
-
     private String path;
     public Request() {
     }

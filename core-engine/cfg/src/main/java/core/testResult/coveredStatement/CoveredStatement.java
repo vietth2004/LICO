@@ -1,10 +1,11 @@
-package com.example.unittesting.model.coveredStatement;
+package core.testResult.coveredStatement;
 
 import core.cfg.CfgNode;
 import core.dataStructure.MarkedStatement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CoveredStatement {
     private String statementContent = "";
@@ -17,14 +18,20 @@ public class CoveredStatement {
         this.lineNumber = lineNumber;
     }
 
+    public CoveredStatement(String statementContent, int lineNumber, String conditionStatus) {
+        this.statementContent = statementContent;
+        this.lineNumber = lineNumber;
+        this.conditionStatus = conditionStatus;
+    }
+
     public static List<CoveredStatement> switchToCoveredStatementList(List<MarkedStatement> markedStatements) {
         List<CoveredStatement> coveredStatements = new ArrayList<>();
 
-        for(MarkedStatement markedStatement : markedStatements) {
+        for (MarkedStatement markedStatement : markedStatements) {
             CfgNode cfgNode = markedStatement.getCfgNode();
             CoveredStatement coveredStatement = new CoveredStatement(cfgNode.getContent(), cfgNode.getLineNumber());
 
-            if(markedStatement.isTrueConditionalStatement()) {
+            if (markedStatement.isTrueConditionalStatement()) {
                 coveredStatement.conditionStatus = "true";
             } else if (markedStatement.isFalseConditionalStatement()) {
                 coveredStatement.conditionStatus = "false";
@@ -51,5 +58,22 @@ public class CoveredStatement {
     @Override
     public String toString() {
         return lineNumber + " " + statementContent + " " + conditionStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(statementContent, lineNumber, conditionStatus);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof CoveredStatement) {
+            CoveredStatement coverStatement = (CoveredStatement) o;
+            return this.statementContent.equals(coverStatement.statementContent)
+                    && this.lineNumber == coverStatement.lineNumber
+                    && this.conditionStatus.equals(coverStatement.conditionStatus);
+        } else {
+            return false;
+        }
     }
 }

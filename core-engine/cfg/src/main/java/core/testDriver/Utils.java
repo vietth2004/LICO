@@ -1,5 +1,6 @@
 package core.testDriver;
 
+import core.FilePath;
 import org.eclipse.jdt.core.dom.*;
 
 import javax.tools.JavaCompiler;
@@ -132,7 +133,7 @@ public final class Utils {
         Object[] result = new Object[parameterClasses.length];
         Scanner scanner;
         try {
-            scanner = new Scanner(new File("core-engine/cfg/src/main/java/data/TestData.txt"));
+            scanner = new Scanner(new File(FilePath.generatedTestDataPath));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

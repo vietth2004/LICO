@@ -77,8 +77,8 @@ public class Utils {
     }
 
 
-    public static Block getFunctionBlock(ASTNode node) {
-
+    public static Block getFunctionBlock(ASTNode node)
+    {
         if (node instanceof MethodDeclaration) {
             Block block = ((MethodDeclaration) node).getBody();
             return block;

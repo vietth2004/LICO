@@ -1,5 +1,6 @@
 package com.example.uploadprojectservice.utils.cloneProjectUtils.dataModel;
 
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ public class ClassData {
     private String className;
     private String superClassName;
     private List<String> superInterfaceName;
+
+    private String fields = "";
 
     public ClassData() {
     }
@@ -32,6 +35,13 @@ public class ClassData {
                 superInterfaceName.add(interfaceList.get(i).toString());
             }
         }
+
+        FieldDeclaration[] fieldDeclarations = typeDeclaration.getFields();
+        StringBuilder extractedFields = new StringBuilder();
+        for(FieldDeclaration fieldDeclaration : fieldDeclarations) {
+            extractedFields.append(fieldDeclaration).append("\n");
+        }
+        fields = extractedFields.toString();
     }
 
     public String getClassName() {
@@ -64,6 +74,10 @@ public class ClassData {
 
     public void setSuperInterfaceName(List<String> superInterfaceName) {
         this.superInterfaceName = superInterfaceName;
+    }
+
+    public String getFields() {
+        return fields;
     }
 }
 

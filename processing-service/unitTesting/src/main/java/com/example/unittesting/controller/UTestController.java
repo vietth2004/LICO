@@ -4,6 +4,7 @@ import com.example.unittesting.Sevice.UTestService;
 
 import com.example.unittesting.UnitTestingApplication;
 import com.example.unittesting.utils.testing.ConcolicTesting;
+import com.example.unittesting.utils.testing.NTDTesting;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,20 +40,20 @@ public class UTestController {
                     @io.swagger.v3.oas.annotations.Parameter(name = "coverageType", description = "Loại độ phủ cần kiểm thử")}
     )
     public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
-        ConcolicTesting.Coverage coverage;
+        NTDTesting.Coverage coverage;
 
         switch (coverageType) {
             case "statement":
-                coverage = ConcolicTesting.Coverage.STATEMENT;
+                coverage = NTDTesting.Coverage.STATEMENT;
                 break;
             case "branch":
-                coverage = ConcolicTesting.Coverage.BRANCH;
+                coverage = NTDTesting.Coverage.BRANCH;
                 break;
             case "path":
-                coverage = ConcolicTesting.Coverage.PATH;
+                coverage = NTDTesting.Coverage.PATH;
                 break;
             case "mcdc":
-                coverage = ConcolicTesting.Coverage.MCDC;
+                coverage = NTDTesting.Coverage.MCDC;
                 break;
             default:
                 throw new RuntimeException("Invalid coverage type");
