@@ -19,4 +19,12 @@ public class Unzip {
     public double getExtractedSize() {
         return extractedSize;
     }
+
+    public void setProgress(boolean progress) {
+        this.progress = progress;
+    }
+
+    public void setExtractedSize(double extractedSize) {
+        this.extractedSize = extractedSize;
+    }
 }

@@ -5,13 +5,21 @@ const stompClient = new StompJs.Client({
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
+    intervalId = setInterval(() => {
+        stompClient.publish({
+            destination: "/app/getExtractedSize",
+            body: JSON.stringify({})
+        });
+    }, 1000);
     stompClient.subscribe('/topic/greetings', (greeting) => {
         showGreeting(JSON.parse(greeting.body).content);
         console.log(JSON.parse(greeting.body).content)
     });
     stompClient.subscribe('/topic/extractedSize', (extractedSize) => {
-        showExtractedSize(JSON.parse(extractedSize.body).content);
-        console.log(JSON.parse(extractedSize.body).content)
+        console.log(extractedSize.body)
+        const extractedSizeData = JSON.parse(extractedSize.body).content;
+        console.log(extractedSizeData); // Log dữ liệu ra console
+        showExtractedSize(extractedSizeData); // Hiển thị dữ liệu lên giao diện
     });
 };
 
@@ -54,7 +62,7 @@ function sendName() {
     });
     stompClient.publish({
         destination: "/app/unzip",
-        body: JSON.stringify()
+        body: JSON.stringify({})
     });
 }
 

@@ -24,6 +24,11 @@ public class ParserServiceImpl implements ParserService{
     final ProjectService projectService;
 
     final JwtUtils jwtUtils;
+    private boolean isJavaServer = false;
+    private boolean isXmlServer = false;
+    private boolean isJspServer = false;
+    private boolean isPropServer = false;
+    private boolean isEndProgress = false;
 
     public ParserServiceImpl(ProjectService projectService, JwtUtils jwtUtils) {
         this.projectService = projectService;
@@ -125,10 +130,18 @@ public class ParserServiceImpl implements ParserService{
         String xmlServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/xml-service/pathParse/old"; //xml-service
         String jspServerUrl = "http://" + ipConstants.getJspServiceIp() + ":7005/api/jsp-service/pathParse/old"; //jsp-service
         String propServerUrl = "http://" + ipConstants.getXmlServiceIp() + ":7006/api/prop-service/pathParse/old"; //xml-service
+        isJavaServer = true;
         ResponseEntity<Request> javaRequest = restTemplate.postForEntity(javaServerUrl, path, Request.class);
+        isJavaServer = false;
+        isXmlServer = true;
         ResponseEntity<Request> xmlRequest = restTemplate.postForEntity(xmlServerUrl, path, Request.class);
+        isXmlServer = false;
+        isJspServer = true;
         ResponseEntity<Request> jspRequest = restTemplate.postForEntity(jspServerUrl, path, Request.class);
+        isJspServer = false;
+        isPropServer = true;
         ResponseEntity<Request> propRequest = restTemplate.postForEntity(propServerUrl, path, Request.class);
+        isPropServer = false;
         Request request = new Request(
                 javaRequest.getBody().getRootNode()
                 , javaRequest.getBody().getAllDependencies()
@@ -138,7 +151,32 @@ public class ParserServiceImpl implements ParserService{
                 , propRequest.getBody().getPropertiesNodes()
                 , path.getPath()
                 );
+        isEndProgress = true;
 
         return request;
+    }
+
+    public ProjectService getProjectService() {
+        return projectService;
+    }
+
+    public boolean isJavaServer() {
+        return isJavaServer;
+    }
+
+    public boolean isXmlServer() {
+        return isXmlServer;
+    }
+
+    public boolean isJspServer() {
+        return isJspServer;
+    }
+
+    public boolean isPropServer() {
+        return isPropServer;
+    }
+
+    public boolean isEndProgress() {
+        return isEndProgress;
     }
 }
