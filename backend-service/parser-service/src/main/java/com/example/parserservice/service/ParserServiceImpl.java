@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.http.HttpClient;
 import java.util.List;
 import java.util.concurrent.*;
 
