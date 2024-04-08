@@ -37,4 +37,24 @@ public class Parser {
     public boolean isPropServer() {
         return isPropServer;
     }
+
+    public void setEndProgress(boolean endProgress) {
+        isEndProgress = endProgress;
+    }
+
+    public void setJavaServer(boolean javaServer) {
+        isJavaServer = javaServer;
+    }
+
+    public void setXmlServer(boolean xmlServer) {
+        isXmlServer = xmlServer;
+    }
+
+    public void setJspServer(boolean jspServer) {
+        isJspServer = jspServer;
+    }
+
+    public void setPropServer(boolean propServer) {
+        isPropServer = propServer;
+    }
 }

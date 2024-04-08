@@ -143,7 +143,7 @@ public class ProjectService {
                     }
                     extractedSize = count * 1.0 / totalSize;
                     unzipProgress = true;
-                    System.out.println(extractedSize);
+                    //System.out.println(extractedSize);
                     //System.out.println(unzipProgress);
             }
             System.out.println(count);

@@ -17,14 +17,15 @@ import org.springframework.web.util.HtmlUtils;
 public class TaskController {
     @Autowired
     private ProjectService projectService;
+    @Autowired
     private ParserServiceImpl parserService;
     @MessageMapping("/unzip")
     @SendTo("/topic/extractedSize")
     public Unzip getExtractedSize() throws Exception{
 //        Thread.sleep(1000); // simulated delay
         Unzip unZip =new Unzip(projectService.isUnzipProgress(), projectService.getExtractedSize());
-        System.out.println(unZip.isProgress());
-         System.out.println(unZip.getExtractedSize());
+        //System.out.println(unZip.isProgress());
+         //System.out.println(unZip.getExtractedSize());
          return (unZip);
 
     }
@@ -32,8 +33,9 @@ public class TaskController {
     @SendTo("/topic/parserProgress")
     public Parser getParserProgress() throws Exception{
 //        Thread.sleep(1000); // simulated delay
+        System.out.println("isEndProgress"+parserService.isEndProgress() +"isJavaServer" +parserService.isJavaServer()+"isXmlServer"+ parserService.isXmlServer()+"isJspServer" + parserService.isJspServer()+"isPropServer"+ parserService.isPropServer());
         Parser parser = new Parser(parserService.isEndProgress(), parserService.isJavaServer(), parserService.isXmlServer(), parserService.isJspServer(), parserService.isPropServer());
-        System.out.println(parser.isEndProgress());
+        System.out.println("ABC"+parser.isEndProgress());
         return (parser);
 
     }
