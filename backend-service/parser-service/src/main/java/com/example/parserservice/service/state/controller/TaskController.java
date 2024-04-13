@@ -35,7 +35,7 @@ public class TaskController {
 //        Thread.sleep(1000); // simulated delay
         System.out.println("isEndProgress"+parserService.isEndProgress() +"isJavaServer" +parserService.isJavaServer()+"isXmlServer"+ parserService.isXmlServer()+"isJspServer" + parserService.isJspServer()+"isPropServer"+ parserService.isPropServer());
         Parser parser = new Parser(parserService.isEndProgress(), parserService.isJavaServer(), parserService.isXmlServer(), parserService.isJspServer(), parserService.isPropServer());
-        System.out.println("ABC"+parser.isEndProgress());
+        //System.out.println("ABC"+parser);
         return (parser);
 
     }

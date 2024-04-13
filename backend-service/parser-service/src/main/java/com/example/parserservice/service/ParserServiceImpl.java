@@ -48,6 +48,7 @@ public class ParserServiceImpl implements ParserService{
     //**
     @Override
     public Response build(List<String> parserList, MultipartFile file, String user, String project) {
+        isEndProgress = false;
         log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String userPath = user;
         if(!userPath.equals("anonymous")){
@@ -88,6 +89,7 @@ public class ParserServiceImpl implements ParserService{
     //**
     @Override
     public Response build(List<String> parserList, Path path) {
+        isEndProgress = false;
         log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
 
         /**
