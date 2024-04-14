@@ -3,18 +3,20 @@ package com.example.projectservice.controller;
 import com.example.projectservice.project.Project;
 import com.example.projectservice.project.ProjectRepository;
 import com.example.projectservice.response.AuthenticationResponse;
+import com.example.projectservice.utils.DeleteFile;
 import com.example.projectservice.version.Version;
 import com.example.projectservice.version.VersionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/project-service/")
@@ -58,23 +60,6 @@ public class ProjectController {
 
     @PostMapping("/project/save")
     public ResponseEntity<?> saveProject(@RequestBody Project project){
-
-        //save project
-//        int count = 0;
-//        for (Project project1: projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))) {
-//            int index = project1.getName().lastIndexOf("(");
-//            int index1 = project1.getName().lastIndexOf(")");
-//            if (index != -1) {
-//                String copyProj = project1.getName().substring(0, index - 1);
-//                if (copyProj.equals(project.getName())) {
-//                    String s = project1.getName().substring(index+1, index1);
-//                    Integer integer = Integer.parseInt(s);
-//                    count = integer + 1;
-//                    break;
-//                }
-//            }
-//        }
-//        project.setName(project.getName() + " (" + count + ")");
         Project tmpProject = new Project(project.getId(), project.getName(), project.getLanguage(), project.getUser());
         projectRepository.save(tmpProject);
 
@@ -86,6 +71,56 @@ public class ProjectController {
         }
         return ResponseEntity.ok(new AuthenticationResponse("Success!", tmpProject.getId()));
     }
+    @GetMapping("/project/delete")
+    public ResponseEntity<?> deleteProject(@RequestParam(name = "id", required = false) Integer id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(new AuthenticationResponse("ID is required"));
+        }
+
+        Optional<Project> projectOptional = projectRepository.findById(id);
+
+        if (projectOptional.isPresent()) {
+            // Kiểm tra xem có phiên bản nào liên kết với dự án không
+            List<Version> versions = versionRepository.findByPId(id);
+            if (!versions.isEmpty()) {
+                return ResponseEntity.badRequest().body(new AuthenticationResponse("There are versions associated with this project. Please delete the versions first."));
+            }
+
+            // Xóa dự án nếu không có phiên bản liên kết
+            projectRepository.deleteById(id);
+            return ResponseEntity.ok(new AuthenticationResponse("Project with ID " + id + " has been deleted"));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/project/delete-v")
+    public ResponseEntity<?> deleteProjectVerion(@RequestParam(name = "id", required = false) Integer id) throws IOException {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(new AuthenticationResponse("ID is required"));
+        }
+
+        Optional<Project> projectOptional = projectRepository.findById(id);
+
+        if (projectOptional.isPresent()) {
+            // Kiểm tra xem có phiên bản nào liên kết với dự án không
+            List<Version> versions = versionRepository.findByPId(id);
+            if (!versions.isEmpty()) {
+                List<String> pathProject = versionRepository.findPathByPId(id);
+                for(String path: pathProject){
+                    DeleteFile.deleteFolder(path);
+                    DeleteFile.deleteZipFile(path);
+                }
+                versionRepository.deleteAllByProjectId(id);
+            }
+            // Xóa dự án nếu không có phiên bản liên kết
+            projectRepository.deleteAllByProjectId(id);
+            return ResponseEntity.ok(new AuthenticationResponse("Project with ID " + id + " has been deleted"));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @GetMapping("/version/get")
     public Page<Version> getAllVersionInProjectByUser(@RequestParam(name = "name", required = false) String name,
@@ -115,5 +150,18 @@ public class ProjectController {
         versionRepository.save(version);
         return ResponseEntity.ok(new AuthenticationResponse("Success!", version.getId()));
     }
+    @GetMapping("/version/delete")
+    public ResponseEntity<?> deleteVersion(@RequestParam(name = "id", required = false) Integer id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(new AuthenticationResponse("ID is required"));
+        }
 
+        Optional<Version> projectOptional = versionRepository.findById(id);
+        if (projectOptional.isPresent()) {
+            versionRepository.deleteById(id);
+            return ResponseEntity.ok(new AuthenticationResponse("Version with ID " + id + " has been deleted"));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
