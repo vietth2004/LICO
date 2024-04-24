@@ -50,13 +50,13 @@ public final class CloneProject {
         iCloneProject(originalDirPath, destinationDirPath);
         System.out.println(command);
 
-        Process p = Runtime.getRuntime().exec(command.toString());
-        System.out.println(p.waitFor());
-
-        if(p.waitFor() != 0) {
-            System.out.println("Can't compile project");
-            throw new RuntimeException("Can't compile project");
-        }
+//        Process p = Runtime.getRuntime().exec(command.toString());
+//        System.out.println(p.waitFor());
+//
+//        if(p.waitFor() != 0) {
+//            System.out.println("Can't compile project");
+//            throw new RuntimeException("Can't compile project");
+//        }
     }
 
     private static void iCloneProject(String originalDirPath, String destinationDirPath) throws IOException {

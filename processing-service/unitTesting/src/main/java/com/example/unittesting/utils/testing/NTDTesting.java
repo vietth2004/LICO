@@ -1,5 +1,6 @@
 package com.example.unittesting.utils.testing;
 
+import core.algorithms.FindAllPath;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
 import core.testResult.result.autoTestResult.TestResult;
@@ -61,9 +62,17 @@ public class NTDTesting {
         setupCfgTree(coverage);
         setupParameters(methodName);
 
+        test();
+
         TestResult result = startGenerating(coverage);
 
         return result;
+    }
+
+    private static void test() {
+        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+
+        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
     }
 
     private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
@@ -228,7 +237,7 @@ public class NTDTesting {
         parameters = ((MethodDeclaration) testFunc).parameters();
         parameterClasses = core.testDriver.Utils.getParameterClasses(parameters);
         parameterNames = core.testDriver.Utils.getParameterNames(parameters);
-        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
+//        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
     }
 
     private static void setupFullyClonedClassName(String className) {

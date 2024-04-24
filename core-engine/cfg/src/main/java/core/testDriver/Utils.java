@@ -74,7 +74,8 @@ public final class Utils {
             Type componentType = arrayType.getElementType();
             Class<?> componentClass = getTypeClass(componentType); // get clas of the component of array like int, double, ...
             int dimension = arrayType.getDimensions();
-            return Array.newInstance(componentClass, new int[dimension]).getClass();
+            Class<?> arrayClass = Array.newInstance(componentClass, new int[dimension]).getClass();
+            return arrayClass;
         } else if (type instanceof SimpleType) {
             SimpleType simpleType = (SimpleType) type;
             return getClassForName(simpleType.getName().getFullyQualifiedName());
@@ -183,6 +184,29 @@ public final class Utils {
     }
 
     private static Object createRandomVariableData(Class<?> parameterClass) {
+        if (parameterClass.isPrimitive()) {
+            return createRandomPrimitiveVariableData(parameterClass);
+        } else if (parameterClass.isArray()) {
+            return createRandomArrayVariableData(parameterClass);
+        }
+        throw new RuntimeException("Unsupported type: " + parameterClass.getName());
+    }
+
+    private static Object createRandomArrayVariableData(Class<?> parameterClass) {
+        int totalDimentsions = 0;
+        for(Class<?> componentType = parameterClass.getComponentType();;) {
+            if(componentType.isArray()) {
+                totalDimentsions++;
+                componentType = componentType.getComponentType();
+            } else {
+                int[] dimensions = new int[totalDimentsions];
+                Arrays.fill(dimensions, 10);
+                return Array.newInstance(componentType, dimensions);
+            }
+        }
+    }
+
+    private static Object createRandomPrimitiveVariableData(Class<?> parameterClass) {
         String className = parameterClass.getName();
         Random random = new Random();
 
@@ -213,10 +237,11 @@ public final class Utils {
         throw new RuntimeException("Unsupported type: " + className);
     }
 
+
     public static void createCloneMethod(MethodDeclaration method, CompilationUnit compilationUnit) {
         StringBuilder cloneMethod = new StringBuilder();
         cloneMethod.append("package data;\n");
-        for(ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
+        for (ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
             cloneMethod.append(iImport);
         }
         cloneMethod.append("import static core.dataStructure.MarkedPath.markOneStatement;\n");

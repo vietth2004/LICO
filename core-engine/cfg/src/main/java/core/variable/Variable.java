@@ -18,7 +18,8 @@ public abstract class Variable {
         if(variable instanceof PrimitiveTypeVariable) {
             return PrimitiveTypeVariable.createZ3PrimitiveTypeVariable((PrimitiveTypeVariable) variable, ctx);
         } else if(variable instanceof ArrayTypeVariable) {
-            throw new RuntimeException("Invalid type");
+            return null;
+//            throw new RuntimeException("Invalid type");
         } else {
             throw new RuntimeException("Invalid type");
         }

@@ -90,8 +90,10 @@ public final class SymbolicExecution {
             String name = declaration.getName().toString();
 
             Expr variable = Variable.createZ3Variable(memoryModel.getVariable(name), ctx);
-            if(!haveDuplicateVariable(variable.toString())) {
-                vars.add(variable);
+            if(variable != null) {
+                if (!haveDuplicateVariable(variable.toString())) {
+                    vars.add(variable);
+                }
             }
         } else {
             throw new RuntimeException("Invalid parameter");
