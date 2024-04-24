@@ -37,6 +37,7 @@ public class UploadController {
      */
     @Autowired
     private final UploadService uploadService;
+
     public UploadController(UploadService uploadService){
         this.uploadService = uploadService;
     }
@@ -56,6 +57,7 @@ public class UploadController {
                             @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
                             @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException, InterruptedException {
         if (file != null) {
+            System.out.println("thu ti");
             String path = uploadService.buildProject(parserList, file, user, project);
             Object result = uploadService.build(path);
 
@@ -210,7 +212,7 @@ public class UploadController {
             description = "API sẽ lưu lại những expected inputs/outputs mà người dùng nhập vào" +
                     "với inputs đó chương trình thực hiện các test case cho ra độ phủ actual outputs"
     )
-    public ResponseEntity<Object> setExpectValue(@RequestBody InfoMethod requestMethod){
+    public ResponseEntity<? extends Object> setExpectValue(@RequestBody InfoMethod requestMethod){
         if (requestMethod != null) {
             try {
                 ResponseEntity<Object> response = uploadService.saveDataTest(requestMethod);

@@ -26,6 +26,8 @@ public class ProjectService {
     private final Path fileStorageLocation;
 
     private final JwtUtils jwtUtils;
+    private double extractedSize = 0.00;
+    private boolean unzipProgress = false;
 
     @Autowired
     public ProjectService(FileStorageProperties fileStorageProperties, JwtUtils jwtUtils) {
@@ -101,6 +103,17 @@ public class ProjectService {
             ZipInputStream zis = new ZipInputStream(bin);
             ZipEntry zipEntry = null;
             int count = 0;
+            long totalSize = 0; // Thay đổi kiểu dữ liệu của totalSize thành long
+            while ((zipEntry = zis.getNextEntry()) != null) {
+                totalSize ++;
+                zis.closeEntry();
+            }
+
+            // Reset lại stream để bắt đầu unzip từ đầu
+            zis.close();
+            fin = new FileInputStream(Filepath);
+            bin = new BufferedInputStream(fin);
+            zis = new ZipInputStream(bin);
             while ((zipEntry = zis.getNextEntry()) != null) {
                 // ...
                 count++;
@@ -128,8 +141,14 @@ public class ProjectService {
                         bufout.close();
                         fos.close();
                     }
+                    extractedSize = count * 1.0 / totalSize;
+                    unzipProgress = true;
+                    //System.out.println(extractedSize);
+                    //System.out.println(unzipProgress);
             }
             System.out.println(count);
+            unzipProgress = false;
+            //System.out.println(unzipProgress);
             zis.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,5 +168,17 @@ public class ProjectService {
         }
 
         return destFile;
+    }
+
+    public double getExtractedSize() {
+        return extractedSize;
+    }
+
+    public void setExtractedSize(long extractedSize) {
+        this.extractedSize = extractedSize;
+    }
+
+    public boolean isUnzipProgress() {
+        return unzipProgress;
     }
 }

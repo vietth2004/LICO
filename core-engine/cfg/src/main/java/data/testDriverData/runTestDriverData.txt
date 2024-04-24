@@ -1,0 +1,5 @@
+int count=0;
+===false===false---end---n > 0===true===false---end---n/=10;
+===false===false---end---count++;
+===false===false---end---n > 0===false===true---end---return count;
+===false===false---end---

@@ -62,18 +62,18 @@ public class NTDTesting {
         setupCfgTree(coverage);
         setupParameters(methodName);
 
-        test();
+//        test();
 
         TestResult result = startGenerating(coverage);
 
         return result;
     }
 
-    private static void test() {
-        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
-
-        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
-    }
+//    private static void test() {
+//        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+//
+//        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
+//    }
 
     private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
         TestResult testResult = new TestResult();
@@ -237,7 +237,7 @@ public class NTDTesting {
         parameters = ((MethodDeclaration) testFunc).parameters();
         parameterClasses = core.testDriver.Utils.getParameterClasses(parameters);
         parameterNames = core.testDriver.Utils.getParameterNames(parameters);
-//        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
+        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
     }
 
     private static void setupFullyClonedClassName(String className) {

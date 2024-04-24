@@ -1,6 +1,6 @@
-package data.clonedProject.QKL;
+package data.clonedProject;
 import java.io.FileWriter;
-public class Hzy {
+public class XOROperationinanArray {
 private static void writeDataToFile(String data, String path, boolean append) {
 try {
 FileWriter writer = new FileWriter(path, append);
@@ -19,23 +19,25 @@ writeDataToFile(markResult.toString(), "core-engine/cfg/src/main/java/data/testD
 if (!isTrueCondition && !isFalseCondition) return true;
 return !isFalseCondition;
 }
-public int factorial(int n)
+public static int xorOperation(int n, int start)
 {
-mark("int result=1;\n", false, false);
-int result=1;
+mark("int xor=start;\n", false, false);
+int xor=start;
 mark("int i=1", false, false);
-for (int i=1; ((i <= n) && mark("i <= n", true, false)) || mark("i <= n", false, true); mark("i=i + 1", false, false),
-i=i + 1) {
+for (int i=1; ((i < n) && mark("i < n", true, false)) || mark("i < n", false, true); mark("i++", false, false),
+i++) {
 {
-mark("result*=i;\n", false, false);
-result*=i;
+mark("int nextNum=start + 2 * i;\n", false, false);
+int nextNum=start + 2 * i;
+mark("xor=xor ^ nextNum;\n", false, false);
+xor=xor ^ nextNum;
 }
 }
-mark("return result;\n", false, false);
-return result;
+mark("return xor;\n", false, false);
+return xor;
 }
 
-public static final int intfactorialintnTotalStatement = 6;
-public static final int intfactorialintnTotalBranch = 2;
-public static final int HzyTotalStatement = 6;
+public static final int intxorOperationintnintstartTotalStatement = 7;
+public static final int intxorOperationintnintstartTotalBranch = 2;
+public static final int XOROperationinanArrayTotalStatement = 7;
 }
