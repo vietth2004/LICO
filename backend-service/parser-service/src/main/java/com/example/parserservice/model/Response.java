@@ -8,7 +8,7 @@ import com.example.parserservice.dom.Node;
 import java.util.List;
 
 
-public class Response {
+public class Response implements Cloneable {
 
     private JavaNode rootNode;
 
@@ -223,5 +223,13 @@ public class Response {
 
     public void setOrientedDependencies(List<OrientedDependency> orientedDependencies) {
         this.orientedDependencies = orientedDependencies;
+    }
+
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package core.ast.Expression.Name;
 
 import core.ast.Expression.ExpressionNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;

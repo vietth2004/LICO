@@ -1,7 +1,7 @@
 package core.testResult.coveredStatement;
 
 import core.cfg.CfgNode;
-import core.dataStructure.MarkedStatement;
+import core.path.MarkedStatement;
 
 import java.util.ArrayList;
 import java.util.List;

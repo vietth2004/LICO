@@ -1,18 +1,19 @@
 package com.example.unittesting.utils.testing;
 
+import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
 import core.testResult.result.autoTestResult.TestResult;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import core.FilePath;
-import core.algorithms.FindPath;
-import core.algorithms.SymbolicExecution;
+import core.path.FindPath;
+import core.symbolicExecution.SymbolicExecution;
 import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
-import core.dataStructure.MarkedPath;
-import core.dataStructure.MarkedStatement;
-import core.dataStructure.Path;
+import core.path.MarkedPath;
+import core.path.MarkedStatement;
+import core.path.Path;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
 import core.testDriver.TestDriverGenerator;
@@ -65,7 +66,7 @@ public class ConcolicTesting {
 
     private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException {
         TestResult testResult = new TestResult();
-        Object[] evaluatedValues = core.testDriver.Utils.createRandomTestData(parameterClasses);
+        Object[] evaluatedValues = SymbolicExecution.createRandomTestData(parameterClasses);
 
         writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
@@ -92,7 +93,7 @@ public class ConcolicTesting {
                 break;
             }
 
-            evaluatedValues = core.testDriver.Utils.getParameterValue(parameterClasses);
+            evaluatedValues = SymbolicExecution.getEvaluatedTestData(parameterClasses);
 
             writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
@@ -195,8 +196,8 @@ public class ConcolicTesting {
 
     private static void setupParameters() {
         parameters = ((MethodDeclaration) testFunc).parameters();
-        parameterClasses = core.testDriver.Utils.getParameterClasses(parameters);
-        parameterNames = core.testDriver.Utils.getParameterNames(parameters);
+        parameterClasses = TestDriverUtils.getParameterClasses(parameters);
+        parameterNames = TestDriverUtils.getParameterNames(parameters);
     }
 
     private static void setupCfgTree(Coverage coverage) {

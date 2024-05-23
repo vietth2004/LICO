@@ -7,7 +7,7 @@ import core.ast.Expression.Literal.NumberLiteral.DoubleLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.ast.Expression.OperationExpression.PrefixExpressionNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
 public abstract class LiteralNode extends ExpressionNode {

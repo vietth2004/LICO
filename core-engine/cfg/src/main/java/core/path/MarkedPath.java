@@ -1,4 +1,4 @@
-package core.dataStructure;
+package core.path;
 
 import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;

@@ -1,5 +1,5 @@
 package data;
-import static core.dataStructure.MarkedPath.markOneStatement;
+import static core.path.MarkedPath.markOneStatement;
 public class CloneFile {
 public static int sampleMethod(int a, int b, int c)
 {

@@ -1,5 +1,4 @@
-int count=0;
-===false===false---end---n > 0===true===false---end---n/=10;
-===false===false---end---count++;
-===false===false---end---n > 0===false===true---end---return count;
+int[] x=new int[10];
+===false===false---end---double result=1;
+===false===false---end---index == 0===true===false---end---return 1;
 ===false===false---end---

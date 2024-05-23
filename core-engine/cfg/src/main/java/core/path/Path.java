@@ -1,4 +1,4 @@
-package core.dataStructure;
+package core.path;
 
 import core.ast.additionalNodes.Node;
 import core.cfg.*;

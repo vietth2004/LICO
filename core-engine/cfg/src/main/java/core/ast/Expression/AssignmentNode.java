@@ -6,7 +6,7 @@ import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.OperationExpression.InfixExpressionNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
 public class AssignmentNode extends ExpressionNode {

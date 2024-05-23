@@ -1,4 +1,4 @@
-package core.dataStructure;
+package core.symbolicExecution;
 
 import core.ast.AstNode;
 import core.ast.Expression.Name.NameNode;
@@ -31,8 +31,8 @@ public class MemoryModel { // ONLY FOR PRIMITIVE TYPES!!!!
         S.put(new PrimitiveTypeVariable(typeCode, name), element);
     }
 
-    public void declareArrayTypeVariable(ArrayType type, String name, AstNode element) {
-        S.put(new ArrayTypeVariable(type, name), element);
+    public void declareArrayTypeVariable(ArrayType type, String name, int numberOfDimensions, AstNode element) {
+        S.put(new ArrayTypeVariable(type, name, numberOfDimensions), element);
     }
 
     public AstNode getValue(String name) {

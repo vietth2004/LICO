@@ -5,7 +5,7 @@ import core.ast.Type.ArrayTypeNode;
 import core.ast.AstNode;
 import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
 import core.ast.Expression.Literal.LiteralNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package core.ast.Expression;
 import core.ast.AstNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Name;

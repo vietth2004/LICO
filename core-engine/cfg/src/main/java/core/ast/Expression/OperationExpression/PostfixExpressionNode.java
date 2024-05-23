@@ -2,11 +2,12 @@ package core.ast.Expression.OperationExpression;
 
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
+import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.PostfixExpression;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class PostfixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PostfixExpression.Operator operator;
 
-    public static Expr createZ3Expression(PostfixExpressionNode postfixExpressionNode, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
+    public static Expr createZ3Expression(PostfixExpressionNode postfixExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode operand = postfixExpressionNode.operand;
         PostfixExpression.Operator operator = postfixExpressionNode.operator;
 

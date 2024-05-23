@@ -3,7 +3,7 @@ package core.ast;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Statement.StatementNode;
 import core.ast.VariableDeclaration.VariableDeclarationNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
 public abstract class AstNode {

@@ -2,11 +2,12 @@ package core.ast.Expression.OperationExpression;
 
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
+import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class PrefixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PrefixExpression.Operator operator;
 
-    public static Expr createZ3Expression(PrefixExpressionNode prefixExpressionNode, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
+    public static Expr createZ3Expression(PrefixExpressionNode prefixExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode operand = prefixExpressionNode.operand;
         PrefixExpression.Operator operator = prefixExpressionNode.operator;
 

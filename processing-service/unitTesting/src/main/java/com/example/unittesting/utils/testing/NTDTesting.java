@@ -1,19 +1,16 @@
 package com.example.unittesting.utils.testing;
 
-import core.algorithms.FindAllPath;
+import core.path.*;
+import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
 import core.testResult.result.autoTestResult.TestResult;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import core.FilePath;
-import core.algorithms.FindPath;
-import core.algorithms.SymbolicExecution;
+import core.symbolicExecution.SymbolicExecution;
 import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
-import core.dataStructure.MarkedPath;
-import core.dataStructure.MarkedStatement;
-import core.dataStructure.Path;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
 import core.utils.Utils;
@@ -69,15 +66,15 @@ public class NTDTesting {
         return result;
     }
 
-//    private static void test() {
-//        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
-//
-//        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
-//    }
+    private static void test() {
+        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+
+        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
+    }
 
     private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
         TestResult testResult = new TestResult();
-        Object[] evaluatedValues = core.testDriver.Utils.createRandomTestData(parameterClasses);
+        Object[] evaluatedValues = SymbolicExecution.createRandomTestData(parameterClasses);
 
         writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
@@ -107,7 +104,7 @@ public class NTDTesting {
                 break;
             }
 
-            evaluatedValues = core.testDriver.Utils.getParameterValue(parameterClasses);
+            evaluatedValues = SymbolicExecution.getEvaluatedTestData(parameterClasses);
 
             writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
@@ -235,8 +232,8 @@ public class NTDTesting {
 
     private static void setupParameters(String methodName) throws ClassNotFoundException, NoSuchMethodException {
         parameters = ((MethodDeclaration) testFunc).parameters();
-        parameterClasses = core.testDriver.Utils.getParameterClasses(parameters);
-        parameterNames = core.testDriver.Utils.getParameterNames(parameters);
+        parameterClasses = TestDriverUtils.getParameterClasses(parameters);
+        parameterNames = TestDriverUtils.getParameterNames(parameters);
         method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
     }
 

@@ -1,9 +1,8 @@
-package core.algorithms;
+package core.path;
 
 import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgForEachExpressionNode;
 import core.cfg.CfgNode;
-import core.dataStructure.Path;
 
 import java.util.ArrayList;
 import java.util.List;

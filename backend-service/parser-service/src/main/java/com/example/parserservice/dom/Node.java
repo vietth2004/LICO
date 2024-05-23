@@ -24,6 +24,8 @@ public class Node implements Serializable {
     protected String absolutePath;
     protected String entityClass;
 
+    protected String type = "Node";
+
     @JsonIgnore
     @JciaIgnore
     protected Node parent;
@@ -91,6 +93,14 @@ public class Node implements Serializable {
 
     public void setEntityClass(String entityClass) {
         this.entityClass = entityClass;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void addChild(Node child) {

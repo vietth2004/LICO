@@ -2,10 +2,9 @@ package core.ast.Expression;
 
 import core.ast.*;
 import core.ast.Expression.Literal.*;
-import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.OperationExpression.*;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
 public abstract class ExpressionNode extends AstNode {

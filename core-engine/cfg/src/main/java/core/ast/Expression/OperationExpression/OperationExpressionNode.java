@@ -2,6 +2,7 @@ package core.ast.Expression.OperationExpression;
 
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
+import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.BooleanLiteralNode;
@@ -11,7 +12,7 @@ import core.ast.Expression.Literal.NumberLiteral.DoubleLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.ast.Expression.Name.NameNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import core.variable.Variable;
 import org.eclipse.jdt.core.dom.*;
 
@@ -33,27 +34,27 @@ public abstract class OperationExpressionNode extends ExpressionNode {
 //        }
 //    }
 
-    public static Expr createZ3Expression(ExpressionNode operand, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
-        if(operand instanceof InfixExpressionNode) {
+    public static Expr createZ3Expression(ExpressionNode operand, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
+        if (operand instanceof InfixExpressionNode) {
             return InfixExpressionNode.createZ3Expression((InfixExpressionNode) operand, ctx, vars, memoryModel);
-        } else if(operand instanceof PostfixExpressionNode) {
+        } else if (operand instanceof PostfixExpressionNode) {
             return PostfixExpressionNode.createZ3Expression((PostfixExpressionNode) operand, ctx, vars, memoryModel);
-        } else if(operand instanceof PrefixExpressionNode) {
+        } else if (operand instanceof PrefixExpressionNode) {
             return PrefixExpressionNode.createZ3Expression((PrefixExpressionNode) operand, ctx, vars, memoryModel);
-        } else if(operand instanceof ParenthesizedExpressionNode) {
+        } else if (operand instanceof ParenthesizedExpressionNode) {
             return ParenthesizedExpressionNode.createZ3Expression((ParenthesizedExpressionNode) operand, ctx, vars, memoryModel);
-        } else if(operand instanceof NameNode) {
+        } else if (operand instanceof NameNode) {
             return createZ3Variable((NameNode) operand, ctx, vars, memoryModel);
-        } else if(operand instanceof LiteralNode) {
-            if(operand instanceof NumberLiteralNode) {
-                if(operand instanceof IntegerLiteralNode) {
+        } else if (operand instanceof LiteralNode) {
+            if (operand instanceof NumberLiteralNode) {
+                if (operand instanceof IntegerLiteralNode) {
                     return ctx.mkInt(((IntegerLiteralNode) operand).getIntegerValue());
                 } else { // operand instanceof DoubleLiteralNode
                     return ctx.mkReal(((DoubleLiteralNode) operand).getTokenValue());
                 }
-            } else if(operand instanceof BooleanLiteralNode) {
+            } else if (operand instanceof BooleanLiteralNode) {
                 return ctx.mkBool(((BooleanLiteralNode) operand).getValue());
-            } else if(operand instanceof CharacterLiteralNode) {
+            } else if (operand instanceof CharacterLiteralNode) {
                 return ctx.mkInt(((CharacterLiteralNode) operand).getCharacterValue());
             } else {
                 throw new RuntimeException("Invalid Literal");
@@ -63,24 +64,24 @@ public abstract class OperationExpressionNode extends ExpressionNode {
         }
     }
 
-    private static Expr createZ3Variable(NameNode variableName, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
+    private static Expr createZ3Variable(NameNode variableName, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         String stringName = NameNode.getStringNameNode(variableName);
-        Expr variable =  Variable.createZ3Variable(memoryModel.getVariable(stringName), ctx);
-
+        Expr variable = Variable.createZ3Variable(memoryModel.getVariable(stringName), ctx);
+        Z3VariableWrapper z3VariableWrapper = new Z3VariableWrapper(variable);
         //Check duplicate and add to vars
-        int variableIndex = getDuplicateVariableIndex(variable.toString(), vars);
-        if(variableIndex != -1) {
-            vars.set(variableIndex, variable);
+        int variableIndex = getDuplicateVariableIndex(z3VariableWrapper, vars);
+        if (variableIndex != -1) {
+            vars.set(variableIndex, z3VariableWrapper);
         } else {
-            vars.add(variable);
+            vars.add(z3VariableWrapper);
         }
 
         return variable;
     }
 
-    public static int getDuplicateVariableIndex(String var, List<Expr> vars) {
-        for(int i = 0; i < vars.size(); i++) {
-            if(var.equals(vars.get(i).toString())) {
+    public static int getDuplicateVariableIndex(Z3VariableWrapper z3Variable, List<Z3VariableWrapper> vars) {
+        for (int i = 0; i < vars.size(); i++) {
+            if (z3Variable.equals(vars.get(i))) {
                 return i;
             }
         }

@@ -2,6 +2,8 @@ package com.example.parserservice.controller;
 
 import com.example.parserservice.model.Path;
 import com.example.parserservice.model.Response;
+import com.example.parserservice.model.newResponse.NewResponse;
+import com.example.parserservice.model.newResponse.Node;
 import com.example.parserservice.service.ParserService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,7 +30,7 @@ public class ParserController {
 
 
     @PostMapping("/parse/file")
-    public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
+    public NewResponse parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
                                                   @RequestBody MultipartFile file,
                                                   @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
                                                   @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
@@ -36,12 +38,13 @@ public class ParserController {
         long start = System.currentTimeMillis();
         long memoryBefore = getUsedMemory();
         Response response = parserService.build(parserList, file, user, project);
+        NewResponse newResponse = Node.convertToNewResponse(response);
         long end = System.currentTimeMillis();
         long memoryAfter = getUsedMemory();
         System.out.println("Total time is " + (end-start));
         System.out.println("Total memory is " + (memoryAfter-memoryBefore));
 
-        return response;
+        return newResponse;
     }
 
     private long getUsedMemory()

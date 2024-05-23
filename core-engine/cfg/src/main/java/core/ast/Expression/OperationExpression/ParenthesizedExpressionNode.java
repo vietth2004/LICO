@@ -2,9 +2,10 @@ package core.ast.Expression.OperationExpression;
 
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
+import core.Z3Vars.Z3VariableWrapper;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class ParenthesizedExpressionNode extends OperationExpressionNode {
     private ExpressionNode expression;
 
-    public static Expr createZ3Expression(ParenthesizedExpressionNode parenthesizedExpressionNode, Context ctx, List<Expr> vars, MemoryModel memoryModel) {
+    public static Expr createZ3Expression(ParenthesizedExpressionNode parenthesizedExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode operand = parenthesizedExpressionNode.expression;
 
         Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);

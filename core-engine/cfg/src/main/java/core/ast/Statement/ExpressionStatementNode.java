@@ -2,7 +2,7 @@ package core.ast.Statement;
 
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 
 public class ExpressionStatementNode extends StatementNode {

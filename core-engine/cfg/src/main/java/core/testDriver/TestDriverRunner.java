@@ -2,8 +2,7 @@ package core.testDriver;
 
 import core.FilePath;
 import core.cmd.CommandLine;
-import core.dataStructure.MarkedStatement;
-import core.testexecution.TestExecutionManager;
+import core.path.MarkedStatement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

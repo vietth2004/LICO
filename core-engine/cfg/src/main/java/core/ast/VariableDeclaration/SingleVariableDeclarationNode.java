@@ -2,11 +2,8 @@ package core.ast.VariableDeclaration;
 
 import core.ast.AstNode;
 import core.ast.Expression.ArrayNode;
-import core.ast.Expression.Literal.LiteralNode;
-import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.Name.SimpleNameNode;
-import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
@@ -31,7 +28,7 @@ public class SingleVariableDeclarationNode extends VariableDeclarationNode {
             memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) type).getPrimitiveTypeCode(), key, simpleNameNode);
         } else if (type instanceof ArrayType) {
             ArrayType arrayType = (ArrayType) type;
-            memoryModel.declareArrayTypeVariable(arrayType, key, createMultiDimensionsInitializationArray(key, 0, arrayType.getDimensions(), arrayType.getElementType(), memoryModel));
+            memoryModel.declareArrayTypeVariable(arrayType, key, arrayType.getDimensions(), createMultiDimensionsInitializationArray(key, 0, arrayType.getDimensions(), arrayType.getElementType(), memoryModel));
         } else { // OTHER TYPES
             throw new RuntimeException("Invalid type");
         }

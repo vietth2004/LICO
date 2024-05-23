@@ -1,9 +1,8 @@
 package core.ast.Statement;
 
 import core.ast.AstNode;
-import core.ast.Statement.StatementNode;
 import core.ast.VariableDeclaration.VariableDeclarationFragmentNode;
-import core.dataStructure.MemoryModel;
+import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
