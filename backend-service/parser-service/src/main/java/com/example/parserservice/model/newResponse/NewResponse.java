@@ -8,12 +8,15 @@ public class NewResponse {
     private String address;
     private ArrayList nodes;
 
+    private Integer rootId;
+
     private com.example.parserservice.model.Response oldResponse;
 
-    public NewResponse(String address, ArrayList nodes, Response oldResponse) {
+    public NewResponse(String address, ArrayList nodes, Response oldResponse, Integer rootId) {
         this.address = address;
         this.nodes = nodes;
         this.oldResponse = oldResponse;
+        this.rootId = rootId;
     }
 
     public String getAddress() {

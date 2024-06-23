@@ -2,6 +2,7 @@ package com.example.parserservice.util.worker;
 
 import com.example.parserservice.model.Path;
 import com.example.parserservice.model.Response;
+import com.example.parserservice.model.newResponse.NewResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -16,6 +17,14 @@ public class Writer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public static void writeNewResponse(Path filePath, NewResponse response, String project) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File(filePath.getPath() + "/" + project + ".json"), response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

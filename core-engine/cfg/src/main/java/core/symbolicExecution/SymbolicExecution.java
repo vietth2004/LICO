@@ -129,7 +129,7 @@ public final class SymbolicExecution {
     private Model createModel(Context ctx, BoolExpr f) {
         Solver s = ctx.mkSolver();
         s.add(f);
-        System.out.println(s);
+//        System.out.println(s);
 
         Status satisfaction = s.check();
         if (satisfaction != Status.SATISFIABLE) {

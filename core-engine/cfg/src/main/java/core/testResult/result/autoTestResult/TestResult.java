@@ -23,13 +23,22 @@ public class TestResult {
         this.fullCoverage = (double) Math.round(fullCoverage * 100) / 100;
     }
 
+    public List<List<Object>> getFullTestDataSet() {
+        List<List<Object>> result = new ArrayList<>();
+        for (TestData testData : fullTestData) {
+            result.add(testData.getTestDataSet());
+        }
+
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < fullTestData.size(); i++) {
-            result.append("Test no " + i + ": " + fullTestData.get(i));
-        }
-
+//        for (int i = 0; i < fullTestData.size(); i++) {
+//            result.append("Test no " + i + ": " + fullTestData.get(i));
+//        }
+        result.append(fullTestData);
         return result.toString();
     }
 }

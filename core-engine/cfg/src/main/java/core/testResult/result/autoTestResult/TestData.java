@@ -22,7 +22,7 @@ public class TestData {
         }
 
         for(int i = 0; i < names.size(); i++) {
-            this.addToParameterDataList(new ParameterData(names.get(i), types[i].toString(), values[i].toString()));
+            this.addToParameterDataList(new ParameterData(names.get(i), types[i].toString(), values[i]));
         }
 
         this.coveredStatements = coveredStatements;
@@ -78,15 +78,25 @@ public class TestData {
         return status;
     }
 
+    public List<Object> getTestDataSet() {
+        List<Object> result = new ArrayList<>();
+        for (ParameterData parameterData : parameterDataList) {
+            result.add(parameterData.getValue());
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
 
-        result.append(coveredStatements);
+//        result.append(coveredStatements);
 
-        for (int i = 0; i < parameterDataList.size(); i++) {
-            result.append("Parameter no " + i + ": " + parameterDataList.get(i));
-        }
+//        for (int i = 0; i < parameterDataList.size(); i++) {
+//            result.append("Parameter no " + i + ": " + parameterDataList.get(i));
+//        }
+
+        result.append(parameterDataList);
 
         return result.toString();
     }

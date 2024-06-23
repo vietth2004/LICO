@@ -37,8 +37,7 @@ public class ParserController {
 
         long start = System.currentTimeMillis();
         long memoryBefore = getUsedMemory();
-        Response response = parserService.build(parserList, file, user, project);
-        NewResponse newResponse = Node.convertToNewResponse(response);
+        NewResponse newResponse = parserService.build(parserList, file, user, project);
         long end = System.currentTimeMillis();
         long memoryAfter = getUsedMemory();
         System.out.println("Total time is " + (end-start));

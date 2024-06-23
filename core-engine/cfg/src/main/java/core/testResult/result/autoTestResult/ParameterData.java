@@ -3,12 +3,12 @@ package core.testResult.result.autoTestResult;
 public class ParameterData {
     private String name;
     private String type;
-    private String value;
+    private Object value;
 
     public ParameterData() {
     }
 
-    public ParameterData(String name, String type, String value) {
+    public ParameterData(String name, String type, Object value) {
         this.name = name;
         this.type = type;
         this.value = value;
@@ -22,7 +22,7 @@ public class ParameterData {
         return type;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -30,7 +30,8 @@ public class ParameterData {
     public String toString() {
         StringBuilder result = new StringBuilder();
 
-        result.append(type + " " + name + " = " + value);
+//        result.append(type + " " + name + " = " + value);
+        result.append(value);
 
         return result.toString();
     }

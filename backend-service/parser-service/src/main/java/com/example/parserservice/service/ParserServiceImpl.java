@@ -2,6 +2,8 @@ package com.example.parserservice.service;
 
 import com.example.parserservice.constant.HostIPConstants;
 import com.example.parserservice.model.jsf.JSFResponse;
+import com.example.parserservice.model.newResponse.NewResponse;
+import com.example.parserservice.model.newResponse.Node;
 import com.example.parserservice.service.project.ProjectService;
 import com.example.parserservice.model.*;
 import com.example.parserservice.model.parser.Request;
@@ -47,7 +49,7 @@ public class ParserServiceImpl implements ParserService{
     //Build Project with Multipart File
     //**
     @Override
-    public Response build(List<String> parserList, MultipartFile file, String user, String project) {
+    public NewResponse build(List<String> parserList, MultipartFile file, String user, String project) {
         isEndProgress = false;
         log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String userPath = user;
@@ -72,8 +74,12 @@ public class ParserServiceImpl implements ParserService{
         Wrapper.wrapXmlAndJspNode(request);
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
-        Writer.write(filePath, response, "tmp-prj");
-        return response;
+
+        NewResponse newResponse = Node.convertToNewResponse(response);
+
+        Writer.writeNewResponse(filePath, newResponse, "tmp-prj");
+
+        return newResponse;
     }
 
     @Override
@@ -114,7 +120,6 @@ public class ParserServiceImpl implements ParserService{
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
 
         Writer.write(path, response, "tmp-prj");
-
 
         return response;
     }

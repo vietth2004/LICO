@@ -3,8 +3,8 @@ package com.example.unittesting.controller;
 import com.example.unittesting.Sevice.UTestService;
 
 import com.example.unittesting.UnitTestingApplication;
-import com.example.unittesting.utils.testing.ConcolicTesting;
 import com.example.unittesting.utils.testing.NTDTesting;
+import com.example.unittesting.utils.testing.PairwiseTesting.PairwiseTesting;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,26 +40,26 @@ public class UTestController {
                     @io.swagger.v3.oas.annotations.Parameter(name = "coverageType", description = "Loại độ phủ cần kiểm thử")}
     )
     public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
-        NTDTesting.Coverage coverage;
+        PairwiseTesting.Coverage coverage;
 
         switch (coverageType) {
             case "statement":
-                coverage = NTDTesting.Coverage.STATEMENT;
+                coverage = PairwiseTesting.Coverage.STATEMENT;
                 break;
             case "branch":
-                coverage = NTDTesting.Coverage.BRANCH;
+                coverage = PairwiseTesting.Coverage.BRANCH;
                 break;
             case "path":
-                coverage = NTDTesting.Coverage.PATH;
+                coverage = PairwiseTesting.Coverage.PATH;
                 break;
             case "mcdc":
-                coverage = NTDTesting.Coverage.MCDC;
+                coverage = PairwiseTesting.Coverage.MCDC;
                 break;
             default:
                 throw new RuntimeException("Invalid coverage type");
         }
 
-        return ResponseEntity.ok(utestService.getRunFullConcolic(targetId, nameProject, coverage));
+        return ResponseEntity.ok(utestService.runAutomationTest(targetId, nameProject, coverage));
     }
 
 }

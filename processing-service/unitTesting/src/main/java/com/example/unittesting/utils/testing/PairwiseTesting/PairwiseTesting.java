@@ -1,5 +1,6 @@
-package com.example.unittesting.utils.testing;
+package com.example.unittesting.utils.testing.PairwiseTesting;
 
+import com.example.unittesting.utils.testing.NTDTesting;
 import core.path.*;
 import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
@@ -13,6 +14,8 @@ import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
+import core.testDriver.TestDriverGenerator;
+import core.testDriver.TestDriverRunner;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
@@ -30,8 +33,7 @@ import java.util.*;
 
 @JsonAutoDetect
 @Component
-public class NTDTesting {
-
+public class PairwiseTesting {
     public enum Coverage {
         STATEMENT,
         BRANCH,
@@ -50,26 +52,95 @@ public class NTDTesting {
     private static Method method;
     private static ASTNode testFunc;
 
-    private NTDTesting() {
+    private static long totalUsedMem = 0;
+    private static long tickCount = 0;
+
+    private PairwiseTesting() {
     }
 
-    public static TestResult runFullNTD(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
+    public static TestResult runFullPairwise(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
 
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters(methodName);
 
-//        test();
+        totalUsedMem = 0;
+        tickCount = 0;
+        Timer T = new Timer(true);
+
+        TimerTask memoryTask = new TimerTask() {
+            @Override
+            public void run() {
+                totalUsedMem += (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+                tickCount += 1;
+            }
+        };
+        T.scheduleAtFixedRate(memoryTask, 0, 1); //0 delay and 5 ms tick
+
+        ValueDictionary valueDictionary1 = new ValueDictionary(parameterNames.size());
+        ValueDictionary valueDictionary2 = new ValueDictionary(parameterNames.size());
+        ValueDictionary valueDictionary3 = new ValueDictionary(parameterNames.size());
+
+        long startRunTestTime = System.nanoTime();
 
         TestResult result = startGenerating(coverage);
+
+        long endRunTestTime = System.nanoTime();
+        double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+        float usedMem = ((float) totalUsedMem) / tickCount / 1024 / 1024;
+        System.out.println("DS1: " + runTestDuration + " ms, " + usedMem + " MB");
+//        System.out.println(result);
+        System.out.println(result.getFullTestData().size());
+
+        List<Parameter> parameterList1 = PairwiseTestingUtils.convertTestResultToParameterValues(result);
+        generatePairWiseTestdata(valueDictionary1, parameterList1);
+        valueDictionary1.addDistinctToTestDataSet(result.getFullTestDataSet());
+
+        endRunTestTime = System.nanoTime();
+        runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+        usedMem = ((float) totalUsedMem) / tickCount / 1024 / 1024;
+        System.out.println("DS2: " + runTestDuration + " ms, " + usedMem + " MB");
+//        System.out.println(valueDictionary1);
+        System.out.println(valueDictionary1.getTestDataSetSize());
+
+        List<Parameter> parameterList2 = GetParameterList.getFromAnalyzeSimpleConditions(cfgBeginNode, parameterClasses, parameterNames);
+        parameterList2 = PairwiseTestingUtils.merge2ParameterList(parameterList1, parameterList2);
+        generatePairWiseTestdata(valueDictionary2, parameterList2);
+        valueDictionary2.addDistinctToTestDataSet(result.getFullTestDataSet());
+
+        endRunTestTime = System.nanoTime();
+        runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+        usedMem = ((float) totalUsedMem) / tickCount / 1024 / 1024;
+        System.out.println("DS3: " + runTestDuration + " ms, " + usedMem + " MB");
+//        System.out.println(valueDictionary2);
+        System.out.println(valueDictionary2.getTestDataSetSize());
+
+        List<Parameter> parameterList3 = GetParameterList.getFromSymbolicExecuteAllPaths(cfgBeginNode, parameters, parameterClasses, parameterNames);
+        parameterList3 = PairwiseTestingUtils.merge2ParameterList(parameterList2, parameterList3);
+        generatePairWiseTestdata(valueDictionary3, parameterList3);
+        valueDictionary3.addDistinctToTestDataSet(result.getFullTestDataSet());
+
+        endRunTestTime = System.nanoTime();
+        runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+        usedMem = ((float) totalUsedMem) / tickCount / 1024 / 1024;
+        System.out.println("DS4: " + runTestDuration + " ms, " + usedMem + " MB");
+//        System.out.println(valueDictionary3);
+        System.out.println(valueDictionary3.getTestDataSetSize());
 
         return result;
     }
 
-    private static void test() {
-        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+    private static void generatePairWiseTestdata(ValueDictionary valueDictionary, List<Parameter> parameterList) {
+        PairwiseTestingUtils.generateFirstTwoPairWiseTestData(valueDictionary, parameterList);
 
-        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
+        for (int i = 2; i < parameterList.size(); i++) {
+            List<Object> visitingParameterValues = parameterList.get(i).getValues();
+
+            List<Pair> pairs = PairwiseTestingUtils.createPairsBetween2Paras(visitingParameterValues, i, parameterList);
+
+            PairwiseTestingUtils.IPO_H(valueDictionary, i, parameterList, pairs);
+            PairwiseTestingUtils.IPO_V(valueDictionary, i, parameterList, pairs);
+        }
     }
 
     private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
@@ -82,8 +153,6 @@ public class NTDTesting {
         Object output = method.invoke(parameterClasses, evaluatedValues);
         long endRunTestTime = System.nanoTime();
         double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
-
-        int k = 1;
 
         List<MarkedStatement> markedStatements = getMarkedStatement();
         MarkedPath.markPathToCFGV2(cfgBeginNode, markedStatements);
@@ -123,7 +192,7 @@ public class NTDTesting {
             testResult.addToFullTestData(new TestData(parameterNames, parameterClasses, evaluatedValues, coveredStatements, output, runTestDuration, calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
             uncoveredNode = findUncoverNode(cfgBeginNode, coverage);
-            System.out.println("Uncovered Node: " + uncoveredNode);
+//            System.out.println("Uncovered Node: " + uncoveredNode);
         }
 
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
@@ -312,3 +381,4 @@ public class NTDTesting {
         return result.toString().replace(" ", "").replace(".", "");
     }
 }
+

@@ -57,7 +57,6 @@ public class UploadController {
                             @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
                             @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException, InterruptedException {
         if (file != null) {
-            System.out.println("thu ti");
             String path = uploadService.buildProject(parserList, file, user, project);
             Object result = uploadService.build(path);
 
@@ -72,8 +71,6 @@ public class UploadController {
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 
             System.out.println("clone time " + runTestDuration);
-
-
 
             path += "\\tmp-prjt.json";
             File jsonFile = new File(path);
