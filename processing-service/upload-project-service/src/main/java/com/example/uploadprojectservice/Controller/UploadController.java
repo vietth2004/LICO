@@ -19,12 +19,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,12 +61,12 @@ public class UploadController {
             String path = uploadService.buildProject(parserList, file, user, project);
             Object result = uploadService.build(path);
 
-            String javaDirPath = CloneProject.getJavaDirPath(path);
-            if(javaDirPath.equals("")) throw new RuntimeException("Invalid project");
+            Path rootPackage = CloneProject.findRootPackage(Paths.get(path));
+            if(rootPackage == null) throw new RuntimeException("Invalid project");
 
             long startRunTestTime = System.nanoTime();
             // Clone Project
-            CloneProject.cloneProject(javaDirPath, FilePath.clonedProjectPath);
+            CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath);
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;

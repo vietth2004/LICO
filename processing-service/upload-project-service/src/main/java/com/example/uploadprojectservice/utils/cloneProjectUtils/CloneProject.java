@@ -9,9 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
@@ -43,6 +46,40 @@ public final class CloneProject {
             }
         }
         return "";
+    }
+
+    public static Path findRootPackage(Path sourceDir) throws IOException {
+        List<Path> files = Files.list(sourceDir).collect(Collectors.toList());
+        Optional<Path> javaFile = files.stream().filter(file -> file.getFileName().toString().endsWith(".java"))
+                .findAny();
+
+        if (javaFile.isPresent()) {
+            Path file = javaFile.get();
+            List<String> lines = Files.readAllLines(file);
+            Optional<String> packageLine = lines.stream()
+                    .filter(line -> line.startsWith("package "))
+                    .findFirst();
+            if (packageLine.isPresent()) {
+                String packageName = packageLine.get().substring(8, packageLine.get().indexOf(";")).trim().replace(".", "\\");
+//                Path packageRoot = sourceDir;
+//                for (String part : packageName.split("\\.")) {
+//                    packageRoot = packageRoot.resolve(part);
+//                }
+                String oldPath = sourceDir.toString();
+                String newPath = oldPath.substring(0, oldPath.indexOf(packageName) - 1);
+                return Paths.get(newPath);
+            }
+            return file.getParent();
+        }
+        for (Path file: files) {
+            if (Files.isDirectory(file)) {
+                Path path = findRootPackage(file);
+                if (path != null) {
+                    return path;
+                }
+            }
+        }
+        return null;
     }
 
     public static void cloneProject(String originalDirPath, String destinationDirPath) throws IOException, InterruptedException {

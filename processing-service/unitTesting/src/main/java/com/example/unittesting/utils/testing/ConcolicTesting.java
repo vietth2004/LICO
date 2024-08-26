@@ -32,14 +32,7 @@ import java.util.*;
 
 @JsonAutoDetect
 @Component
-public class ConcolicTesting {
-    public enum Coverage {
-        STATEMENT,
-        BRANCH,
-        MCDC,
-        PATH
-    }
-
+public class ConcolicTesting extends TestGeneration {
     private static CompilationUnit compilationUnit;
     private static ArrayList<ASTNode> funcAstNodeList;
     private static CfgNode cfgBeginNode;
@@ -54,7 +47,6 @@ public class ConcolicTesting {
     }
 
     public static TestResult runFullConcolic(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
-
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters();
@@ -227,6 +219,8 @@ public class ConcolicTesting {
                 return ASTHelper.Coverage.STATEMENT;
             case BRANCH:
                 return ASTHelper.Coverage.BRANCH;
+            case MCDC:
+                return ASTHelper.Coverage.MCDC;
             default:
                 throw new RuntimeException("Invalid coverage");
         }

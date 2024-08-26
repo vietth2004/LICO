@@ -2,31 +2,33 @@ package com.example.parserservice.model.newResponse;
 
 import com.example.parserservice.model.Response;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class JavaNode extends Node {
 
-    public static void convertJavaNodes(Response newResponse) {
+    public static ArrayList convertJavaNodes(Response newResponse) {
         List<LinkedHashMap> javaNodes = newResponse.getJavaNodes();
+
+        Set<LinkedHashMap> annotations = new HashSet<>();
 
         if (javaNodes != null) {
             for (LinkedHashMap javaNode : javaNodes) {
                 if (javaNode != null) {
                     addTypeToJavaNode(javaNode);
-                    convertAnnotations(javaNode);
+                    convertAnnotations(javaNode, annotations);
                     convertDependencies(javaNode);
                 }
             }
         }
+
+        return new ArrayList<>(annotations);
     }
 
-    private static void convertAnnotations(LinkedHashMap javaNode) {
+    private static void convertAnnotations(LinkedHashMap javaNode, Set<LinkedHashMap> allAnnotations) {
         ArrayList annotates = (ArrayList) javaNode.get("annotates");
         ArrayList annotatesWithValue = (ArrayList) javaNode.get("annotatesWithValue");
 
-        ArrayList annotations = new ArrayList();
+        ArrayList<LinkedHashMap> annotations = new ArrayList();
         if (annotates != null) {
             annotations.addAll(annotates);
         }
@@ -36,7 +38,14 @@ public class JavaNode extends Node {
         javaNode.remove("annotates");
         javaNode.remove("annotatesWithValue");
 
-        javaNode.put("annotations", annotations);
+        ArrayList<Integer> annotationsId = new ArrayList<>();
+
+        for (LinkedHashMap annotation : annotations) {
+            annotationsId.add((Integer) annotation.get("id"));
+            allAnnotations.add(annotation);
+        }
+
+        javaNode.put("annotationsId", annotationsId);
     }
 
     private static void addTypeToJavaNode(LinkedHashMap javaNode) {

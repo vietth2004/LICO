@@ -50,6 +50,7 @@ public class ParserController {
     {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
+
     @PostMapping("/parse/path")
     public ResponseEntity<Object> parseProjectToRootNodeByPath (@RequestParam(name="parser") List<String> parserList,
                                                                     @RequestBody Path path) throws IOException {

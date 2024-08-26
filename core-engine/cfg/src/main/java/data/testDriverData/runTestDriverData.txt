@@ -1,2 +1,5 @@
-a <= b && b <= c && c <= d===true===false---end---return true;
-===false===false---end---
+int j=0;
+===false===false---end---System.out.println("abc");
+===false===false---end---j++;
+===false===false---end---j > a===false===true---end---j > 18===false===true---end---a > 2===true===false---end---b < 5===false===true---end---a > 18===false===true---end---int i=0===false===false---end---i < a===true===false---end---i > b===false===true---end---i > 12===false===true---end---return 3;
+===false===false---end---3.152===3

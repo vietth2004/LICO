@@ -1,6 +1,7 @@
 package com.example.unittesting.utils.testing.PairwiseTesting;
 
 import com.example.unittesting.utils.testing.NTDTesting;
+import com.example.unittesting.utils.testing.TestGeneration;
 import core.path.*;
 import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
@@ -33,13 +34,7 @@ import java.util.*;
 
 @JsonAutoDetect
 @Component
-public class PairwiseTesting {
-    public enum Coverage {
-        STATEMENT,
-        BRANCH,
-        MCDC,
-        PATH
-    }
+public class PairwiseTesting extends TestGeneration {
     private static CompilationUnit compilationUnit;
     private static String simpleClassName;
     private static String fullyClonedClassName;

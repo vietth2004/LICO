@@ -30,14 +30,7 @@ import java.util.*;
 
 @JsonAutoDetect
 @Component
-public class NTDTesting {
-
-    public enum Coverage {
-        STATEMENT,
-        BRANCH,
-        MCDC,
-        PATH
-    }
+public class NTDTesting extends TestGeneration {
     private static CompilationUnit compilationUnit;
     private static String simpleClassName;
     private static String fullyClonedClassName;

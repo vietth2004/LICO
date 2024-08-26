@@ -132,7 +132,9 @@ public abstract class AbstractNode extends AbstractIdentifiedEntity implements J
 		this.children = List.copyOf(children);
 		this.dependencyFrom = ImmutableOrderedMap.copyOf(dependencyFrom);
 		this.dependencyTo = ImmutableOrderedMap.copyOf(dependencyTo);
-		for (final AbstractNode child : children) child.internalFreeze(map);
+		for (final AbstractNode child : children){
+			child.internalFreeze(map);
+		}
 		return false;
 	}
 

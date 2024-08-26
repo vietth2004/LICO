@@ -248,9 +248,15 @@ public class ASTHelper {
 
             LinkCurrentNode(beforeNode, currentNode, afterNode);
 
-            CfgBeginForNode beginForNode = generateCFGFromForASTNode((CfgForStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            CfgBeginForNode beginForNode = null;
 
-//            System.out.println("forRootNode = " + beginForNode.toString());
+            if(coverage == Coverage.BRANCH || coverage == Coverage.STATEMENT || coverage == Coverage.PATH) {
+                beginForNode = generateCFGFromForASTNodeForBranch_Statement_PathCoverage((CfgForStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else if (coverage == Coverage.MCDC) {
+                beginForNode = generateCFGFromForASTNodeForMCDCCoverage((CfgForStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else {
+                throw new RuntimeException("Invalid coverage!");
+            }
 
             return beginForNode;
 
@@ -274,9 +280,15 @@ public class ASTHelper {
 
             LinkCurrentNode(beforeNode, currentNode, afterNode);
 
-            CfgBoolExprNode beginWhileNode = generateCFGFromWhileASTNode((CfgWhileStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            CfgNode beginWhileNode = null;
 
-//            System.out.println("beginWhileNode = " + beginWhileNode.toString());
+            if(coverage == Coverage.BRANCH || coverage == Coverage.STATEMENT || coverage == Coverage.PATH) {
+                beginWhileNode = generateCFGFromWhileASTNodeForBranch_Statement_PathCoverage((CfgWhileStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else if (coverage == Coverage.MCDC) {
+                beginWhileNode = generateCFGFromWhileASTNodeForMCDCCoverage((CfgWhileStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else {
+                throw new RuntimeException("Invalid coverage!");
+            }
 
             return beginWhileNode;
 
@@ -286,9 +298,15 @@ public class ASTHelper {
 
             LinkCurrentNode(beforeNode, currentNode, afterNode);
 
-            CfgBeginDoNode beginDoNode = generateCFGFromDoASTNode((CfgDoStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            CfgBeginDoNode beginDoNode = null;
 
-//            System.out.println("beginDoNode = " + beginDoNode.toString());
+            if(coverage == Coverage.BRANCH || coverage == Coverage.STATEMENT || coverage == Coverage.PATH) {
+                beginDoNode = generateCFGFromDoASTNodeForBranch_Statement_PathCoverage((CfgDoStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else if (coverage == Coverage.MCDC) {
+                beginDoNode = generateCFGFromDoASTNodeForMCDCCoverage((CfgDoStatementBlockNode) currentNode, compilationUnit, firstLine, coverage);
+            } else {
+                throw new RuntimeException("Invalid coverage!");
+            }
 
             return beginDoNode;
         } else if (statement instanceof Block) {
@@ -554,8 +572,11 @@ public class ASTHelper {
 
         // tmpEndNode xử lí vấn đề liên quan đến độ phủ điều kiện con của các câu lệnh "Và" ('&&', '&')
         CfgEndBlockNode tmpEndNode = new CfgEndBlockNode();
+        CfgBeginBlockNode beginThenBlock = new CfgBeginBlockNode();
 
-        CfgBoolExprNode ifCondition = generateConditionCfg(ifConditionAST, cfgEndBoolNode, thenAST, beforeNode, tmpEndNode, compilationUnit, firstLine, coverage);
+        CfgBoolExprNode ifCondition = generateConditionCfg(ifConditionAST, cfgEndBoolNode, beginThenBlock, beforeNode, tmpEndNode, compilationUnit, firstLine, coverage);
+
+        beginThenBlock.setAfterStatementNode(createThenBlock(thenAST, beginThenBlock, cfgEndBoolNode, compilationUnit, firstLine, coverage));
 
         CfgNode cfgElseNode = createElseBlock(elseAST, ifCondition, cfgEndBoolNode, compilationUnit, firstLine, coverage);
 
@@ -568,7 +589,7 @@ public class ASTHelper {
     }
 
     // tmpEndNode xử lí vấn đề liên quan đến độ phủ điều kiện con của các câu lệnh "Và" ('&&', '&')
-    public static CfgBoolExprNode generateConditionCfg(Expression condition, CfgEndBlockNode endBoolNode, Statement thenStatement, CfgNode beforeNode, CfgEndBlockNode tmpEndNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+    public static CfgBoolExprNode generateConditionCfg(Expression condition, CfgEndBlockNode endBoolNode, CfgNode beginThenBlock, CfgNode beforeNode, CfgEndBlockNode tmpEndNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
 
         if (condition instanceof InfixExpression && isOrOperator(((InfixExpression) condition).getOperator())) { // điều kiện có chứa dấu "Hoặc"
             InfixExpression infixExpression = (InfixExpression) condition;
@@ -579,8 +600,8 @@ public class ASTHelper {
             CfgEndBlockNode firstTmpEndNode = new CfgEndBlockNode();
             CfgEndBlockNode currentTmpEndNode = new CfgEndBlockNode();
 
-            CfgBoolExprNode firstCondition = generateConditionCfg(leftOperand, endBoolNode, thenStatement, beforeNode, firstTmpEndNode, compilationUnit, firstLine, coverage);
-            CfgBoolExprNode currentCondition = generateConditionCfg(rightOperand, endBoolNode, thenStatement, firstCondition, currentTmpEndNode, compilationUnit, firstLine, coverage);
+            CfgBoolExprNode firstCondition = generateConditionCfg(leftOperand, endBoolNode, beginThenBlock, beforeNode, firstTmpEndNode, compilationUnit, firstLine, coverage);
+            CfgBoolExprNode currentCondition = generateConditionCfg(rightOperand, endBoolNode, beginThenBlock, firstCondition, currentTmpEndNode, compilationUnit, firstLine, coverage);
 
             firstTmpEndNode.setAfterStatementNode(currentCondition);
 
@@ -588,7 +609,7 @@ public class ASTHelper {
 
             for (int i = 0; i < extendedOperands.size(); i++) {
                 CfgEndBlockNode newTmpEndNode = new CfgEndBlockNode();
-                CfgBoolExprNode newCondition = generateConditionCfg((Expression) extendedOperands.get(i), endBoolNode, thenStatement, currentCondition, newTmpEndNode, compilationUnit, firstLine, coverage);
+                CfgBoolExprNode newCondition = generateConditionCfg((Expression) extendedOperands.get(i), endBoolNode, beginThenBlock, currentCondition, newTmpEndNode, compilationUnit, firstLine, coverage);
 
                 currentTmpEndNode.setAfterStatementNode(newCondition);
                 currentTmpEndNode = newTmpEndNode;
@@ -616,7 +637,7 @@ public class ASTHelper {
                 currentCondition = newCondition;
             }
 
-            currentCondition.setupCondition(createThenBlock(thenStatement, currentCondition, endBoolNode, compilationUnit, firstLine, coverage), tmpEndNode, endBoolNode);
+            currentCondition.setupCondition(beginThenBlock, tmpEndNode, endBoolNode);
 
             return firstCondition;
 
@@ -624,7 +645,7 @@ public class ASTHelper {
 
             CfgBoolExprNode ifCondition = createCondition(condition, beforeNode, compilationUnit, firstLine);
 
-            ifCondition.setTrueNode(createThenBlock(thenStatement, ifCondition, endBoolNode, compilationUnit, firstLine, coverage));
+            ifCondition.setTrueNode(beginThenBlock);
 
             ifCondition.setEndBlockNode(endBoolNode);
 
@@ -644,14 +665,14 @@ public class ASTHelper {
         return ifCondition;
     }
 
-    private static CfgNode createThenBlock(Statement thenStatement, CfgBoolExprNode condition, CfgEndBlockNode endBoolNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+    private static CfgNode createThenBlock(Statement thenStatement, CfgNode beforeStatement, CfgEndBlockNode endBoolNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
         CfgNode cfgThenNodeBlock = new CfgBlockNode();
 
         cfgThenNodeBlock.setAst(thenStatement);
         setLineNumber(cfgThenNodeBlock, compilationUnit, thenStatement, firstLine);
         cfgThenNodeBlock.setContent(thenStatement.toString());
 
-        cfgThenNodeBlock.setBeforeStatementNode(condition);
+        cfgThenNodeBlock.setBeforeStatementNode(beforeStatement);
 
         cfgThenNodeBlock.setAfterStatementNode(endBoolNode);
 
@@ -727,126 +748,126 @@ public class ASTHelper {
         return beginBlockNode;
     }
 
-//    public static CfgBeginForNode generateCFGFromForASTNode(CfgForStatementBlockNode forCfgNode) {
-////        System.out.println("generateCFGFromForASTNode starts...");
-//        CfgNode beforeNode = forCfgNode.getBeforeStatementNode();
-//        CfgBeginForNode beginForNode = new CfgBeginForNode();
-//
-//        beforeNode.setAfterStatementNode(beginForNode);
-//        beginForNode.setBeforeStatementNode(beforeNode);
-//
-//        CfgEndBlockNode cfgEndBlockNode = new CfgEndBlockNode();
-//
-//        CfgNode afterNode = forCfgNode.getAfterStatementNode();
-//
-//        cfgEndBlockNode.setAfterStatementNode(afterNode);
-//        afterNode.setBeforeStatementNode(cfgEndBlockNode);
-//
-//        beginForNode.setEndBlockNode(cfgEndBlockNode);
-//
-//        List initializers = ((ForStatement) forCfgNode.getAst()).initializers();
-//
-//        CfgNode tempBeforeNode = beginForNode;
-//
-//        for (int i = 0; i < initializers.size(); i++) {
-//            CfgNormalNode normalNode = new CfgNormalNode();
-//
-//            if (initializers.get(i) instanceof VariableDeclarationExpression) {
-//                normalNode.setAst((VariableDeclarationExpression) initializers.get(i));
-//            } else if (initializers.get(i) instanceof Assignment) {
-//                normalNode.setAst((Assignment) initializers.get(i));
-//            }
-//
-//            LinkCurrentNode(tempBeforeNode, normalNode, afterNode);
-//
-//            tempBeforeNode = normalNode;
-//        }
-//
-//        //Dieu kien
-//        Expression forConditionAST = ((ForStatement) forCfgNode.getAst()).getExpression();
-//
-////        CfgBoolExprNode forConditionNode = new CfgBoolExprNode();
-////        forConditionNode.setAst(forConditionAST);
-////        forConditionNode.setContent(forConditionAST.toString());
-////
-////        LinkCurrentNode(tempBeforeNode, forConditionNode, afterNode);
-//
-//        //Khoi body
-//        Statement bodyStatementBlock = ((ForStatement) forCfgNode.getAst()).getBody();
-////        CfgNode bodyStatementNode = new CfgBlockNode();
-////        bodyStatementNode.setAst(bodyStatementBlock);
-////        bodyStatementNode.setContent(bodyStatementBlock.toString());
-//
-//        CfgEndBlockNode endBodyBlockNode = new CfgEndBlockNode();
-//
-//        //Updater
-//        List updaters = ((ForStatement) forCfgNode.getAst()).updaters();
-//
-//        CfgNode tempBeforeUpdaterNode = endBodyBlockNode;
-//
-//        CfgNode firstUpdaterNode = null;
-//
-//        for (int i = 0; i < updaters.size(); i++) {
-//            CfgNormalNode normalNode = new CfgNormalNode();
-//
-//            if (updaters.get(i) instanceof PostfixExpression) {
-//                normalNode.setAst((PostfixExpression) updaters.get(i));
-//            } else if (updaters.get(i) instanceof Assignment) {
-//                normalNode.setAst((Assignment) updaters.get(i));
-//            }
-//
-//            LinkCurrentNode(tempBeforeUpdaterNode, normalNode, afterNode);
-//
-//            tempBeforeUpdaterNode = normalNode;
-//
-//            if (i == 0) {
-//                firstUpdaterNode = normalNode;
-//            }
-//        }
-//
-//        endBodyBlockNode.setAfterStatementNode(firstUpdaterNode);
-//        firstUpdaterNode.setBeforeStatementNode(endBodyBlockNode);
-//
-//        // add end node to keep track of latest endBlockNode
-//        endNodeStack.push(cfgEndBlockNode);
-//
-//        // add condition node to keep track of the latest condition node
-//        conditionNodeStack.push(endBodyBlockNode);
-//
-////        bodyStatementNode.setBeforeStatementNode(forConditionNode);
-////        bodyStatementNode.setAfterStatementNode(endBodyBlockNode);
-//
-//        // here
-//        CfgEndBlockNode tmpEndNode = new CfgEndBlockNode();
-//
-//        CfgBoolExprNode forConditionNode = generateConditionCfg(forConditionAST, endBodyBlockNode, bodyStatementBlock, tempBeforeUpdaterNode, tmpEndNode);
-//        tmpEndNode.setAfterStatementNode(cfgEndBlockNode);
-//
-//        tempBeforeNode.setAfterStatementNode(forConditionNode);
-//        tempBeforeUpdaterNode.setAfterStatementNode(forConditionNode);
-//
-////        CfgNode cfgBodyNode = generateCFGFromASTBlockNode(bodyStatementNode);
-//
-//
-//
-////        if (cfgBodyNode == null) {
-////            forConditionNode.setTrueNode(endBodyBlockNode);
-////        } else {
-////            forConditionNode.setTrueNode(cfgBodyNode);
-////        }
-//        forConditionNode.setFalseNode(cfgEndBlockNode);
-//
-//        cfgEndBlockNode.getBeforeEndBoolNodeList().add(forConditionNode);
-//        cfgEndBlockNode.setBeforeStatementNode(forConditionNode);
-//
-//        // pop from stack to delete finished "for" block
-//        endNodeStack.pop();
-//        conditionNodeStack.pop();
-//
-//        return beginForNode;
-//    }
+    private static CfgBeginForNode generateCFGFromForASTNodeForMCDCCoverage(CfgForStatementBlockNode forCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage){
+        CfgNode beforeNode = forCfgNode.getBeforeStatementNode();
+        CfgBeginForNode beginForNode = new CfgBeginForNode();
 
-    public static CfgBeginForNode generateCFGFromForASTNode(CfgForStatementBlockNode forCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+        beforeNode.setAfterStatementNode(beginForNode);
+        beginForNode.setBeforeStatementNode(beforeNode);
+
+        CfgEndBlockNode cfgEndBlockNode = new CfgEndBlockNode();
+
+        CfgNode afterNode = forCfgNode.getAfterStatementNode();
+
+        cfgEndBlockNode.setAfterStatementNode(afterNode);
+        afterNode.setBeforeStatementNode(cfgEndBlockNode);
+
+        beginForNode.setEndBlockNode(cfgEndBlockNode);
+
+        List initializers = ((ForStatement) forCfgNode.getAst()).initializers();
+
+        CfgNode tempBeforeNode = beginForNode;
+
+        for (int i = 0; i < initializers.size(); i++) {
+            CfgNormalNode normalNode = new CfgNormalNode();
+
+            if (initializers.get(i) instanceof VariableDeclarationExpression) {
+                normalNode.setAst((VariableDeclarationExpression) initializers.get(i));
+                setLineNumber(normalNode, compilationUnit, (VariableDeclarationExpression) initializers.get(i), firstLine);
+            } else if (initializers.get(i) instanceof Assignment) {
+                normalNode.setAst((Assignment) initializers.get(i));
+                setLineNumber(normalNode, compilationUnit, (Assignment) initializers.get(i), firstLine);
+            }
+
+            LinkCurrentNode(tempBeforeNode, normalNode, afterNode);
+
+            tempBeforeNode = normalNode;
+        }
+
+        //Dieu kien
+        Expression forConditionAST = ((ForStatement) forCfgNode.getAst()).getExpression();
+        CfgBeginBlockNode beginForConditionNode = new CfgBeginBlockNode();
+
+        tempBeforeNode.setAfterStatementNode(beginForConditionNode);
+        beginForConditionNode.setBeforeStatementNode(tempBeforeNode);
+
+        //Khoi body
+        Statement bodyStatementBlock = ((ForStatement) forCfgNode.getAst()).getBody();
+        CfgNode bodyStatementNode = new CfgBlockNode();
+        bodyStatementNode.setAst(bodyStatementBlock);
+        setLineNumber(bodyStatementNode, compilationUnit, bodyStatementBlock, firstLine);
+        bodyStatementNode.setContent(bodyStatementBlock.toString());
+
+        //Updater
+        List updaters = ((ForStatement) forCfgNode.getAst()).updaters();
+
+        CfgNode tempBeforeUpdaterNode = bodyStatementNode;
+
+        CfgNode firstUpdaterNode = null;
+
+        for (int i = 0; i < updaters.size(); i++) {
+            CfgNormalNode normalNode = new CfgNormalNode();
+
+            if (updaters.get(i) instanceof PostfixExpression) {
+                normalNode.setAst((PostfixExpression) updaters.get(i));
+                setLineNumber(normalNode, compilationUnit, (PostfixExpression) updaters.get(i), firstLine);
+            } else if (updaters.get(i) instanceof Assignment) {
+                normalNode.setAst((Assignment) updaters.get(i));
+                setLineNumber(normalNode, compilationUnit, (Assignment) updaters.get(i), firstLine);
+            }
+
+            LinkCurrentNode(tempBeforeUpdaterNode, normalNode, afterNode);
+
+            tempBeforeUpdaterNode = normalNode;
+
+            if (i == 0) {
+                firstUpdaterNode = normalNode;
+            }
+        }
+
+        tempBeforeUpdaterNode.setAfterStatementNode(beginForConditionNode);
+
+        // add end node to keep track of latest endBlockNode
+        endNodeStack.push(cfgEndBlockNode);
+
+        CfgEndBlockNode endBodyBlockNode = new CfgEndBlockNode();
+        CfgBeginBlockNode beginBodyBlockNode = new CfgBeginBlockNode();
+
+        bodyStatementNode.setBeforeStatementNode(beginBodyBlockNode);
+        bodyStatementNode.setAfterStatementNode(endBodyBlockNode);
+
+        endBodyBlockNode.setAfterStatementNode(firstUpdaterNode);
+        firstUpdaterNode.setBeforeStatementNode(endBodyBlockNode);
+
+        // add condition node to keep track of the latest condition node
+        conditionNodeStack.push(endBodyBlockNode);
+
+        CfgNode cfgBodyNode = generateCFGFromASTBlockNode(bodyStatementNode, compilationUnit, firstLine, coverage);
+
+        // pop from stack to delete finished "for" block
+        endNodeStack.pop();
+        conditionNodeStack.pop();
+
+        //handle condition
+        CfgBoolExprNode forConditionNode = generateConditionCfg(forConditionAST, cfgEndBlockNode, beginBodyBlockNode, beginForConditionNode, cfgEndBlockNode, compilationUnit, firstLine, coverage);
+        forConditionNode.setFalseNode(cfgEndBlockNode);
+        forConditionNode.setEndBlockNode(cfgEndBlockNode);
+//        if (cfgBodyNode == null) {
+//            forConditionNode.setTrueNode(endBodyBlockNode);
+//        } else {
+//            forConditionNode.setTrueNode(cfgBodyNode);
+//        }
+//        forConditionNode.setFalseNode(cfgEndBlockNode);
+
+        cfgEndBlockNode.getBeforeEndBoolNodeList().add(forConditionNode);
+        cfgEndBlockNode.setBeforeStatementNode(forConditionNode);
+
+//        System.out.println("generateCFGFromForASTNode ends...");
+
+        return beginForNode;
+    }
+
+    private static CfgBeginForNode generateCFGFromForASTNodeForBranch_Statement_PathCoverage(CfgForStatementBlockNode forCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
 //        System.out.println("generateCFGFromForASTNode starts...");
         CfgNode beforeNode = forCfgNode.getBeforeStatementNode();
         CfgBeginForNode beginForNode = new CfgBeginForNode();
@@ -867,9 +888,7 @@ public class ASTHelper {
 
         CfgNode tempBeforeNode = beginForNode;
 
-        for (int i = 0;
-             i < initializers.size();
-             i++) {
+        for (int i = 0; i < initializers.size(); i++) {
             CfgNormalNode normalNode = new CfgNormalNode();
 
             if (initializers.get(i) instanceof VariableDeclarationExpression) {
@@ -966,7 +985,7 @@ public class ASTHelper {
         return beginForNode;
     }
 
-    public static CfgBoolExprNode generateCFGFromWhileASTNode(CfgWhileStatementBlockNode whileCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+    public static CfgBoolExprNode generateCFGFromWhileASTNodeForBranch_Statement_PathCoverage(CfgWhileStatementBlockNode whileCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
 //        System.out.println("generateCFGFromWhileASTNode starts...");
         CfgNode beforeNode = whileCfgNode.getBeforeStatementNode();
 
@@ -1031,7 +1050,132 @@ public class ASTHelper {
         return whileConditionNode;
     }
 
-    public static CfgBeginDoNode generateCFGFromDoASTNode(CfgDoStatementBlockNode doCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+    public static CfgBeginBlockNode generateCFGFromWhileASTNodeForMCDCCoverage(CfgWhileStatementBlockNode whileCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+//        System.out.println("generateCFGFromWhileASTNode starts...");
+        CfgNode beforeNode = whileCfgNode.getBeforeStatementNode();
+
+        CfgEndBlockNode cfgEndBlockNode = new CfgEndBlockNode();
+
+        CfgNode afterNode = whileCfgNode.getAfterStatementNode();
+
+        cfgEndBlockNode.setAfterStatementNode(afterNode);
+        afterNode.setBeforeStatementNode(cfgEndBlockNode);
+
+        //Dieu kien
+        Expression whileConditionAST = ((WhileStatement) whileCfgNode.getAst()).getExpression();
+        CfgBeginBlockNode beginWhileCondition = new CfgBeginBlockNode();
+        beforeNode.setAfterStatementNode(beginWhileCondition);
+        beginWhileCondition.setBeforeStatementNode(beforeNode);
+        beginWhileCondition.setEndBlockNode(cfgEndBlockNode);
+
+        //Khoi body
+        Statement bodyStatementBlock = ((WhileStatement) whileCfgNode.getAst()).getBody();
+        CfgNode bodyStatementNode = new CfgBlockNode();
+        CfgBeginBlockNode beginBodyBlockNode = new CfgBeginBlockNode();
+
+        bodyStatementNode.setAst(bodyStatementBlock);
+        setLineNumber(bodyStatementNode, compilationUnit, bodyStatementBlock, firstLine);
+        bodyStatementNode.setContent(bodyStatementBlock.toString());
+
+        CfgEndBlockNode endBodyBlockNode = new CfgEndBlockNode();
+
+        // add end node to keep track of latest endBlockNode
+        endNodeStack.push(cfgEndBlockNode);
+
+        bodyStatementNode.setAfterStatementNode(endBodyBlockNode);
+        bodyStatementNode.setBeforeStatementNode(beginBodyBlockNode);
+        beginBodyBlockNode.setAfterStatementNode(bodyStatementNode);
+
+        endBodyBlockNode.setAfterStatementNode(beginWhileCondition);
+
+        // add condition node to keep track of the latest condition node
+        conditionNodeStack.push(endBodyBlockNode);
+
+        CfgNode cfgBodyNode = generateCFGFromASTBlockNode(bodyStatementNode, compilationUnit, firstLine, coverage);
+
+        // pop from stack to delete finished "while" block
+        endNodeStack.pop();
+        conditionNodeStack.pop();
+
+        CfgBoolExprNode whileConditionNode = generateConditionCfg(whileConditionAST, cfgEndBlockNode, beginBodyBlockNode, beginWhileCondition, cfgEndBlockNode, compilationUnit, firstLine, coverage);
+        whileConditionNode.setFalseNode(cfgEndBlockNode);
+        whileConditionNode.setEndBlockNode(cfgEndBlockNode);
+//
+        cfgEndBlockNode.getBeforeEndBoolNodeList().add(whileConditionNode);
+        cfgEndBlockNode.setBeforeStatementNode(whileConditionNode);
+
+        return beginWhileCondition;
+    }
+
+    public static CfgBeginDoNode generateCFGFromDoASTNodeForMCDCCoverage(CfgDoStatementBlockNode doCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
+//        System.out.println("generateCFGFromDoASTNode starts...");
+        CfgNode beforeNode = doCfgNode.getBeforeStatementNode();
+
+        CfgEndBlockNode cfgEndBlockNode = new CfgEndBlockNode();
+
+        CfgNode afterNode = doCfgNode.getAfterStatementNode();
+
+        cfgEndBlockNode.setAfterStatementNode(afterNode);
+        afterNode.setBeforeStatementNode(cfgEndBlockNode);
+
+        CfgBeginDoNode beginDoNode = new CfgBeginDoNode();
+        beginDoNode.setBeforeStatementNode(beforeNode);
+        beforeNode.setAfterStatementNode(beginDoNode);
+
+        beginDoNode.setEndBlockNode(cfgEndBlockNode);
+
+        //Khoi body
+        Statement bodyStatementBlock = ((DoStatement) doCfgNode.getAst()).getBody();
+        CfgNode bodyStatementNode = new CfgBlockNode();
+
+        bodyStatementNode.setAst(bodyStatementBlock);
+        setLineNumber(bodyStatementNode, compilationUnit, bodyStatementBlock, firstLine);
+        bodyStatementNode.setContent(bodyStatementBlock.toString());
+
+        //Dieu kien
+        Expression doConditionAST = ((DoStatement) doCfgNode.getAst()).getExpression();
+        CfgBeginBlockNode beginDoCondition = new CfgBeginBlockNode();
+
+//        CfgBoolExprNode doConditionNode = new CfgBoolExprNode();
+//        doConditionNode.setAst(doConditionAST);
+//        setLineNumber(doConditionNode, compilationUnit, doConditionAST, firstLine);
+//        doConditionNode.setContent(doConditionAST.toString());
+
+//        doConditionNode.setEndBlockNode(cfgEndBlockNode);
+
+        CfgEndBlockNode endBodyBlockNode = new CfgEndBlockNode();
+
+        // add end node to keep track of latest endBlockNode
+        endNodeStack.push(cfgEndBlockNode);
+
+        bodyStatementNode.setAfterStatementNode(endBodyBlockNode);
+        bodyStatementNode.setBeforeStatementNode(beginDoNode);
+
+        endBodyBlockNode.setAfterStatementNode(beginDoCondition);
+        beginDoCondition.setBeforeStatementNode(endBodyBlockNode);
+        beginDoCondition.setEndBlockNode(cfgEndBlockNode);
+
+        // add condition node to keep track of the latest condition node
+        conditionNodeStack.push(endBodyBlockNode);
+
+        CfgNode cfgBodyNode = generateCFGFromASTBlockNode(bodyStatementNode, compilationUnit, firstLine, coverage);
+
+        // pop from stack to delete finished "do-while" block
+        endNodeStack.pop();
+
+        CfgBoolExprNode doConditionNode = generateConditionCfg(doConditionAST, cfgEndBlockNode, beginDoNode, beginDoCondition, cfgEndBlockNode, compilationUnit, firstLine, coverage);
+        doConditionNode.setFalseNode(cfgEndBlockNode);
+        doConditionNode.setEndBlockNode(cfgEndBlockNode);
+
+        cfgEndBlockNode.getBeforeEndBoolNodeList().add(doConditionNode);
+        cfgEndBlockNode.setBeforeStatementNode(doConditionNode);
+
+//        System.out.println("generateCFGFromDoASTNode ends...");
+
+        return beginDoNode;
+    }
+
+    public static CfgBeginDoNode generateCFGFromDoASTNodeForBranch_Statement_PathCoverage(CfgDoStatementBlockNode doCfgNode, CompilationUnit compilationUnit, int firstLine, Coverage coverage) {
 //        System.out.println("generateCFGFromDoASTNode starts...");
         CfgNode beforeNode = doCfgNode.getBeforeStatementNode();
 

@@ -1,8 +1,12 @@
 package com.example.unittesting.Sevice;
 
 
+import com.example.unittesting.model.MethodTest;
+import com.example.unittesting.utils.testing.ConcolicTesting;
 import com.example.unittesting.utils.testing.NTDTesting;
 import com.example.unittesting.utils.testing.PairwiseTesting.PairwiseTesting;
+import com.example.unittesting.utils.testing.TestGeneration;
+import core.entity.ParameterInput;
 import core.testResult.result.autoTestResult.TestResult;
 
 import com.example.unittesting.utils.findNode;
@@ -18,13 +22,17 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Service
 
 public class UTestServiceImpl implements UTestService {
+    private MethodTest methodTest;
+
+    private List<ParameterInput> parameterInputs;
     @Override
-    public ResponseEntity<Object> runAutomationTest(int targetId, String nameProject, PairwiseTesting.Coverage coverage) throws IOException {
+    public ResponseEntity<Object> runAutomationTest(int targetId, String nameProject, TestGeneration.Coverage coverage) throws IOException {
         try {
             File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
             if (!jsonFile.exists()) {
@@ -44,7 +52,10 @@ public class UTestServiceImpl implements UTestService {
                         File file = new File(pathMethod);
                         String className = file.getName();
 
-                        TestResult result = PairwiseTesting.runFullPairwise(pathMethod, name, className, coverage);
+                        // TEST TEMPLATE
+//                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
+
+                        TestResult result = ConcolicTesting.runFullConcolic(pathMethod, name, className, coverage);
 
                         return ResponseEntity.ok(result);
                     } else {
@@ -63,4 +74,27 @@ public class UTestServiceImpl implements UTestService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
         }
     }
+
+    public void createMethodTest(String path, Integer targerId) throws IOException {
+        File file = new File(path);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode nodes = objectMapper.readTree(file);
+        JsonNode rootNode = nodes.get("rootNode");
+        NodeServiceImpl nodeService = new NodeServiceImpl(rootNode);
+        JsonNode node = nodeService.findByIdNode(targerId);
+        Integer idMethod = node.get("id").intValue();
+        String nameMethod = node.get("simpleName").textValue();
+
+        JsonNode parentNode = nodeService.findParentById(targerId);
+//        String className = parentNode.get("simpleName").textValue() + "Test";
+        String methodPath = node.get("path").textValue();
+//        String qualifiedClassName = parentNode.get("qualifiedName").textValue();
+
+//        methodTest = new MethodTest(idMethod, nameMethod, qualifiedClassName, methodPath);
+        methodTest = new MethodTest(idMethod, nameMethod, "ABC", methodPath);
+        nodeService.getParameterDependency(targerId);
+        parameterInputs = nodeService.getParameterInputs();
+    }
+
+
 }

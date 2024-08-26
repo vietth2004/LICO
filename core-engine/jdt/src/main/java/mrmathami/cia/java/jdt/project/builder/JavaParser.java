@@ -92,7 +92,8 @@ final class JavaParser {
 				codeFormatter, recoveryEnabled);
 		astParser.createASTs(sourcePathArray, sourceEncodingArray, EMPTY, nodes, null);
 		nodes.postprocessing();
-		return parser.postProcessing();
+		RootNode rNode = parser.postProcessing();
+		return rNode;
 	}
 
 	@Nonnull

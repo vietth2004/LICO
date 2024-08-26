@@ -5,6 +5,7 @@ import com.example.unittesting.Sevice.UTestService;
 import com.example.unittesting.UnitTestingApplication;
 import com.example.unittesting.utils.testing.NTDTesting;
 import com.example.unittesting.utils.testing.PairwiseTesting.PairwiseTesting;
+import com.example.unittesting.utils.testing.TestGeneration;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,20 +41,20 @@ public class UTestController {
                     @io.swagger.v3.oas.annotations.Parameter(name = "coverageType", description = "Loại độ phủ cần kiểm thử")}
     )
     public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
-        PairwiseTesting.Coverage coverage;
+        TestGeneration.Coverage coverage;
 
         switch (coverageType) {
             case "statement":
-                coverage = PairwiseTesting.Coverage.STATEMENT;
+                coverage = TestGeneration.Coverage.STATEMENT;
                 break;
             case "branch":
-                coverage = PairwiseTesting.Coverage.BRANCH;
+                coverage = TestGeneration.Coverage.BRANCH;
                 break;
             case "path":
-                coverage = PairwiseTesting.Coverage.PATH;
+                coverage = TestGeneration.Coverage.PATH;
                 break;
             case "mcdc":
-                coverage = PairwiseTesting.Coverage.MCDC;
+                coverage = TestGeneration.Coverage.MCDC;
                 break;
             default:
                 throw new RuntimeException("Invalid coverage type");

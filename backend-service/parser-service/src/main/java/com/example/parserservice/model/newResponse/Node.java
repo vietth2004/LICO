@@ -10,7 +10,7 @@ public class Node {
     public static NewResponse convertToNewResponse(Response oldResponse) {
         Response tmpResponse = (Response) oldResponse.clone();
 
-        JavaNode.convertJavaNodes(tmpResponse);
+        ArrayList annotations = JavaNode.convertJavaNodes(tmpResponse);
         XmlNode.convertXmlNodes(tmpResponse);
         JspNode.convertJspNodes(tmpResponse);
         PropertiesNode.convertPropertiesNode(tmpResponse);
@@ -63,7 +63,7 @@ public class Node {
         nodes.add(projectNode);
         //================================================
 
-        NewResponse newResponse = new NewResponse(address, nodes, oldResponse, projectNode.getId());
+        NewResponse newResponse = new NewResponse(address, nodes, oldResponse, projectNode.getId(), annotations);
 
         return newResponse;
     }

@@ -19,65 +19,41 @@ writer.close();
 e.printStackTrace();
 }
 }
-public static int getFare(int age, int distance)
+public static int test(int a, int b)
 {
-mark("int fare=0;\n", false, false);
-int fare=0;
-if (((age > 4 && age < 14) && mark("age > 4 && age < 14", true, false)) || mark("age > 4 && age < 14", false, true))
-{
-{
-if (((distance >= 10) && mark("distance >= 10", true, false)) || mark("distance >= 10", false, true))
-{
-{
-mark("fare=130;\n", false, false);
-fare=130;
+mark("int j=0;\n", false, false);
+int j=0;
+do {{
+mark("System.out.println(\"abc\");\n", false, false);
+System.out.println("abc");
+mark("j++;\n", false, false);
+j++;
 }
 }
-else {
-{
-mark("fare=100;\n", false, false);
-fare=100;
-}
-}
-}
-}
-else {
-if (((age > 15) && mark("age > 15", true, false)) || mark("age > 15", false, true))
+while (((((j > a) && mark("j > a", true, false)) || mark("j > a", false, true)) && (((j < b) && mark("j < b", true, false)) || mark("j < b", false, true))) || (((j > 18) && mark("j > 18", true, false)) || mark("j > 18", false, true)));
+if (((((a > 2) && mark("a > 2", true, false)) || mark("a > 2", false, true)) && (((b < 5) && mark("b < 5", true, false)) || mark("b < 5", false, true))) || (((a > 18) && mark("a > 18", true, false)) || mark("a > 18", false, true)))
 {
 {
-if (((distance < 10 && age >= 60) && mark("distance < 10 && age >= 60", true, false)) || mark("distance < 10 && age >= 60", false, true))
+mark("System.out.println(\"abc\");\n", false, false);
+System.out.println("abc");
+}
+}
+mark("int i=0", false, false);
+for (int i=0; ((((i < a) && mark("i < a", true, false)) || mark("i < a", false, true)) && (((i > b) && mark("i > b", true, false)) || mark("i > b", false, true))) || (((i > 12) && mark("i > 12", true, false)) || mark("i > 12", false, true)); mark("i=i + 1", false, false),
+i=i + 1) {
 {
-{
-mark("fare=160;\n", false, false);
-fare=160;
+mark("System.out.println(\"abc\");\n", false, false);
+System.out.println("abc");
 }
 }
-else {
-if (((distance > 10 && age < 60) && mark("distance > 10 && age < 60", true, false)) || mark("distance > 10 && age < 60", false, true))
-{
-{
-mark("fare=250;\n", false, false);
-fare=250;
-}
-}
-else {
-{
-mark("fare=200;\n", false, false);
-fare=200;
-}
-}
-}
-}
-}
-}
-mark("return fare;\n", false, false);
-return fare;
+mark("return 3;\n", false, false);
+return 3;
 }
 
 public static void main(String[] args) {
 writeDataToFile("", "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", false);
 long startRunTestTime = System.nanoTime();
-Object output = getFare(5, 10);
+Object output = test(8, 8);
 long endRunTestTime = System.nanoTime();
 double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 writeDataToFile(runTestDuration + "===" + output, "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", true);

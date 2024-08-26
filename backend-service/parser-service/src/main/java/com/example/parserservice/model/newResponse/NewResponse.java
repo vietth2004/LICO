@@ -10,13 +10,16 @@ public class NewResponse {
 
     private Integer rootId;
 
+    private ArrayList annotations;
+
     private com.example.parserservice.model.Response oldResponse;
 
-    public NewResponse(String address, ArrayList nodes, Response oldResponse, Integer rootId) {
+    public NewResponse(String address, ArrayList nodes, Response oldResponse, Integer rootId, ArrayList annotations) {
         this.address = address;
         this.nodes = nodes;
         this.oldResponse = oldResponse;
         this.rootId = rootId;
+        this.annotations = annotations;
     }
 
     public String getAddress() {
