@@ -53,7 +53,7 @@ return 3;
 public static void main(String[] args) {
 writeDataToFile("", "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", false);
 long startRunTestTime = System.nanoTime();
-Object output = test(8, 8);
+Object output = test(0, 2);
 long endRunTestTime = System.nanoTime();
 double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 writeDataToFile(runTestDuration + "===" + output, "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", true);

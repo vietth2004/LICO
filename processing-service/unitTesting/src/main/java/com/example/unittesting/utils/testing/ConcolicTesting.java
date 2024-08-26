@@ -124,6 +124,7 @@ public class ConcolicTesting extends TestGeneration {
             case STATEMENT:
                 return MarkedPath.findUncoveredStatement(cfgNode);
             case BRANCH:
+            case MCDC:
                 return MarkedPath.findUncoveredBranch(cfgNode);
             default:
                 throw new RuntimeException("Invalid coverage type");
