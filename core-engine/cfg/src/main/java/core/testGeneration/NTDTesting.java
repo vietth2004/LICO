@@ -1,11 +1,10 @@
-package com.example.unittesting.utils.testing;
+package core.testGeneration;
 
 import core.path.*;
 import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
 import core.testResult.result.autoTestResult.TestResult;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import core.FilePath;
 import core.symbolicExecution.SymbolicExecution;
 import core.cfg.CfgBlockNode;
@@ -16,9 +15,7 @@ import core.parser.ProjectParser;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -28,25 +25,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@JsonAutoDetect
-@Component
 public class NTDTesting extends TestGeneration {
-    private static CompilationUnit compilationUnit;
     private static String simpleClassName;
     private static String fullyClonedClassName;
-    private static ArrayList<ASTNode> funcAstNodeList;
-    private static CfgNode cfgBeginNode;
-    private static CfgEndBlockNode cfgEndNode;
-    private static List<ASTNode> parameters;
-    private static Class<?>[] parameterClasses;
-    private static List<String> parameterNames;
     private static Method method;
-    private static ASTNode testFunc;
-
     private NTDTesting() {
     }
 
-    public static TestResult runFullNTD(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
+    public static TestResult runFullNTD(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
 
         setup(path, className, methodName);
         setupCfgTree(coverage);
@@ -59,11 +45,11 @@ public class NTDTesting extends TestGeneration {
         return result;
     }
 
-    private static void test() {
-        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
-
-        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
-    }
+//    private static void test() {
+//        List<Path> paths = (new FindAllPath(cfgBeginNode)).getPaths();
+//
+//        SymbolicExecution solution = new SymbolicExecution(paths.get(0), parameters);
+//    }
 
     private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
         TestResult testResult = new TestResult();
@@ -75,8 +61,6 @@ public class NTDTesting extends TestGeneration {
         Object output = method.invoke(parameterClasses, evaluatedValues);
         long endRunTestTime = System.nanoTime();
         double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
-
-        int k = 1;
 
         List<MarkedStatement> markedStatements = getMarkedStatement();
         MarkedPath.markPathToCFGV2(cfgBeginNode, markedStatements);
@@ -173,6 +157,7 @@ public class NTDTesting extends TestGeneration {
             case STATEMENT:
                 return MarkedPath.findUncoveredStatement(cfgNode);
             case BRANCH:
+            case MCDC:
                 return MarkedPath.findUncoveredBranch(cfgNode);
             default:
                 throw new RuntimeException("Invalid coverage type");
@@ -198,7 +183,7 @@ public class NTDTesting extends TestGeneration {
         int totalCovered = 0;
         if (coverage == Coverage.STATEMENT) {
             totalCovered = MarkedPath.getTotalCoveredStatement();
-        } else if (coverage == Coverage.BRANCH) {
+        } else if (coverage == Coverage.BRANCH || coverage == Coverage.MCDC) {
             totalCovered = MarkedPath.getTotalCoveredBranch();
             System.out.println(totalCovered);
         }
@@ -269,6 +254,8 @@ public class NTDTesting extends TestGeneration {
                 return ASTHelper.Coverage.STATEMENT;
             case BRANCH:
                 return ASTHelper.Coverage.BRANCH;
+            case MCDC:
+                return ASTHelper.Coverage.MCDC;
             default:
                 throw new RuntimeException("Invalid coverage");
         }
@@ -283,7 +270,7 @@ public class NTDTesting extends TestGeneration {
         }
         if (coverage == Coverage.STATEMENT) {
             result.append("TotalStatement");
-        } else if (coverage == Coverage.BRANCH) {
+        } else if (coverage == Coverage.BRANCH || coverage == Coverage.MCDC) {
             result.append("TotalBranch");
         } else {
             throw new RuntimeException("Invalid Coverage");

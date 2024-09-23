@@ -3,7 +3,8 @@ package com.example.uploadprojectservice.Controller;
 import com.example.uploadprojectservice.Service.UploadService;
 import com.example.uploadprojectservice.ast.Node.Parameter;
 import com.example.uploadprojectservice.ast.data.InfoMethod;
-import com.example.uploadprojectservice.utils.cloneProjectUtils.CloneProject;
+import core.uploadProjectUtils.ConcolicUploadUtil;
+import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import com.example.uploadprojectservice.utils.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,12 +62,17 @@ public class UploadController {
             String path = uploadService.buildProject(parserList, file, user, project);
             Object result = uploadService.build(path);
 
-            Path rootPackage = CloneProject.findRootPackage(Paths.get(path));
+            Path rootPackage =  CloneProject.findRootPackage(Paths.get(path));
             if(rootPackage == null) throw new RuntimeException("Invalid project");
 
             long startRunTestTime = System.nanoTime();
-            // Clone Project
+
+            // Clone Project (NTD)
             CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath);
+
+            // Concolic Preprocess
+//            ConcolicUploadUtil.ConcolicPreprocessSourceCode(rootPackage.toString());
+
             long endRunTestTime = System.nanoTime();
 
             double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;

@@ -83,6 +83,7 @@ public final class SymbolicExecution {
             }
             currentNode = currentNode.getNext();
         }
+        System.out.println(finalZ3Expression);
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
         evaluateAndSaveTestDataCreated();

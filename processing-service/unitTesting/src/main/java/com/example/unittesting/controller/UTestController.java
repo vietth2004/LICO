@@ -3,9 +3,7 @@ package com.example.unittesting.controller;
 import com.example.unittesting.Sevice.UTestService;
 
 import com.example.unittesting.UnitTestingApplication;
-import com.example.unittesting.utils.testing.NTDTesting;
-import com.example.unittesting.utils.testing.PairwiseTesting.PairwiseTesting;
-import com.example.unittesting.utils.testing.TestGeneration;
+import core.testGeneration.TestGeneration;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;

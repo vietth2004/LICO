@@ -29,6 +29,8 @@ public abstract class ExpressionNode extends AstNode {
             VariableDeclarationExpressionNode.executeVariableDeclarationExpression((VariableDeclarationExpression) expression,
                     memoryModel);
             return null;
+        } else if (expression instanceof MethodInvocation) {
+            return MethodInvocationNode.executeMethodInvocation((MethodInvocation) expression, memoryModel);
         } else {
 //            throw new RuntimeException(expression.getClass() + " is not an Expression!!!");
             return null;

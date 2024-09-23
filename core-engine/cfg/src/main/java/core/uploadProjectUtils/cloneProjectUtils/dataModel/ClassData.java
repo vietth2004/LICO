@@ -1,4 +1,4 @@
-package com.example.uploadprojectservice.utils.cloneProjectUtils.dataModel;
+package core.uploadProjectUtils.cloneProjectUtils.dataModel;
 
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;

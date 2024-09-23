@@ -42,7 +42,7 @@ public class SingleVariableDeclarationNode extends VariableDeclarationNode {
 //        }
     }
 
-    private static AstNode createMultiDimensionsInitializationArray(String identifier,
+    public static AstNode createMultiDimensionsInitializationArray(String identifier,
                                                                     int iterateDimension, int numberOfDimensions, Type type, MemoryModel memoryModel) {
         int capacityOfDimension = 10;  // SYMBOLIC CAPACITY
 

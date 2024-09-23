@@ -1,6 +1,6 @@
-package com.example.uploadprojectservice.utils.cloneProjectUtils;
+package core.uploadProjectUtils.cloneProjectUtils;
 
-import com.example.uploadprojectservice.utils.cloneProjectUtils.dataModel.ClassData;
+import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
 import core.FilePath;
 import org.eclipse.jdt.core.dom.*;
 
@@ -22,10 +22,12 @@ public final class CloneProject {
     private static int totalFunctionStatement;
     private static int totalClassStatement;
     private static int totalFunctionBranch;
+
     private enum CoverageType {
         STATEMENT,
         BRANCH
     }
+
     private static StringBuilder command;
 
     public static String getJavaDirPath(String originDir) {
@@ -34,14 +36,13 @@ public final class CloneProject {
         if (!dir.isDirectory()) {
             throw new RuntimeException("Invalid Dir");
         }
-        for(File file : Objects.requireNonNull(dir.listFiles())) {
-            if(file.isDirectory()) {
-                if(file.getName().equals("java")) {
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
+            if (file.isDirectory()) {
+                if (file.getName().equals("java")) {
                     return file.getPath();
-                }
-                else {
+                } else {
                     String dirPath = getJavaDirPath(file.getPath());
-                    if(dirPath.endsWith("java")) return dirPath;
+                    if (dirPath.endsWith("java")) return dirPath;
                 }
             }
         }
@@ -71,7 +72,7 @@ public final class CloneProject {
             }
             return file.getParent();
         }
-        for (Path file: files) {
+        for (Path file : files) {
             if (Files.isDirectory(file)) {
                 Path path = findRootPackage(file);
                 if (path != null) {
@@ -90,7 +91,7 @@ public final class CloneProject {
         Process p = Runtime.getRuntime().exec(command.toString());
         System.out.println(p.waitFor());
 
-        if(p.waitFor() != 0) {
+        if (p.waitFor() != 0) {
             System.out.println("Can't compile project");
             throw new RuntimeException("Can't compile project");
         }
@@ -135,7 +136,7 @@ public final class CloneProject {
     }
 
     public static void deleteFilesInDirectory(String directoryPath) throws IOException {
-        if(Files.exists(Path.of(directoryPath))) {
+        if (Files.exists(Path.of(directoryPath))) {
             FileUtils.cleanDirectory(new File(directoryPath));
         } else {
             FileUtils.forceMkdir(new File(directoryPath));
@@ -281,9 +282,9 @@ public final class CloneProject {
         for (int i = 0; i < methodDeclaration.parameters().size(); i++) {
             result.append(methodDeclaration.parameters().get(i));
         }
-        if(coverageType == CoverageType.STATEMENT) {
+        if (coverageType == CoverageType.STATEMENT) {
             result.append("TotalStatement");
-        } else if (coverageType == CoverageType.BRANCH){
+        } else if (coverageType == CoverageType.BRANCH) {
             result.append("TotalBranch");
         } else {
             throw new RuntimeException("Invalid Coverage");
@@ -308,7 +309,7 @@ public final class CloneProject {
         StringBuilder cloneMethod = new StringBuilder();
 
         List<ASTNode> modifiers = method.modifiers();
-        for(ASTNode modifier : modifiers) {
+        for (ASTNode modifier : modifiers) {
             cloneMethod.append(modifier).append(" ");
         }
 
@@ -350,7 +351,7 @@ public final class CloneProject {
         StringBuilder result = new StringBuilder();
 
         result.append("{\n");
-        if(block != null) {
+        if (block != null) {
             List<ASTNode> statements = block.statements();
             for (int i = 0; i < statements.size(); i++) {
                 result.append(generateCodeForOneStatement(statements.get(i), ";"));
@@ -484,11 +485,49 @@ public final class CloneProject {
     }
 
     private static String generateCodeForCondition(Expression condition) {
+//        return generateCodeForConditionForMCDCCoverage(condition);
+        return generateCodeForConditionForBranchAndStatementCoverage(condition);
+    }
+
+    private static String generateCodeForConditionForBranchAndStatementCoverage(Expression condition) {
         totalFunctionStatement++;
         totalClassStatement++;
         totalFunctionBranch += 2;
         return "((" + condition + ") && mark(\"" + condition + "\", true, false))" +
                 " || mark(\"" + condition + "\", false, true)";
+    }
+
+    private static String generateCodeForConditionForMCDCCoverage(Expression condition) {
+        StringBuilder result = new StringBuilder();
+
+        if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
+            InfixExpression infixCondition = (InfixExpression) condition;
+
+            result.append("(").append(generateCodeForConditionForMCDCCoverage(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
+            result.append(generateCodeForConditionForMCDCCoverage(infixCondition.getRightOperand())).append(")");
+
+            List<ASTNode> extendedOperands = infixCondition.extendedOperands();
+            for (ASTNode operand : extendedOperands) {
+                result.append(" ").append(infixCondition.getOperator()).append(" ");
+                result.append("(").append(generateCodeForConditionForMCDCCoverage((Expression) operand)).append(")");
+            }
+        } else {
+            totalFunctionStatement++;
+            totalClassStatement++;
+            totalFunctionBranch += 2;
+            result.append("((").append(condition).append(") && mark(\"").append(condition).append("\", true, false))");
+            result.append(" || mark(\"").append(condition).append("\", false, true)");
+        }
+
+        return result.toString();
+    }
+
+
+    private static boolean isSeparableOperator(InfixExpression.Operator operator) {
+        return operator.equals(InfixExpression.Operator.CONDITIONAL_OR) ||
+                operator.equals(InfixExpression.Operator.OR) ||
+                operator.equals(InfixExpression.Operator.CONDITIONAL_AND) ||
+                operator.equals(InfixExpression.Operator.AND);
     }
 
     private static void writeDataToFile(String data, String path) {

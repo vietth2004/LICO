@@ -1,7 +1,2 @@
-int j=0;
-===false===false---end---System.out.println("abc");
-===false===false---end---j++;
-===false===false---end---j > a===true===false---end---j < b===true===false---end---System.out.println("abc");
-===false===false---end---j++;
-===false===false---end---j > a===true===false---end---j < b===false===true---end---j > 18===false===true---end---a > 2===false===true---end---a > 18===false===true---end---int i=0===false===false---end---i < a===false===true---end---i > 12===false===true---end---return 3;
-===false===false---end---1.4611===3
+minimum(x,y,10) == y===false===true---end---minimum(x,3,4) == x===true===false---end---return 2;
+===false===false---end---

@@ -1,4 +1,4 @@
-package com.example.unittesting.utils.testing.PairwiseTesting;
+package core.testGeneration.PairwiseTesting;
 
 import core.cfg.CfgNode;
 import core.path.FindAllPath;

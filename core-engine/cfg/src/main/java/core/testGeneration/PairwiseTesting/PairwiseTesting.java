@@ -1,13 +1,11 @@
-package com.example.unittesting.utils.testing.PairwiseTesting;
+package core.testGeneration.PairwiseTesting;
 
-import com.example.unittesting.utils.testing.NTDTesting;
-import com.example.unittesting.utils.testing.TestGeneration;
+import core.testGeneration.TestGeneration;
 import core.path.*;
 import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
 import core.testResult.result.autoTestResult.TestResult;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import core.FilePath;
 import core.symbolicExecution.SymbolicExecution;
 import core.cfg.CfgBlockNode;
@@ -15,14 +13,10 @@ import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
 import core.parser.ASTHelper;
 import core.parser.ProjectParser;
-import core.testDriver.TestDriverGenerator;
-import core.testDriver.TestDriverRunner;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,21 +26,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@JsonAutoDetect
-@Component
 public class PairwiseTesting extends TestGeneration {
-    private static CompilationUnit compilationUnit;
     private static String simpleClassName;
     private static String fullyClonedClassName;
-    private static ArrayList<ASTNode> funcAstNodeList;
-    private static CfgNode cfgBeginNode;
-    private static CfgEndBlockNode cfgEndNode;
-    private static List<ASTNode> parameters;
-    private static Class<?>[] parameterClasses;
-    private static List<String> parameterNames;
     private static Method method;
-    private static ASTNode testFunc;
-
     private static long totalUsedMem = 0;
     private static long tickCount = 0;
 

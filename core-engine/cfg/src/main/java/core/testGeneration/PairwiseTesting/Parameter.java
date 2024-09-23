@@ -1,4 +1,4 @@
-package com.example.unittesting.utils.testing.PairwiseTesting;
+package core.testGeneration.PairwiseTesting;
 
 import java.util.ArrayList;
 import java.util.List;

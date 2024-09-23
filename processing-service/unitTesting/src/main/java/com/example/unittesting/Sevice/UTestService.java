@@ -1,7 +1,6 @@
 package com.example.unittesting.Sevice;
 
-import com.example.unittesting.utils.testing.NTDTesting;
-import com.example.unittesting.utils.testing.PairwiseTesting.PairwiseTesting;
+import core.testGeneration.PairwiseTesting.PairwiseTesting;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;

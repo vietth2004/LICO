@@ -1,4 +1,4 @@
-package com.example.uploadprojectservice.utils.cloneProjectUtils;
+package core.uploadProjectUtils.cloneProjectUtils;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;

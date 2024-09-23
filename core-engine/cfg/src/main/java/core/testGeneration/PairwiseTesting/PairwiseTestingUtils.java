@@ -1,4 +1,4 @@
-package com.example.unittesting.utils.testing.PairwiseTesting;
+package core.testGeneration.PairwiseTesting;
 
 import core.testResult.result.autoTestResult.ParameterData;
 import core.testResult.result.autoTestResult.TestData;
