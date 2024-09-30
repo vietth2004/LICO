@@ -12,10 +12,12 @@ import org.eclipse.jdt.core.dom.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MethodInvocationNode extends ExpressionNode {
-    private static int numberOfFunctionsCall = 1;
+    private static HashMap<String, Integer> functionMap = new HashMap<>();
+
 
     public static AstNode executeMethodInvocation(MethodInvocation methodInvocation, MemoryModel memoryModel) {
         String methodName = methodInvocation.getName().toString();
@@ -49,8 +51,10 @@ public class MethodInvocationNode extends ExpressionNode {
 
     private static AstNode declareStubVariable(String methodName, MethodDeclaration methodDeclaration, MemoryModel memoryModel) {
         Type funcReturnType = methodDeclaration.getReturnType2();
-        String stubName = methodName + "_call_" + numberOfFunctionsCall;
-        numberOfFunctionsCall++;
+        int numberOfCalls = functionMap.getOrDefault(methodName, 0) + 1;
+        functionMap.put(methodName, numberOfCalls);
+        String stubName = methodName + "_call_" + numberOfCalls;
+
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
         if(funcReturnType instanceof PrimitiveType) {

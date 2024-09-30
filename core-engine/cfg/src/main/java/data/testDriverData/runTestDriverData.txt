@@ -1,2 +1,2 @@
-Math.max(x,y) == y===true===false---end---return 1;
+minimum(x,y,10) == y===false===true---end---minimum(x,3,4) == x===false===true---end---return 3;
 ===false===false---end---

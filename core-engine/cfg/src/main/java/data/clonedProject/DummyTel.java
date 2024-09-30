@@ -19,7 +19,21 @@ writeDataToFile(markResult.toString(), "core-engine/cfg/src/main/java/data/testD
 if (!isTrueCondition && !isFalseCondition) return true;
 return !isFalseCondition;
 }
-public static double calculateTotalCost(int startTime, int callDuration)
+public static double calculateTotalCost(int startTime,int callDuration){
+  double resultCost=0.5 * callDuration;
+  if (startTime >= 18) {
+    resultCost=resultCost / 2;
+  }
+ else   if (startTime < 8) {
+    resultCost=resultCost / 2;
+  }
+  if (callDuration > 60) {
+    resultCost-=(resultCost * 15.0 / 100);
+  }
+  resultCost+=(resultCost * 5.0 / 100);
+  return resultCost;
+}
+public static double calculateTotalCost_clone(int startTime, int callDuration)
 {
 mark("double resultCost=0.5 * callDuration;\n", false, false);
 double resultCost=0.5 * callDuration;

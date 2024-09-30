@@ -19,7 +19,23 @@ writeDataToFile(markResult.toString(), "core-engine/cfg/src/main/java/data/testD
 if (!isTrueCondition && !isFalseCondition) return true;
 return !isFalseCondition;
 }
-public static double intPow(double number, int index)
+public static double intPow(double number,int index){
+  double result=1;
+  if (index == 0)   return 1;
+ else   if (index < 0) {
+    for (int i=0; i < -index; i++) {
+      result*=number;
+    }
+    return 1 / result;
+  }
+ else {
+    for (int i=0; i < index; i++) {
+      result*=number;
+    }
+    return result;
+  }
+}
+public static double intPow_clone(double number, int index)
 {
 mark("double result=1;\n", false, false);
 double result=1;
@@ -63,7 +79,11 @@ return result;
 
 public static final int doubleintPowdoublenumberintindexTotalStatement = 14;
 public static final int doubleintPowdoublenumberintindexTotalBranch = 8;
-public static int abs(int x)
+public static int abs(int x){
+  if (x < 0)   return -x;
+ else   return x;
+}
+public static int abs_clone(int x)
 {
 if (((x < 0) && mark("x < 0", true, false)) || mark("x < 0", false, true))
 {
@@ -78,7 +98,14 @@ return x;
 
 public static final int intabsintxTotalStatement = 3;
 public static final int intabsintxTotalBranch = 2;
-public int factorial(int n)
+public int factorial(int n){
+  int result=1;
+  for (int i=1; i <= n; i=i + 1) {
+    result*=i;
+  }
+  return result;
+}
+public int factorial_clone(int n)
 {
 mark("int result=1;\n", false, false);
 int result=1;
@@ -96,7 +123,12 @@ return result;
 
 public static final int intfactorialintnTotalStatement = 6;
 public static final int intfactorialintnTotalBranch = 2;
-public static boolean isPrime(int n)
+public static boolean isPrime(int n){
+  if (n <= 1)   return false;
+  for (int i=2; i <= n / 2; i++)   if (n % i == 0)   return false;
+  return true;
+}
+public static boolean isPrime_clone(int n)
 {
 if (((n <= 1) && mark("n <= 1", true, false)) || mark("n <= 1", false, true))
 {
@@ -118,7 +150,19 @@ return true;
 
 public static final int booleanisPrimeintnTotalStatement = 8;
 public static final int booleanisPrimeintnTotalBranch = 6;
-public boolean isPerfectNumber(int number)
+public boolean isPerfectNumber(int number){
+  if (number <= 0) {
+    return false;
+  }
+  int sum=0;
+  for (int i=1; i < number; i++) {
+    if (number % i == 0) {
+      sum+=i;
+    }
+  }
+  return sum == number;
+}
+public boolean isPerfectNumber_clone(int number)
 {
 if (((number <= 0) && mark("number <= 0", true, false)) || mark("number <= 0", false, true))
 {
@@ -148,7 +192,14 @@ return sum == number;
 
 public static final int booleanisPerfectNumberintnumberTotalStatement = 9;
 public static final int booleanisPerfectNumberintnumberTotalBranch = 6;
-public static int findGCD(int x, int y)
+public static int findGCD(int x,int y){
+  int gcd=1;
+  for (int i=1; i <= x && i <= y; i++) {
+    if (x % i == 0 && y % i == 0)     gcd=i;
+  }
+  return gcd;
+}
+public static int findGCD_clone(int x, int y)
 {
 mark("int gcd=1;\n", false, false);
 int gcd=1;
