@@ -3,17 +3,20 @@ package core.variable;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.Type;
 
 public class PrimitiveTypeVariable extends Variable {
-    private PrimitiveType.Code code;
+//    private PrimitiveType.Code code;
+    private PrimitiveType primitiveType;
 
-    public PrimitiveTypeVariable(PrimitiveType.Code code, String name) {
-        this.code = code;
+    public PrimitiveTypeVariable(PrimitiveType primitiveType, String name) {
+//        this.code = type.getPrimitiveTypeCode();
+        this.primitiveType = primitiveType;
         super.setName(name);
     }
 
     public static Expr createZ3PrimitiveTypeVariable(PrimitiveTypeVariable primitiveTypeVariable, Context ctx) {
-        PrimitiveType.Code code = primitiveTypeVariable.code;
+        PrimitiveType.Code code = primitiveTypeVariable.getCode();
         String name = primitiveTypeVariable.getName();
 
         if (code.equals(PrimitiveType.INT) ||
@@ -33,6 +36,11 @@ public class PrimitiveTypeVariable extends Variable {
     }
 
     public PrimitiveType.Code getCode() {
-        return code;
+        return primitiveType.getPrimitiveTypeCode();
+    }
+
+    @Override
+    public Type getType() {
+        return this.primitiveType;
     }
 }

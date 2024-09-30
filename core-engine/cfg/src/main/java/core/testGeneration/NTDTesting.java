@@ -37,10 +37,13 @@ public class NTDTesting extends TestGeneration {
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters(methodName);
+        isSetup = true;
 
 //        test();
 
         TestResult result = startGenerating(coverage);
+
+        isSetup = false;
 
         return result;
     }

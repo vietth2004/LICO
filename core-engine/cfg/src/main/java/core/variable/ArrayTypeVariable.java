@@ -52,4 +52,9 @@ public class ArrayTypeVariable extends Variable {
         }
         return false;
     }
+
+    @Override
+    public ArrayType getType() {
+        return type;
+    }
 }

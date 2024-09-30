@@ -16,7 +16,7 @@ public class VariableDeclarationFragmentNode extends VariableDeclarationNode {
         if(initializer != null) {
             if(baseType instanceof PrimitiveType) {
                 PrimitiveType type = (PrimitiveType) baseType;
-                memoryModel.declarePrimitiveTypeVariable(type.getPrimitiveTypeCode(), name, ExpressionNode.executeExpression(initializer, memoryModel));
+                memoryModel.declarePrimitiveTypeVariable(type, name, ExpressionNode.executeExpression(initializer, memoryModel));
             } else if(baseType instanceof ArrayType) {
                 ArrayType type = (ArrayType) baseType;
                 memoryModel.declareArrayTypeVariable(type, name, type.getDimensions(), ExpressionNode.executeExpression(initializer, memoryModel));
@@ -27,7 +27,7 @@ public class VariableDeclarationFragmentNode extends VariableDeclarationNode {
         } else {
             if(baseType instanceof PrimitiveType) {
                 PrimitiveType type = (PrimitiveType) baseType;
-                memoryModel.declarePrimitiveTypeVariable(type.getPrimitiveTypeCode(), name, PrimitiveTypeNode.changePrimitiveTypeToLiteralInitialization(type));
+                memoryModel.declarePrimitiveTypeVariable(type, name, PrimitiveTypeNode.changePrimitiveTypeToLiteralInitialization(type));
             } else {
                 throw new RuntimeException("Only deal with PrimitiveType!!");
             }

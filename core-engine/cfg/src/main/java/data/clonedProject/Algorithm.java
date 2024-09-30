@@ -1,5 +1,7 @@
 package data.clonedProject;
 
+import data.clonedProject.utils.JavaAlgorithm;
+
 import java.io.FileWriter;
 
 public class Algorithm {
@@ -413,34 +415,24 @@ public class Algorithm {
     public static final int booleantestintaintbTotalStatement = 3;
     public static final int booleantestintaintbTotalBranch = 2;
 
-//    public static int minimum(int a, int b, int c) {
-//        if (((a < b && a < c) && mark("a < b && a < c", true, false)) || mark("a < b && a < c", false, true)) {
-//            {
-//                mark("return a;\n", false, false);
-//                return a;
-//            }
-//        } else {
-//            if (((b < a && b < c) && mark("b < a && b < c", true, false)) || mark("b < a && b < c", false, true)) {
-//                {
-//                    mark("return b;\n", false, false);
-//                    return b;
-//                }
-//            } else {
-//                {
-//                    mark("return c;\n", false, false);
-//                    return c;
-//                }
-//            }
-//        }
-//    }
-
     public static int minimum(int a, int b, int c) {
-        if (a < b && a < c) {
-            return a;
-        } else if (b < a && b < c) {
-            return b;
+        if (((a < b && a < c) && mark("a < b && a < c", true, false)) || mark("a < b && a < c", false, true)) {
+            {
+                mark("return a;\n", false, false);
+                return a;
+            }
         } else {
-            return c;
+            if (((b < a && b < c) && mark("b < a && b < c", true, false)) || mark("b < a && b < c", false, true)) {
+                {
+                    mark("return b;\n", false, false);
+                    return b;
+                }
+            } else {
+                {
+                    mark("return c;\n", false, false);
+                    return c;
+                }
+            }
         }
     }
 
@@ -448,13 +440,13 @@ public class Algorithm {
     public static final int intminimumintaintbintcTotalBranch = 4;
 
     public static int methodInvocation(int x, int y) {
-        if (((minimum(x, y, 10) == y) && mark("minimum(x,y,10) == y", true, false)) || mark("minimum(x,y,10) == y", false, true)) {
+        if (((Math.max(x, y) == y) && mark("Math.max(x,y) == y", true, false)) || mark("Math.max(x,y) == y", false, true)) {
             {
                 mark("return 1;\n", false, false);
                 return 1;
             }
         } else {
-            if (((minimum(x, 3, 4) == x) && mark("minimum(x,3,4) == x", true, false)) || mark("minimum(x,3,4) == x", false, true)) {
+            if (((JavaAlgorithm.minimum(x, y, 45) == x) && mark("JavaAlgorithm.minimum(x,y,45) == x", true, false)) || mark("JavaAlgorithm.minimum(x,y,45) == x", false, true)) {
                 {
                     mark("return 2;\n", false, false);
                     return 2;

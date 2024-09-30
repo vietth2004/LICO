@@ -38,8 +38,11 @@ public class ConcolicTesting extends TestGeneration {
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters();
+        isSetup = true;
 
         TestResult result = startGenerating(coverage);
+
+        isSetup = false;
 
         return result;
     }

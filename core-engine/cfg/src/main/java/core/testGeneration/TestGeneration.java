@@ -9,13 +9,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestGeneration {
+public abstract class TestGeneration {
     public enum Coverage {
         STATEMENT,
         BRANCH,
         MCDC,
         PATH
     }
+
+    protected static boolean isSetup = false;
 
     protected static CompilationUnit compilationUnit;
     protected static ArrayList<ASTNode> funcAstNodeList;
@@ -27,6 +29,18 @@ public class TestGeneration {
     protected static ASTNode testFunc;
 
     public static ArrayList<ASTNode> getFuncAstNodeList() {
-        return funcAstNodeList;
+        if (isSetup) {
+            return funcAstNodeList;
+        } else {
+            throw new RuntimeException("Value has not been setup");
+        }
+    }
+
+    public static CompilationUnit getCompilationUnit() {
+        if (isSetup) {
+            return compilationUnit;
+        } else {
+            throw new RuntimeException("Value has not been setup");
+        }
     }
 }

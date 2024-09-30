@@ -5,31 +5,56 @@ import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Name.SimpleNameNode;
 import core.ast.VariableDeclaration.SingleVariableDeclarationNode;
 import core.symbolicExecution.MemoryModel;
+import core.testDriver.TestDriverUtils;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MethodInvocationNode extends ExpressionNode {
     private static int numberOfFunctionsCall = 1;
+
     public static AstNode executeMethodInvocation(MethodInvocation methodInvocation, MemoryModel memoryModel) {
-        ArrayList<ASTNode> funcAstNodeList = TestGeneration.getFuncAstNodeList();
-        MethodDeclaration testFunc = null;
         String methodName = methodInvocation.getName().toString();
 
-        for (ASTNode func : funcAstNodeList) {
-            if (((MethodDeclaration) func).getName().getIdentifier().equals(methodName)) {
-                testFunc = (MethodDeclaration) func;
+        if (methodInvocation.getExpression() == null) { // method invocation in the same class
+            MethodDeclaration methodDeclaration = getInvokedMethodAST(methodName);
+            return declareStubVariable(methodName, methodDeclaration, memoryModel);
+        } else { // method invocation outside the class or in libs
+            CompilationUnit compilationUnit = TestGeneration.getCompilationUnit();
+
+            for (ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
+                ImportDeclaration importDeclaration = (ImportDeclaration) iImport;
+                System.out.println("abc");
             }
+
+            Class<?>[] classes = TestDriverUtils.getVariableClasses(methodInvocation.arguments(), memoryModel);
         }
 
-        Type funcReturnType = testFunc.getReturnType2();
+        return null;
+    }
+
+    private static MethodDeclaration getInvokedMethodAST(String methodName) {
+        ArrayList<ASTNode> funcAstNodeList = TestGeneration.getFuncAstNodeList();
+        for (ASTNode astNode : funcAstNodeList) {
+            if (((MethodDeclaration) astNode).getName().getIdentifier().equals(methodName)) {
+                return (MethodDeclaration) astNode;
+            }
+        }
+        throw new RuntimeException("There is no method named: " + methodName);
+    }
+
+    private static AstNode declareStubVariable(String methodName, MethodDeclaration methodDeclaration, MemoryModel memoryModel) {
+        Type funcReturnType = methodDeclaration.getReturnType2();
         String stubName = methodName + "_call_" + numberOfFunctionsCall;
         numberOfFunctionsCall++;
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
         if(funcReturnType instanceof PrimitiveType) {
-            memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) funcReturnType).getPrimitiveTypeCode(), stubName, stubNameNode);
+            memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) funcReturnType), stubName, stubNameNode);
             return stubNameNode;
         } else if (funcReturnType instanceof ArrayType) {
             ArrayType arrayType = (ArrayType) funcReturnType;

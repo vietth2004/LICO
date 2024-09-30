@@ -25,7 +25,7 @@ public class SingleVariableDeclarationNode extends VariableDeclarationNode {
         String key = simpleNameNode.getIdentifier();
 
         if(type instanceof PrimitiveType) {
-            memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) type).getPrimitiveTypeCode(), key, simpleNameNode);
+            memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) type), key, simpleNameNode);
         } else if (type instanceof ArrayType) {
             ArrayType arrayType = (ArrayType) type;
             memoryModel.declareArrayTypeVariable(arrayType, key, arrayType.getDimensions(), createMultiDimensionsInitializationArray(key, 0, arrayType.getDimensions(), arrayType.getElementType(), memoryModel));
@@ -62,7 +62,7 @@ public class SingleVariableDeclarationNode extends VariableDeclarationNode {
                 array[i] = element;
                 // Tạo từng phần từ của mảng trong parameter ra bên ngoài ArrayNode trong MemoryModel
                 if(type instanceof PrimitiveType) {
-                    memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) type).getPrimitiveTypeCode(), tmpIdentifier, element);
+                    memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) type), tmpIdentifier, element);
                 } else {
                     throw new RuntimeException("Invalid type");
                 }

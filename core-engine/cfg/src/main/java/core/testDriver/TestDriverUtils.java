@@ -1,5 +1,9 @@
 package core.testDriver;
 
+import core.ast.Expression.Literal.LiteralNode;
+import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
+import core.symbolicExecution.MemoryModel;
+import core.variable.Variable;
 import org.eclipse.jdt.core.dom.*;
 
 import java.lang.reflect.Array;
@@ -30,6 +34,23 @@ public final class TestDriverUtils {
                 types[i] = getTypeClass(type);
             } else {
                 throw new RuntimeException("Unsupported parameter: " + param.getClass());
+            }
+        }
+        return types;
+    }
+
+    public static Class<?>[] getVariableClasses(List<ASTNode> variables, MemoryModel memoryModel) {
+        Class<?>[] types = new Class[variables.size()];
+        for (int i = 0; i < variables.size(); i++) {
+            ASTNode variableNode = variables.get(i);
+            if (LiteralNode.isLiteral(variableNode)) {
+                types[i] = LiteralNode.getLiteralClass(variableNode);
+            } else if (variableNode instanceof Name) {
+                String key = ((Name) variableNode).getFullyQualifiedName();
+                Variable variable = memoryModel.getVariable(key);
+                types[i] = getTypeClass(variable.getType());
+            } else {
+                throw new RuntimeException("Unsupported variable: " + variableNode.getClass());
             }
         }
 

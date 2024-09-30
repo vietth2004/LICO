@@ -185,7 +185,10 @@ public final class CloneProject {
 
         //Imports
         for (ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
-            result.append(iImport);
+            result.append("import data.clonedProject.");
+
+            ImportDeclaration importDeclaration = (ImportDeclaration) iImport;
+            result.append(importDeclaration.getName()).append(";\n");
         }
         result.append("import java.io.FileWriter;\n");
 

@@ -37,10 +37,10 @@ public class PairwiseTesting extends TestGeneration {
     }
 
     public static TestResult runFullPairwise(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
-
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters(methodName);
+        isSetup = true;
 
         totalUsedMem = 0;
         tickCount = 0;
@@ -62,6 +62,8 @@ public class PairwiseTesting extends TestGeneration {
         long startRunTestTime = System.nanoTime();
 
         TestResult result = startGenerating(coverage);
+
+        isSetup = false;
 
         long endRunTestTime = System.nanoTime();
         double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
