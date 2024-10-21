@@ -1,4 +1,4 @@
-package core.testGeneration.PairwiseTesting;
+package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
 import java.util.ArrayList;
 import java.util.List;

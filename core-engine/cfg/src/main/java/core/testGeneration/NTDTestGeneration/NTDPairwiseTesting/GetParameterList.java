@@ -1,4 +1,4 @@
-package core.testGeneration.PairwiseTesting;
+package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
 import core.cfg.CfgNode;
 import core.path.FindAllPath;
@@ -20,6 +20,7 @@ public class GetParameterList {
         System.out.println("path size: " + paths.size());
         for (Path path : paths) {
             SymbolicExecution solution = new SymbolicExecution(path, parameters);
+            solution.execute();
 
             if (solution.getModel() == null) continue;
 

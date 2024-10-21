@@ -1,6 +1,6 @@
-package core.testGeneration.PairwiseTesting;
+package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
-import core.testGeneration.TestGeneration;
+import core.testGeneration.NTDTestGeneration.NTDTestGeneration;
 import core.path.*;
 import core.testDriver.TestDriverUtils;
 import core.testResult.coveredStatement.CoveredStatement;
@@ -18,22 +18,15 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 
-public class PairwiseTesting extends TestGeneration {
-    private static String simpleClassName;
-    private static String fullyClonedClassName;
-    private static Method method;
+public class NTDPairwiseTesting extends NTDTestGeneration {
     private static long totalUsedMem = 0;
     private static long tickCount = 0;
 
-    private PairwiseTesting() {
+    private NTDPairwiseTesting() {
     }
 
     public static TestResult runFullPairwise(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
@@ -149,6 +142,7 @@ public class PairwiseTesting extends TestGeneration {
             Path newPath = (new FindPath(cfgBeginNode, uncoveredNode, cfgEndNode)).getPath();
 
             SymbolicExecution solution = new SymbolicExecution(newPath, parameters);
+            solution.execute();
 
             if (solution.getModel() == null) {
                 isTestedSuccessfully = false;
@@ -181,58 +175,6 @@ public class PairwiseTesting extends TestGeneration {
         testResult.setFullCoverage(calculateFullTestSuiteCoverage());
 
         return testResult;
-    }
-
-    private static List<MarkedStatement> getMarkedStatement() {
-        List<MarkedStatement> result = new ArrayList<>();
-
-        String markedData = getDataFromFile(FilePath.concreteExecuteResultPath);
-        String[] markedStatements = markedData.split("---end---");
-        for (int i = 0; i < markedStatements.length; i++) {
-            String[] markedStatementData = markedStatements[i].split("===");
-            String statement = markedStatementData[0];
-            boolean isTrueConditionalStatement = Boolean.parseBoolean(markedStatementData[1]);
-            boolean isFalseConditionalStatement = Boolean.parseBoolean(markedStatementData[2]);
-            result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement));
-        }
-        return result;
-    }
-
-    private static void writeDataToFile(String data, String path, boolean append) {
-        try {
-            FileWriter writer = new FileWriter(path, append);
-            writer.write(data);
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static String getDataFromFile(String path) {
-        StringBuilder result = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line;
-            if ((line = br.readLine()) != null) {
-                result.append(line);
-            }
-            while ((line = br.readLine()) != null) {
-                result.append("\n").append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result.toString();
-    }
-
-    private static CfgNode findUncoverNode(CfgNode cfgNode, Coverage coverage) {
-        switch (coverage) {
-            case STATEMENT:
-                return MarkedPath.findUncoveredStatement(cfgNode);
-            case BRANCH:
-                return MarkedPath.findUncoveredBranch(cfgNode);
-            default:
-                throw new RuntimeException("Invalid coverage type");
-        }
     }
 
     private static void setup(String path, String className, String methodName) throws IOException {
@@ -317,17 +259,6 @@ public class PairwiseTesting extends TestGeneration {
         block.setAfterStatementNode(cfgEndNode);
 
         ASTHelper.generateCFG(block, compilationUnit, firstLine, getCoverageType(coverage));
-    }
-
-    private static ASTHelper.Coverage getCoverageType(Coverage coverage) {
-        switch (coverage) {
-            case STATEMENT:
-                return ASTHelper.Coverage.STATEMENT;
-            case BRANCH:
-                return ASTHelper.Coverage.BRANCH;
-            default:
-                throw new RuntimeException("Invalid coverage");
-        }
     }
 
     private static String getTotalFunctionCoverageVariableName(MethodDeclaration methodDeclaration, Coverage coverage) {

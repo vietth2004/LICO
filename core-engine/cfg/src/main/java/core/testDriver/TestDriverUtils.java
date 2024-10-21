@@ -4,6 +4,7 @@ import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.symbolicExecution.MemoryModel;
 import core.variable.Variable;
+import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
 import org.eclipse.jdt.core.dom.*;
 
 import java.lang.reflect.Array;
@@ -128,6 +129,31 @@ public final class TestDriverUtils {
                 return void.class;
             default:
                 throw new RuntimeException("Unsupported primitive type: " + primitiveTypeStr);
+        }
+    }
+
+    public static PrimitiveType.Code getPrimitiveCode(Class<?> typeClass) {
+        switch (typeClass.getName()) {
+            case "int":
+                return PrimitiveType.INT;
+            case "boolean":
+                return PrimitiveType.BOOLEAN;
+            case "byte":
+                return PrimitiveType.BYTE;
+            case "short":
+                return PrimitiveType.SHORT;
+            case "char":
+                return PrimitiveType.CHAR;
+            case "long":
+                return PrimitiveType.LONG;
+            case "float":
+                return PrimitiveType.FLOAT;
+            case "double":
+                return PrimitiveType.DOUBLE;
+            case "void":
+                return PrimitiveType.VOID;
+            default:
+                throw new RuntimeException("Unsupported primitive type: " + typeClass);
         }
     }
 

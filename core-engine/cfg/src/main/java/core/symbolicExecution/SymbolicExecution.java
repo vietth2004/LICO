@@ -15,6 +15,7 @@ import core.variable.PrimitiveTypeVariable;
 import core.variable.Variable;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.PrefixExpression;
+import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import java.io.File;
@@ -35,10 +36,10 @@ public final class SymbolicExecution {
     public SymbolicExecution(Path testPath, List<ASTNode> parameters) {
         this.testPath = testPath;
         this.parameters = parameters;
-        execute();
+//        execute();
     }
 
-    private void execute() {
+    public List<Z3VariableWrapper> execute() {
         memoryModel = new MemoryModel();
         Z3Vars = new ArrayList<>();
 
@@ -87,6 +88,7 @@ public final class SymbolicExecution {
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
         evaluateAndSaveTestDataCreated();
+        return Z3Vars;
     }
 
     private void createZ3ParameterVariable(ASTNode parameter, Context ctx) {
@@ -153,16 +155,26 @@ public final class SymbolicExecution {
 
                     Expr evaluateResult = model.evaluate(primitiveVar, false);
 
+                    String name = primitiveVar.toString();
+
                     if (evaluateResult instanceof IntNum) {
                         result.append(evaluateResult);
+
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
                     } else if (evaluateResult instanceof IntExpr) {
                         result.append("1");
+
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
                     } else if (evaluateResult instanceof RatNum) {
                         RatNum ratNum = (RatNum) evaluateResult;
                         double value = (ratNum.getNumerator().getInt() * 1.0) / ratNum.getDenominator().getInt();
                         result.append(value);
+
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
                     } else if (evaluateResult instanceof RealExpr) {
                         result.append("1.0");
+
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
                     } else if (evaluateResult instanceof BoolExpr) {
                         BoolExpr boolExpr = (BoolExpr) evaluateResult;
                         if (!boolExpr.toString().equals("false") && !boolExpr.toString().equals("true")) {
@@ -170,7 +182,11 @@ public final class SymbolicExecution {
                         } else {
                             result.append(boolExpr);
                         }
+
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.BOOLEAN));
                     }
+
+
                 } else {
                     ArrayTypeVariable arrayTypeVariable = z3VariableWrapper.getArrayVar();
                     result.append(arrayTypeVariable.getConstraints());
@@ -181,8 +197,16 @@ public final class SymbolicExecution {
                 }
             }
 
+
+
             writeDataToFile(result.toString());
         }
+    }
+
+    private String generateAdditionalInformationForStubVariable(int iterate, String name, PrimitiveType.Code type) {
+        if (iterate >= parameters.size()){
+            return " " + type + " " + name;
+        } else return "";
     }
 
     public static Object[] getEvaluatedTestData(Class<?>[] parameterClasses) {
@@ -240,6 +264,13 @@ public final class SymbolicExecution {
                 // Specific element constraints!!!
             }
         }
+
+//        String stub = scanner.nextLine();
+//        String stub1 = scanner.nextLine();
+
+//        String stub = scanner.next();
+//        String stub1 = scanner.next();
+//        String stub2 = scanner.next();
 
         return result;
     }

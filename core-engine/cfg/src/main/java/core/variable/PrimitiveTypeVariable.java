@@ -6,11 +6,17 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.Type;
 
 public class PrimitiveTypeVariable extends Variable {
-//    private PrimitiveType.Code code;
+    private PrimitiveType.Code code;
     private PrimitiveType primitiveType;
 
     public PrimitiveTypeVariable(PrimitiveType primitiveType, String name) {
 //        this.code = type.getPrimitiveTypeCode();
+        this.primitiveType = primitiveType;
+        super.setName(name);
+    }
+
+    public PrimitiveTypeVariable(PrimitiveType.Code code, String name) {
+        this.code = code;
         this.primitiveType = primitiveType;
         super.setName(name);
     }
@@ -36,7 +42,8 @@ public class PrimitiveTypeVariable extends Variable {
     }
 
     public PrimitiveType.Code getCode() {
-        return primitiveType.getPrimitiveTypeCode();
+        if (code == null) return primitiveType.getPrimitiveTypeCode();
+        else return code;
     }
 
     @Override

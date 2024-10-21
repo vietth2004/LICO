@@ -19,23 +19,27 @@ writer.close();
 e.printStackTrace();
 }
 }
-public static boolean test(int a, int b)
+public static int methodInvocation(int x, int y)
 {
-if (((a > 2 && b < 5 || a > 18) && mark("a > 2 && b < 5 || a > 18", true, false)) || mark("a > 2 && b < 5 || a > 18", false, true))
+if (((Math.max(x,y) == y) && mark("Math.max(x,y) == y", true, false)) || mark("Math.max(x,y) == y", false, true))
 {
 {
-mark("return true;\n", false, false);
-return true;
+mark("return 1;\n", false, false);
+return 1;
 }
 }
-mark("return false;\n", false, false);
-return false;
+else {
+{
+mark("return 3;\n", false, false);
+return 3;
+}
+}
 }
 
 public static void main(String[] args) {
 writeDataToFile("", "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", false);
 long startRunTestTime = System.nanoTime();
-Object output = test(8, 8);
+Object output = methodInvocation(1, 0);
 long endRunTestTime = System.nanoTime();
 double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 writeDataToFile(runTestDuration + "===" + output, "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", true);

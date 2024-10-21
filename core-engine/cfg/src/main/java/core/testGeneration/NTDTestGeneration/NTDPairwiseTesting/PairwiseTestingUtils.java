@@ -1,4 +1,4 @@
-package core.testGeneration.PairwiseTesting;
+package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
 import core.testResult.result.autoTestResult.ParameterData;
 import core.testResult.result.autoTestResult.TestData;

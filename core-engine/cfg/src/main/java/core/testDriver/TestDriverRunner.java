@@ -29,7 +29,7 @@ public final class TestDriverRunner {
     private static List<MarkedStatement> getMarkedStatement() {
         List<MarkedStatement> result = new ArrayList<>();
 
-        String markedData = getDataFromFile("core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt");
+        String markedData = getDataFromFile(FilePath.concreteExecuteResultPath);
         String[] markedStatements = markedData.split("---end---");
         for (int i = 0; i < markedStatements.length; i++) {
             String[] markedStatementData = markedStatements[i].split("===");

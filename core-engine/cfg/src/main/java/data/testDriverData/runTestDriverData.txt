@@ -1,2 +1,2 @@
-Math.max(x,y) == y===true===false---end---return 1;
-===false===false---end---
+Math.max(x,y) == y===false===true---end---return 3;
+===false===false---end---0.2902===3

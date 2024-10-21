@@ -1,4 +1,4 @@
-package core.testGeneration.PairwiseTesting;
+package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
 public class Pair {
     private Object value1;
