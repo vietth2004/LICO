@@ -1,7 +1,0 @@
-<<<<<<< HEAD
-Math.max(x,y) == y===false===true---end---return 3;
-===false===false---end---0.2902===3
-=======
-minimum(x,y,10) == y===false===true---end---minimum(x,3,4) == x===false===true---end---return 3;
-===false===false---end---
->>>>>>> dbe98ddb04dfd75c61b3f65e751934f140cd6c45
