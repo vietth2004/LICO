@@ -224,7 +224,11 @@ return result;
 
 public static final int intfactorialintnTotalStatement = 8;
 public static final int intfactorialintnTotalBranch = 4;
+<<<<<<< HEAD
 public static int minimum(int a,int b,int c){
+=======
+private static int minimum(int a,int b,int c){
+>>>>>>> dbe98ddb04dfd75c61b3f65e751934f140cd6c45
   if (a < b && a < c) {
     return a;
   }
@@ -235,7 +239,11 @@ public static int minimum(int a,int b,int c){
     return c;
   }
 }
+<<<<<<< HEAD
 public static int minimum_clone(int a, int b, int c)
+=======
+private static int minimum_clone(int a, int b, int c)
+>>>>>>> dbe98ddb04dfd75c61b3f65e751934f140cd6c45
 {
 if (((a < b && a < c) && mark("a < b && a < c", true, false)) || mark("a < b && a < c", false, true))
 {

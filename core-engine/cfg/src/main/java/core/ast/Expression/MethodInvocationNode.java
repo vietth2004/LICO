@@ -10,10 +10,12 @@ import org.eclipse.jdt.core.dom.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MethodInvocationNode extends ExpressionNode {
     private static int numberOfFunctionsCall = 1;
+
 
     public static AstNode executeMethodInvocation(MethodInvocation methodInvocation, MemoryModel memoryModel) {
         String methodName = methodInvocation.getName().toString();

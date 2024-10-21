@@ -227,7 +227,8 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
         parameters = ((MethodDeclaration) testFunc).parameters();
         parameterClasses = TestDriverUtils.getParameterClasses(parameters);
         parameterNames = TestDriverUtils.getParameterNames(parameters);
-        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName, parameterClasses);
+        String methodNameClone = methodName + "_clone";
+        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodNameClone, parameterClasses);
     }
 
     private static void setupFullyClonedClassName(String className) {
