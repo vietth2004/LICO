@@ -1,10 +1,40 @@
 package core.testDriver;
 
 import core.parser.ASTHelper;
+import core.symbolicExecution.SymbolicExecution;
 import org.eclipse.jdt.core.dom.*;
+
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public final class TestDriverGenerator {
+
+    private static String markMethodUtility =
+            "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition) {\n" +
+                    "StringBuilder markResult = new StringBuilder();\n" +
+                    "markResult.append(statement).append(\"===\");\n" +
+                    "markResult.append(isTrueCondition).append(\"===\");\n" +
+                    "markResult.append(isFalseCondition).append(\"---end---\");\n" +
+                    "writeDataToFile(markResult.toString(), \"core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt\", true);\n" +
+                    "if (!isTrueCondition && !isFalseCondition) return true;\n" +
+                    "return !isFalseCondition;\n" +
+                    "}\n";
+
+    private static String writeDataToFileUtility =
+            "private static void writeDataToFile(String data, String path, boolean append) {\n" +
+                    "try {\n" +
+                    "FileWriter writer = new FileWriter(path, append);\n" +
+                    "writer.write(data);\n" +
+                    "writer.close();\n" +
+                    "} catch(Exception e) {\n" +
+                    "e.printStackTrace();\n" +
+                    "}\n" +
+                    "}\n";
+
+    private static Queue<String> stubVariableNames = new LinkedList<>();
+    private static Queue<String> stubVariablesOrigins = new LinkedList<>();
+
     private TestDriverGenerator() {
     }
 
@@ -15,6 +45,22 @@ public final class TestDriverGenerator {
 
         result.append("public class TestDriver {\n");
         result.append(generateUtilities(method, coverage));
+        result.append(generateTestRunner(method.getName().toString(), testData));
+        result.append("}");
+
+        return result.toString();
+    }
+
+    public static String generateTestDriver(MethodDeclaration method, Object[] testData, List<String> stubVariableDeclarations, ASTHelper.Coverage coverage) {
+        StringBuilder result = new StringBuilder();
+
+        result.append(generatePreSetup());
+
+        stubVariablesOrigins = new LinkedList<>(SymbolicExecution.getStubVariablesOrigins());
+        stubVariableNames = new LinkedList<>(SymbolicExecution.getStubVariableNames());
+
+        result.append("public class TestDriver {\n");
+        result.append(generateUtilities(method, stubVariableDeclarations, coverage));
         result.append(generateTestRunner(method.getName().toString(), testData));
         result.append("}");
 
@@ -34,13 +80,13 @@ public final class TestDriverGenerator {
         result.append("writeDataToFile(\"\", \"core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt\", false);\n");
         result.append("long startRunTestTime = System.nanoTime();\n");
         result.append("Object output = ").append(methodName).append("(");
-        for(int i = 0; i < testData.length; i++) {
-            if(testData[i] instanceof Character) {
+        for (int i = 0; i < testData.length; i++) {
+            if (testData[i] instanceof Character) {
                 result.append("'").append(testData[i]).append("'");
             } else {
                 result.append(testData[i]);
             }
-            if(i != testData.length - 1) result.append(", ");
+            if (i != testData.length - 1) result.append(", ");
         }
         result.append(");\n");
         result.append("long endRunTestTime = System.nanoTime();\n");
@@ -50,39 +96,55 @@ public final class TestDriverGenerator {
         return result.toString();
     }
 
+    private static String generateUtilities(MethodDeclaration method, List<String> stubVariableDeclarations, ASTHelper.Coverage coverage) {
+        StringBuilder result = new StringBuilder();
+
+        // Generate mark method
+        result.append(markMethodUtility);
+
+        // Generate writeDataToFile method
+        result.append(writeDataToFileUtility);
+
+        // Generate testing method with instruments
+        result.append(createCloneMethod(method, stubVariableDeclarations, coverage));
+
+        return result.toString();
+    }
+
     private static String generateUtilities(MethodDeclaration method, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
         // Generate mark method
-        result.append(
-                "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition) {\n" +
-                        "StringBuilder markResult = new StringBuilder();\n" +
-                        "markResult.append(statement).append(\"===\");\n" +
-                        "markResult.append(isTrueCondition).append(\"===\");\n" +
-                        "markResult.append(isFalseCondition).append(\"---end---\");\n" +
-                        "writeDataToFile(markResult.toString(), \"core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt\", true);\n" +
-                        "if (!isTrueCondition && !isFalseCondition) return true;\n" +
-                        "return !isFalseCondition;\n" +
-                        "}\n"
-        );
+        result.append(markMethodUtility);
 
         // Generate writeDataToFile method
-        result.append(
-                "private static void writeDataToFile(String data, String path, boolean append) {\n" +
-                        "try {\n" +
-                        "FileWriter writer = new FileWriter(path, append);\n" +
-                        "writer.write(data);\n" +
-                        "writer.close();\n" +
-                        "} catch(Exception e) {\n" +
-                        "e.printStackTrace();\n" +
-                        "}\n" +
-                        "}\n"
-        );
+        result.append(writeDataToFileUtility);
 
         // Generate testing method with instruments
         result.append(createCloneMethod(method, coverage));
 
         return result.toString();
+    }
+
+    private static String createCloneMethod(MethodDeclaration method, List<String> stubVariableDeclarations, ASTHelper.Coverage coverage) {
+        StringBuilder cloneMethod = new StringBuilder();
+
+        cloneMethod.append("public static ").append(method.getReturnType2()).append(" ").append(method.getName()).append("(");
+        List<ASTNode> parameters = method.parameters();
+        for (int i = 0; i < parameters.size(); i++) {
+            cloneMethod.append(parameters.get(i));
+            if (i != parameters.size() - 1) cloneMethod.append(", ");
+        }
+
+        for (String stubVariableDeclaration : stubVariableDeclarations) {
+            cloneMethod.append(", ");
+            cloneMethod.append(stubVariableDeclaration);
+        }
+        cloneMethod.append(")\n");
+
+        cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)).append("\n");
+
+        return cloneMethod.toString();
     }
 
     private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
@@ -162,7 +224,7 @@ public final class TestDriverGenerator {
         }
         result.append("for (");
         for (int i = 0; i < initializers.size(); i++) {
-            result.append(initializers.get(i));
+            result.append(replaceMethodInvocationWithStubVar(initializers.get(i)));
             if (i != initializers.size() - 1) result.append(", ");
         }
 
@@ -220,9 +282,23 @@ public final class TestDriverGenerator {
         StringBuilder result = new StringBuilder();
 
         result.append(generateCodeForMarkMethod(statement, markMethodSeparator));
-        result.append(statement);
+        result.append(replaceMethodInvocationWithStubVar(statement));
 
         return result.toString();
+    }
+
+    private static String replaceMethodInvocationWithStubVar(ASTNode statement) {
+        if (!stubVariablesOrigins.isEmpty() && !stubVariableNames.isEmpty()) {
+            String replacement = statement.toString().replace(
+                    stubVariablesOrigins.peek(),
+                    stubVariableNames.peek()
+            );
+            if (!replacement.equals(statement.toString())) {
+                stubVariablesOrigins.poll();
+                stubVariableNames.poll();
+            }
+            return replacement;
+        } else return statement.toString();
     }
 
     private static String generateCodeForMarkMethod(ASTNode statement, String markMethodSeparator) {
@@ -256,9 +332,9 @@ public final class TestDriverGenerator {
     }
 
     private static String generateCodeForCondition(Expression condition, ASTHelper.Coverage coverage) {
-        if(coverage == ASTHelper.Coverage.MCDC) {
+        if (coverage == ASTHelper.Coverage.MCDC) {
             return generateCodeForConditionForMCDCCoverage(condition);
-        } else if(coverage == ASTHelper.Coverage.BRANCH || coverage == ASTHelper.Coverage.STATEMENT) {
+        } else if (coverage == ASTHelper.Coverage.BRANCH || coverage == ASTHelper.Coverage.STATEMENT) {
             return generateCodeForConditionForBranchAndStatementCoverage(condition);
         } else {
             throw new RuntimeException("Invalid coverage!");
@@ -266,7 +342,8 @@ public final class TestDriverGenerator {
     }
 
     private static String generateCodeForConditionForBranchAndStatementCoverage(Expression condition) {
-        return "((" + condition + ") && mark(\"" + condition + "\", true, false))" +
+        String tmpCondition = replaceMethodInvocationWithStubVar(condition);
+        return "((" + tmpCondition + ") && mark(\"" + condition + "\", true, false))" +
                 " || mark(\"" + condition + "\", false, true)";
     }
 
@@ -285,8 +362,7 @@ public final class TestDriverGenerator {
                 result.append("(").append(generateCodeForConditionForMCDCCoverage((Expression) operand)).append(")");
             }
         } else {
-            result.append("((").append(condition).append(") && mark(\"").append(condition).append("\", true, false))");
-            result.append(" || mark(\"").append(condition).append("\", false, true)");
+            result.append(generateCodeForConditionForBranchAndStatementCoverage(condition));
         }
 
         return result.toString();

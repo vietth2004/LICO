@@ -4,22 +4,24 @@ import core.ast.AstNode;
 import core.ast.Expression.Name.SimpleNameNode;
 import core.ast.VariableDeclaration.SingleVariableDeclarationNode;
 import core.symbolicExecution.MemoryModel;
+import core.symbolicExecution.SymbolicExecution;
 import core.testDriver.TestDriverUtils;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 public class MethodInvocationNode extends ExpressionNode {
-    private static HashMap<String, Integer> functionMap = new HashMap<>();
-
-
+    private static int numberOfFunctionsCall = 1;
 
     public static AstNode executeMethodInvocation(MethodInvocation methodInvocation, MemoryModel memoryModel) {
         String methodName = methodInvocation.getName().toString();
+
+        SymbolicExecution.addToStubVariablesOrigins(methodInvocation.toString());
 
         if (methodInvocation.getExpression() == null) { // method invocation in the same class
             MethodDeclaration methodDeclaration = getInvokedMethodAST(methodName);
@@ -47,6 +49,7 @@ public class MethodInvocationNode extends ExpressionNode {
         for (ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
             ImportDeclaration importDeclaration = (ImportDeclaration) iImport;
             String importName = importDeclaration.getName().toString();
+
             if (importName.contains(optionalExpression)) {
                 Class<?>[] classes = TestDriverUtils.getVariableClasses(methodInvocation.arguments(), memoryModel);
                 try {
@@ -57,7 +60,6 @@ public class MethodInvocationNode extends ExpressionNode {
                 }
             }
         }
-
 
         Class<?>[] classes = TestDriverUtils.getVariableClasses(methodInvocation.arguments(), memoryModel);
         try {
@@ -71,10 +73,9 @@ public class MethodInvocationNode extends ExpressionNode {
 
     private static AstNode declareStubVariable(String methodName, MethodDeclaration methodDeclaration, MemoryModel memoryModel) {
         Type funcReturnType = methodDeclaration.getReturnType2();
-        int numberOfCalls = functionMap.getOrDefault(methodName, 0) + 1;
-        functionMap.put(methodName, numberOfCalls);
-        String stubName = methodName + "_call_" + numberOfCalls;
-
+        String stubName = methodName + "_call_" + numberOfFunctionsCall;
+        SymbolicExecution.addToStubVariableNames(stubName);
+        numberOfFunctionsCall++;
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
         if (funcReturnType instanceof PrimitiveType) {
@@ -93,6 +94,7 @@ public class MethodInvocationNode extends ExpressionNode {
     private static AstNode declareStubVariable(String methodName, Class<?> invokedMethodReturnClass, MemoryModel memoryModel) {
         String stubName = methodName + "_call_" + numberOfFunctionsCall;
         numberOfFunctionsCall++;
+        SymbolicExecution.addToStubVariableNames(stubName);
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
         if (invokedMethodReturnClass.isPrimitive()) {
@@ -108,5 +110,9 @@ public class MethodInvocationNode extends ExpressionNode {
         } else { // OTHER TYPES
             throw new RuntimeException("Invalid type");
         }
+    }
+
+    public static void resetNumberOfFunctionsCall() {
+        MethodInvocationNode.numberOfFunctionsCall = 1;
     }
 }

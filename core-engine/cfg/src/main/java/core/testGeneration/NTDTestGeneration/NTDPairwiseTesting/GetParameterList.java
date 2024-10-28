@@ -24,7 +24,7 @@ public class GetParameterList {
 
             if (solution.getModel() == null) continue;
 
-            Object[] evaluatedValues = SymbolicExecution.getEvaluatedTestData(parameterClasses);
+            Object[] evaluatedValues = solution.getEvaluatedTestData(parameterClasses);
             for (int i = 0; i < result.size(); i++) {
                 result.get(i).addDistinctValue(evaluatedValues[i]);
             }

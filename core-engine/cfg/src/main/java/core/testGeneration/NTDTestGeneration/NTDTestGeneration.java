@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NTDTestGeneration extends TestGeneration {
+public abstract class NTDTestGeneration extends TestGeneration {
     protected static String simpleClassName;
     protected static String fullyClonedClassName;
     protected static Method method;

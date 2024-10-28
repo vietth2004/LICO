@@ -149,7 +149,7 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
                 break;
             }
 
-            evaluatedValues = SymbolicExecution.getEvaluatedTestData(parameterClasses);
+            evaluatedValues = solution.getEvaluatedTestData(parameterClasses);
 
             writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 

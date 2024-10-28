@@ -21,6 +21,7 @@ public class CfgNode
     private boolean isFalseNode = false; //Nut false cua cau lenh dieu kien
     private String content = "";
     private boolean isMarked = false;
+    private boolean isFakeMarked = false;
     private ASTNode ast;
     private CfgNode parent;
     private List<CfgNode> children = new ArrayList<>();
@@ -312,5 +313,13 @@ public class CfgNode
 
     public void setMarked(boolean marked) {
         isMarked = marked;
+    }
+
+    public boolean isFakeMarked() {
+        return isFakeMarked;
+    }
+
+    public void setFakeMarked(boolean fakeMarked) {
+        isFakeMarked = fakeMarked;
     }
 }

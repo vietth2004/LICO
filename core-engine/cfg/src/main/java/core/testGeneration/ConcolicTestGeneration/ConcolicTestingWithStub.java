@@ -1,6 +1,7 @@
 package core.testGeneration.ConcolicTestGeneration;
 
 import core.Z3Vars.Z3VariableWrapper;
+import core.cfg.CfgBoolExprNode;
 import core.testDriver.TestDriverUtils;
 import core.testGeneration.TestGeneration;
 import core.testResult.coveredStatement.CoveredStatement;
@@ -19,16 +20,17 @@ import core.parser.ASTHelper;
 import core.parser.ProjectParser;
 import core.testDriver.TestDriverGenerator;
 import core.testDriver.TestDriverRunner;
-import core.uploadProjectUtils.ConcolicUploadUtil;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ConcolicTestingWithStub extends ConcolicTestGeneration {
     private static String simpleClassName;
@@ -72,32 +74,48 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
 
         boolean isTestedSuccessfully = true;
 
-        for (CfgNode uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage); uncoveredNode != null; ) {
+        for (CfgNode uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage); uncoveredNode != null; uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage)) {
+            System.out.println("Uncovered Node: " + uncoveredNode);
 
             Path newPath = (new FindPath(TestGeneration.cfgBeginNode, uncoveredNode, TestGeneration.cfgEndNode)).getPath();
 
             SymbolicExecution solution = new SymbolicExecution(newPath, TestGeneration.parameters);
-            List<Z3VariableWrapper> Z3Vars = solution.execute();
 
-            if (solution.getModel() == null) {
-                isTestedSuccessfully = false;
-                break;
+            try {
+                solution.execute();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                uncoveredNode.setFakeMarked(true); // for STATEMENT coverage
+                if (coverage == Coverage.MCDC || coverage == Coverage.BRANCH) {
+                    CfgNode parent = uncoveredNode.getParent();
+                    if (parent instanceof CfgBoolExprNode) {
+                        CfgBoolExprNode cfgBoolExprNode = (CfgBoolExprNode) parent;
+                        if (cfgBoolExprNode.getTrueNode() == uncoveredNode) {
+                            cfgBoolExprNode.setFakeTrueMarked(true);
+                        } else if (cfgBoolExprNode.getFalseNode() == uncoveredNode) {
+                            cfgBoolExprNode.setFakeFalseMarked(true);
+                        }
+                    }
+                }
+                continue;
             }
 
-            evaluatedValues = SymbolicExecution.getEvaluatedTestData(TestGeneration.parameterClasses);
+            evaluatedValues = solution.getEvaluatedTestData(TestGeneration.parameterClasses);
+            List<String> stubVariableDeclarations = solution.getStubVariablesDeclarations();
 
             TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
-            String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage));
+            String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, stubVariableDeclarations, TestGeneration.getCoverageType(coverage));
             markedStatements = TestDriverRunner.runTestDriver(testDriver);
 
             MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
             coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
 
-            testResult.addToFullTestData(new TestData(TestGeneration.parameterNames, TestGeneration.parameterClasses, evaluatedValues, coveredStatements, TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
+            List<String> testDataNames = new ArrayList<>();
+            testDataNames.addAll(TestGeneration.parameterNames);
+            testDataNames.addAll(SymbolicExecution.getStubVariableNames());
+            testResult.addToFullTestData(new TestData(testDataNames, SymbolicExecution.getStubVariablesTypes().toArray(new Class<?>[0]), evaluatedValues, coveredStatements, TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
-            uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage);
-            System.out.println("Uncovered Node: " + uncoveredNode);
         }
 
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
@@ -128,43 +146,33 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
     }
 
     private static double calculateFullTestSuiteCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-//        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT);
-//        int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-//        int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
-//        return (totalCovered * 100.0) / totalFunctionStatement;
-        return 100;
+        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT)).get(null);
+        int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+        return (totalCovered * 100.0) / totalFunctionStatement;
     }
 
-    private static double calculateRequiredCoverage(TestGeneration.Coverage coverage) {
-//        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage);
-//        int totalFunctionCoverage = 1;
-//        int totalCovered = 0;
-//        if (coverage == TestGeneration.Coverage.STATEMENT) {
-//            totalCovered = MarkedPath.getTotalCoveredStatement();
-//            totalFunctionCoverage = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-//        } else if (coverage == TestGeneration.Coverage.BRANCH) {
-//            totalCovered = MarkedPath.getTotalCoveredBranch();
-//            Map<String, Integer> hashMap = ConcolicUploadUtil.totalBranchesInUnits;
-//            totalFunctionCoverage = hashMap.get(key);
-//        }
-//        return (totalCovered * 100.0) / totalFunctionCoverage;
-
-        return 50;
+    private static double calculateRequiredCoverage(TestGeneration.Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        int totalFunctionCoverage = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage)).get(null);
+        int totalCovered = 0;
+        if (coverage == TestGeneration.Coverage.STATEMENT) {
+            totalCovered = MarkedPath.getTotalCoveredStatement();
+        } else if (coverage == TestGeneration.Coverage.BRANCH || coverage == TestGeneration.Coverage.MCDC) {
+            totalCovered = MarkedPath.getTotalCoveredBranch();
+            System.out.println(totalCovered);
+        }
+        return (totalCovered * 100.0) / totalFunctionCoverage;
     }
 
-    private static double calculateFunctionCoverage() {
-//        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT);
-//        int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-//        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
-//        return (totalCoveredStatement * 100.0) / (totalFunctionStatement * 1.0);
-        return 40;
+    private static double calculateFunctionCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT)).get(null);
+        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
+        return (totalCoveredStatement * 100.0) / (totalFunctionStatement * 1.0);
     }
 
-    private static double calculateSourceCodeCoverage() {
-//        int totalClassStatement = ConcolicUploadUtil.totalStatementsInJavaFile.get(classKey);
-//        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
-//        return (totalCoveredStatement * 100.0) / (totalClassStatement * 1.0);
-        return 8;
+    private static double calculateSourceCodeCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        int totalClassStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalClassCoverageVariableName()).get(null);
+        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
+        return (totalCoveredStatement * 100.0) / (totalClassStatement * 1.0);
     }
 
     private static void setUpTestFunc(String methodName) {
@@ -216,6 +224,37 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
             result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement));
         }
         return result;
+    }
+
+    private static String getTotalClassCoverageVariableName() {
+        StringBuilder result = new StringBuilder();
+        result.append(simpleClassName).append("TotalStatement");
+        return result.toString().replace(" ", "").replace(".", "");
+    }
+
+    protected static String getTotalFunctionCoverageVariableName(MethodDeclaration methodDeclaration, TestGeneration.Coverage coverage) {
+        StringBuilder result = new StringBuilder();
+        result.append(methodDeclaration.getReturnType2());
+        result.append(methodDeclaration.getName());
+        for (int i = 0; i < methodDeclaration.parameters().size(); i++) {
+            result.append(methodDeclaration.parameters().get(i));
+        }
+        if (coverage == TestGeneration.Coverage.STATEMENT) {
+            result.append("TotalStatement");
+        } else if (coverage == TestGeneration.Coverage.BRANCH || coverage == TestGeneration.Coverage.MCDC) {
+            result.append("TotalBranch");
+        } else {
+            throw new RuntimeException("Invalid Coverage");
+        }
+
+        return reformatVariableName(result.toString());
+    }
+
+    private static String reformatVariableName(String name) {
+        return name.replace(" ", "").replace(".", "")
+                .replace("[", "").replace("]", "")
+                .replace("<", "").replace(">", "")
+                .replace(",", "");
     }
 }
 

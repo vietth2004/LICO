@@ -3,7 +3,7 @@ package core.testGeneration.ConcolicTestGeneration;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
-public class ConcolicTestGeneration extends TestGeneration {
+public abstract class ConcolicTestGeneration extends TestGeneration {
     protected static String classKey;
     protected static String getTotalFunctionCoverageVariableName(MethodDeclaration methodDeclaration, TestGeneration.Coverage coverage) {
         StringBuilder result = new StringBuilder(classKey);

@@ -32,8 +32,16 @@ public final class SymbolicExecution {
 
     private Path testPath;
     private List<ASTNode> parameters;
+    private List<String> stubVariablesDeclarations = new ArrayList<>();
+
+    private static Queue<String> stubVariableNames = new LinkedList<>();
+    private static Queue<String> stubVariablesOrigins = new LinkedList<>();
+    private static List<Class<?>> stubVariablesTypes = new ArrayList<>();
 
     public SymbolicExecution(Path testPath, List<ASTNode> parameters) {
+        stubVariablesOrigins = new LinkedList<>();
+        stubVariableNames = new LinkedList<>();
+        stubVariablesTypes = new ArrayList<>();
         this.testPath = testPath;
         this.parameters = parameters;
 //        execute();
@@ -42,6 +50,7 @@ public final class SymbolicExecution {
     public List<Z3VariableWrapper> execute() {
         memoryModel = new MemoryModel();
         Z3Vars = new ArrayList<>();
+        MethodInvocationNode.resetNumberOfFunctionsCall();
 
         HashMap<String, String> cfg = new HashMap();
         cfg.put("model", "true");
@@ -158,32 +167,32 @@ public final class SymbolicExecution {
                     String name = primitiveVar.toString();
 
                     if (evaluateResult instanceof IntNum) {
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
+
                         result.append(evaluateResult);
-
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
                     } else if (evaluateResult instanceof IntExpr) {
-                        result.append("1");
-
                         result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
+
+                        result.append("1");
                     } else if (evaluateResult instanceof RatNum) {
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
+
                         RatNum ratNum = (RatNum) evaluateResult;
                         double value = (ratNum.getNumerator().getInt() * 1.0) / ratNum.getDenominator().getInt();
                         result.append(value);
-
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
                     } else if (evaluateResult instanceof RealExpr) {
-                        result.append("1.0");
-
                         result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
+
+                        result.append("1.0");
                     } else if (evaluateResult instanceof BoolExpr) {
+                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.BOOLEAN));
+
                         BoolExpr boolExpr = (BoolExpr) evaluateResult;
                         if (!boolExpr.toString().equals("false") && !boolExpr.toString().equals("true")) {
                             result.append("false");
                         } else {
                             result.append(boolExpr);
                         }
-
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.BOOLEAN));
                     }
 
 
@@ -197,20 +206,18 @@ public final class SymbolicExecution {
                 }
             }
 
-
-
             writeDataToFile(result.toString());
         }
     }
 
     private String generateAdditionalInformationForStubVariable(int iterate, String name, PrimitiveType.Code type) {
         if (iterate >= parameters.size()){
-            return " " + type + " " + name;
+            return type + " " + name + " ";
         } else return "";
     }
 
-    public static Object[] getEvaluatedTestData(Class<?>[] parameterClasses) {
-        Object[] result = new Object[parameterClasses.length];
+    public Object[] getEvaluatedTestData(Class<?>[] parameterClasses) {
+        List<Object> result = new ArrayList<>();
         Scanner scanner;
         try {
             scanner = new Scanner(new File(FilePath.generatedTestDataPath));
@@ -219,38 +226,19 @@ public final class SymbolicExecution {
         }
 
         for (int i = 0; i < parameterClasses.length; i++) {
-            if (!scanner.hasNext()) {
-                result[i] = createRandomVariableData(parameterClasses[i]);
-                continue;
-            }
+//            if (!scanner.hasNext()) {
+//                result[i] = createRandomVariableData(parameterClasses[i]);
+//                continue;
+//            }
 
             Class<?> parameterClass = parameterClasses[i];
 
             if (parameterClass.isPrimitive()) {
 
-                String className = parameterClasses[i].getName();
+                String type = parameterClasses[i].getName();
 
-                if ("int".equals(className)) {
-                    result[i] = scanner.nextInt();
-                } else if ("boolean".equals(className)) {
-                    result[i] = scanner.nextBoolean();
-                } else if ("byte".equals(className)) {
-                    result[i] = scanner.nextByte();
-                } else if ("short".equals(className)) {
-                    result[i] = scanner.nextShort();
-                } else if ("char".equals(className)) {
-                    result[i] = (char) scanner.nextInt();
-                } else if ("long".equals(className)) {
-                    result[i] = scanner.nextLong();
-                } else if ("float".equals(className)) {
-                    result[i] = scanner.nextFloat();
-                } else if ("double".equals(className)) {
-                    result[i] = scanner.nextDouble();
-                } else if ("void".equals(className)) {
-                    result[i] = null;
-                } else {
-                    throw new RuntimeException("Unsupported type: " + className);
-                }
+                result.add(scanValue(scanner, type));
+
             } else if (parameterClass.isArray()) {
                 String constraint = scanner.nextLine();
                 String[] constraints = constraint.split(" ");
@@ -259,20 +247,55 @@ public final class SymbolicExecution {
                 for (int j = 0; j < numberOfDimensions; j++) {
                     dimensions[j] = Integer.parseInt(constraints[j + 1]);
                 }
-                result[i] = Array.newInstance(parameterClass.getComponentType(), dimensions);
+                result.add(Array.newInstance(parameterClass.getComponentType(), dimensions));
 
                 // Specific element constraints!!!
             }
         }
 
-//        String stub = scanner.nextLine();
-//        String stub1 = scanner.nextLine();
+        while (scanner.hasNext()) {
+            String type = scanner.next();
+            String name = scanner.next();
 
-//        String stub = scanner.next();
-//        String stub1 = scanner.next();
-//        String stub2 = scanner.next();
+            stubVariablesDeclarations.add(type + " " + name);
 
-        return result;
+            result.add(scanValue(scanner, type));
+        }
+
+        return result.toArray();
+    }
+
+    private Object scanValue(Scanner scanner, String type) {
+        if ("int".equals(type)) {
+            stubVariablesTypes.add(int.class);
+            return scanner.nextInt();
+        } else if ("boolean".equals(type)) {
+            stubVariablesTypes.add(boolean.class);
+            return scanner.nextBoolean();
+        } else if ("byte".equals(type)) {
+            stubVariablesTypes.add(byte.class);
+            return scanner.nextByte();
+        } else if ("short".equals(type)) {
+            stubVariablesTypes.add(short.class);
+            return scanner.nextShort();
+        } else if ("char".equals(type)) {
+            stubVariablesTypes.add(char.class);
+            return (char) scanner.nextInt();
+        } else if ("long".equals(type)) {
+            stubVariablesTypes.add(long.class);
+            return scanner.nextLong();
+        } else if ("float".equals(type)) {
+            stubVariablesTypes.add(float.class);
+            return scanner.nextFloat();
+        } else if ("double".equals(type)) {
+            stubVariablesTypes.add(double.class);
+            return scanner.nextDouble();
+        } else if ("void".equals(type)) {
+            stubVariablesTypes.add(void.class);
+            return null;
+        } else {
+            throw new RuntimeException("Unsupported type: " + type);
+        }
     }
 
     public static Object[] createRandomTestData(Class<?>[] parameterClasses) {
@@ -351,5 +374,30 @@ public final class SymbolicExecution {
 
     public Model getModel() {
         return model;
+    }
+
+
+    public List<String> getStubVariablesDeclarations() {
+        return stubVariablesDeclarations;
+    }
+
+    public static Queue<String> getStubVariablesOrigins() {
+        return stubVariablesOrigins;
+    }
+
+    public static void addToStubVariablesOrigins(String stubVariablesOrigin) {
+        SymbolicExecution.stubVariablesOrigins.add(stubVariablesOrigin);
+    }
+
+    public static Queue<String> getStubVariableNames() {
+        return stubVariableNames;
+    }
+
+    public static void addToStubVariableNames(String stubVariableName) {
+        SymbolicExecution.stubVariableNames.add(stubVariableName);
+    }
+
+    public static List<Class<?>> getStubVariablesTypes() {
+        return stubVariablesTypes;
     }
 }

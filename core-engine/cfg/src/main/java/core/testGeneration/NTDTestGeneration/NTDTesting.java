@@ -73,7 +73,7 @@ public class NTDTesting extends NTDTestGeneration {
                 break;
             }
 
-            evaluatedValues = SymbolicExecution.getEvaluatedTestData(TestGeneration.parameterClasses);
+            evaluatedValues = solution.getEvaluatedTestData(TestGeneration.parameterClasses);
 
             TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
