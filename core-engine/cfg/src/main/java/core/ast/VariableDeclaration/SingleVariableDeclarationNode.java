@@ -73,4 +73,8 @@ public class SingleVariableDeclarationNode extends VariableDeclarationNode {
             throw new RuntimeException("Iterate dimension out of bound!");
         }
     }
+
+    public static void replaceMethodInvocationWithStub(SingleVariableDeclaration originSingleVariableDeclaration, MethodInvocation originMethodInvocation, ASTNode replacement) {
+
+    }
 }

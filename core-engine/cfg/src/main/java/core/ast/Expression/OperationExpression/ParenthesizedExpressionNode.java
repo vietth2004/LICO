@@ -6,12 +6,18 @@ import core.Z3Vars.Z3VariableWrapper;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.symbolicExecution.MemoryModel;
-import org.eclipse.jdt.core.dom.ParenthesizedExpression;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
 
 public class ParenthesizedExpressionNode extends OperationExpressionNode {
     private ExpressionNode expression;
+
+    public static void replaceMethodInvocationWithStub(ParenthesizedExpression originParenthesizedExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
+        Expression expression = originParenthesizedExpression.getExpression();
+        if (expression == originMethodInvocation)
+            originParenthesizedExpression.setExpression((Expression) replacement);
+    }
 
     public static Expr createZ3Expression(ParenthesizedExpressionNode parenthesizedExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode operand = parenthesizedExpressionNode.expression;

@@ -11,24 +11,25 @@ import org.eclipse.jdt.core.dom.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 public class MethodInvocationNode extends ExpressionNode {
     private static int numberOfFunctionsCall = 1;
+    private static AST ast;
 
     public static AstNode executeMethodInvocation(MethodInvocation methodInvocation, MemoryModel memoryModel) {
+        ast = methodInvocation.getAST();
+
         String methodName = methodInvocation.getName().toString();
 
         SymbolicExecution.addToStubVariablesOrigins(methodInvocation.toString());
 
         if (methodInvocation.getExpression() == null) { // method invocation in the same class
             MethodDeclaration methodDeclaration = getInvokedMethodAST(methodName);
-            return declareStubVariable(methodName, methodDeclaration, memoryModel);
+            return declareStubVariable(methodName, methodDeclaration, memoryModel, methodInvocation);
         } else { // method invocation outside the class or in libs
             Class<?> invokedMethodReturnClass = getInvokedMethodReturnClass(methodInvocation, memoryModel);
-            return declareStubVariable(methodName, invokedMethodReturnClass, memoryModel);
+            return declareStubVariable(methodName, invokedMethodReturnClass, memoryModel, methodInvocation);
         }
     }
 
@@ -71,34 +72,42 @@ public class MethodInvocationNode extends ExpressionNode {
     }
 
 
-    private static AstNode declareStubVariable(String methodName, MethodDeclaration methodDeclaration, MemoryModel memoryModel) {
+    private static AstNode declareStubVariable(String methodName, MethodDeclaration methodDeclaration, MemoryModel memoryModel, MethodInvocation methodInvocation) {
         Type funcReturnType = methodDeclaration.getReturnType2();
         String stubName = methodName + "_call_" + numberOfFunctionsCall;
         SymbolicExecution.addToStubVariableNames(stubName);
         numberOfFunctionsCall++;
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
+        replaceMethodInvocationWithStub(methodInvocation, stubName);
+
         if (funcReturnType instanceof PrimitiveType) {
             memoryModel.declarePrimitiveTypeVariable(((PrimitiveType) funcReturnType), stubName, stubNameNode);
+            addStubVariableToParameterList(stubName, funcReturnType);
             return stubNameNode;
         } else if (funcReturnType instanceof ArrayType) {
             ArrayType arrayType = (ArrayType) funcReturnType;
             AstNode arrayNode = SingleVariableDeclarationNode.createMultiDimensionsInitializationArray(stubName, 0, arrayType.getDimensions(), arrayType.getElementType(), memoryModel);
             memoryModel.declareArrayTypeVariable(arrayType, stubName, arrayType.getDimensions(), arrayNode);
+            addStubVariableToParameterList(stubName, funcReturnType);
             return arrayNode;
         } else { // OTHER TYPES
             throw new RuntimeException("Invalid type");
         }
     }
 
-    private static AstNode declareStubVariable(String methodName, Class<?> invokedMethodReturnClass, MemoryModel memoryModel) {
+    private static AstNode declareStubVariable(String methodName, Class<?> invokedMethodReturnClass, MemoryModel memoryModel, MethodInvocation methodInvocation) {
         String stubName = methodName + "_call_" + numberOfFunctionsCall;
         numberOfFunctionsCall++;
         SymbolicExecution.addToStubVariableNames(stubName);
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
+        replaceMethodInvocationWithStub(methodInvocation, stubName);
+
         if (invokedMethodReturnClass.isPrimitive()) {
-            memoryModel.declarePrimitiveTypeVariable(TestDriverUtils.getPrimitiveCode(invokedMethodReturnClass), stubName, stubNameNode);
+            PrimitiveType type = ast.newPrimitiveType(TestDriverUtils.getPrimitiveCode(invokedMethodReturnClass));
+            memoryModel.declarePrimitiveTypeVariable(type, stubName, stubNameNode);
+            addStubVariableToParameterList(stubName, type);
             return stubNameNode;
         } else if (invokedMethodReturnClass.isArray()) {
 
@@ -111,6 +120,23 @@ public class MethodInvocationNode extends ExpressionNode {
             throw new RuntimeException("Invalid type");
         }
     }
+
+    private static SimpleName replaceMethodInvocationWithStub(MethodInvocation methodInvocation, String stubName) {
+        SimpleName simpleName = ast.newSimpleName(stubName);
+        ASTNode methodInvocationParent = methodInvocation.getParent();
+        AstNode.replaceMethodInvocationWithStub(methodInvocationParent, methodInvocation, simpleName);
+        return simpleName;
+    }
+
+    private static void addStubVariableToParameterList(String stubName, Type funcReturnType) {
+        MethodDeclaration methodDeclaration = TestGeneration.getTestFunc();
+        SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
+        singleVariableDeclaration.setName(ast.newSimpleName(stubName));
+        singleVariableDeclaration.setType(funcReturnType);
+        methodDeclaration.parameters().add(singleVariableDeclaration);
+        System.out.println("acf");
+    }
+
 
     public static void resetNumberOfFunctionsCall() {
         MethodInvocationNode.numberOfFunctionsCall = 1;

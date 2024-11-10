@@ -8,6 +8,7 @@ import core.path.MarkedPath;
 import core.path.MarkedStatement;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -98,6 +99,14 @@ public abstract class TestGeneration {
     public static CompilationUnit getCompilationUnit() {
         if (isSetup) {
             return compilationUnit;
+        } else {
+            throw new RuntimeException("Value has not been setup");
+        }
+    }
+
+    public static MethodDeclaration getTestFunc() {
+        if (isSetup) {
+            return (MethodDeclaration) testFunc;
         } else {
             throw new RuntimeException("Value has not been setup");
         }

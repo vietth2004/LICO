@@ -53,9 +53,9 @@ public final class MarkedPath {
 
             MarkedStatement markedStatement = markedStatements.get(i);
             if (rootNode.getContent().equals(markedStatement.getStatement())) {
-//                if (!rootNode.isMarked()) {
-//                }
-                fullTestSuiteCoveredStatements.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
+                if (!rootNode.isMarked()) {
+                    fullTestSuiteCoveredStatements.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
+                }
                 totalCoveredStatement.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
                 rootNode.setMarked(true);
                 markedStatement.setCfgNode(rootNode);
@@ -174,6 +174,7 @@ public final class MarkedPath {
     }
 
     public static int getFullTestSuiteTotalCoveredStatements() {
+        System.out.println("abc");
         return fullTestSuiteCoveredStatements.size();
     }
 
@@ -291,7 +292,7 @@ public final class MarkedPath {
         }
         if (!coveredNodeInPath.contains(rootNode)) {
             coveredNodeInPath.add(rootNode);
-            if(!rootNode.isMarked() && !rootNode.isFakeMarked()) return rootNode;
+            if (!rootNode.isMarked() && !rootNode.isFakeMarked()) return rootNode;
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
                 CfgNode falseBranchUncoveredNode = findUncoveredStatement(boolExprNode.getFalseNode(), duplicateNode);
@@ -369,4 +370,12 @@ public final class MarkedPath {
             return null;
         }
     }
+
+//    private static void checkDuplicateAndAddToSet(Set<CoveredStatement> coveredStatements, CoveredStatement newCoveredStatement) {
+//        if (!coveredStatements.contains(newCoveredStatement)) {
+//            for (CoveredStatement coveredStatement : coveredStatements) {
+//                if (coveredStatement)
+//            }
+//        }
+//    }
 }

@@ -3,7 +3,10 @@ package core.ast.VariableDeclaration;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
 import core.symbolicExecution.MemoryModel;
+import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
+
+import java.util.List;
 
 public class VariableDeclarationFragmentNode extends VariableDeclarationNode {
 
@@ -31,6 +34,13 @@ public class VariableDeclarationFragmentNode extends VariableDeclarationNode {
             } else {
                 throw new RuntimeException("Only deal with PrimitiveType!!");
             }
+        }
+    }
+
+    public static void replaceMethodInvocationWithStub(VariableDeclarationFragment originVariableDeclarationFragment,  MethodInvocation originMethodInvocation, ASTNode replacement) {
+        Expression initializer = originVariableDeclarationFragment.getInitializer();
+        if (initializer == originMethodInvocation) {
+            originVariableDeclarationFragment.setInitializer((Expression) replacement);
         }
     }
 

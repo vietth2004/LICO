@@ -91,4 +91,9 @@ public class AssignmentNode extends ExpressionNode {
             return assignValue;
         }
     }
+
+    public static void replaceMethodInvocationWithStub(Assignment originAssignment, MethodInvocation originMethodInvocation, ASTNode replacement) {
+        if (originAssignment.getRightHandSide() == originMethodInvocation)
+            originAssignment.setRightHandSide((Expression) replacement);
+    }
 }

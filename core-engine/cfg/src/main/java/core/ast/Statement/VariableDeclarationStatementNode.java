@@ -3,10 +3,7 @@ package core.ast.Statement;
 import core.ast.AstNode;
 import core.ast.VariableDeclaration.VariableDeclarationFragmentNode;
 import core.symbolicExecution.MemoryModel;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
 
@@ -20,5 +17,9 @@ public class VariableDeclarationStatementNode extends StatementNode {
         for(VariableDeclarationFragment fragment : fragments) {
             VariableDeclarationFragmentNode.executeVariableDeclarationFragment(fragment, statement.getType(), memoryModel);
         }
+    }
+
+    public static void replaceMethodInvocationWithStub(VariableDeclarationStatement originStatement, MethodInvocation originMethodInvocation, ASTNode replacement) {
+
     }
 }

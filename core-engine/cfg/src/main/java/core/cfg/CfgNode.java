@@ -78,7 +78,9 @@ public class CfgNode
 
     public String getContent()
     {
-        return content;
+        if (ast != null)
+            return ast.toString();
+        else return content;
     }
 
     public String getContentReport()

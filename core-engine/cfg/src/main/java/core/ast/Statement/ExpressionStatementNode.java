@@ -3,7 +3,10 @@ package core.ast.Statement;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.symbolicExecution.MemoryModel;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 
 public class ExpressionStatementNode extends StatementNode {
 
@@ -15,4 +18,9 @@ public class ExpressionStatementNode extends StatementNode {
         return expressionStatementNode;
     }
 
+    public static void replaceMethodInvocationWithStub(ExpressionStatement originExpressionStatement, MethodInvocation originMethodInvocation, ASTNode replacement) {
+        if (originExpressionStatement.getExpression() == originMethodInvocation){
+            originExpressionStatement.setExpression((Expression) replacement);
+        }
+    }
 }

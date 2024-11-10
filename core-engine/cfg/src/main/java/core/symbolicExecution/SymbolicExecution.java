@@ -38,6 +38,8 @@ public final class SymbolicExecution {
     private static Queue<String> stubVariablesOrigins = new LinkedList<>();
     private static List<Class<?>> stubVariablesTypes = new ArrayList<>();
 
+    private static CfgNode currentCfgNode;
+
     public SymbolicExecution(Path testPath, List<ASTNode> parameters) {
         stubVariablesOrigins = new LinkedList<>();
         stubVariableNames = new LinkedList<>();
@@ -50,7 +52,8 @@ public final class SymbolicExecution {
     public List<Z3VariableWrapper> execute() {
         memoryModel = new MemoryModel();
         Z3Vars = new ArrayList<>();
-        MethodInvocationNode.resetNumberOfFunctionsCall();
+        currentCfgNode = null;
+//        MethodInvocationNode.resetNumberOfFunctionsCall();
 
         HashMap<String, String> cfg = new HashMap();
         cfg.put("model", "true");
@@ -66,7 +69,7 @@ public final class SymbolicExecution {
         Expr finalZ3Expression = null;
 
         while (currentNode != null) {
-            CfgNode currentCfgNode = currentNode.getData();
+            currentCfgNode = currentNode.getData();
 
             ASTNode astNode = currentCfgNode.getAst();
 
@@ -93,6 +96,8 @@ public final class SymbolicExecution {
             }
             currentNode = currentNode.getNext();
         }
+
+        currentCfgNode = null;
         System.out.println(finalZ3Expression);
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
@@ -145,8 +150,7 @@ public final class SymbolicExecution {
 
         Status satisfaction = s.check();
         if (satisfaction != Status.SATISFIABLE) {
-            System.out.println("Expression is UNSATISFIABLE");
-            return null;
+            throw new RuntimeException("Expression is UNSATISFIABLE");
         } else {
             return s.getModel();
         }
@@ -253,14 +257,14 @@ public final class SymbolicExecution {
             }
         }
 
-        while (scanner.hasNext()) {
-            String type = scanner.next();
-            String name = scanner.next();
-
-            stubVariablesDeclarations.add(type + " " + name);
-
-            result.add(scanValue(scanner, type));
-        }
+//        while (scanner.hasNext()) {
+//            String type = scanner.next();
+//            String name = scanner.next();
+//
+//            stubVariablesDeclarations.add(type + " " + name);
+//
+//            result.add(scanValue(scanner, type));
+//        }
 
         return result.toArray();
     }
@@ -399,5 +403,9 @@ public final class SymbolicExecution {
 
     public static List<Class<?>> getStubVariablesTypes() {
         return stubVariablesTypes;
+    }
+
+    public static CfgNode getCurrentCfgNode() {
+        return currentCfgNode;
     }
 }

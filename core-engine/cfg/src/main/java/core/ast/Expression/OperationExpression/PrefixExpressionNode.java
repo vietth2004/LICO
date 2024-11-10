@@ -8,13 +8,19 @@ import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.symbolicExecution.MemoryModel;
-import org.eclipse.jdt.core.dom.PrefixExpression;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
 
 public class PrefixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PrefixExpression.Operator operator;
+
+    public static void replaceMethodInvocationWithStub(PrefixExpression originPrefixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
+        Expression operand = originPrefixExpression.getOperand();
+        if (operand == originMethodInvocation)
+            originPrefixExpression.setOperand((Expression) replacement);
+    }
 
     public static Expr createZ3Expression(PrefixExpressionNode prefixExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode operand = prefixExpressionNode.operand;

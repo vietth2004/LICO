@@ -19,6 +19,23 @@ public class InfixExpressionNode extends OperationExpressionNode {
     private InfixExpression.Operator operator;
     private List<AstNode> extendedOperands;
 
+    public static void replaceMethodInvocationWithStub(InfixExpression originInfixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
+        Expression leftOperand = originInfixExpression.getLeftOperand();
+        Expression rightOperand = originInfixExpression.getRightOperand();
+        List<ASTNode> extendedOperands = originInfixExpression.extendedOperands();
+        if (leftOperand == originMethodInvocation)
+            originInfixExpression.setLeftOperand((Expression) replacement);
+        else if (rightOperand == originMethodInvocation) {
+            originInfixExpression.setRightOperand((Expression) replacement);
+        } else {
+            for (int i = 0; i < extendedOperands.size(); i++){
+                if (extendedOperands.get(i) == originMethodInvocation){
+                    extendedOperands.set(i, replacement);
+                }
+            }
+        }
+    }
+
     public static Expr createZ3Expression(InfixExpressionNode infixExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode leftOperand = infixExpressionNode.leftOperand;
         ExpressionNode rightOperand = infixExpressionNode.rightOperand;

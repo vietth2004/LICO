@@ -8,13 +8,19 @@ import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.symbolicExecution.MemoryModel;
-import org.eclipse.jdt.core.dom.PostfixExpression;
+import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
 
 public class PostfixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PostfixExpression.Operator operator;
+
+    public static void replaceMethodInvocationWithStub(PostfixExpression originPostfixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
+        Expression operand = originPostfixExpression.getOperand();
+        if (operand == originMethodInvocation)
+            originPostfixExpression.setOperand((Expression) replacement);
+    }
 
     public static Expr createZ3Expression(PostfixExpressionNode postfixExpressionNode, Context ctx, List<Z3VariableWrapper> vars, MemoryModel memoryModel) {
         ExpressionNode operand = postfixExpressionNode.operand;
