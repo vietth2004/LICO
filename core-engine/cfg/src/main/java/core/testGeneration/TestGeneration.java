@@ -89,11 +89,11 @@ public abstract class TestGeneration {
     }
 
     public static ArrayList<ASTNode> getFuncAstNodeList() {
-        if (isSetup) {
-            return funcAstNodeList;
-        } else {
-            throw new RuntimeException("Value has not been setup");
-        }
+//        if (isSetup) {
+        return funcAstNodeList;
+//        } else {
+//            throw new RuntimeException("Value has not been setup");
+//        }
     }
 
     public static CompilationUnit getCompilationUnit() {
@@ -105,10 +105,10 @@ public abstract class TestGeneration {
     }
 
     public static MethodDeclaration getTestFunc() {
-        if (isSetup) {
+//        if (isSetup) {
             return (MethodDeclaration) testFunc;
-        } else {
-            throw new RuntimeException("Value has not been setup");
-        }
+//        } else {
+//            throw new RuntimeException("Value has not been setup");
+//        }
     }
 }

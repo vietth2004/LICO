@@ -1,6 +1,8 @@
 package core.ast.Statement;
 
+import core.cfg.CfgNode;
 import core.symbolicExecution.SymbolicExecution;
+import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.CfgUtils;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.List;
@@ -10,7 +12,13 @@ public class ForStatementNode extends StatementNode {
     public static void replaceMethodInvocationWithStub(ForStatement originForStatement, MethodInvocation originMethodInvocation, ASTNode replacement) {
         if (originForStatement.getExpression() == originMethodInvocation) {
             originForStatement.setExpression((Expression) replacement);
-            SymbolicExecution.getCurrentCfgNode().setAst(replacement);
+
+            CfgNode currentCfgNode = SymbolicExecution.getCurrentCfgNode();
+            if (currentCfgNode != null) {
+                currentCfgNode.setAst(replacement);
+            } else {
+                CfgUtils.getCurrentCfgNode().setAst(replacement);
+            }
         } else {
             List<ASTNode> updaters = originForStatement.updaters();
             for (int i = 0; i < updaters.size(); i++) {

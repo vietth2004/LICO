@@ -2,7 +2,6 @@ package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
 import core.cfg.CfgNode;
 import core.path.FindAllPath;
-import core.path.FindAllSimpleConditions;
 import core.path.Path;
 import core.symbolicExecution.SymbolicExecution;
 import org.eclipse.jdt.core.dom.ASTNode;

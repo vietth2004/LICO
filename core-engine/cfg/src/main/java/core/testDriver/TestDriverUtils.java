@@ -157,6 +157,18 @@ public final class TestDriverUtils {
         }
     }
 
+    public static Type cloneTypeAST(Type type, AST ast) {
+        if (type instanceof PrimitiveType) {
+            PrimitiveType primitiveType = (PrimitiveType) type;
+            return ast.newPrimitiveType(primitiveType.getPrimitiveTypeCode());
+        } else if (type instanceof ArrayType) {
+            ArrayType arrayType = (ArrayType) type;
+            return ast.newArrayType(cloneTypeAST(arrayType.getElementType(), ast), arrayType.getDimensions());
+        } else {
+            throw new RuntimeException("Invalid type");
+        }
+    }
+
     /**
      * Get class of SimpleType by is name
      *

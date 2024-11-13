@@ -132,9 +132,8 @@ public class MethodInvocationNode extends ExpressionNode {
         MethodDeclaration methodDeclaration = TestGeneration.getTestFunc();
         SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
         singleVariableDeclaration.setName(ast.newSimpleName(stubName));
-        singleVariableDeclaration.setType(funcReturnType);
+        singleVariableDeclaration.setType(TestDriverUtils.cloneTypeAST(funcReturnType, ast));
         methodDeclaration.parameters().add(singleVariableDeclaration);
-        System.out.println("acf");
     }
 
 

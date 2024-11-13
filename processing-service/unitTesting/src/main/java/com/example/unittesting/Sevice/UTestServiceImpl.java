@@ -2,8 +2,8 @@ package com.example.unittesting.Sevice;
 
 
 import com.example.unittesting.model.MethodTest;
-import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub;
-import core.testGeneration.NTDTestGeneration.NTDTesting;
+import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.AS4UT;
+import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.ConcolicTestingWithStub;
 import core.testGeneration.TestGeneration;
 import core.entity.ParameterInput;
 import core.testResult.result.autoTestResult.TestResult;
@@ -54,7 +54,7 @@ public class UTestServiceImpl implements UTestService {
                         // TEST TEMPLATE
 //                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
 
-                        TestResult result = ConcolicTestingWithStub.runFullConcolic(pathMethod, name, className, coverage);
+                        TestResult result = AS4UT.runFullConcolic(pathMethod, name, className, coverage);
 
                         return ResponseEntity.ok(result);
                     } else {

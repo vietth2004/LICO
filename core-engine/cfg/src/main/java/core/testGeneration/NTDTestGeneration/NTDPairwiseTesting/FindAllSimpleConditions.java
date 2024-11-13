@@ -1,4 +1,4 @@
-package core.path;
+package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 
 import core.ast.Expression.Literal.BooleanLiteralNode;
 import core.ast.Expression.Literal.CharacterLiteralNode;

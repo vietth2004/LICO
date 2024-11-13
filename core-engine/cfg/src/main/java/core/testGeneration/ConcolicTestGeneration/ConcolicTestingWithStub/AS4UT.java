@@ -1,8 +1,9 @@
-package core.testGeneration.ConcolicTestGeneration;
+package core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub;
 
 import core.ast.Expression.MethodInvocationNode;
 import core.cfg.CfgBoolExprNode;
 import core.testDriver.TestDriverUtils;
+import core.testGeneration.ConcolicTestGeneration.ConcolicTestGeneration;
 import core.testGeneration.TestGeneration;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
@@ -25,17 +26,14 @@ import org.eclipse.jdt.core.dom.*;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Stream;
 
-public class ConcolicTestingWithStub extends ConcolicTestGeneration {
+public class AS4UT extends ConcolicTestGeneration {
     private static String simpleClassName;
     private static String fullyClonedClassName;
-    private static Method method;
     private static List<ASTNode> originalParameters; // parameters before adding stub vars
 
-    private ConcolicTestingWithStub() {
+    private AS4UT() {
     }
 
     public static TestResult runFullConcolic(String path, String methodName, String className, TestGeneration.Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
@@ -57,18 +55,15 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
 
         TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
-        long startRunTestTime = System.nanoTime();
-        Object output = method.invoke(TestGeneration.parameterClasses, evaluatedValues);
-        long endRunTestTime = System.nanoTime();
-        double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+        String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage));
+        List<MarkedStatement> markedStatements = TestDriverRunner.runTestDriver(testDriver);
 
-        List<MarkedStatement> markedStatements = getMarkedStatement();
         MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
 
         List<CoveredStatement> coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
 
         testResult.addToFullTestData(new TestData(TestGeneration.parameterNames, TestGeneration.parameterClasses, evaluatedValues, coveredStatements,
-                output, runTestDuration, calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
+                TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
         boolean isTestedSuccessfully = true;
 
@@ -107,7 +102,7 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
 
             TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
-            String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage));
+            testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage));
             markedStatements = TestDriverRunner.runTestDriver(testDriver);
 
             MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
@@ -186,14 +181,13 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
                 TestGeneration.testFunc = func;
             }
         }
+        originalParameters = new ArrayList<>(((MethodDeclaration) testFunc).parameters());
     }
 
-    private static void setupParameters(String methodName) throws ClassNotFoundException, NoSuchMethodException {
+    private static void setupParameters(String methodName) {
         TestGeneration.parameters = ((MethodDeclaration) TestGeneration.testFunc).parameters();
-        originalParameters = new ArrayList<>(parameters);
         TestGeneration.parameterClasses = TestDriverUtils.getParameterClasses(TestGeneration.parameters);
         TestGeneration.parameterNames = TestDriverUtils.getParameterNames(TestGeneration.parameters);
-        method = Class.forName(fullyClonedClassName).getDeclaredMethod(methodName + "_clone", TestGeneration.parameterClasses);
     }
 
     private static void setupCfgTree(TestGeneration.Coverage coverage) {
@@ -215,21 +209,8 @@ public class ConcolicTestingWithStub extends ConcolicTestGeneration {
         block.setAfterStatementNode(TestGeneration.cfgEndNode);
 
         ASTHelper.generateCFG(block, TestGeneration.compilationUnit, firstLine, TestGeneration.getCoverageType(coverage));
-    }
 
-    private static List<MarkedStatement> getMarkedStatement() {
-        List<MarkedStatement> result = new ArrayList<>();
-
-        String markedData = getDataFromFile(FilePath.concreteExecuteResultPath);
-        String[] markedStatements = markedData.split("---end---");
-        for (int i = 0; i < markedStatements.length; i++) {
-            String[] markedStatementData = markedStatements[i].split("===");
-            String statement = markedStatementData[0];
-            boolean isTrueConditionalStatement = Boolean.parseBoolean(markedStatementData[1]);
-            boolean isFalseConditionalStatement = Boolean.parseBoolean(markedStatementData[2]);
-            result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement));
-        }
-        return result;
+        CfgUtils.modifyCfgWithStubVars(cfgBeginNode);
     }
 
     private static String getTotalClassCoverageVariableName() {
