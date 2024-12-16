@@ -1,10 +1,8 @@
 package core.testDriver;
 
 import core.ast.Expression.Literal.LiteralNode;
-import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.symbolicExecution.MemoryModel;
 import core.variable.Variable;
-import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
 import org.eclipse.jdt.core.dom.*;
 
 import java.lang.reflect.Array;

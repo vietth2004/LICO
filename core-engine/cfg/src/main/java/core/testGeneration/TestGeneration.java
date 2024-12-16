@@ -1,11 +1,9 @@
 package core.testGeneration;
 
-import core.FilePath;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
-import core.parser.ASTHelper;
+import core.cfg.utils.ASTHelper;
 import core.path.MarkedPath;
-import core.path.MarkedStatement;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -14,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,7 +2,7 @@ package core.ast.Statement;
 
 import core.cfg.CfgNode;
 import core.symbolicExecution.SymbolicExecution;
-import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.CfgUtils;
+import core.cfg.utils.CfgUtils;
 import org.eclipse.jdt.core.dom.*;
 
 public class DoStatementNode extends StatementNode {

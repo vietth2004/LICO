@@ -1,6 +1,4 @@
-package core.parser;
-
-//import com.sun.istack.internal.NotNull;
+package core.cfg.utils;
 
 import core.cfg.*;
 import core.utils.Utils;

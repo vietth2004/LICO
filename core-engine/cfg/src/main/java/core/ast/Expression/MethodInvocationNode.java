@@ -22,8 +22,6 @@ public class MethodInvocationNode extends ExpressionNode {
 
         String methodName = methodInvocation.getName().toString();
 
-        SymbolicExecution.addToStubVariablesOrigins(methodInvocation.toString());
-
         if (methodInvocation.getExpression() == null) { // method invocation in the same class
             MethodDeclaration methodDeclaration = getInvokedMethodAST(methodName);
             return declareStubVariable(methodName, methodDeclaration, memoryModel, methodInvocation);
@@ -75,7 +73,6 @@ public class MethodInvocationNode extends ExpressionNode {
     private static AstNode declareStubVariable(String methodName, MethodDeclaration methodDeclaration, MemoryModel memoryModel, MethodInvocation methodInvocation) {
         Type funcReturnType = methodDeclaration.getReturnType2();
         String stubName = methodName + "_call_" + numberOfFunctionsCall;
-        SymbolicExecution.addToStubVariableNames(stubName);
         numberOfFunctionsCall++;
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
@@ -99,7 +96,6 @@ public class MethodInvocationNode extends ExpressionNode {
     private static AstNode declareStubVariable(String methodName, Class<?> invokedMethodReturnClass, MemoryModel memoryModel, MethodInvocation methodInvocation) {
         String stubName = methodName + "_call_" + numberOfFunctionsCall;
         numberOfFunctionsCall++;
-        SymbolicExecution.addToStubVariableNames(stubName);
         SimpleNameNode stubNameNode = new SimpleNameNode(stubName);
 
         replaceMethodInvocationWithStub(methodInvocation, stubName);

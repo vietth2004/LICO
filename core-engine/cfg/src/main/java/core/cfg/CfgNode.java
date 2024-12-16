@@ -1,6 +1,6 @@
 package core.cfg;
 
-import core.parser.ASTHelper;
+import core.cfg.utils.ASTHelper;
 import core.structureTree.structureNode.SFunctionNode;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;

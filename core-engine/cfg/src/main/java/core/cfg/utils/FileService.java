@@ -1,4 +1,4 @@
-package core.parser;
+package core.cfg.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

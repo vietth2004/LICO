@@ -2,7 +2,7 @@ package core.node;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import core.parser.ASTHelper;
+import core.cfg.utils.ASTHelper;
 import core.structureTree.SNode;
 import core.structureTree.structureNode.SFunctionNode;
 import lombok.Getter;

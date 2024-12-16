@@ -3,6 +3,7 @@ package core.testGeneration.NTDTestGeneration.NTDPairwiseTesting;
 import core.testGeneration.NTDTestGeneration.NTDTestGeneration;
 import core.path.*;
 import core.testDriver.TestDriverUtils;
+import core.testGeneration.TestGeneration;
 import core.testResult.coveredStatement.CoveredStatement;
 import core.testResult.result.autoTestResult.TestData;
 import core.testResult.result.autoTestResult.TestResult;
@@ -11,8 +12,8 @@ import core.symbolicExecution.SymbolicExecution;
 import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
-import core.parser.ASTHelper;
-import core.parser.ProjectParser;
+import core.cfg.utils.ASTHelper;
+import core.cfg.utils.ProjectParser;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
@@ -172,7 +173,7 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
         else System.out.println("Test fail due to UNSATISFIABLE constraint");
 
-        testResult.setFullCoverage(calculateFullTestSuiteCoverage());
+        testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
 
         return testResult;
     }
@@ -185,9 +186,14 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
         MarkedPath.resetFullTestSuiteCoveredStatements();
     }
 
-    private static double calculateFullTestSuiteCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, Coverage.STATEMENT)).get(null);
-        int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+    private static double calculateFullTestSuiteCoverage(Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage)).get(null);
+        int totalCovered = 0;
+        if (coverage == Coverage.STATEMENT) {
+            totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+        } else { // branch
+            totalCovered = MarkedPath.getFullTestSuiteTotalCoveredBranch();
+        }
         return (totalCovered * 100.0) / totalFunctionStatement;
     }
 

@@ -6,7 +6,7 @@ import core.entity.Parameter;
 import core.entity.ParameterInput;
 import core.entity.PrimitiveParameter;
 import core.entity.ReferenceParameter;
-import core.parser.FileService;
+import core.cfg.utils.FileService;
 import lombok.Data;
 import org.eclipse.jdt.core.dom.*;
 import org.springframework.util.CollectionUtils;

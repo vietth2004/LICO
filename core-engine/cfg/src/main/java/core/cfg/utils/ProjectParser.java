@@ -1,7 +1,8 @@
-package core.parser;
+package core.cfg.utils;
 
 import core.cfg.CfgNode;
 import core.node.ClassAbstractableElementVisibleElementJavaNode;
+import core.parser.JavaFileParser;
 import core.structureTree.SNode;
 import core.node.FileNode;
 import core.node.Node;

@@ -1,6 +1,6 @@
 package core.structureTree;
 
-import core.parser.ProjectParser;
+import core.cfg.utils.ProjectParser;
 
 public class SProjectNode extends SNode{
 

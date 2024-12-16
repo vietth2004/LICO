@@ -1,14 +1,12 @@
 package core.testDriver;
 
-import core.parser.ASTHelper;
-import core.symbolicExecution.SymbolicExecution;
+import core.FilePath;
+import core.cfg.utils.ASTHelper;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public final class TestDriverGenerator {
 
@@ -18,7 +16,7 @@ public final class TestDriverGenerator {
                     "markResult.append(statement).append(\"===\");\n" +
                     "markResult.append(isTrueCondition).append(\"===\");\n" +
                     "markResult.append(isFalseCondition).append(\"---end---\");\n" +
-                    "writeDataToFile(markResult.toString(), \"core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt\", true);\n" +
+                    "writeDataToFile(markResult.toString(), \"" + FilePath.concreteExecuteResultPath + "\", true);\n" +
                     "if (!isTrueCondition && !isFalseCondition) return true;\n" +
                     "return !isFalseCondition;\n" +
                     "}\n";
@@ -60,7 +58,7 @@ public final class TestDriverGenerator {
     private static String generateTestRunner(String methodName, Object[] testData) {
         StringBuilder result = new StringBuilder();
         result.append("public static void main(String[] args) {\n");
-        result.append("writeDataToFile(\"\", \"core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt\", false);\n");
+        result.append("writeDataToFile(\"\", \"" + FilePath.concreteExecuteResultPath + "\", false);\n");
         result.append("long startRunTestTime = System.nanoTime();\n");
         result.append("Object output = ").append(methodName).append("(");
         for (int i = 0; i < testData.length; i++) {
@@ -74,7 +72,7 @@ public final class TestDriverGenerator {
         result.append(");\n");
         result.append("long endRunTestTime = System.nanoTime();\n");
         result.append("double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;\n");
-        result.append("writeDataToFile(runTestDuration + \"===\" + output, \"core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt\", true);\n");
+        result.append("writeDataToFile(runTestDuration + \"===\" + output, \""+ FilePath.concreteExecuteResultPath + "\", true);\n");
         result.append("}\n");
         return result.toString();
     }
@@ -89,14 +87,24 @@ public final class TestDriverGenerator {
         result.append(writeDataToFileUtility);
 
         // Generate testing method with instruments
-        List<MethodInvocation> methodInvocations = new ArrayList<>();
-        result.append(createCloneMethod(method, coverage, methodInvocations));
+        result.append(createCloneMethod(method, coverage));
+
         // Generate MethodDeclaration form MethodInvocation
+        result.append(generateAllMethodDeclarationFromMethodInvocation(method));
+
+
+        return result.toString();
+    }
+
+    private static String generateAllMethodDeclarationFromMethodInvocation(MethodDeclaration methodDeclaration) {
+        StringBuilder result = new StringBuilder();
+        List<MethodInvocation> methodInvocations = new ArrayList<>();
+        methodDeclaration.getBody().accept(new MethodInvocationVisitor(methodInvocations));
         for (MethodInvocation methodInvocation : methodInvocations) {
-            result.append("\n").append(getInvokeAdMethodST(methodInvocation.getName().toString()));
+            MethodDeclaration newMethodDeclaration = getInvokeAdMethodST(methodInvocation.getName().toString());
+            result.append("\n").append(newMethodDeclaration);
+            result.append(generateAllMethodDeclarationFromMethodInvocation(newMethodDeclaration));
         }
-
-
         return result.toString();
     }
 
@@ -110,7 +118,7 @@ public final class TestDriverGenerator {
         throw new RuntimeException("There is no method named: " + methodName);
     }
 
-    private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage, List<MethodInvocation> methodInvocations) {
+    private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
         StringBuilder cloneMethod = new StringBuilder();
 
         cloneMethod.append("public static ").append(method.getReturnType2()).append(" ").append(method.getName()).append("(");
@@ -120,8 +128,6 @@ public final class TestDriverGenerator {
             if (i != parameters.size() - 1) cloneMethod.append(", ");
         }
         cloneMethod.append(")\n");
-
-        method.getBody().accept(new MethodInvocationVisitor(methodInvocations));
 
         cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)).append("\n");
 

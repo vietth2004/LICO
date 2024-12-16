@@ -1,13 +1,10 @@
-package core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub;
+package core.cfg.utils;
 
 import core.ast.AstNode;
-import core.ast.Expression.Name.SimpleNameNode;
-import core.ast.VariableDeclaration.SingleVariableDeclarationNode;
 import core.ast.additionalNodes.Node;
 import core.cfg.CfgNode;
 import core.path.FindAllPath;
 import core.path.Path;
-import core.symbolicExecution.MemoryModel;
 import core.symbolicExecution.SymbolicExecution;
 import core.testDriver.TestDriverUtils;
 import core.testGeneration.TestGeneration;
@@ -181,8 +178,6 @@ public final class CfgUtils {
 
     private static ASTNode modifyMethodInvocationWithStubVars(MethodInvocation methodInvocation, boolean isChildNode) {
         String methodName = methodInvocation.getName().toString();
-
-        SymbolicExecution.addToStubVariablesOrigins(methodInvocation.toString());
 
         if (methodInvocation.getExpression() == null) { // method invocation in the same class
             MethodDeclaration methodDeclaration = getInvokedMethodAST(methodName);

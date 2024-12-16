@@ -15,6 +15,7 @@ public final class MarkedPath {
     private static Set<CoveredStatement> fullTestSuiteCoveredStatements;
     private static Set<CoveredStatement> totalCoveredStatement;
     private static Set<CoveredStatement> totalCoveredBranch;
+    private static Set<CoveredStatement> fullTestSuiteCoveredBranches;
 
     private MarkedPath() {
     }
@@ -66,14 +67,16 @@ public final class MarkedPath {
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
                 if (markedStatement.isFalseConditionalStatement()) {
-//                    if (!boolExprNode.isFalseMarked()) {
-//                    }
+                    if (!boolExprNode.isFalseMarked()) {
+                        fullTestSuiteCoveredBranches.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "false"));
+                    }
                     totalCoveredBranch.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "false"));
                     boolExprNode.setFalseMarked(true);
                     rootNode = boolExprNode.getFalseNode();
                 } else if (markedStatement.isTrueConditionalStatement()) {
-//                    if (!boolExprNode.isTrueMarked()) {
-//                    }
+                    if (!boolExprNode.isTrueMarked()) {
+                        fullTestSuiteCoveredBranches.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "true"));
+                    }
                     totalCoveredBranch.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "true"));
                     boolExprNode.setTrueMarked(true);
                     rootNode = boolExprNode.getTrueNode();
@@ -171,11 +174,15 @@ public final class MarkedPath {
 
     public static void resetFullTestSuiteCoveredStatements() {
         fullTestSuiteCoveredStatements = new HashSet<>();
+        fullTestSuiteCoveredBranches = new HashSet<>();
     }
 
     public static int getFullTestSuiteTotalCoveredStatements() {
-        System.out.println("abc");
         return fullTestSuiteCoveredStatements.size();
+    }
+
+    public static int getFullTestSuiteTotalCoveredBranch() {
+        return fullTestSuiteCoveredBranches.size();
     }
 
 //    public static List<MarkedStatement> isPathActuallyCovered(Path path) {

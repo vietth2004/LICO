@@ -1,6 +1,6 @@
 package core.node;
 
-import core.parser.ASTHelper;
+import core.cfg.utils.ASTHelper;
 import core.structureTree.SNode;
 import core.structureTree.normalNode.SNormalCharNode;
 import core.structureTree.normalNode.SNormalDoubleNode;

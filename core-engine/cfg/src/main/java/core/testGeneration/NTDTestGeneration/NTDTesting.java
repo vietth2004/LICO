@@ -11,8 +11,8 @@ import core.symbolicExecution.SymbolicExecution;
 import core.cfg.CfgBlockNode;
 import core.cfg.CfgEndBlockNode;
 import core.cfg.CfgNode;
-import core.parser.ASTHelper;
-import core.parser.ProjectParser;
+import core.cfg.utils.ASTHelper;
+import core.cfg.utils.ProjectParser;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
@@ -96,7 +96,7 @@ public class NTDTesting extends NTDTestGeneration {
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
         else System.out.println("Test fail due to UNSATISFIABLE constraint");
 
-        testResult.setFullCoverage(calculateFullTestSuiteCoverage());
+        testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
 
         return testResult;
     }
@@ -109,9 +109,14 @@ public class NTDTesting extends NTDTestGeneration {
         MarkedPath.resetFullTestSuiteCoveredStatements();
     }
 
-    private static double calculateFullTestSuiteCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT)).get(null);
-        int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+    private static double calculateFullTestSuiteCoverage(Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage)).get(null);
+        int totalCovered = 0;
+        if (coverage == Coverage.STATEMENT) {
+            totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+        } else { // branch
+            totalCovered = MarkedPath.getFullTestSuiteTotalCoveredBranch();
+        }
         return (totalCovered * 100.0) / totalFunctionStatement;
     }
 
@@ -186,7 +191,7 @@ public class NTDTesting extends NTDTestGeneration {
     }
 
     private static String getTotalFunctionCoverageVariableName(MethodDeclaration methodDeclaration, TestGeneration.Coverage coverage) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(); //dont have class key because cloned project does not have
         result.append(methodDeclaration.getReturnType2());
         result.append(methodDeclaration.getName());
         for (int i = 0; i < methodDeclaration.parameters().size(); i++) {

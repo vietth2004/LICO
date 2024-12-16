@@ -19,47 +19,39 @@ writer.close();
 e.printStackTrace();
 }
 }
-public static int countCharacterTypes(char input, boolean isUpperCase_call_1, boolean isLowerCase_call_2, boolean isLetter_call_3, boolean isDigit_call_4)
+public static double easeOutBounce(double x)
 {
-mark("int uppercaseCount=0;\n", false, false);
-int uppercaseCount=0;
-mark("int lowercaseCount=0;\n", false, false);
-int lowercaseCount=0;
-mark("int specialCount=0;\n", false, false);
-int specialCount=0;
-if (((isUpperCase_call_1) && mark("isUpperCase_call_1", true, false)) || mark("isUpperCase_call_1", false, true))
+mark("double n1=7.5625;\n", false, false);
+double n1=7.5625;
+mark("double d1=2.75;\n", false, false);
+double d1=2.75;
+if (((x < 1 / d1) && mark("x < 1 / d1", true, false)) || mark("x < 1 / d1", false, true))
 {
-{
-mark("uppercaseCount++;\n", false, false);
-uppercaseCount++;
+mark("return n1 * x * x;\n", false, false);
+return n1 * x * x;
 }
-}
-else {
-if (((isLowerCase_call_2) && mark("isLowerCase_call_2", true, false)) || mark("isLowerCase_call_2", false, true))
+if (((x < 2 / d1) && mark("x < 2 / d1", true, false)) || mark("x < 2 / d1", false, true))
 {
 {
-mark("lowercaseCount++;\n", false, false);
-lowercaseCount++;
+mark("return n1 * (x-=1.5 / d1) * x + 0.75;\n", false, false);
+return n1 * (x-=1.5 / d1) * x + 0.75;
 }
 }
-else {
-if (((!isLetter_call_3 && !isDigit_call_4) && mark("!isLetter_call_3 && !isDigit_call_4", true, false)) || mark("!isLetter_call_3 && !isDigit_call_4", false, true))
+if (((x < 2.5 / d1) && mark("x < 2.5 / d1", true, false)) || mark("x < 2.5 / d1", false, true))
 {
 {
-mark("specialCount++;\n", false, false);
-specialCount++;
+mark("return n1 * (x-=2.25 / d1) * x + 0.9375;\n", false, false);
+return n1 * (x-=2.25 / d1) * x + 0.9375;
 }
 }
-}
-}
-mark("return uppercaseCount + lowercaseCount + specialCount;\n", false, false);
-return uppercaseCount + lowercaseCount + specialCount;
+mark("return n1 * (x-=2.625 / d1) * x + 0.984375;\n", false, false);
+return n1 * (x-=2.625 / d1) * x + 0.984375;
 }
 
 public static void main(String[] args) {
 writeDataToFile("", "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", false);
 long startRunTestTime = System.nanoTime();
-Object output = countCharacterTypes('', false, false, true, false);
+Object output = easeOutBounce(0.0);
 long endRunTestTime = System.nanoTime();
 double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
 writeDataToFile(runTestDuration + "===" + output, "core-engine/cfg/src/main/java/data/testDriverData/runTestDriverData.txt", true);

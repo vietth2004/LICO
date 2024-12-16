@@ -1,5 +1,4 @@
-int uppercaseCount=0;
-===false===false---end---int lowercaseCount=0;
-===false===false---end---int specialCount=0;
-===false===false---end---isUpperCase_call_1===false===true---end---isLowerCase_call_2===false===true---end---!isLetter_call_3 && !isDigit_call_4===false===true---end---return uppercaseCount + lowercaseCount + specialCount;
-===false===false---end---0.900999===0
+double n1=7.5625;
+===false===false---end---double d1=2.75;
+===false===false---end---x < 1 / d1===true===false---end---return n1 * x * x;
+===false===false---end---0.9026===0.0

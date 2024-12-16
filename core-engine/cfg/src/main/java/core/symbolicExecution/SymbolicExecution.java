@@ -29,21 +29,11 @@ public final class SymbolicExecution {
     private MemoryModel memoryModel;
     private List<Z3VariableWrapper> Z3Vars;
     private Model model;
-
     private Path testPath;
     private List<ASTNode> parameters;
-    private List<String> stubVariablesDeclarations = new ArrayList<>();
-
-    private static Queue<String> stubVariableNames = new LinkedList<>();
-    private static Queue<String> stubVariablesOrigins = new LinkedList<>();
-    private static List<Class<?>> stubVariablesTypes = new ArrayList<>();
-
     private static CfgNode currentCfgNode;
 
     public SymbolicExecution(Path testPath, List<ASTNode> parameters) {
-        stubVariablesOrigins = new LinkedList<>();
-        stubVariableNames = new LinkedList<>();
-        stubVariablesTypes = new ArrayList<>();
         this.testPath = testPath;
         this.parameters = parameters;
 //        execute();
@@ -53,16 +43,12 @@ public final class SymbolicExecution {
         memoryModel = new MemoryModel();
         Z3Vars = new ArrayList<>();
         currentCfgNode = null;
-//        MethodInvocationNode.resetNumberOfFunctionsCall();
 
         HashMap<String, String> cfg = new HashMap();
         cfg.put("model", "true");
         Context ctx = new Context(cfg);
 
-        for (ASTNode astNode : parameters) {
-            AstNode.executeASTNode(astNode, memoryModel);
-            createZ3ParameterVariable(astNode, ctx);
-        }
+        executeParameters(ctx);
 
         Node currentNode = testPath.getCurrentFirst();
 
@@ -101,8 +87,16 @@ public final class SymbolicExecution {
         System.out.println(finalZ3Expression);
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
-        evaluateAndSaveTestDataCreated();
+        evaluateAndSaveTestDataCreated(ctx);
         return Z3Vars;
+    }
+
+    private void executeParameters(Context ctx) {
+        Z3Vars = new ArrayList<>();
+        for (ASTNode astNode : parameters) {
+            AstNode.executeASTNode(astNode, memoryModel);
+            createZ3ParameterVariable(astNode, ctx);
+        }
     }
 
     private void createZ3ParameterVariable(ASTNode parameter, Context ctx) {
@@ -156,7 +150,12 @@ public final class SymbolicExecution {
         }
     }
 
-    private void evaluateAndSaveTestDataCreated() {
+    private void evaluateAndSaveTestDataCreated(Context ctx) {
+        // check and update Z3Vars with stub variables
+        if (Z3Vars.size() != parameters.size()) {
+            executeParameters(ctx);
+        }
+
         if (model != null) {
             StringBuilder result = new StringBuilder();
 
@@ -171,25 +170,21 @@ public final class SymbolicExecution {
                     String name = primitiveVar.toString();
 
                     if (evaluateResult instanceof IntNum) {
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
 
                         result.append(evaluateResult);
                     } else if (evaluateResult instanceof IntExpr) {
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.INT));
 
                         result.append("1");
                     } else if (evaluateResult instanceof RatNum) {
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
-
                         RatNum ratNum = (RatNum) evaluateResult;
-                        double value = (ratNum.getNumerator().getInt() * 1.0) / ratNum.getDenominator().getInt();
+                        IntNum numerator = ratNum.getNumerator();
+                        IntNum denominator = ratNum.getDenominator();
+                        double value = (numerator.getInt64() * 1.0) / denominator.getInt64();
                         result.append(value);
                     } else if (evaluateResult instanceof RealExpr) {
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.DOUBLE));
 
                         result.append("1.0");
                     } else if (evaluateResult instanceof BoolExpr) {
-                        result.append(generateAdditionalInformationForStubVariable(i, name, PrimitiveType.BOOLEAN));
 
                         BoolExpr boolExpr = (BoolExpr) evaluateResult;
                         if (!boolExpr.toString().equals("false") && !boolExpr.toString().equals("true")) {
@@ -198,7 +193,6 @@ public final class SymbolicExecution {
                             result.append(boolExpr);
                         }
                     }
-
 
                 } else {
                     ArrayTypeVariable arrayTypeVariable = z3VariableWrapper.getArrayVar();
@@ -214,12 +208,6 @@ public final class SymbolicExecution {
         }
     }
 
-    private String generateAdditionalInformationForStubVariable(int iterate, String name, PrimitiveType.Code type) {
-        if (iterate >= parameters.size()){
-            return type + " " + name + " ";
-        } else return "";
-    }
-
     public Object[] getEvaluatedTestData(Class<?>[] parameterClasses) {
         List<Object> result = new ArrayList<>();
         Scanner scanner;
@@ -231,7 +219,7 @@ public final class SymbolicExecution {
 
         for (int i = 0; i < parameterClasses.length; i++) {
 //            if (!scanner.hasNext()) {
-//                result[i] = createRandomVariableData(parameterClasses[i]);
+//                result.add(createRandomVariableData(parameterClasses[i]));
 //                continue;
 //            }
 
@@ -257,45 +245,27 @@ public final class SymbolicExecution {
             }
         }
 
-//        while (scanner.hasNext()) {
-//            String type = scanner.next();
-//            String name = scanner.next();
-//
-//            stubVariablesDeclarations.add(type + " " + name);
-//
-//            result.add(scanValue(scanner, type));
-//        }
-
         return result.toArray();
     }
 
     private Object scanValue(Scanner scanner, String type) {
         if ("int".equals(type)) {
-            stubVariablesTypes.add(int.class);
             return scanner.nextInt();
         } else if ("boolean".equals(type)) {
-            stubVariablesTypes.add(boolean.class);
             return scanner.nextBoolean();
         } else if ("byte".equals(type)) {
-            stubVariablesTypes.add(byte.class);
             return scanner.nextByte();
         } else if ("short".equals(type)) {
-            stubVariablesTypes.add(short.class);
             return scanner.nextShort();
         } else if ("char".equals(type)) {
-            stubVariablesTypes.add(char.class);
             return (char) scanner.nextInt();
         } else if ("long".equals(type)) {
-            stubVariablesTypes.add(long.class);
             return scanner.nextLong();
         } else if ("float".equals(type)) {
-            stubVariablesTypes.add(float.class);
             return scanner.nextFloat();
         } else if ("double".equals(type)) {
-            stubVariablesTypes.add(double.class);
             return scanner.nextDouble();
         } else if ("void".equals(type)) {
-            stubVariablesTypes.add(void.class);
             return null;
         } else {
             throw new RuntimeException("Unsupported type: " + type);
@@ -378,31 +348,6 @@ public final class SymbolicExecution {
 
     public Model getModel() {
         return model;
-    }
-
-
-    public List<String> getStubVariablesDeclarations() {
-        return stubVariablesDeclarations;
-    }
-
-    public static Queue<String> getStubVariablesOrigins() {
-        return stubVariablesOrigins;
-    }
-
-    public static void addToStubVariablesOrigins(String stubVariablesOrigin) {
-        SymbolicExecution.stubVariablesOrigins.add(stubVariablesOrigin);
-    }
-
-    public static Queue<String> getStubVariableNames() {
-        return stubVariableNames;
-    }
-
-    public static void addToStubVariableNames(String stubVariableName) {
-        SymbolicExecution.stubVariableNames.add(stubVariableName);
-    }
-
-    public static List<Class<?>> getStubVariablesTypes() {
-        return stubVariablesTypes;
     }
 
     public static CfgNode getCurrentCfgNode() {

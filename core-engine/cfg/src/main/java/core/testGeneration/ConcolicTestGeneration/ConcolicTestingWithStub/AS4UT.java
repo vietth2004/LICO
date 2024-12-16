@@ -1,7 +1,8 @@
 package core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub;
 
 import core.ast.Expression.MethodInvocationNode;
-import core.cfg.CfgBoolExprNode;
+import core.cfg.*;
+import core.cfg.utils.CfgUtils;
 import core.testDriver.TestDriverUtils;
 import core.testGeneration.ConcolicTestGeneration.ConcolicTestGeneration;
 import core.testGeneration.TestGeneration;
@@ -11,14 +12,11 @@ import core.testResult.result.autoTestResult.TestResult;
 import core.FilePath;
 import core.path.FindPath;
 import core.symbolicExecution.SymbolicExecution;
-import core.cfg.CfgBlockNode;
-import core.cfg.CfgEndBlockNode;
-import core.cfg.CfgNode;
 import core.path.MarkedPath;
 import core.path.MarkedStatement;
 import core.path.Path;
-import core.parser.ASTHelper;
-import core.parser.ProjectParser;
+import core.cfg.utils.ASTHelper;
+import core.cfg.utils.ProjectParser;
 import core.testDriver.TestDriverGenerator;
 import core.testDriver.TestDriverRunner;
 import core.utils.Utils;
@@ -119,7 +117,7 @@ public class AS4UT extends ConcolicTestGeneration {
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
         else System.out.println("Test fail due to UNSATISFIABLE constraint");
 
-        testResult.setFullCoverage(calculateFullTestSuiteCoverage());
+        testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
 
         return testResult;
     }
@@ -145,9 +143,14 @@ public class AS4UT extends ConcolicTestGeneration {
         fullyClonedClassName = "data.clonedProject." + packetName + className;
     }
 
-    private static double calculateFullTestSuiteCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT)).get(null);
-        int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+    private static double calculateFullTestSuiteCoverage(Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage)).get(null);
+        int totalCovered = 0;
+        if (coverage == Coverage.STATEMENT) {
+            totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+        } else { // branch
+            totalCovered = MarkedPath.getFullTestSuiteTotalCoveredBranch();
+        }
         return (totalCovered * 100.0) / totalFunctionStatement;
     }
 

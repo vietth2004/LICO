@@ -14,8 +14,8 @@ import core.cfg.CfgNode;
 import core.path.MarkedPath;
 import core.path.MarkedStatement;
 import core.path.Path;
-import core.parser.ASTHelper;
-import core.parser.ProjectParser;
+import core.cfg.utils.ASTHelper;
+import core.cfg.utils.ProjectParser;
 import core.testDriver.TestDriverGenerator;
 import core.testDriver.TestDriverRunner;
 import core.uploadProjectUtils.ConcolicUploadUtil;
@@ -95,7 +95,7 @@ public class ConcolicTesting extends ConcolicTestGeneration {
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
         else System.out.println("Test fail due to UNSATISFIABLE constraint");
 
-        testResult.setFullCoverage(calculateFullTestSuiteCoverage());
+        testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
 
         return testResult;
     }
@@ -108,11 +108,17 @@ public class ConcolicTesting extends ConcolicTestGeneration {
         MarkedPath.resetFullTestSuiteCoveredStatements();
     }
 
-    private static double calculateFullTestSuiteCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT);
-        int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-        int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
-        return (totalCovered * 100.0) / totalFunctionStatement;
+    private static double calculateFullTestSuiteCoverage(Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, coverage);
+        if (coverage == Coverage.STATEMENT) {
+            int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
+            int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+            return (totalCovered * 100.0) / totalFunctionStatement;
+        } else { // branch
+            int totalFunctionBranch = ConcolicUploadUtil.totalBranchesInUnits.get(key);
+            int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredBranch();
+            return (totalCovered * 100.0) / totalFunctionBranch;
+        }
     }
 
     private static double calculateRequiredCoverage(TestGeneration.Coverage coverage) {

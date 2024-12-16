@@ -2,7 +2,7 @@ package core.testexecution.instrument;
 
 import core.cfg.CfgNode;
 import core.cfg.CfgReturnStatementNode;
-import core.parser.ProjectParser;
+import core.cfg.utils.ProjectParser;
 import core.structureTree.structureNode.SFunctionNode;
 import core.testcases.TestCase;
 import core.testdata.DataNode;
