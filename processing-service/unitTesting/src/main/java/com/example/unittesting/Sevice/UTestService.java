@@ -4,9 +4,13 @@ import core.testGeneration.NTDTestGeneration.NTDPairwiseTesting.NTDPairwiseTesti
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UTestService {
 
     public ResponseEntity<Object> runAutomationTest(int targetId, String nameProject, NTDPairwiseTesting.Coverage coverage) throws IOException;
+    public ResponseEntity<Object> runAutomationTestFile(int targetId, String nameProject, NTDPairwiseTesting.Coverage coverage) throws IOException;
+    public ResponseEntity<Object> runAutomationTestProject(String nameProject, NTDPairwiseTesting.Coverage coverage) throws IOException;
+    public ResponseEntity<Object> runAutomationTestAll(List<Integer> targetIds, String nameProject, NTDPairwiseTesting.Coverage coverage) throws IOException;
 
 }

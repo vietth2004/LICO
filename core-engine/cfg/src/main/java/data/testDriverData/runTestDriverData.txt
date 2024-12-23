@@ -1,4 +1,4 @@
-double n1=7.5625;
-===false===false---end---double d1=2.75;
-===false===false---end---x < 1 / d1===true===false---end---return n1 * x * x;
-===false===false---end---0.9026===0.0
+int sum=0;
+===false===false---end---char ch=start===false===false---end---ch <= end===true===false---end---sum+=1;
+===false===false---end---ch++===false===false---end---ch <= end===false===true---end---return sum;
+===false===false---end---1.8095===1

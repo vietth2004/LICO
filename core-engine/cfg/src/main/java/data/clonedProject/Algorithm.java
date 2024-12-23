@@ -1,5 +1,4 @@
 package data.clonedProject;
-import data.clonedProject.utils.JavaAlgorithm;
 import java.io.FileWriter;
 public class Algorithm {
 private static void writeDataToFile(String data, String path, boolean append) {
@@ -674,8 +673,11 @@ return c;
 public static final int intminimumintaintbintcTotalStatement = 5;
 public static final int intminimumintaintbintcTotalBranch = 4;
 public static int methodInvocation(int x,int y){
-  if (Math.max(x,y) == y) {
+  if (minimum(x,y,10) == y) {
     return 1;
+  }
+ else   if (minimum(x,3,4) == x) {
+    return 2;
   }
  else {
     return 3;
@@ -683,11 +685,19 @@ public static int methodInvocation(int x,int y){
 }
 public static int methodInvocation_clone(int x, int y)
 {
-if (((Math.max(x,y) == y) && mark("Math.max(x,y) == y", true, false)) || mark("Math.max(x,y) == y", false, true))
+if (((minimum(x,y,10) == y) && mark("minimum(x,y,10) == y", true, false)) || mark("minimum(x,y,10) == y", false, true))
 {
 {
 mark("return 1;\n", false, false);
 return 1;
+}
+}
+else {
+if (((minimum(x,3,4) == x) && mark("minimum(x,3,4) == x", true, false)) || mark("minimum(x,3,4) == x", false, true))
+{
+{
+mark("return 2;\n", false, false);
+return 2;
 }
 }
 else {
@@ -697,51 +707,48 @@ return 3;
 }
 }
 }
-
-public static final int intmethodInvocationintxintyTotalStatement = 3;
-public static final int intmethodInvocationintxintyTotalBranch = 2;
-public static double easeOutBounce(double x){
-  double n1=7.5625;
-  double d1=2.75;
-  if (x < 1 / d1)   return n1 * x * x;
-  if (x < 2 / d1) {
-    return n1 * (x-=1.5 / d1) * x + 0.75;
-  }
-  if (x < 2.5 / d1) {
-    return n1 * (x-=2.25 / d1) * x + 0.9375;
-  }
-  return n1 * (x-=2.625 / d1) * x + 0.984375;
-}
-public static double easeOutBounce_clone(double x)
-{
-mark("double n1=7.5625;\n", false, false);
-double n1=7.5625;
-mark("double d1=2.75;\n", false, false);
-double d1=2.75;
-if (((x < 1 / d1) && mark("x < 1 / d1", true, false)) || mark("x < 1 / d1", false, true))
-{
-mark("return n1 * x * x;\n", false, false);
-return n1 * x * x;
-}
-if (((x < 2 / d1) && mark("x < 2 / d1", true, false)) || mark("x < 2 / d1", false, true))
-{
-{
-mark("return n1 * (x-=1.5 / d1) * x + 0.75;\n", false, false);
-return n1 * (x-=1.5 / d1) * x + 0.75;
-}
-}
-if (((x < 2.5 / d1) && mark("x < 2.5 / d1", true, false)) || mark("x < 2.5 / d1", false, true))
-{
-{
-mark("return n1 * (x-=2.25 / d1) * x + 0.9375;\n", false, false);
-return n1 * (x-=2.25 / d1) * x + 0.9375;
-}
-}
-mark("return n1 * (x-=2.625 / d1) * x + 0.984375;\n", false, false);
-return n1 * (x-=2.625 / d1) * x + 0.984375;
 }
 
-public static final int doubleeaseOutBouncedoublexTotalStatement = 9;
-public static final int doubleeaseOutBouncedoublexTotalBranch = 6;
-public static final int AlgorithmTotalStatement = 130;
+public static final int intmethodInvocationintxintyTotalStatement = 5;
+public static final int intmethodInvocationintxintyTotalBranch = 4;
+public static int methodInvocationTwo(int x,int y){
+  if (Math.min(y,10) == y) {
+    return 1;
+  }
+ else   if (minimum(x,3,4) == x) {
+    return 2;
+  }
+ else {
+    return 3;
+  }
+}
+public static int methodInvocationTwo_clone(int x, int y)
+{
+if (((Math.min(y,10) == y) && mark("Math.min(y,10) == y", true, false)) || mark("Math.min(y,10) == y", false, true))
+{
+{
+mark("return 1;\n", false, false);
+return 1;
+}
+}
+else {
+if (((minimum(x,3,4) == x) && mark("minimum(x,3,4) == x", true, false)) || mark("minimum(x,3,4) == x", false, true))
+{
+{
+mark("return 2;\n", false, false);
+return 2;
+}
+}
+else {
+{
+mark("return 3;\n", false, false);
+return 3;
+}
+}
+}
+}
+
+public static final int intmethodInvocationTwointxintyTotalStatement = 5;
+public static final int intmethodInvocationTwointxintyTotalBranch = 4;
+public static final int AlgorithmTotalStatement = 128;
 }

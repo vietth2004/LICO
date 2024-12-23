@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -53,7 +54,7 @@ public class UTestServiceImpl implements UTestService {
                         // TEST TEMPLATE
 //                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
 
-                        TestResult result = AS4UT.runFullConcolic(pathMethod, name, className, coverage);
+                        TestResult result = AS4UT.runFullConcolic(targetId, pathMethod, name, className, coverage);
 
                         return ResponseEntity.ok(result);
                     } else {
@@ -69,6 +70,191 @@ public class UTestServiceImpl implements UTestService {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> runAutomationTestFile(int targetId, String nameProject, TestGeneration.Coverage coverage) throws IOException {
+        try {
+            File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
+            if (!jsonFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The path does not exist!");
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    List<Object> results = new ArrayList<>();
+                    JsonNode data = objectMapper.readTree(jsonFile);
+                    JsonNode nodeWithId = findNode.getNodeById(targetId, data.get("rootNode"));
+                    if (nodeWithId.get("entityClass").asText().equals("JavaNode")) {
+                        JsonNode children = nodeWithId.get("children");
+                        List<String> methodNames  = new ArrayList<>();
+                        for (JsonNode child : children) {
+                            if (child.get("entityClass").asText().equals("JavaMethodNode")) {
+                                String methodName = child.get("simpleName").asText();
+                                methodNames.add(methodName);
+                                int openingParenthesisIndex = methodName.indexOf("(");
+                                String pathMethod = nodeWithId.get("path").asText();
+                                File file = new File(pathMethod);
+                                String className = file.getName();
+                                results.add(AS4UT.runFullConcolic(child.get("id").asInt(), pathMethod, methodName.substring(0, openingParenthesisIndex).trim(),className , coverage));
+                            }
+                        }
+
+                        return ResponseEntity.ok(results);
+                    } else {
+                        System.out.println("Node with id not JavaNode.\n");
+                        return ResponseEntity.ok(nodeWithId);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Error reading JSON file.\n");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
+        }
+    }
+    @Override
+    public ResponseEntity<Object> runAutomationTestProject(String nameProject, TestGeneration.Coverage coverage) throws IOException {
+        try {
+            // Load file JSON
+            File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
+            if (!jsonFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The path does not exist!");
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode data = objectMapper.readTree(jsonFile);
+
+            // Lấy nút gốc
+            JsonNode rootNode = findNode.getNodeById(1, data.get("rootNode"));
+            if (rootNode == null || !rootNode.get("entityClass").asText().equals("JavaPackageNode")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The root node is not a JavaPackageNode!");
+            }
+
+            // Kết quả kiểm thử
+            List<Object> results = new ArrayList<>();
+            processJavaPackageNode(rootNode, nameProject, coverage, results);
+
+            return ResponseEntity.ok(results);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
+        }
+    }
+
+    // Đệ quy xử lý JavaPackageNode
+    private void processJavaPackageNode(JsonNode node, String nameProject, TestGeneration.Coverage coverage, List<Object> results) {
+        if (!node.has("children")) return;
+
+        for (JsonNode child : node.get("children")) {
+            String entityClass = child.get("entityClass").asText();
+
+            try {
+                if ("JavaMethodNode".equals(entityClass)) {
+                    results.add(processJavaMethodNode(child, coverage));
+                } else if ("JavaNode".equals(entityClass)) {
+                    results.add(processJavaNode(child, coverage));
+                } else if ("JavaPackageNode".equals(entityClass)) {
+                    processJavaPackageNode(child, nameProject, coverage, results);
+                }
+            } catch (Exception e) {
+                results.add("Error processing node ID " + child.get("id").asInt() + ": " + e.getMessage());
+            }
+        }
+    }
+    private List<Object> processJavaNode(JsonNode javaNode, TestGeneration.Coverage coverage) {
+        List<Object> results = new ArrayList<>();
+        if (!javaNode.has("children")) {
+            results.add("JavaNode ID " + javaNode.get("id").asInt() + " does not contain any methods.");
+            return results;
+        }
+
+        for (JsonNode child : javaNode.get("children")) {
+            String entityClass = child.get("entityClass").asText();
+
+            if ("JavaMethodNode".equals(entityClass)) {
+                try {
+                    Object testResult = processJavaMethodNode(child, coverage);
+                    results.add(testResult);
+                } catch (Exception e) {
+                    results.add("Error testing method ID " + child.get("id").asInt() + ": " + e.getMessage());
+                }
+            } else {
+                results.add("Skipped non-method node with ID " + child.get("id").asInt());
+            }
+        }
+        return results;
+    }
+    private TestResult processJavaMethodNode(JsonNode javaMethodNode, TestGeneration.Coverage coverage) throws IOException {
+        try {
+            if (!javaMethodNode.get("entityClass").asText().equals("JavaMethodNode")) {
+                throw new IllegalArgumentException("Provided node is not a JavaMethodNode.");
+            }
+
+            String simpleName = javaMethodNode.get("simpleName").asText();
+            String pathMethod = javaMethodNode.get("path").asText();
+            System.out.println("Path: " + pathMethod);
+
+            int openingParenthesisIndex = simpleName.indexOf("(");
+            String methodName = simpleName.substring(0, openingParenthesisIndex).trim();
+
+            File file = new File(pathMethod);
+            String className = file.getName();
+
+            return AS4UT.runFullConcolic(javaMethodNode.get("id").asInt(),pathMethod, methodName, className, coverage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException("Error processing JavaMethodNode: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> runAutomationTestAll(List<Integer> targetIds, String nameProject, TestGeneration.Coverage coverage) throws IOException {
+        try {
+            File jsonFile = new File("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json");
+            if (!jsonFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The path does not exist!");
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode data = objectMapper.readTree(jsonFile);
+
+            List<Object> results = new ArrayList<>();
+            for (Integer targetId : targetIds) {
+                JsonNode nodeWithId = findNode.getNodeById(targetId, data.get("rootNode"));
+
+                if (nodeWithId == null) {
+                    results.add("Node with ID " + targetId + " not found.");
+                    continue;
+                }
+
+                String entityClass = nodeWithId.get("entityClass").asText();
+                if ("JavaPackageNode".equals(entityClass)) {
+                    processJavaPackageNode(nodeWithId, nameProject, coverage, results);
+                }
+                else  if ("JavaNode".equals(entityClass)) {
+                    results.add( processJavaNode(nodeWithId, coverage));
+                }
+                else if ("JavaMethodNode".equals(entityClass)) {
+                    results.add(processJavaMethodNode(nodeWithId, coverage));
+                } else {
+                    results.add("Unsupported entity class for node ID " + targetId + ": " + entityClass);
+                }
+            }
+            return ResponseEntity.ok(results);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file.");
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
         }
     }
@@ -93,6 +279,4 @@ public class UTestServiceImpl implements UTestService {
         nodeService.getParameterDependency(targerId);
         parameterInputs = nodeService.getParameterInputs();
     }
-
-
 }
