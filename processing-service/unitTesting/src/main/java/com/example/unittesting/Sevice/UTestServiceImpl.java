@@ -2,6 +2,8 @@ package com.example.unittesting.Sevice;
 
 
 import com.example.unittesting.model.MethodTest;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import core.testGeneration.ConcolicTestGeneration.ConcolicTesting;
 import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.AS4UT;
 import core.testGeneration.TestGeneration;
 import core.entity.ParameterInput;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,8 +30,8 @@ import java.util.List;
 
 public class UTestServiceImpl implements UTestService {
     private MethodTest methodTest;
-
     private List<ParameterInput> parameterInputs;
+
     @Override
     public ResponseEntity<Object> runAutomationTest(int targetId, String nameProject, TestGeneration.Coverage coverage) throws IOException {
         try {
@@ -60,6 +63,53 @@ public class UTestServiceImpl implements UTestService {
                         System.out.println("Node with id not JavaMethodNode.\n");
                         return ResponseEntity.ok(nodeWithId);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Error reading JSON file.\n");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
+        }
+    }
+
+    private final String JAVA_METHOD_NODE = "JavaMethodNode";
+
+    @Override
+    public ResponseEntity<Object> runRegressionTest(String nameProject, TestGeneration.Coverage coverage) {
+        try {
+            String dirPath = "project/anonymous/tmp-prj/" + nameProject;
+            File jsonFile = new File(dirPath + "/tmp-prj.json");
+            if (!jsonFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Non exist file "+ jsonFile.getPath());
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    JsonNode data = objectMapper.readTree(jsonFile);
+                    List<TestResult> finalResult = new ArrayList<>();
+
+                    ArrayNode changedNodes = (ArrayNode) data.get("changedNodes");
+
+                    for (int i = 0; i < changedNodes.size(); i++) {
+                        JsonNode changeNode = changedNodes.get(i);
+
+                        if (changeNode.get("entityClass").asText().equals(JAVA_METHOD_NODE)) {
+
+                            String path = changeNode.get("path").asText();
+                            String name = changeNode.get("simpleName").asText();
+                            String className = (new File(path)).getName();
+
+                            TestResult result = ConcolicTesting.runFullConcolic(path, name, className, coverage);
+                            finalResult.add(result);
+                        }
+
+                        System.out.println("abc");
+                    }
+
+                    return ResponseEntity.ok(finalResult);
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("Error reading JSON file.\n");

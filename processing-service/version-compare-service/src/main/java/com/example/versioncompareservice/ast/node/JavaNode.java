@@ -85,7 +85,8 @@ public class JavaNode extends Node implements Serializable {
         this.setupProperties((AbstractNode) javaNode);
         this.status = status;
 
-        if(javaNode.getEntityClass().equals("JavaClassNode") || javaNode.getEntityClass().equals("JavaInterfaceNode"))
+        if(javaNode.getEntityClass().equals("JavaClassNode") || javaNode.getEntityClass().equals("JavaInterfaceNode")
+            || javaNode.getEntityClass().equals("JavaMethodNode"))
         {
             this.path = path + "/" + javaNode.getSourceFile().getRelativePath();
         }

@@ -1,4 +1,2 @@
-double n1=7.5625;
-===false===false---end---double d1=2.75;
-===false===false---end---x < 1 / d1===true===false---end---return n1 * x * x;
-===false===false---end---0.9026===0.0
+number % 2 == 0===false===true---end---return true;
+===false===false---end---0.8397===true

@@ -49,7 +49,7 @@ public class ParserServiceImpl implements ParserService{
     //Build Project with Multipart File
     //**
     @Override
-    public NewResponse build(List<String> parserList, MultipartFile file, String user, String project) {
+    public Response build(List<String> parserList, MultipartFile file, String user, String project) {
         isEndProgress = false;
         log.info("Function: build() Thread name: {}, id: {}, state: {}", Thread.currentThread().getName(), Thread.currentThread().getId(), Thread.currentThread().getState());
         String userPath = user;
@@ -75,11 +75,9 @@ public class ParserServiceImpl implements ParserService{
         Response response = Getter.getResponse(parserList, request, filePath.getPath());
         response.setOrientedDependencies(Converter.convertToOrientedDependencies(response.getDependencies()));
 
-        NewResponse newResponse = Node.convertToNewResponse(response);
+        Writer.write(filePath, response, "tmp-prj");
 
-        Writer.writeNewResponse(filePath, newResponse, "tmp-prj");
-
-        return newResponse;
+        return response;
     }
 
     @Override

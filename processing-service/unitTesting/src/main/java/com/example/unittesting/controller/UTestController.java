@@ -61,4 +61,32 @@ public class UTestController {
         return ResponseEntity.ok(utestService.runAutomationTest(targetId, nameProject, coverage));
     }
 
+    @GetMapping(value = "/regressionTest")
+    @Operation(
+            parameters = {@io.swagger.v3.oas.annotations.Parameter(name = "nameProject"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "coverageType")}
+    )
+    public ResponseEntity<Object> getRegressionTest(@RequestParam String nameProject, @RequestParam String coverageType) {
+        TestGeneration.Coverage coverage;
+
+        switch (coverageType) {
+            case "statement":
+                coverage = TestGeneration.Coverage.STATEMENT;
+                break;
+            case "branch":
+                coverage = TestGeneration.Coverage.BRANCH;
+                break;
+            case "path":
+                coverage = TestGeneration.Coverage.PATH;
+                break;
+            case "mcdc":
+                coverage = TestGeneration.Coverage.MCDC;
+                break;
+            default:
+                throw new RuntimeException("Invalid coverage type");
+        }
+
+        return ResponseEntity.ok(utestService.runRegressionTest(nameProject, coverage));
+    }
+
 }

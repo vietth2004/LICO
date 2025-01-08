@@ -30,20 +30,20 @@ public class ParserController {
 
 
     @PostMapping("/parse/file")
-    public NewResponse parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
+    public Response parseProjectToRootNodeByFile (@RequestParam(name="parser") List<String> parserList,
                                                   @RequestBody MultipartFile file,
                                                   @RequestParam(name="user", required = false, defaultValue = "anonymous") String user,
                                                   @RequestParam(name="project", required = false, defaultValue = "tmp-prj") String project) throws IOException {
 
         long start = System.currentTimeMillis();
         long memoryBefore = getUsedMemory();
-        NewResponse newResponse = parserService.build(parserList, file, user, project);
+        Response response = parserService.build(parserList, file, user, project);
         long end = System.currentTimeMillis();
         long memoryAfter = getUsedMemory();
         System.out.println("Total time is " + (end-start));
         System.out.println("Total memory is " + (memoryAfter-memoryBefore));
 
-        return newResponse;
+        return response;
     }
 
     private long getUsedMemory()

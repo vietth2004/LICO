@@ -109,44 +109,48 @@ public class ConcolicTesting extends ConcolicTestGeneration {
     }
 
     private static double calculateFullTestSuiteCoverage(Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, coverage);
-        if (coverage == Coverage.STATEMENT) {
-            int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-            int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
-            return (totalCovered * 100.0) / totalFunctionStatement;
-        } else { // branch
-            int totalFunctionBranch = ConcolicUploadUtil.totalBranchesInUnits.get(key);
-            int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredBranch();
-            return (totalCovered * 100.0) / totalFunctionBranch;
-        }
+//        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) testFunc, coverage);
+//        if (coverage == Coverage.STATEMENT) {
+//            int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
+//            int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
+//            return (totalCovered * 100.0) / totalFunctionStatement;
+//        } else { // branch
+//            int totalFunctionBranch = ConcolicUploadUtil.totalBranchesInUnits.get(key);
+//            int totalCovered = MarkedPath.getFullTestSuiteTotalCoveredBranch();
+//            return (totalCovered * 100.0) / totalFunctionBranch;
+//        }
+        return 0;
     }
 
     private static double calculateRequiredCoverage(TestGeneration.Coverage coverage) {
-        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage);
-        int totalFunctionCoverage = 1;
-        int totalCovered = 0;
-        if (coverage == TestGeneration.Coverage.STATEMENT) {
-            totalCovered = MarkedPath.getTotalCoveredStatement();
-            totalFunctionCoverage = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-        } else if (coverage == TestGeneration.Coverage.BRANCH) {
-            totalCovered = MarkedPath.getTotalCoveredBranch();
-            Map<String, Integer> hashMap = ConcolicUploadUtil.totalBranchesInUnits;
-            totalFunctionCoverage = hashMap.get(key);
-        }
-        return (totalCovered * 100.0) / totalFunctionCoverage;
+//        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage);
+//        int totalFunctionCoverage = 1;
+//        int totalCovered = 0;
+//        if (coverage == TestGeneration.Coverage.STATEMENT) {
+//            totalCovered = MarkedPath.getTotalCoveredStatement();
+//            totalFunctionCoverage = ConcolicUploadUtil.totalStatementsInUnits.get(key);
+//        } else if (coverage == TestGeneration.Coverage.BRANCH) {
+//            totalCovered = MarkedPath.getTotalCoveredBranch();
+//            Map<String, Integer> hashMap = ConcolicUploadUtil.totalBranchesInUnits;
+//            totalFunctionCoverage = hashMap.get(key);
+//        }
+//        return (totalCovered * 100.0) / totalFunctionCoverage;
+        return 0;
     }
 
     private static double calculateFunctionCoverage() {
-        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT);
-        int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
-        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
-        return (totalCoveredStatement * 100.0) / (totalFunctionStatement * 1.0);
+//        String key = getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT);
+//        int totalFunctionStatement = ConcolicUploadUtil.totalStatementsInUnits.get(key);
+//        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
+//        return (totalCoveredStatement * 100.0) / (totalFunctionStatement * 1.0);
+        return 0;
     }
 
     private static double calculateSourceCodeCoverage() {
-        int totalClassStatement = ConcolicUploadUtil.totalStatementsInJavaFile.get(classKey);
-        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
-        return (totalCoveredStatement * 100.0) / (totalClassStatement * 1.0);
+//        int totalClassStatement = ConcolicUploadUtil.totalStatementsInJavaFile.get(classKey);
+//        int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
+//        return (totalCoveredStatement * 100.0) / (totalClassStatement * 1.0);
+        return 0;
     }
 
     private static void setUpTestFunc(String methodName) {

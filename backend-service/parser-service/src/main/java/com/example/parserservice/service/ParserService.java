@@ -13,7 +13,7 @@ public interface ParserService {
 
     Request buildProject(MultipartFile file) throws IOException;
 
-    NewResponse build(List<String> parser, MultipartFile file, String user, String project) throws IOException;
+    Response build(List<String> parser, MultipartFile file, String user, String project) throws IOException;
 
     Response build(List<String> parser, Path path) throws IOException;
 }

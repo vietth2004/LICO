@@ -12,6 +12,7 @@ import com.example.versioncompareservice.service.analyzer.ChangedNodeAnalyzer;
 import com.example.versioncompareservice.service.analyzer.DeletedNodeAnalyzer;
 import com.example.versioncompareservice.service.analyzer.UnchangedNodeAnalyzer;
 import com.example.versioncompareservice.utils.*;
+import com.example.versioncompareservice.utils.worker.Writer;
 import com.netflix.discovery.shared.Pair;
 import mrmathami.cia.java.JavaCiaException;
 import mrmathami.cia.java.jdt.ProjectBuilder;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -81,10 +81,17 @@ public class VersionServiceImpl implements VersionService{
         String oldVersion = fileStorageService.storeFile(files.get(0), userPath, project);
         String newVersion = fileStorageService.storeFile(files.get(1), userPath, project);
 
-        version.setOldVersion("./project/" + userPath + "/" + project + "/" + oldVersion + ".project");
-        version.setNewVersion("./project/" + userPath + "/" + project + "/" + newVersion + ".project");
+        String oldVersionPath = "./project/" + userPath + "/" + project + "/" + oldVersion + ".project";
+        String newVersionPath = "./project/" + userPath + "/" + project + "/" + newVersion + ".project";
 
-        return getCompare(version);
+        version.setOldVersion(oldVersionPath);
+        version.setNewVersion(newVersionPath);
+
+        Response response = getCompare(version);
+
+        Writer.write(newVersionPath, response, "tmp-prj");
+
+        return response;
     }
 
     public Response getCompare (MultipartFile file, String user, String project, String oldPath) throws JavaCiaException, IOException {
