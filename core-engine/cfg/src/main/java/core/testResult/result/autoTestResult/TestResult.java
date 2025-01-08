@@ -4,8 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestResult {
+    private int id;
+
     private List<TestData> fullTestData = new ArrayList<>();
     private double fullCoverage = 0;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void addToFullTestData(TestData testData) {
         fullTestData.add(testData);
