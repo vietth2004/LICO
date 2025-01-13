@@ -34,7 +34,7 @@ public class AS4UT extends ConcolicTestGeneration {
     private AS4UT() {
     }
 
-    public static TestResult runFullConcolic(int id, String path, String methodName, String className, TestGeneration.Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
+    public static TestResult runFullConcolic(int id, String path, String methodName, String className, TestGeneration.Coverage coverage) throws IOException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters(methodName);

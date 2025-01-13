@@ -30,7 +30,7 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
     private NTDPairwiseTesting() {
     }
 
-    public static TestResult runFullPairwise(String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
+    public static TestResult runFullPairwise(int id, String path, String methodName, String className, Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters(methodName);
@@ -55,7 +55,7 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
 
         long startRunTestTime = System.nanoTime();
 
-        TestResult result = startGenerating(coverage);
+        TestResult result = startGenerating(id, coverage);
 
         isSetup = false;
 
@@ -117,8 +117,10 @@ public class NTDPairwiseTesting extends NTDTestGeneration {
         }
     }
 
-    private static TestResult startGenerating(Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
+    private static TestResult startGenerating(int id, Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
         TestResult testResult = new TestResult();
+        testResult.setId(id);
+
         Object[] evaluatedValues = SymbolicExecution.createRandomTestData(parameterClasses);
 
         writeDataToFile("", FilePath.concreteExecuteResultPath, false);

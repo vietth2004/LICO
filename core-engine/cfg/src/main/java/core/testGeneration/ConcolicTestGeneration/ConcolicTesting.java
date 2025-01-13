@@ -33,21 +33,23 @@ public class ConcolicTesting extends ConcolicTestGeneration {
     private ConcolicTesting() {
     }
 
-    public static TestResult runFullConcolic(String path, String methodName, String className, TestGeneration.Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
+    public static TestResult runFullConcolic(int id, String path, String methodName, String className, TestGeneration.Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
         setup(path, className, methodName);
         setupCfgTree(coverage);
         setupParameters();
         TestGeneration.isSetup = true;
 
-        TestResult result = startGenerating(coverage);
+        TestResult result = startGenerating(id, coverage);
 
         TestGeneration.isSetup = false;
 
         return result;
     }
 
-    private static TestResult startGenerating(TestGeneration.Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException {
+    private static TestResult startGenerating(int id, TestGeneration.Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException {
         TestResult testResult = new TestResult();
+        testResult.setId(id);
+
         Object[] evaluatedValues = SymbolicExecution.createRandomTestData(TestGeneration.parameterClasses);
 
         TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);

@@ -5,6 +5,7 @@ import com.example.unittesting.model.MethodTest;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import core.testGeneration.ConcolicTestGeneration.ConcolicTesting;
 import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.AS4UT;
+import core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub.ConcolicTestingWithStub4Libs;
 import core.testGeneration.TestGeneration;
 import core.entity.ParameterInput;
 import core.testResult.result.autoTestResult.TestResult;
@@ -56,7 +57,7 @@ public class UTestServiceImpl implements UTestService {
                         // TEST TEMPLATE
 //                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
 
-                        TestResult result = AS4UT.runFullConcolic(targetId, pathMethod, name, className, coverage);
+                        TestResult result = ConcolicTestingWithStub4Libs.runFullConcolic(targetId, pathMethod, name, className, coverage);
 
                         return ResponseEntity.ok(result);
                     } else {
@@ -102,7 +103,7 @@ public class UTestServiceImpl implements UTestService {
                             String name = changeNode.get("simpleName").asText();
                             String className = (new File(path)).getName();
 
-                            TestResult result = ConcolicTesting.runFullConcolic(path, name, className, coverage);
+                            TestResult result = ConcolicTesting.runFullConcolic(0, path, name, className, coverage);
                             finalResult.add(result);
                         }
 
