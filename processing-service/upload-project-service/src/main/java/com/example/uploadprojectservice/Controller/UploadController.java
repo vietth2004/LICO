@@ -3,7 +3,10 @@ package com.example.uploadprojectservice.Controller;
 import com.example.uploadprojectservice.Service.UploadService;
 import com.example.uploadprojectservice.ast.Node.Parameter;
 import com.example.uploadprojectservice.ast.data.InfoMethod;
-import core.uploadProjectUtils.ConcolicUploadUtil;
+import com.example.uploadprojectservice.model.Response;
+import com.example.uploadprojectservice.model.VersionCompareResponse;
+import com.example.uploadprojectservice.utils.worker.Getter;
+import com.example.uploadprojectservice.utils.worker.Writer;
 import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import com.example.uploadprojectservice.utils.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,10 +43,35 @@ public class UploadController {
     @Autowired
     private final UploadService uploadService;
 
-    public UploadController(UploadService uploadService){
+    public UploadController(UploadService uploadService) {
         this.uploadService = uploadService;
     }
 
+    @PostMapping("/regression-testing-upload")
+    public JsonNode regressionUpload(@RequestBody List<MultipartFile> files,
+                                     @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
+                                     @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException, InterruptedException {
+        if (files != null) {
+            String path = uploadService.buildProject(null, files.get(1), user, project);
+
+            Response utUploadResponse = Getter.getResponse(path);
+
+            uploadService.preprocessSourceCode(path);
+
+            File jsonFile = new File(path + "\\tmp-prjt.json");
+
+            VersionCompareResponse versionCompareResponse = uploadService.compareTwoVersions(files, project, user);
+
+            uploadService.applyVersionCompareInfo(utUploadResponse.getRootNode(), versionCompareResponse);
+
+            Writer.write(path, utUploadResponse, "tmp-prjt");
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode data = objectMapper.readTree(jsonFile);
+            return data;
+        } else {
+            throw new IllegalArgumentException("File is null");
+        }
+    }
 
     @PostMapping("/process")
     @Operation(
@@ -60,24 +88,9 @@ public class UploadController {
                             @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException, InterruptedException {
         if (file != null) {
             String path = uploadService.buildProject(parserList, file, user, project);
-            Object result = uploadService.build(path);
+            uploadService.build(path);
 
-            Path rootPackage =  CloneProject.findRootPackage(Paths.get(path));
-            if(rootPackage == null) throw new RuntimeException("Invalid project");
-
-            long startRunTestTime = System.nanoTime();
-
-            // Clone Project (NTD)
-            CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath);
-
-            // Concolic Preprocess
-//            ConcolicUploadUtil.ConcolicPreprocessSourceCode(rootPackage.toString());
-
-            long endRunTestTime = System.nanoTime();
-
-            double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
-
-            System.out.println("clone time " + runTestDuration);
+            uploadService.preprocessSourceCode(path);
 
             path += "\\tmp-prjt.json";
             File jsonFile = new File(path);
@@ -122,6 +135,7 @@ public class UploadController {
                     .body("Lỗi xảy ra trong quá trình xử lý yêu cầu: " + e.getMessage());
         }
     }
+
     @GetMapping(value = "/read")
     @Operation(
             summary = "Đây là API gọi đến một method",
@@ -165,7 +179,7 @@ public class UploadController {
                         for (MethodDeclaration methodDeclaration : methodDeclarations) {
                             String methodName = methodDeclaration.getSignature().asString();
                             //System.out.println(methodName);
-                            if(methodName.equals(simpleName)){
+                            if (methodName.equals(simpleName)) {
                                 content = new StringBuilder(methodDeclaration.toString());
                                 for (com.github.javaparser.ast.body.Parameter parameter : methodDeclaration.getParameters()) {
                                     parameters.add(new Parameter(parameter.getNameAsString(), parameter.getType().asString()));
@@ -205,7 +219,7 @@ public class UploadController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error processing request. Exception: " + e.getMessage()+"\n");
+            System.out.println("Error processing request. Exception: " + e.getMessage() + "\n");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request. Exception: " + e.getMessage());
         }
     }
@@ -216,7 +230,7 @@ public class UploadController {
             description = "API sẽ lưu lại những expected inputs/outputs mà người dùng nhập vào" +
                     "với inputs đó chương trình thực hiện các test case cho ra độ phủ actual outputs"
     )
-    public ResponseEntity<? extends Object> setExpectValue(@RequestBody InfoMethod requestMethod){
+    public ResponseEntity<? extends Object> setExpectValue(@RequestBody InfoMethod requestMethod) {
         if (requestMethod != null) {
             try {
                 ResponseEntity<Object> response = uploadService.saveDataTest(requestMethod);

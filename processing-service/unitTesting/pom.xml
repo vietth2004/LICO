@@ -152,7 +152,6 @@
         <repository>
             <id>repo-cfg</id>
             <name>CFG4</name>
-            <!--            <url>https://raw.githubusercontent.com/thanhminhmr/repository/main/</url>-->
             <url>file://../../core-engine/</url>
         </repository>
     </repositories>

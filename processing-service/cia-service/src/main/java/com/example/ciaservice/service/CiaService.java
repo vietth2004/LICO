@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface CiaService {
 
+    public Response calculate (List<Dependency> dependencies, Integer totalNodes, List<JavaNode> javaNodes);
+
     public Response calculate (List<Dependency> dependencies, Integer totalNodes);
 
     public Response findImpact (List<JavaNode> javaNodes, List<Dependency> dependencies, Integer totalNodes, List<Integer> changedNodes);

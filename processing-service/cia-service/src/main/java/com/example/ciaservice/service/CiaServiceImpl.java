@@ -18,6 +18,30 @@ import org.springframework.stereotype.Service;
 public class CiaServiceImpl implements CiaService{
 
     @Override
+    public Response calculate(List<Dependency> dependencies, Integer totalNodes, List<JavaNode> javaNodes) {
+        Map<Integer, Integer> nodes = new HashMap<>(totalNodes);
+
+        for(int i = 0; i < totalNodes; ++i) {
+            nodes.put(i, 0);
+        }
+
+        for(Dependency dependency : dependencies) {
+            Integer calleeNodeId = dependency.getCalleeNode();
+            nodes.put(calleeNodeId, nodes.getOrDefault(calleeNodeId, 0) + Utility.calculateWeight(dependency.getType()));
+        }
+
+        for(Dependency dependency : dependencies) {
+            if(dependency.getType().getMEMBER().equals(1)) {
+                Integer calleeNodeId = dependency.getCalleeNode();
+                Integer callerNodeId = dependency.getCallerNode();
+                nodes.put(callerNodeId, nodes.getOrDefault(callerNodeId, 0) + nodes.getOrDefault(calleeNodeId, 0));
+            }
+        }
+
+        return Utility.convertMapToNodes(nodes, javaNodes);
+    }
+
+    @Override
     public Response calculate(List<Dependency> dependencies, Integer totalNodes) {
         Response response = new Response();
         Map<Integer, Integer> nodes = new HashMap<>(totalNodes);
@@ -46,7 +70,7 @@ public class CiaServiceImpl implements CiaService{
 
     @Override
     public Response findImpact(List<JavaNode> javaNodes, List<Dependency> dependencies, Integer totalNodes, List<Integer> changedNodes) {
-        List<Node> nodes = calculate(dependencies, totalNodes).getNodes();
+        List<Node> nodes = calculate(dependencies, totalNodes, javaNodes).getNodes();
         Set<Node> affectedNodes = new HashSet<>();
 
         for(Integer javaNode : changedNodes) {

@@ -30,7 +30,14 @@ public class VersionController {
                                          @RequestParam(name="user", required = false, defaultValue = "anonymous") String user)
             throws JavaCiaException, IOException {
         System.out.println(project);
-        return versionService.getCompare(files, user, project);
+        long startRunTestTime = System.nanoTime();
+
+        Response response = versionService.getCompare(files, user, project);
+
+        long endRunTestTime = System.nanoTime();
+        double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;
+        System.out.println(runTestDuration);
+        return response;
     }
 
     @PostMapping("/byPath")

@@ -1,6 +1,7 @@
 package com.example.ciaservice.ast.utility;
 
 import com.example.ciaservice.ast.DependencyCountTable;
+import com.example.ciaservice.ast.JavaNode;
 import com.example.ciaservice.ast.Node;
 import com.example.ciaservice.model.Response;
 
@@ -34,6 +35,23 @@ public class Utility {
         }
 
         return new Response(nodeList);
+    }
+
+    public static Response convertMapToNodes(Map<Integer, Integer> nodes, List<JavaNode> javaNodes) {
+        List<Node> nodeList = new ArrayList<>();
+
+        for(Integer id : nodes.keySet()) {
+            nodeList.add(new Node(id, nodes.get(id), getUniqueName(id, javaNodes)));
+        }
+
+        return new Response(nodeList);
+    }
+
+    private static String getUniqueName(Integer id, List<JavaNode> javaNodes) {
+        for(JavaNode javaNode : javaNodes) {
+            if(javaNode.getId().equals(id)) return javaNode.getUniqueName();
+        }
+        return "";
     }
 
     public static Response convertSetToNodes(Set<Node> nodes) {

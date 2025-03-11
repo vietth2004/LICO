@@ -9,6 +9,10 @@ public class MethodNode extends Node implements Serializable {
     private String qualifiedName;
     private String uniqueName;
 
+    private boolean changed = false;
+    private boolean added = false;
+    private boolean impacted = false;
+
     public MethodNode() {
     }
 
@@ -40,4 +44,27 @@ public class MethodNode extends Node implements Serializable {
         return uniqueName;
     }
 
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
+    }
+
+    public boolean isAdded() {
+        return added;
+    }
+
+    public void setAdded(boolean added) {
+        this.added = added;
+    }
+
+    public boolean isImpacted() {
+        return impacted;
+    }
+
+    public void setImpacted(boolean impacted) {
+        this.impacted = impacted;
+    }
 }
