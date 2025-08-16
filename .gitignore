@@ -57,3 +57,4 @@ backend-service/project-service/src/main/resources/application.properties
 /processing-service/jsf-service/src/test/
 /management-service/api-gateway/src/test/
 /service-log/
+/core-engine/cfg/src/main/java/data/clonedProject

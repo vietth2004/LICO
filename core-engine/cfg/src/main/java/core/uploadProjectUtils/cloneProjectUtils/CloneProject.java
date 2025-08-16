@@ -268,9 +268,11 @@ public final class CloneProject {
             totalFunctionBranch = 0;
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
             result.append(methodDeclaration);
-            result.append(createCloneMethod(methodDeclaration));
-            result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
-            result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
+            if(!((MethodDeclaration) astNode).isConstructor()){
+                result.append(createCloneMethod(methodDeclaration));
+                result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
+                result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
+            }
         }
 
         result.append(createTotalClassStatementVariable(classData));
