@@ -112,9 +112,16 @@ public final class CloneProject {
                 existJavaFile = true;
                 totalClassStatement = 0;
                 String fileName = file.getName();
-                createCloneFile(destinationDirPath, fileName);
                 CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(originalDirPath + "\\" + fileName);
-                String sourceCode = createCloneSourceCode(compilationUnit, originalDirPath + "\\" + fileName);
+                //Kiểm tra xem tên file có dấu cách không thì xóa và tạo file clone
+                if (fileName.chars().anyMatch(Character::isWhitespace)) {
+                    int dot = fileName.lastIndexOf(".");
+                    String baseName = fileName.substring(0, dot);
+                    baseName = baseName.trim().replaceAll("\\s+", "_");
+                    fileName = baseName + "_clone.java";
+                }
+                createCloneFile(destinationDirPath, fileName);
+                String sourceCode = createCloneSourceCode(compilationUnit, fileName.replaceFirst("\\.java$", ""));
                 writeDataToFile(sourceCode, destinationDirPath + "\\" + fileName);
             }
         }
@@ -173,7 +180,7 @@ public final class CloneProject {
         }
     }
 
-    private static String createCloneSourceCode(CompilationUnit compilationUnit, String filePath) {
+    private static String createCloneSourceCode(CompilationUnit compilationUnit, String fileName) {
         StringBuilder result = new StringBuilder();
 
         //Packet
@@ -207,7 +214,12 @@ public final class CloneProject {
         // Class type (interface/class) and class name
         ClassData classData = classDataArr.get(0);
 
-        result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
+        //Giải pháp tạm thời cho việc class name không trùng với tên file
+        if(!fileName.equals(classData.getClassName())) {
+            result.append("public ").append(classData.getTypeOfClass()).append(" ").append(fileName);
+        } else {
+            result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
+        }
 
         //Extensions
         if (classData.getSuperClassName() != null) {
