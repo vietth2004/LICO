@@ -61,6 +61,15 @@ public class Getter {
 
     private static Node createNodeFromFile(File file) {
         String fileName = file.getName();
+
+        //Xóa dấu cách trong tên file
+        if (fileName.chars().anyMatch(Character::isWhitespace)) {
+            int dot = fileName.lastIndexOf(".");
+            String baseName = fileName.substring(0, dot);
+            baseName = baseName.trim().replaceAll("\\s+", "_");
+            fileName = baseName + "_clone.java";
+        }
+
         Node node = new Node(getNextId(), fileName, null, new ArrayList<>(), file.getAbsolutePath());
         List<MethodNode> methodNodes = createJavaNodeFromFile(file);
         if (!methodNodes.isEmpty()) {
