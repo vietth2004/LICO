@@ -2,6 +2,7 @@ package core.uploadProjectUtils.cloneProjectUtils;
 
 import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
 import core.FilePath;
+import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.File;
@@ -114,12 +115,8 @@ public final class CloneProject {
                 String fileName = file.getName();
                 CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(originalDirPath + "\\" + fileName);
                 //Kiểm tra xem tên file có dấu cách không thì xóa và tạo file clone
-                if (fileName.chars().anyMatch(Character::isWhitespace)) {
-                    int dot = fileName.lastIndexOf(".");
-                    String baseName = fileName.substring(0, dot);
-                    baseName = baseName.trim().replaceAll("\\s+", "_");
-                    fileName = baseName + "_clone.java";
-                }
+                fileName = Utils.fileNameNormalize(fileName);
+
                 createCloneFile(destinationDirPath, fileName);
                 String sourceCode = createCloneSourceCode(compilationUnit, fileName.replaceFirst("\\.java$", ""));
                 writeDataToFile(sourceCode, destinationDirPath + "\\" + fileName);

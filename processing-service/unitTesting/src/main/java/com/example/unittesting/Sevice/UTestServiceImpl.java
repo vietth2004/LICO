@@ -15,6 +15,7 @@ import com.example.unittesting.utils.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import core.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -55,12 +56,7 @@ public class UTestServiceImpl implements UTestService {
                         String className = file.getName();
 
                         //Xóa dấu cách trong tên file
-                        if (className.chars().anyMatch(Character::isWhitespace)) {
-                            int dot = className.lastIndexOf(".");
-                            String baseName = className.substring(0, dot);
-                            baseName = baseName.trim().replaceAll("\\s+", "_");
-                            className = baseName + "_clone.java";
-                        }
+                        className = Utils.fileNameNormalize(className);
                         // TEST TEMPLATE
 //                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
 

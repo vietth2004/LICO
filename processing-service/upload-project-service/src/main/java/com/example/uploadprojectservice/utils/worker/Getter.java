@@ -6,6 +6,7 @@ import com.example.uploadprojectservice.model.Response;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import core.utils.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,12 +64,7 @@ public class Getter {
         String fileName = file.getName();
 
         //Xóa dấu cách trong tên file
-        if (fileName.chars().anyMatch(Character::isWhitespace)) {
-            int dot = fileName.lastIndexOf(".");
-            String baseName = fileName.substring(0, dot);
-            baseName = baseName.trim().replaceAll("\\s+", "_");
-            fileName = baseName + "_clone.java";
-        }
+        fileName = Utils.fileNameNormalize(fileName);
 
         Node node = new Node(getNextId(), fileName, null, new ArrayList<>(), file.getAbsolutePath());
         List<MethodNode> methodNodes = createJavaNodeFromFile(file);
