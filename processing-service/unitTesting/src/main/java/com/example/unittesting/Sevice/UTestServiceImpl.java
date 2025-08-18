@@ -54,6 +54,13 @@ public class UTestServiceImpl implements UTestService {
                         File file = new File(pathMethod);
                         String className = file.getName();
 
+                        //Xóa dấu cách trong tên file
+                        if (className.chars().anyMatch(Character::isWhitespace)) {
+                            int dot = className.lastIndexOf(".");
+                            String baseName = className.substring(0, dot);
+                            baseName = baseName.trim().replaceAll("\\s+", "_");
+                            className = baseName + "_clone.java";
+                        }
                         // TEST TEMPLATE
 //                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
 

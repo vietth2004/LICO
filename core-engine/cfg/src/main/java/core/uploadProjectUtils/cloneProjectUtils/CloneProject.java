@@ -215,11 +215,9 @@ public final class CloneProject {
         ClassData classData = classDataArr.get(0);
 
         //Giải pháp tạm thời cho việc class name không trùng với tên file
-        if(!fileName.equals(classData.getClassName())) {
-            result.append("public ").append(classData.getTypeOfClass()).append(" ").append(fileName);
-        } else {
-            result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
-        }
+        classData.setClassName(fileName);
+
+        result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
 
         //Extensions
         if (classData.getSuperClassName() != null) {
