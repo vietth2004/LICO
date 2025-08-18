@@ -305,4 +305,14 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public static String fileNameNormalize(String fileName){
+        if (fileName.chars().anyMatch(Character::isWhitespace) || fileName.contains("'")) {
+            int dot = fileName.lastIndexOf(".");
+            String baseName = fileName.substring(0, dot);
+            baseName = baseName.trim().replaceAll("[\\s']", "_");
+            fileName = baseName + "_clone.java";
+        }
+        return fileName;
+    }
 }
