@@ -6,6 +6,7 @@ import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public final class TestDriverGenerator {
@@ -98,24 +99,48 @@ public final class TestDriverGenerator {
 
     private static String generateAllMethodDeclarationFromMethodInvocation(MethodDeclaration methodDeclaration) {
         StringBuilder result = new StringBuilder();
-        List<MethodInvocation> methodInvocations = new ArrayList<>();
-        methodDeclaration.getBody().accept(new MethodInvocationVisitor(methodInvocations));
-        for (MethodInvocation methodInvocation : methodInvocations) {
-            MethodDeclaration newMethodDeclaration = getInvokeAdMethodST(methodInvocation.getName().toString());
+        if (methodDeclaration == null) {
+            throw new IllegalArgumentException("MethodDeclaration cannot be null");
+        }
+        HashSet<MethodDeclaration> methodDeclarations = new HashSet<>();
+        methodDeclarations = findAllDistinctMethods(methodDeclaration, methodDeclarations);
+        methodDeclarations.remove(methodDeclaration);
+        for (MethodDeclaration newMethodDeclaration : methodDeclarations) {
             result.append("\n").append(newMethodDeclaration);
-            result.append(generateAllMethodDeclarationFromMethodInvocation(newMethodDeclaration));
         }
         return result.toString();
     }
 
     private static MethodDeclaration getInvokeAdMethodST(String methodName) {
+        if (methodName == null || methodName.isEmpty()) {
+            throw new IllegalArgumentException("Method name cannot be null or empty");
+        }
         ArrayList<ASTNode> funcAstNodeList = TestGeneration.getFuncAstNodeList();
         for (ASTNode astNode : funcAstNodeList) {
-            if (((MethodDeclaration) astNode).getName().getIdentifier().equals(methodName)) {
+            if (astNode instanceof MethodDeclaration &&
+                    ((MethodDeclaration) astNode).getName().getIdentifier().equals(methodName)) {
                 return (MethodDeclaration) astNode;
             }
         }
         throw new RuntimeException("There is no method named: " + methodName);
+    }
+
+    private static HashSet<MethodDeclaration> findAllDistinctMethods(MethodDeclaration methodDeclaration,
+                                                                     HashSet<MethodDeclaration> methodDeclarations) {
+        List<MethodInvocation> methodInvocations = new ArrayList<>();
+        Block body = methodDeclaration.getBody();
+        if (body != null) {
+            body.accept(new MethodInvocationVisitor(methodInvocations));
+        }
+        for (MethodInvocation methodInvocation : methodInvocations) {
+            String methodName = methodInvocation.getName().toString();
+            MethodDeclaration newMethodDeclaration = getInvokeAdMethodST(methodName);
+            if (newMethodDeclaration != null && !methodDeclarations.contains(newMethodDeclaration)) {
+                methodDeclarations.add(newMethodDeclaration);
+                methodDeclarations = findAllDistinctMethods(newMethodDeclaration, methodDeclarations);
+            }
+        }
+        return methodDeclarations;
     }
 
     private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
