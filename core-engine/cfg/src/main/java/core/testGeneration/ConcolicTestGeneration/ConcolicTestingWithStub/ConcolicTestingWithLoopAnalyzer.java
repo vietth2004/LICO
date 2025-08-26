@@ -128,8 +128,18 @@ public class ConcolicTestingWithLoopAnalyzer extends ConcolicTestGeneration {
         else System.out.println("Test fail due to UNSATISFIABLE constraint");
 
         testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
+        List<Map<String, Object[]>> loopTestcases = new ArrayList<>();
         if (hasLoop((MethodDeclaration) TestGeneration.testFunc)) {
-            analyzeLoop((MethodDeclaration) TestGeneration.testFunc);
+            loopTestcases = analyzeLoop((MethodDeclaration) TestGeneration.testFunc);
+        }
+        for (Map<String, Object[]> map : loopTestcases) {
+            for (Map.Entry<String, Object[]> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object[] values = entry.getValue();
+
+                testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, values, TestGeneration.getCoverageType(coverage));
+                TestDriverRunner.runTestDriver(testDriver);
+            }
         }
 
         return testResult;
@@ -276,7 +286,7 @@ public class ConcolicTestingWithLoopAnalyzer extends ConcolicTestGeneration {
         return false;
     }
 
-    public static void analyzeLoop(MethodDeclaration method) throws IOException {
+    public static List<Map<String, Object[]>> analyzeLoop(MethodDeclaration method) throws IOException {
         System.out.println("\n===== ANALYZING LOOPS USING SYMBOLIC EXECUTION =====");
         LoopAnalyzer loopAnalyzer = new LoopAnalyzer(method);
         List<LoopInfo> loops = loopAnalyzer.detectLoops();
@@ -294,7 +304,7 @@ public class ConcolicTestingWithLoopAnalyzer extends ConcolicTestGeneration {
             loopTestcases = loopAnalyzer.generateLoopBoundaryTestCases();
         }
 
-
+        return loopTestcases;
     }
 }
 

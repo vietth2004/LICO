@@ -146,7 +146,7 @@ public class LoopAnalyzer {
                     if (varFragment.getName().getIdentifier().equals(iteratorVar)) {
                         Expression initializerExpr = varFragment.getInitializer();
                             if (initializerExpr instanceof NumberLiteral) {
-                                return Integer.parseInt(initializer.toString());
+                                return Integer.parseInt(initializerExpr.toString());
                             }
                     }
                 }
