@@ -148,22 +148,32 @@ public final class TestDriverGenerator {
     private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
         int limit = 1;
         StringBuilder cloneMethod = new StringBuilder();
-        cloneMethod.append(createMethodWithRecurLimit(limit, method, coverage));
+//        cloneMethod.append(createMethodWithRecurLimit(limit, method, coverage));
+        cloneMethod.append("private static int MAX_RECURSION_DEPTH = ").append(limit).append(";\n");
         cloneMethod.append("public static ").append(method.getReturnType2()).append(" ").append(method.getName()).append("(");
         List<ASTNode> parameters = method.parameters();
         for (int i = 0; i < parameters.size(); i++) {
             cloneMethod.append(parameters.get(i));
             if (i != parameters.size() - 1) cloneMethod.append(", ");
         }
-        cloneMethod.append(")\n");
+        cloneMethod.append(")\n{\n");
 
-        cloneMethod.append("{\n").append("return ").append(method.getName()).append("(");
-        for (int i = 0; i < parameters.size(); i++) {
-            SingleVariableDeclaration param = (SingleVariableDeclaration) parameters.get(i);
-            cloneMethod.append(param.getName());
-            if (i != parameters.size() - 1) cloneMethod.append(", ");
-        }
-        cloneMethod.append(parameters.isEmpty() ? "" : ", ").append("0);\n");
+//        cloneMethod.append("{\n").append("return ").append(method.getName()).append("(");
+//        for (int i = 0; i < parameters.size(); i++) {
+//            SingleVariableDeclaration param = (SingleVariableDeclaration) parameters.get(i);
+//            cloneMethod.append(param.getName());
+//            if (i != parameters.size() - 1) cloneMethod.append(", ");
+//        }
+//        cloneMethod.append(parameters.isEmpty() ? "" : ", ").append("0);\n");
+        cloneMethod.append("if (MAX_RECURSION_DEPTH <= 0) {\n")
+                .append("System.out.println(\"Recursion depth exceeded. Returning default value.\");\n")
+                .append("return ").append(getDefaultValue(method.getReturnType2())).append(";\n")
+                .append("}\n");
+        cloneMethod.append("MAX_RECURSION_DEPTH--;\n");
+
+        cloneMethod.append(generateCodeForBlock(method.getBody(), coverage));
+
+
 
         cloneMethod.append("}\n");
 
