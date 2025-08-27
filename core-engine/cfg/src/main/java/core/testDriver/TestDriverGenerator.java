@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static org.eclipse.jdt.core.dom.PrimitiveType.*;
+
 public final class TestDriverGenerator {
 
     private static String markMethodUtility =
@@ -144,8 +146,9 @@ public final class TestDriverGenerator {
     }
 
     private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
+        int limit = 1;
         StringBuilder cloneMethod = new StringBuilder();
-
+        cloneMethod.append(createMethodWithRecurLimit(limit, method, coverage));
         cloneMethod.append("public static ").append(method.getReturnType2()).append(" ").append(method.getName()).append("(");
         List<ASTNode> parameters = method.parameters();
         for (int i = 0; i < parameters.size(); i++) {
@@ -154,9 +157,64 @@ public final class TestDriverGenerator {
         }
         cloneMethod.append(")\n");
 
-        cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)).append("\n");
+        cloneMethod.append("{\n").append("return ").append(method.getName()).append("(");
+        for (int i = 0; i < parameters.size(); i++) {
+            SingleVariableDeclaration param = (SingleVariableDeclaration) parameters.get(i);
+            cloneMethod.append(param.getName());
+            if (i != parameters.size() - 1) cloneMethod.append(", ");
+        }
+        cloneMethod.append(parameters.isEmpty() ? "" : ", ").append("0);\n");
+
+        cloneMethod.append("}\n");
 
         return cloneMethod.toString();
+    }
+
+    private static String createMethodWithRecurLimit(int limit, MethodDeclaration method, ASTHelper.Coverage coverage) {
+        StringBuilder cloneMethod = new StringBuilder();
+
+        cloneMethod.append("private static final int MAX_RECURSION_DEPTH = ").append(limit).append(";\n");
+
+        cloneMethod.append("public static ").append(method.getReturnType2()).append(" ")
+                .append(method.getName()).append("(");
+        List<ASTNode> parameters = method.parameters();
+        for (int i = 0; i < parameters.size(); i++) {
+            cloneMethod.append(parameters.get(i));
+            if (i != parameters.size() - 1) cloneMethod.append(", ");
+        }
+        cloneMethod.append(parameters.isEmpty() ? "" : ", ").append("int currentDepth");
+        cloneMethod.append(") {\n");
+
+        cloneMethod.append("if (currentDepth > MAX_RECURSION_DEPTH) {\n")
+                .append("System.out.println(\"Recursion depth exceeded. Returning default value.\");\n")
+                .append("return ").append(getDefaultValue(method.getReturnType2())).append(";\n")
+                .append("}\n");
+
+        cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)
+                .replace(method.getName() + "(", method.getName() + "(currentDepth + 1, "));
+
+        cloneMethod.append("}\n");
+
+        return cloneMethod.toString();
+    }
+
+    private static String getDefaultValue(Type returnType) {
+        if (returnType.isPrimitiveType()) {
+            PrimitiveType primitiveType = (PrimitiveType) returnType;
+            switch (primitiveType.getPrimitiveTypeCode().toString()) {
+                case "boolean": return "false";
+                case "char": return "'\\0'";
+                case "byte": return "0";
+                case "short": return "0";
+                case "int": return "0";
+                case "long": return "0";
+                case "float": return "0.0f";
+                case "double": return "0";
+                case "void": return "";
+                default: throw new IllegalArgumentException("Unknown primitive type");
+            }
+        }
+        return "null"; // Default for non-primitive types
     }
 
     private static class MethodInvocationVisitor extends ASTVisitor {
