@@ -21,23 +21,28 @@ import core.cfg.utils.ASTHelper;
 import core.cfg.utils.ProjectParser;
 import core.testDriver.TestDriverGenerator;
 import core.testDriver.TestDriverRunner;
+import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
     private static String simpleClassName;
     private static String fullyClonedClassName;
+    private static String originalFileLocation;
     private static List<ASTNode> originalParameters; // parameters before adding stub vars
 
     private ConcolicTestingWithStub4Libs() {
     }
 
     public static TestResult runFullConcolic(int id, String path, String methodName, String className, TestGeneration.Coverage coverage) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, InterruptedException {
-        setup(path, className, methodName);
+        setup(path, className, methodName, coverage);
         setupCfgTree(coverage);
         setupParameters(methodName);
         TestGeneration.isSetup = true;
@@ -57,8 +62,8 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
         TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
-        String testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage));
-        List<MarkedStatement> markedStatements = TestDriverRunner.runTestDriver(testDriver);
+        String testDriver = TestDriverGenerator.generateTestDriverNew((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage), originalFileLocation, simpleClassName);
+        List<MarkedStatement> markedStatements = TestDriverRunner.newRunTestDriver(testDriver, originalFileLocation);
 
         MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
 
@@ -104,8 +109,8 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
             TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
-            testDriver = TestDriverGenerator.generateTestDriver((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage));
-            markedStatements = TestDriverRunner.runTestDriver(testDriver);
+            testDriver = TestDriverGenerator.generateTestDriverNew((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage), originalFileLocation, simpleClassName);
+            markedStatements = TestDriverRunner.newRunTestDriver(testDriver, originalFileLocation);
 
             MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
             coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
@@ -126,29 +131,72 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         return testResult;
     }
 
-    private static void setup(String path, String className, String methodName) throws IOException {
+    private static void setup(String path, String className, String methodName, TestGeneration.Coverage coverage) throws IOException, InterruptedException {
         TestGeneration.funcAstNodeList = ProjectParser.parseFile(path);
         TestGeneration.compilationUnit = ProjectParser.parseFileToCompilationUnit(path);
         classKey = (TestGeneration.compilationUnit.getPackage() != null ? TestGeneration.compilationUnit.getPackage().getName().toString() : "") + className.replace(".java", "") + "totalStatement";
-        setupFullyClonedClassName(className);
+        String newPath = getRootProjectPath(path);
+        java.nio.file.Path rootPackage = CloneProject.findRootPackage(Paths.get(newPath));
+        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath, getCoverageType(coverage));
+        setupFullyClonedClassName(className, path, rootPackage.toString());
         setUpTestFunc(methodName);
         MarkedPath.resetFullTestSuiteCoveredStatements();
 
         MethodInvocationNode.resetNumberOfFunctionsCall();
     }
 
-    private static void setupFullyClonedClassName(String className) {
-        className = className.replace(".java", "");
-        simpleClassName = className;
-        String packetName = "";
-        if (TestGeneration.compilationUnit.getPackage() != null) {
-            packetName = TestGeneration.compilationUnit.getPackage().getName() + ".";
+    private static String getRootProjectPath(String path) {
+        // Chuẩn hóa dấu gạch chéo
+        String newPath = path.replace("\\", "/");
+
+        // Tách các phần theo "/"
+        String[] parts = newPath.split("/");
+
+        // Nối lại từ đầu tới folder thứ 6
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 7; i++) {
+            if (i > 0) sb.append("/");
+            sb.append(parts[i]);
         }
-        fullyClonedClassName = "data.clonedProject." + packetName + className;
+
+        return sb.toString();
+    }
+
+    private static void setupFullyClonedClassName(String className, String path, String rootPackage) throws IOException {
+        className = className.replace(".java", "");
+        simpleClassName = getClassFromCU(compilationUnit);
+
+        // Xóa file .java (bỏ cả tên file)
+        String relative = path.substring(rootPackage.length() + 1);
+        int lastSlash = relative.lastIndexOf("\\");
+        if (lastSlash != -1) {
+            relative = relative.substring(0, lastSlash+1);
+        } else {relative = "";}
+
+        // Đổi "/" thành "."
+        String packetName = relative.replace("\\", ".");
+        System.out.println(packetName);
+
+        originalFileLocation = "data.clonedProject." + packetName + className;
+        fullyClonedClassName = "data.clonedProject." + packetName + simpleClassName;
+    }
+
+    private static String getClassFromCU(CompilationUnit compilationUnit) {
+        List<TypeDeclaration> classes = new ArrayList<>();
+        compilationUnit.accept(new ASTVisitor() {
+            @Override
+            public boolean visit(TypeDeclaration node) {
+                classes.add(node);
+                return super.visit(node);
+            }
+        });
+        return classes.get(0).getName().toString();
     }
 
     private static double calculateFullTestSuiteCoverage(Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage)).get(null);
+        Field field = Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage));
+        field.setAccessible(true);
+        int totalFunctionStatement = (int) field.get(null);
         int totalCovered = 0;
         if (coverage == Coverage.STATEMENT) {
             totalCovered = MarkedPath.getFullTestSuiteTotalCoveredStatements();
@@ -159,7 +207,9 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
     }
 
     private static double calculateRequiredCoverage(TestGeneration.Coverage coverage) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalFunctionCoverage = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage)).get(null);
+        Field field = Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, coverage));
+        field.setAccessible(true);
+        int totalFunctionCoverage = (int) field.get(null);
         int totalCovered = 0;
         if (coverage == TestGeneration.Coverage.STATEMENT) {
             totalCovered = MarkedPath.getTotalCoveredStatement();
@@ -171,13 +221,17 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
     }
 
     private static double calculateFunctionCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalFunctionStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT)).get(null);
+        Field field = Class.forName(fullyClonedClassName).getField(getTotalFunctionCoverageVariableName((MethodDeclaration) TestGeneration.testFunc, TestGeneration.Coverage.STATEMENT));
+        field.setAccessible(true);
+        int totalFunctionStatement = (int) field.get(null);
         int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
         return (totalCoveredStatement * 100.0) / (totalFunctionStatement * 1.0);
     }
 
     private static double calculateSourceCodeCoverage() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        int totalClassStatement = (int) Class.forName(fullyClonedClassName).getField(getTotalClassCoverageVariableName()).get(null);
+        Field field = Class.forName(fullyClonedClassName).getField(getTotalClassCoverageVariableName());
+        field.setAccessible(true);
+        int totalClassStatement = (int) field.get(null);
         int totalCoveredStatement = MarkedPath.getTotalCoveredStatement();
         return (totalCoveredStatement * 100.0) / (totalClassStatement * 1.0);
     }

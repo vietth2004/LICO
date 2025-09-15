@@ -63,9 +63,6 @@ public class Getter {
     private static Node createNodeFromFile(File file) {
         String fileName = file.getName();
 
-        //Xóa dấu cách trong tên file
-        fileName = Utils.fileNameNormalize(fileName);
-
         Node node = new Node(getNextId(), fileName, null, new ArrayList<>(), file.getAbsolutePath());
         List<MethodNode> methodNodes = createJavaNodeFromFile(file);
         if (!methodNodes.isEmpty()) {

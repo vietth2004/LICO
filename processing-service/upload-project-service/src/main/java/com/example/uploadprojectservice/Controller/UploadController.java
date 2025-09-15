@@ -7,6 +7,7 @@ import com.example.uploadprojectservice.model.Response;
 import com.example.uploadprojectservice.model.VersionCompareResponse;
 import com.example.uploadprojectservice.utils.worker.Getter;
 import com.example.uploadprojectservice.utils.worker.Writer;
+import core.cfg.utils.ASTHelper;
 import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import com.example.uploadprojectservice.utils.worker.findNode;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -56,7 +57,7 @@ public class UploadController {
 
             Response utUploadResponse = Getter.getResponse(path);
 
-            uploadService.preprocessSourceCode(path);
+            uploadService.preprocessSourceCode(path, ASTHelper.Coverage.BRANCH);
 
             File jsonFile = new File(path + "\\tmp-prjt.json");
 
@@ -90,7 +91,7 @@ public class UploadController {
             String path = uploadService.buildProject(parserList, file, user, project);
             uploadService.build(path);
 
-            uploadService.preprocessSourceCode(path);
+            uploadService.preprocessSourceCode(path, ASTHelper.Coverage.MCDC);
 
             path += "\\tmp-prjt.json";
             File jsonFile = new File(path);

@@ -55,8 +55,6 @@ public class UTestServiceImpl implements UTestService {
                         File file = new File(pathMethod);
                         String className = file.getName();
 
-                        //Xóa dấu cách trong tên file
-                        className = Utils.fileNameNormalize(className);
                         // TEST TEMPLATE
 //                        createMethodTest("project/anonymous/tmp-prj/" + nameProject + "/tmp-prjt.json", targetId);
 

@@ -1,23 +1,29 @@
 package core.uploadProjectUtils.cloneProjectUtils;
 
+import core.cfg.utils.ASTHelper;
 import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
 import core.FilePath;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.TextEdit;
 
 public final class CloneProject {
     private static int totalFunctionStatement;
@@ -51,42 +57,55 @@ public final class CloneProject {
     }
 
     public static Path findRootPackage(Path sourceDir) throws IOException {
-        List<Path> files = Files.list(sourceDir).collect(Collectors.toList());
-        Optional<Path> javaFile = files.stream().filter(file -> file.getFileName().toString().endsWith(".java"))
-                .findAny();
+        if (!Files.exists(sourceDir)) {
+            throw new NoSuchFileException(sourceDir.toString());
+        }
+        // Nếu lỡ truyền vào là file -> lấy thư mục chứa nó
+        Path base = Files.isDirectory(sourceDir) ? sourceDir : sourceDir.getParent();
 
-        if (javaFile.isPresent()) {
-            Path file = javaFile.get();
-            List<String> lines = Files.readAllLines(file);
-            Optional<String> packageLine = lines.stream()
-                    .filter(line -> line.startsWith("package "))
-                    .findFirst();
-            if (packageLine.isPresent()) {
-                String packageName = packageLine.get().substring(8, packageLine.get().indexOf(";")).trim().replace(".", "\\");
-//                Path packageRoot = sourceDir;
-//                for (String part : packageName.split("\\.")) {
-//                    packageRoot = packageRoot.resolve(part);
-//                }
-                String oldPath = sourceDir.toString();
-                String newPath = oldPath.substring(0, oldPath.indexOf(packageName) - 1);
-                return Paths.get(newPath);
-            }
-            return file.getParent();
+        List<Path> javaFiles;
+        try (Stream<Path> s = Files.walk(base)) {
+            javaFiles = s.filter(p -> Files.isRegularFile(p) && p.toString().endsWith(".java"))
+                    .collect(Collectors.toList());
         }
-        for (Path file : files) {
-            if (Files.isDirectory(file)) {
-                Path path = findRootPackage(file);
-                if (path != null) {
-                    return path;
-                }
+        if (javaFiles.isEmpty()) {
+            return base; // không có .java, trả về chính thư mục gốc nhập vào
+        }
+
+        // Tập các package tìm được
+        List<Path> candidates = new ArrayList<>();
+        for (Path jf : javaFiles) {
+            String pkg = readPackageDecl(jf); // null nếu default package
+            int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split("\\.").length;
+
+            Path p = jf.getParent();
+            for (int i = 0; i < depth && p != null; i++) {
+                p = p.getParent();
+            }
+            if (p != null) {
+                candidates.add(p.toAbsolutePath().normalize());
             }
         }
-        return null;
+
+        // Lấy giao đường dẫn của tất cả package tìm được
+        Path root = candidates.get(0);
+        for (int i = 1; i < candidates.size(); i++) {
+            root = commonPrefix(root, candidates.get(i));
+            if (root == null) { // khác ổ đĩa
+                return base.toAbsolutePath().normalize();
+            }
+        }
+
+        // Đảm bảo không vượt ra ngoài base
+        if (!root.startsWith(base.toAbsolutePath().normalize())) {
+            return base.toAbsolutePath().normalize();
+        }
+        return root;
     }
 
-    public static void cloneProject(String originalDirPath, String destinationDirPath) throws IOException, InterruptedException {
+    public static void cloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage) throws IOException, InterruptedException {
         command = new StringBuilder("javac -d " + FilePath.targetClassesFolderPath + " ");
-        iCloneProject(originalDirPath, destinationDirPath);
+        iCloneProject(originalDirPath, destinationDirPath, coverage);
         System.out.println(command);
 
         Process p = Runtime.getRuntime().exec(command.toString());
@@ -98,7 +117,7 @@ public final class CloneProject {
         }
     }
 
-    private static void iCloneProject(String originalDirPath, String destinationDirPath) throws IOException {
+    private static void iCloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage) throws IOException {
         deleteFilesInDirectory(destinationDirPath);
         boolean existJavaFile = false;
 
@@ -108,17 +127,16 @@ public final class CloneProject {
             if (file.isDirectory()) {
                 String dirName = file.getName();
                 createCloneDirectory(destinationDirPath, dirName);
-                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName);
+                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName, coverage);
             } else if (file.isFile() && file.getName().endsWith("java")) {
                 existJavaFile = true;
                 totalClassStatement = 0;
                 String fileName = file.getName();
-                CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(originalDirPath + "\\" + fileName);
-                //Kiểm tra xem tên file có dấu cách không thì xóa và tạo file clone
-                fileName = Utils.fileNameNormalize(fileName);
+                String sourcePath = originalDirPath + "\\" + fileName;
+                CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(sourcePath);
 
                 createCloneFile(destinationDirPath, fileName);
-                String sourceCode = createCloneSourceCode(compilationUnit, fileName.replaceFirst("\\.java$", ""));
+                String sourceCode = createCloneSourceCode(compilationUnit, destinationDirPath, coverage);
                 writeDataToFile(sourceCode, destinationDirPath + "\\" + fileName);
             }
         }
@@ -177,14 +195,14 @@ public final class CloneProject {
         }
     }
 
-    private static String createCloneSourceCode(CompilationUnit compilationUnit, String fileName) {
+    private static String createCloneSourceCode(CompilationUnit compilationUnit, String destinationDirPath, ASTHelper.Coverage coverage) throws IOException {
         StringBuilder result = new StringBuilder();
 
         //Packet
         if (compilationUnit.getPackage() != null) {
             result.append("package data.clonedProject.").append(compilationUnit.getPackage().getName().toString()).append(";\n");
         } else {
-            result.append("package data.clonedProject;\n");
+            result.append(buildPackage(destinationDirPath)).append("\n");
         }
 
         //Imports
@@ -211,10 +229,13 @@ public final class CloneProject {
         // Class type (interface/class) and class name
         ClassData classData = classDataArr.get(0);
 
-        //Giải pháp tạm thời cho việc class name không trùng với tên file
-        classData.setClassName(fileName);
-
-        result.append("public ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
+        // Class modifier
+        String modifier = classData.getClassModifier();
+        if (modifier.equals("default") || modifier.equals("private")) {
+            result.append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
+        } else {
+            result.append(modifier).append(" ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
+        }
 
         //Extensions
         if (classData.getSuperClassName() != null) {
@@ -276,7 +297,8 @@ public final class CloneProject {
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
             result.append(methodDeclaration);
             if(!((MethodDeclaration) astNode).isConstructor()){
-                result.append(createCloneMethod(methodDeclaration));
+                //Xử lý tạm thơ constructor
+                result.append(createCloneMethod(methodDeclaration, coverage));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
             }
@@ -319,11 +341,15 @@ public final class CloneProject {
         return "public static final int ".concat(reformatVariableName(result.toString())).concat(" = " + totalClassStatement + ";\n");
     }
 
-    private static String createCloneMethod(MethodDeclaration method) {
+    private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
         StringBuilder cloneMethod = new StringBuilder();
 
         List<ASTNode> modifiers = method.modifiers();
         for (ASTNode modifier : modifiers) {
+            if(modifier.toString().equals("private")){
+                cloneMethod.append("public").append(" ");
+                continue;
+            }
             cloneMethod.append(modifier).append(" ");
         }
 
@@ -334,41 +360,40 @@ public final class CloneProject {
             if (i != parameters.size() - 1) cloneMethod.append(", ");
         }
         cloneMethod.append(")\n");
-
-        cloneMethod.append(generateCodeForBlock(method.getBody())).append("\n");
+        cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)).append("\n");
 
         return cloneMethod.toString();
     }
 
-    private static String generateCodeForOneStatement(ASTNode statement, String markMethodSeparator) {
+    private static String generateCodeForOneStatement(ASTNode statement, String markMethodSeparator, ASTHelper.Coverage coverage) {
         if (statement == null) {
             return "";
         }
 
         if (statement instanceof Block) {
-            return generateCodeForBlock((Block) statement);
+            return generateCodeForBlock((Block) statement, coverage);
         } else if (statement instanceof IfStatement) {
-            return generateCodeForIfStatement((IfStatement) statement);
+            return generateCodeForIfStatement((IfStatement) statement, coverage);
         } else if (statement instanceof ForStatement) {
-            return generateCodeForForStatement((ForStatement) statement);
+            return generateCodeForForStatement((ForStatement) statement, coverage);
         } else if (statement instanceof WhileStatement) {
-            return generateCodeForWhileStatement((WhileStatement) statement);
+            return generateCodeForWhileStatement((WhileStatement) statement, coverage);
         } else if (statement instanceof DoStatement) {
-            return generateCodeForDoStatement((DoStatement) statement);
+            return generateCodeForDoStatement((DoStatement) statement, coverage);
         } else {
             return generateCodeForNormalStatement(statement, markMethodSeparator);
         }
 
     }
 
-    private static String generateCodeForBlock(Block block) {
+    private static String generateCodeForBlock(Block block, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
         result.append("{\n");
         if (block != null) {
             List<ASTNode> statements = block.statements();
             for (int i = 0; i < statements.size(); i++) {
-                result.append(generateCodeForOneStatement(statements.get(i), ";"));
+                result.append(generateCodeForOneStatement(statements.get(i), ";", coverage));
             }
         }
         result.append("}\n");
@@ -376,16 +401,16 @@ public final class CloneProject {
         return result.toString();
     }
 
-    private static String generateCodeForIfStatement(IfStatement ifStatement) {
+    private static String generateCodeForIfStatement(IfStatement ifStatement, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
-        result.append("if (").append(generateCodeForCondition(ifStatement.getExpression())).append(")\n");
+        result.append("if (").append(generateCodeForCondition(ifStatement.getExpression(), coverage)).append(")\n");
         result.append("{\n");
-        result.append(generateCodeForOneStatement(ifStatement.getThenStatement(), ";"));
+        result.append(generateCodeForOneStatement(ifStatement.getThenStatement(), ";", coverage));
         result.append("}\n");
 
 
-        String elseCode = generateCodeForOneStatement(ifStatement.getElseStatement(), ";");
+        String elseCode = generateCodeForOneStatement(ifStatement.getElseStatement(), ";", coverage);
         if (!elseCode.equals("")) {
             result.append("else {\n").append(elseCode).append("}\n");
         }
@@ -393,7 +418,7 @@ public final class CloneProject {
         return result.toString();
     }
 
-    private static String generateCodeForForStatement(ForStatement forStatement) {
+    private static String generateCodeForForStatement(ForStatement forStatement, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
         // Initializers
@@ -409,49 +434,49 @@ public final class CloneProject {
 
         // Condition
         result.append("; ");
-        result.append(generateCodeForCondition(forStatement.getExpression()));
+        result.append(generateCodeForCondition(forStatement.getExpression(), coverage));
 
         // Updaters
         result.append("; ");
         List<ASTNode> updaters = forStatement.updaters();
         for (int i = 0; i < updaters.size(); i++) {
-            result.append(generateCodeForOneStatement(updaters.get(i), ","));
+            result.append(generateCodeForOneStatement(updaters.get(i), ",", coverage));
             if (i != updaters.size() - 1) result.append(", ");
         }
 
         // Body
         result.append(") {\n");
-        result.append(generateCodeForOneStatement(forStatement.getBody(), ";"));
+        result.append(generateCodeForOneStatement(forStatement.getBody(), ";", coverage));
         result.append("}\n");
 
         return result.toString();
     }
 
-    private static String generateCodeForWhileStatement(WhileStatement whileStatement) {
+    private static String generateCodeForWhileStatement(WhileStatement whileStatement, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
         // Condition
         result.append("while (");
-        result.append(generateCodeForCondition(whileStatement.getExpression()));
+        result.append(generateCodeForCondition(whileStatement.getExpression(), coverage));
         result.append(") {\n");
 
-        result.append(generateCodeForOneStatement(whileStatement.getBody(), ";"));
+        result.append(generateCodeForOneStatement(whileStatement.getBody(), ";", coverage));
         result.append("}\n");
 
         return result.toString();
     }
 
-    private static String generateCodeForDoStatement(DoStatement doStatement) {
+    private static String generateCodeForDoStatement(DoStatement doStatement, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
         // Do body
         result.append("do {");
-        result.append(generateCodeForOneStatement(doStatement.getBody(), ";"));
+        result.append(generateCodeForOneStatement(doStatement.getBody(), ";", coverage));
         result.append("}\n");
 
         // Condition
         result.append("while (");
-        result.append(generateCodeForCondition(doStatement.getExpression()));
+        result.append(generateCodeForCondition(doStatement.getExpression(), coverage));
         result.append(");\n");
 
         return result.toString();
@@ -469,10 +494,11 @@ public final class CloneProject {
     private static String generateCodeForMarkMethod(ASTNode statement, String markMethodSeparator) {
         StringBuilder result = new StringBuilder();
 
+        // Lấy đúng code gốc thay vì toString()
         String stringStatement = statement.toString();
         StringBuilder newStatement = new StringBuilder();
 
-        // Rewrite Statement for mark method
+        // Rewrite Statement for mark method (escape \n, " ...)
         for (int i = 0; i < stringStatement.length(); i++) {
             char charAt = stringStatement.charAt(i);
 
@@ -491,16 +517,22 @@ public final class CloneProject {
             newStatement.append(charAt);
         }
 
-        result.append("mark(\"").append(newStatement).append("\", false, false)").append(markMethodSeparator).append("\n");
+        result.append("mark(\"").append(newStatement).append("\", false, false)")
+                .append(markMethodSeparator).append("\n");
         totalFunctionStatement++;
         totalClassStatement++;
 
         return result.toString();
     }
 
-    private static String generateCodeForCondition(Expression condition) {
-//        return generateCodeForConditionForMCDCCoverage(condition);
-        return generateCodeForConditionForBranchAndStatementCoverage(condition);
+    private static String generateCodeForCondition(Expression condition, ASTHelper.Coverage coverage) {
+        if (coverage == ASTHelper.Coverage.MCDC) {
+            return generateCodeForConditionForMCDCCoverage(condition);
+        } else if (coverage == ASTHelper.Coverage.BRANCH || coverage == ASTHelper.Coverage.STATEMENT) {
+            return generateCodeForConditionForBranchAndStatementCoverage(condition);
+        } else {
+            throw new RuntimeException("Invalid coverage!");
+        }
     }
 
     private static String generateCodeForConditionForBranchAndStatementCoverage(Expression condition) {
@@ -552,5 +584,71 @@ public final class CloneProject {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String readPackageDecl(Path file) throws IOException {
+        try (BufferedReader br = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // bỏ qua dòng comment //... và /* ... */ mở đầu
+                if (line.startsWith("//") || line.startsWith("/*") || line.isEmpty()) continue;
+                if (line.startsWith("package ")) {
+                    int semi = line.indexOf(';');
+                    if (semi > 0) {
+                        return line.substring("package ".length(), semi).trim();
+                    }
+                }
+                // nếu gặp class/enum/interface trước package thì coi như default package
+                if (line.startsWith("class ") || line.startsWith("interface ")
+                        || line.startsWith("enum ") || line.startsWith("@interface ")) {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    // Tìm prefix chung của hai path tuyệt đối đã normalize
+    private static Path commonPrefix(Path a, Path b) {
+        a = a.toAbsolutePath().normalize();
+        b = b.toAbsolutePath().normalize();
+
+        if (a.getRoot() == null || b.getRoot() == null || !Objects.equals(a.getRoot(), b.getRoot()))
+            return null;
+
+        int n = Math.min(a.getNameCount(), b.getNameCount());
+        Path res = a.getRoot();
+        for (int i = 0; i < n; i++) {
+            if (!a.getName(i).equals(b.getName(i))) break;
+            res = res.resolve(a.getName(i).toString());
+        }
+        return res;
+    }
+
+    public static String buildPackage(String sourceDir) {
+        // Chuẩn hóa dấu phân cách: đổi \ thành /
+        String normalized = sourceDir.replace("\\", "/");
+
+        // Tách thành các phần
+        String[] parts = normalized.split("/");
+
+        // Tìm vị trí "clonedProject"
+        int idx = -1;
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].equals("clonedProject")) {
+                idx = i;
+                break;
+            }
+        }
+
+        // Xây package
+        StringBuilder sb = new StringBuilder("package data.clonedProject");
+        for (int i = idx + 1; i < parts.length; i++) {
+            sb.append('.').append(parts[i]);
+        }
+        sb.append(';');
+
+        return sb.toString();
     }
 }

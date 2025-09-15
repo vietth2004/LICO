@@ -4,10 +4,7 @@ import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;
 import core.testResult.coveredStatement.CoveredStatement;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class MarkedPath {
 
@@ -40,62 +37,171 @@ public final class MarkedPath {
     }
 
     public static void markPathToCFGV2(CfgNode rootNode, List<MarkedStatement> markedStatements) {
+        // reset tập coverage cho lần chạy hiện tại
         totalCoveredBranch = new HashSet<>();
         totalCoveredStatement = new HashSet<>();
 
-        int i = 0;
-        while (rootNode != null && i < markedStatements.size()) {
-            // Kiểm tra những CfgNode không có content
-            if (rootNode.getContent().equals("")) {
-                rootNode.setMarked(true);
-                rootNode = rootNode.getAfterStatementNode();
-                continue;
-            }
-
-            MarkedStatement markedStatement = markedStatements.get(i);
-            if (rootNode.getContent().equals(markedStatement.getStatement())) {
-                if (!rootNode.isMarked()) {
-                    fullTestSuiteCoveredStatements.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
-                }
-                totalCoveredStatement.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
-                rootNode.setMarked(true);
-                markedStatement.setCfgNode(rootNode);
-            } else {
-                return;
-            }
-
-            if (rootNode instanceof CfgBoolExprNode) {
-                CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
-                if (markedStatement.isFalseConditionalStatement()) {
-                    if (!boolExprNode.isFalseMarked()) {
-                        fullTestSuiteCoveredBranches.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "false"));
-                    }
-                    totalCoveredBranch.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "false"));
-                    boolExprNode.setFalseMarked(true);
-                    rootNode = boolExprNode.getFalseNode();
-                } else if (markedStatement.isTrueConditionalStatement()) {
-                    if (!boolExprNode.isTrueMarked()) {
-                        fullTestSuiteCoveredBranches.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "true"));
-                    }
-                    totalCoveredBranch.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "true"));
-                    boolExprNode.setTrueMarked(true);
-                    rootNode = boolExprNode.getTrueNode();
-                }
-                i++;
-                continue;
-            }
-
-            // Updater
-            i++;
-            rootNode = rootNode.getAfterStatementNode();
+        if (rootNode == null || markedStatements == null || markedStatements.isEmpty()) {
+            return;
         }
-        while (rootNode != null) {
-            if (rootNode.getContent().equals("")) {
-                rootNode.setMarked(true);
-                rootNode = rootNode.getAfterStatementNode();
+
+        // ===== BƯỚC 1: duyệt CFG 1 lần để build map: statement -> list<CfgNode> =====
+        Map<String, List<CfgNode>> statementToNodes = new HashMap<>();
+        Queue<CfgNode> queue = new LinkedList<>();
+        Set<CfgNode> visited = new HashSet<>();
+        queue.add(rootNode);
+
+        while (!queue.isEmpty()) {
+            CfgNode node = queue.poll();
+            if (node == null || visited.contains(node)) continue;
+            visited.add(node);
+
+            String content = node.getContent();
+            if (content != null && !content.trim().isEmpty()) {
+                String key = content.trim();
+                statementToNodes.computeIfAbsent(key, k -> new ArrayList<>()).add(node);
+            }
+
+            // mở rộng theo các cạnh của CFG
+            if (node instanceof CfgBoolExprNode) {
+                CfgBoolExprNode b = (CfgBoolExprNode) node;
+                queue.add(b.getTrueNode());
+                queue.add(b.getFalseNode());
+            }
+            queue.add(node.getAfterStatementNode());
+        }
+
+        // ===== BƯỚC 2: ánh xạ MarkedStatement -> CfgNode và cập nhật các tập coverage =====
+        for (MarkedStatement marked : markedStatements) {
+            if (marked == null) continue;
+            String stmt = marked.getStatement();
+            if (stmt == null || stmt.trim().isEmpty()) continue;
+            String key = stmt.trim();
+
+            // tìm candidate nodes có cùng content
+            List<CfgNode> candidates = statementToNodes.get(key);
+            CfgNode matched = null;
+
+            if (candidates != null && !candidates.isEmpty()) {
+                // ưu tiên node chưa được mark để tránh reuse
+                for (CfgNode n : candidates) {
+                    if (!n.isMarked()) { matched = n; break; }
+                }
+                if (matched == null) matched = candidates.get(0); // fallback
+            } else {
+                // fallback tìm tương tự: tìm key chứa/được chứa (giúp giảm mismatch do khoảng trắng)
+                for (Map.Entry<String, List<CfgNode>> e : statementToNodes.entrySet()) {
+                    String k = e.getKey();
+                    if (k.contains(key) || key.contains(k)) {
+                        List<CfgNode> list = e.getValue();
+                        matched = list.stream().filter(n -> !n.isMarked()).findFirst().orElse(list.get(0));
+                        break;
+                    }
+                }
+            }
+
+            if (matched == null) {
+                // không tìm thấy node tương ứng -> log và bỏ qua
+                System.err.println("⚠ Không tìm thấy CFG node cho statement: [" + stmt + "]");
+                continue;
+            }
+
+            // Kiểm tra xem node đã được đánh dấu trước đó (tức đã nằm trong fullTestSuite)
+            boolean wasMarkedBefore = matched.isMarked();
+
+            // 1) Statement coverage (tổng cho lần chạy hiện tại)
+            CoveredStatement csStmt = new CoveredStatement(matched.getContent(), matched.getLineNumber(), "");
+            totalCoveredStatement.add(csStmt);
+
+            // 2) Nếu node chưa được mark trước đó thì thêm vào fullTestSuite
+            if (!wasMarkedBefore) {
+                fullTestSuiteCoveredStatements.add(csStmt);
+            }
+
+            // Liên kết và mark node
+            matched.setMarked(true);
+            marked.setCfgNode(matched);
+
+            // 3) Nếu node là boolean expression thì xử lý branch coverage
+            if (matched instanceof CfgBoolExprNode) {
+                CfgBoolExprNode boolNode = (CfgBoolExprNode) matched;
+
+                if (marked.isTrueConditionalStatement()) {
+                    CoveredStatement csBranch = new CoveredStatement(boolNode.getContent(), boolNode.getLineNumber(), "true");
+                    totalCoveredBranch.add(csBranch);
+                    if (!boolNode.isTrueMarked()) {
+                        fullTestSuiteCoveredBranches.add(csBranch);
+                    }
+                    boolNode.setTrueMarked(true);
+                }
+
+                if (marked.isFalseConditionalStatement()) {
+                    CoveredStatement csBranch = new CoveredStatement(boolNode.getContent(), boolNode.getLineNumber(), "false");
+                    totalCoveredBranch.add(csBranch);
+                    if (!boolNode.isFalseMarked()) {
+                        fullTestSuiteCoveredBranches.add(csBranch);
+                    }
+                    boolNode.setFalseMarked(true);
+                }
             }
         }
     }
+//    public static void markPathToCFGV2(CfgNode rootNode, List<MarkedStatement> markedStatements) {
+//        totalCoveredBranch = new HashSet<>();
+//        totalCoveredStatement = new HashSet<>();
+//
+//        int i = 0;
+//        while (rootNode != null && i < markedStatements.size()) {
+//            // Kiểm tra những CfgNode không có content
+//            if (rootNode.getContent().equals("")) {
+//                rootNode.setMarked(true);
+//                rootNode = rootNode.getAfterStatementNode();
+//                continue;
+//            }
+//            MarkedStatement markedStatement = markedStatements.get(i);
+//            if (rootNode.getContent().equals(markedStatement.getStatement())) {
+//                if (!rootNode.isMarked()) {
+//                    fullTestSuiteCoveredStatements.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
+//                }
+//                totalCoveredStatement.add(new CoveredStatement(rootNode.getContent(), rootNode.getLineNumber(), ""));
+//                rootNode.setMarked(true);
+//                markedStatement.setCfgNode(rootNode);
+//            } else {
+//                return;
+//            }
+//
+//            if (rootNode instanceof CfgBoolExprNode) {
+//                CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
+//                if (markedStatement.isFalseConditionalStatement()) {
+//                    if (!boolExprNode.isFalseMarked()) {
+//                        fullTestSuiteCoveredBranches.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "false"));
+//                    }
+//                    totalCoveredBranch.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "false"));
+//                    boolExprNode.setFalseMarked(true);
+//                    rootNode = boolExprNode.getFalseNode();
+//                } else if (markedStatement.isTrueConditionalStatement()) {
+//                    if (!boolExprNode.isTrueMarked()) {
+//                        fullTestSuiteCoveredBranches.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "true"));
+//                    }
+//                    totalCoveredBranch.add(new CoveredStatement(boolExprNode.getContent(), boolExprNode.getLineNumber(), "true"));
+//                    boolExprNode.setTrueMarked(true);
+//                    rootNode = boolExprNode.getTrueNode();
+//                }
+//                i++;
+//                continue;
+//            }
+//
+//            // Updater
+//            i++;
+//            rootNode = rootNode.getAfterStatementNode();
+//        }
+//        while (rootNode != null) {
+//            if (rootNode.getContent().equals("")) {
+//                rootNode.setMarked(true);
+//                rootNode = rootNode.getAfterStatementNode();
+//            }
+//        }
+//    }
 
 //    public static List<MarkedStatement> markPathToCFG(CfgNode rootNode) {
 ////        List<CfgNode> coveredStatements = new ArrayList<>();

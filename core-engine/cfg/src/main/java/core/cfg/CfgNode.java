@@ -3,11 +3,13 @@ package core.cfg;
 import core.cfg.utils.ASTHelper;
 import core.structureTree.structureNode.SFunctionNode;
 import core.utils.Utils;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class CfgNode
 {
@@ -207,10 +209,15 @@ public class CfgNode
     }
 
     public static CompilationUnit parserToCompilationUnit(String sourceCode) {
-        ArrayList<ASTNode> AstFuncList = new ArrayList<>();
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setSource(sourceCode.toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setResolveBindings(true);
+        parser.setBindingsRecovery(true);
+
+        Map options = JavaCore.getOptions();
+        JavaCore.setComplianceOptions(JavaCore.VERSION_1_8, options);
+        parser.setCompilerOptions(options);
         return (CompilationUnit) parser.createAST(null);
     }
     public static ASTNode parserToAstFuncList0(String sourceCodeFile, String funcName)

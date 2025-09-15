@@ -35,6 +35,21 @@ public final class TestDriverGenerator {
     private TestDriverGenerator() {
     }
 
+    public static String generateTestDriverNew(MethodDeclaration method, Object[] testData, ASTHelper.Coverage coverage, String fullyClonedClassName, String simpleClassName) {
+        StringBuilder result = new StringBuilder();
+
+        String path = fullyClonedClassName.contains(".") ? fullyClonedClassName.substring(0, fullyClonedClassName.lastIndexOf('.')) : fullyClonedClassName;
+        result.append("package ").append(path).append(";\n");
+        result.append("import java.io.FileWriter;\n");
+        result.append("public class TestDriver {\n");
+        result.append(markMethodUtility);
+        result.append(writeDataToFileUtility);
+        result.append(newGenerateTestRunner(method, testData, simpleClassName));
+        result.append("}");
+
+        return result.toString();
+    }
+
     public static String generateTestDriver(MethodDeclaration method, Object[] testData, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
@@ -77,6 +92,42 @@ public final class TestDriverGenerator {
         return result.toString();
     }
 
+    private static String newGenerateTestRunner(MethodDeclaration method, Object[] testData, String simpleClassName) {
+        StringBuilder result = new StringBuilder();
+        result.append("public static void main(String[] args) {\n");
+        result.append("writeDataToFile(\"\", \"" + FilePath.concreteExecuteResultPath + "\", false);\n");
+        result.append("long startRunTestTime = System.nanoTime();\n");
+        List<ASTNode> modifiers = method.modifiers();
+        boolean isStatic = false;
+        for (ASTNode modifier : modifiers) {
+            if (modifier.toString().equals("static")){
+                isStatic = true;
+                break;
+            }
+        }
+        if(isStatic){
+            result.append("Object output = ").append(simpleClassName).append(".");
+        }
+        else {
+            result.append("Object output = new ").append(simpleClassName).append("().");
+        }
+        result.append(method.getName().toString()).append("_clone(");
+        for (int i = 0; i < testData.length; i++) {
+            if (testData[i] instanceof Character) {
+                result.append("'").append(testData[i]).append("'");
+            } else {
+                result.append(testData[i]);
+            }
+            if (i != testData.length - 1) result.append(", ");
+        }
+        result.append(");\n");
+        result.append("long endRunTestTime = System.nanoTime();\n");
+        result.append("double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;\n");
+        result.append("writeDataToFile(runTestDuration + \"===\" + output, \""+ FilePath.concreteExecuteResultPath + "\", true);\n");
+        result.append("}\n");
+        return result.toString();
+    }
+
     private static String generateUtilities(MethodDeclaration method, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
@@ -85,6 +136,9 @@ public final class TestDriverGenerator {
 
         // Generate writeDataToFile method
         result.append(writeDataToFileUtility);
+
+        // Generate inclass variables
+        result.append(generateVariables(method));
 
         // Generate testing method with instruments
         result.append(createCloneMethod(method, coverage));
@@ -104,6 +158,44 @@ public final class TestDriverGenerator {
             MethodDeclaration newMethodDeclaration = getInvokeAdMethodST(methodInvocation.getName().toString());
             result.append("\n").append(newMethodDeclaration);
             result.append(generateAllMethodDeclarationFromMethodInvocation(newMethodDeclaration));
+        }
+        return result.toString();
+    }
+
+    private static String generateVariables(MethodDeclaration method) {
+        StringBuilder result = new StringBuilder();
+        // Lần ngược lên tới class
+        ASTNode parent = method.getParent();
+        while (parent != null && !(parent instanceof TypeDeclaration)) {
+            parent = parent.getParent();
+        }
+        if (parent != null) {
+            TypeDeclaration classDecl = (TypeDeclaration) parent;
+            for (FieldDeclaration field : classDecl.getFields()) {
+                String type = field.getType().toString();
+                for (Object fragObj : field.fragments()) {
+                    VariableDeclarationFragment frag = (VariableDeclarationFragment) fragObj;
+
+                    // Lấy modifier (public/private/...)
+                    String modifiers = field.modifiers().toString()
+                            .replaceAll("[\\[\\],]", "").trim();
+
+                    // Nếu chưa có static thì thêm vào
+                    if (!modifiers.contains("static")) {
+                        if (!modifiers.isEmpty()) {
+                            modifiers = modifiers + " static";
+                        } else {
+                            modifiers = "static";
+                        }
+                    }
+
+                    // Ghép thành một dòng code khai báo
+                    String decl = (modifiers.isEmpty() ? "" : modifiers + " ")
+                            + type + " " + frag.toString() + ";";
+
+                    result.append(decl).append("\n");
+                }
+            }
         }
         return result.toString();
     }

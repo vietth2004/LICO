@@ -1,6 +1,7 @@
 package core.uploadProjectUtils.cloneProjectUtils.dataModel;
 
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class ClassData {
 
     private String typeOfClass;
     private String className;
+    private String classModifier;
     private String superClassName;
     private List<String> superInterfaceName;
 
@@ -25,6 +27,21 @@ public class ClassData {
             typeOfClass = "class";
         }
         className = typeDeclaration.getName().getIdentifier();
+        int modifiers = typeDeclaration.getModifiers();
+        switch (modifiers) {
+            case Modifier.PUBLIC:
+                classModifier = "public";
+                break;
+            case Modifier.PRIVATE:
+                classModifier = "private";
+                break;
+            case Modifier.PROTECTED:
+                classModifier = "protected";
+                break;
+            default:
+                classModifier = "default";
+                break;
+        }
         if(typeDeclaration.getSuperclassType() != null) {
             superClassName = typeDeclaration.getSuperclassType().toString();
         }
@@ -51,6 +68,12 @@ public class ClassData {
     public void setClassName(String className) {
         this.className = className;
     }
+
+    public String getClassModifier() {
+        return classModifier;
+    }
+
+    public void setClassModifier(String classModifier) {this.classModifier = classModifier;}
 
     public String getSuperClassName() {
         return superClassName;
