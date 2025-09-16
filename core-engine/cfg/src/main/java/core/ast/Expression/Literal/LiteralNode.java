@@ -543,4 +543,6 @@ public abstract class LiteralNode extends ExpressionNode {
             throw new RuntimeException("Unsupported Literal: " + literal.getClass());
         }
     }
+
+    abstract public ExpressionNode copy();
 }

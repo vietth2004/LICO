@@ -7,6 +7,7 @@ import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
+import core.ast.Expression.Name.SimpleNameNode;
 import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
@@ -32,7 +33,13 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
     public static ExpressionNode executePostfixExpression(PostfixExpression postfixExpression, MemoryModel memoryModel) {
         PostfixExpressionNode postfixExpressionNode = new PostfixExpressionNode();
-        postfixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(postfixExpression.getOperand(), memoryModel);
+        Expression operand = postfixExpression.getOperand();
+        if (operand instanceof SimpleName) {
+            postfixExpressionNode.operand = SimpleNameNode.executeSimpleName((SimpleName) operand);
+        } else {
+            //Xem lai
+            postfixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(postfixExpression.getOperand(), memoryModel);
+        }
         postfixExpressionNode.operator = postfixExpression.getOperator();
 
         ExpressionNode expressionNode = executePostfixExpressionNode(postfixExpressionNode, memoryModel);

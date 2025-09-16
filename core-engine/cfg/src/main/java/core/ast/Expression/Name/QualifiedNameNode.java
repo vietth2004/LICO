@@ -10,13 +10,13 @@ public class QualifiedNameNode extends NameNode {
     private SimpleNameNode name = null;
 
     public static QualifiedNameNode executeQualifiedName(QualifiedName qualifiedName, MemoryModel memoryModel) {
-//        QualifiedNameNode qualifiedNameNode = new QualifiedNameNode();
-//        qualifiedNameNode.qualifier = NameNode.executeName(qualifiedName.getQualifier());
-//        qualifiedNameNode.name = SimpleNameNode.executeSimpleName(qualifiedName.getName());
-//        return qualifiedNameNode;
+        QualifiedNameNode qualifiedNameNode = new QualifiedNameNode();
+        qualifiedNameNode.qualifier = (NameNode) NameNode.executeName(qualifiedName.getQualifier(), memoryModel);
+        qualifiedNameNode.name = (SimpleNameNode) SimpleNameNode.executeSimpleName(qualifiedName.getName(), memoryModel);
+        return qualifiedNameNode;
 
         /*????*/
-        return null;
+//        return null;
     }
 
     public static ExpressionNode executeQualifiedNameNode(QualifiedNameNode qualifiedNameNode, MemoryModel memoryModel) {

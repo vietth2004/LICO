@@ -1,6 +1,8 @@
 package core.ast.Expression.Literal.NumberLiteral;
 
+import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.NumberLiteral;
 
 public abstract class NumberLiteralNode extends LiteralNode {
@@ -48,4 +50,8 @@ public abstract class NumberLiteralNode extends LiteralNode {
     public String toString() {
         return this.tokenValue;
     }
+
+    abstract public ExpressionNode copy();
+
+
 }

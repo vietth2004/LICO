@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class MemoryModel { // ONLY FOR PRIMITIVE TYPES!!!!
     private HashMap<Variable, AstNode> S = new HashMap<>();
-    ;
 
     public MemoryModel() {
     }

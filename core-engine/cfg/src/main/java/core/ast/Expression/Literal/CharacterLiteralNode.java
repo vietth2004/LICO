@@ -1,5 +1,6 @@
 package core.ast.Expression.Literal;
 
+import core.ast.Expression.ExpressionNode;
 import org.eclipse.jdt.core.dom.CharacterLiteral;
 
 public class CharacterLiteralNode extends LiteralNode {
@@ -45,5 +46,10 @@ public class CharacterLiteralNode extends LiteralNode {
     @Override
     public String toString() {
         return getEscapedValue();
+    }
+
+    @Override
+    public ExpressionNode copy() {
+        return createCharacterLiteral(this.getCharacterValue());
     }
 }

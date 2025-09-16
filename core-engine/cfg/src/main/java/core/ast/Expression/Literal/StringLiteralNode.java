@@ -27,4 +27,11 @@ public class StringLiteralNode extends LiteralNode {
     public String toString() {
         return getEscapedValue();
     }
+
+    @Override
+    public LiteralNode copy() {
+        StringLiteralNode copy = new StringLiteralNode();
+        copy.setStringValue(this.getStringValue());
+        return copy;
+    }
 }

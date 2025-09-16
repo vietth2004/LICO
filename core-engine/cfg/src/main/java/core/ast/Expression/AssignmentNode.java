@@ -9,6 +9,7 @@ import core.ast.Expression.OperationExpression.InfixExpressionNode;
 import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
+
 public class AssignmentNode extends ExpressionNode {
 
     private Assignment.Operator operator;
@@ -19,10 +20,12 @@ public class AssignmentNode extends ExpressionNode {
         AssignmentNode assignmentNode = new AssignmentNode();
         assignmentNode.operator = assignment.getOperator();
         assignmentNode.rightHandSide = (ExpressionNode) ExpressionNode.executeExpression(assignment.getRightHandSide(), memoryModel);
+        assignmentNode.leftHandSide = (ExpressionNode) ExpressionNode.executeExpression(assignment.getLeftHandSide(), memoryModel);
 
-        ExpressionNode assignValue = analyzeAssignValue(assignmentNode.rightHandSide, assignmentNode.operator);
 
+        ExpressionNode assignValue = analyzeAssignValue(assignmentNode.leftHandSide, assignmentNode.rightHandSide, assignmentNode.operator);
         Expression leftHandSide = assignment.getLeftHandSide();
+
 
         if(leftHandSide instanceof Name) {
             String key = NameNode.getStringName((Name) leftHandSide);
@@ -39,23 +42,23 @@ public class AssignmentNode extends ExpressionNode {
             }
 
             Expression arrayExpression = arrayAccess.getArray();
-            ArrayNode arrayNode;
+            core.ast.Expression.Array.ArrayNode arrayNode;
             if(arrayExpression instanceof ArrayAccess) {
-                arrayNode = (ArrayNode) ArrayAccessNode.executeArrayAccessNode((ArrayAccess) arrayExpression, memoryModel);
+                arrayNode = (core.ast.Expression.Array.ArrayNode) core.ast.Expression.Array.ArrayAccessNode.executeArrayAccessNode((ArrayAccess) arrayExpression, memoryModel);
             } else if(arrayExpression instanceof Name){
                 String name = NameNode.getStringName((Name) arrayExpression);
-                arrayNode = (ArrayNode) memoryModel.getValue(name);
+                arrayNode = (core.ast.Expression.Array.ArrayNode) memoryModel.getValue(name);
             } else {
                 throw new RuntimeException("Can't execute ArrayAccess");
             }
-            arrayNode.set(assignValue, index);
+            arrayNode.assignElements(index, assignValue);
         }
     }
 
-    private static ExpressionNode analyzeAssignValue(ExpressionNode initialValue, Assignment.Operator assignmentOperator) {
+    private static ExpressionNode analyzeAssignValue(ExpressionNode variable, ExpressionNode initialValue, Assignment.Operator assignmentOperator) {
         InfixExpressionNode assignValue = new InfixExpressionNode();
-        assignValue.setLeftOperand(initialValue);
-        assignValue.setRightOperand(new IntegerLiteralNode(1));
+        assignValue.setLeftOperand(variable);
+        assignValue.setRightOperand(initialValue);
 
         if (assignmentOperator.equals(Assignment.Operator.ASSIGN)) {
             return initialValue;

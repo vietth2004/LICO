@@ -143,7 +143,8 @@ public class InfixExpressionNode extends OperationExpressionNode {
 
             if (extendedOperands.isEmpty()) {
                 return literalResult;
-            } else {
+            }
+            else {
                 infixExpressionNode.leftOperand = literalResult;
                 infixExpressionNode.rightOperand = (ExpressionNode) extendedOperands.remove(0);
                 return executeInfixExpressionNode(infixExpressionNode, memoryModel);
@@ -159,12 +160,12 @@ public class InfixExpressionNode extends OperationExpressionNode {
                 infixExpressionNode.rightOperand = OperationExpressionNode.executeOperandNode(rightOperand, memoryModel);
             }
 
-//            if (oldLeftOperand != infixExpressionNode.leftOperand || oldRightOperand != infixExpressionNode.rightOperand) {
-//                return executeInfixExpressionNode(infixExpressionNode, memoryModel);
-//            } else {
-//                return infixExpressionNode;
-//            }
-            return infixExpressionNode;
+            if (oldLeftOperand != infixExpressionNode.leftOperand || oldRightOperand != infixExpressionNode.rightOperand) {
+                return executeInfixExpressionNode(infixExpressionNode, memoryModel);
+            } else {
+                return infixExpressionNode;
+            }
+            //return infixExpressionNode;
         }
     }
 
@@ -245,13 +246,16 @@ public class InfixExpressionNode extends OperationExpressionNode {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("");
-        result.append(leftOperand.toString());
-        result.append(operator.toString());
-        result.append(rightOperand.toString());
+        StringBuilder result = new StringBuilder();
+        result.append(leftOperand != null ? leftOperand.toString() : "null");
+        result.append(operator != null ? operator.toString() : "null");
+        result.append(rightOperand != null ? rightOperand.toString() : "null");
 
-        for (AstNode extendedOperand : extendedOperands) {
-            result.append(operator.toString() + extendedOperand.toString());
+        if (extendedOperands != null) {
+            for (AstNode extendedOperand : extendedOperands) {
+                result.append(operator != null ? operator.toString() : "null");
+                result.append(extendedOperand != null ? extendedOperand.toString() : "null");
+            }
         }
 
         return result.toString();

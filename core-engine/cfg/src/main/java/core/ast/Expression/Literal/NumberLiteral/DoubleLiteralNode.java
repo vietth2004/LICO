@@ -1,6 +1,7 @@
 package core.ast.Expression.Literal.NumberLiteral;
 
 import core.ast.AstNode;
+import core.ast.Expression.ExpressionNode;
 
 public class DoubleLiteralNode extends NumberLiteralNode {
 
@@ -42,5 +43,10 @@ public class DoubleLiteralNode extends NumberLiteralNode {
     @Override
     public String toString() {
         return super.getTokenValue();
+    }
+
+    @Override
+    public ExpressionNode copy() {
+        return executeDoubleLiteral(getDoubleValue());
     }
 }

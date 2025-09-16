@@ -1,5 +1,6 @@
 package core.ast.Expression.Literal;
 
+import core.ast.Expression.ExpressionNode;
 import org.eclipse.jdt.core.dom.BooleanLiteral;
 
 public class BooleanLiteralNode extends LiteralNode {
@@ -36,5 +37,10 @@ public class BooleanLiteralNode extends LiteralNode {
     @Override
     public String toString() {
         return String.valueOf(this.value);
+    }
+
+    @Override
+    public ExpressionNode copy() {
+        return createBooleanLiteral(this.getValue());
     }
 }

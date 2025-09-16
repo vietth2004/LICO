@@ -27,6 +27,7 @@ public class ArrayCreationNode extends ExpressionNode {
                 numberOfDimensions, elementType, memoryModel);
     }
 
+
     private static AstNode createMultiDimensionsInitializationArray(List<ASTNode> dimensions,
                                                                     int iterateDimension, int numberOfDimensions, Type type, MemoryModel memoryModel) {
         int capacityOfDimension;
@@ -64,4 +65,6 @@ public class ArrayCreationNode extends ExpressionNode {
             throw new RuntimeException("Iterate dimension out of bound!");
         }
     }
+
+
 }

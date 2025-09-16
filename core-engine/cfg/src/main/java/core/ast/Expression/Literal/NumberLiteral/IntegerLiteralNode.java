@@ -1,5 +1,7 @@
 package core.ast.Expression.Literal.NumberLiteral;
 
+import core.ast.Expression.ExpressionNode;
+
 public class IntegerLiteralNode extends NumberLiteralNode {
 
     public IntegerLiteralNode() {
@@ -43,5 +45,10 @@ public class IntegerLiteralNode extends NumberLiteralNode {
     @Override
     public String toString() {
         return super.getTokenValue();
+    }
+
+    @Override
+    public ExpressionNode copy() {
+        return new IntegerLiteralNode(this.getIntegerValue());
     }
 }

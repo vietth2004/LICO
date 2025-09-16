@@ -1,6 +1,7 @@
 package core.ast.Type;
 
 import core.ast.AstNode;
+import core.ast.Expression.ExpressionNode;
 import core.ast.Type.AnnotatableType.*;
 import core.ast.Type.AnnotatableType.WildcardTypeNode;
 
@@ -53,4 +54,5 @@ public class TypeNode extends AstNode {
     public final boolean isAnnotatableNode() {
         return this instanceof AnnotatableTypeNode;
     }
+
 }

@@ -35,5 +35,4 @@ public abstract class AstNode {
             DimensionNode.replaceMethodInvocationWithStub((Dimension) originStatement, originMethodInvocation, replacement);
         }
     }
-
 }

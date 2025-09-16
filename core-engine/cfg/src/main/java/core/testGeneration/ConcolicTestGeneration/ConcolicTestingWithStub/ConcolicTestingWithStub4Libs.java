@@ -2,6 +2,7 @@ package core.testGeneration.ConcolicTestGeneration.ConcolicTestingWithStub;
 
 import core.ast.Expression.MethodInvocationNode;
 import core.cfg.CfgBoolExprNode;
+import core.symbolicExecution.SymbolicExecutionRewrite;
 import core.testDriver.TestDriverUtils;
 import core.testGeneration.ConcolicTestGeneration.ConcolicTestGeneration;
 import core.testGeneration.TestGeneration;
@@ -79,7 +80,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
             Path newPath = (new FindPath(TestGeneration.cfgBeginNode, uncoveredNode, TestGeneration.cfgEndNode)).getPath();
 
-            SymbolicExecution solution = new SymbolicExecution(newPath, TestGeneration.parameters);
+            SymbolicExecutionRewrite solution = new SymbolicExecutionRewrite(newPath, TestGeneration.parameters);
 
             try {
                 solution.execute();

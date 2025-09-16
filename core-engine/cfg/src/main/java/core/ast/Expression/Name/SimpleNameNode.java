@@ -17,12 +17,18 @@ public class SimpleNameNode extends NameNode {
     public static ExpressionNode executeSimpleName(SimpleName simpleName, MemoryModel memoryModel) {
         SimpleNameNode simpleNameNode = new SimpleNameNode();
         simpleNameNode.identifier = simpleName.getIdentifier();
-//        return NameNode.executeNameNode(simpleNameNode, memoryModel);
-        return simpleNameNode;
+        return NameNode.executeNameNode(simpleNameNode, memoryModel);
+        //return simpleNameNode;
     }
 
     public static ExpressionNode executeSimpleNameNode(SimpleNameNode simpleNameNode, MemoryModel memoryModel) {
         return (ExpressionNode) memoryModel.getValue(simpleNameNode);
+    }
+
+    public static ExpressionNode executeSimpleName(SimpleName simpleName) {
+        SimpleNameNode simpleNameNode = new SimpleNameNode();
+        simpleNameNode.identifier = simpleName.getIdentifier();
+        return simpleNameNode;
     }
 
     public static String getStringSimpleName(SimpleName simpleName) {
