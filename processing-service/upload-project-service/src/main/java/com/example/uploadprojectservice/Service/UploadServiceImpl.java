@@ -19,6 +19,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.netflix.discovery.EurekaClient;
 import core.FilePath;
+import core.cfg.utils.ASTHelper;
 import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -132,14 +133,14 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void preprocessSourceCode(String path) throws IOException, InterruptedException {
+    public void preprocessSourceCode(String path, ASTHelper.Coverage coverage) throws IOException, InterruptedException {
         Path rootPackage = CloneProject.findRootPackage(Paths.get(path));
         if (rootPackage == null) throw new RuntimeException("Invalid project");
 
         long startRunTestTime = System.nanoTime();
 
         // Clone Project (NTD)
-        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath);
+        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath, coverage);
 
         // Concolic Preprocess
 //            ConcolicUploadUtil.ConcolicPreprocessSourceCode(rootPackage.toString());

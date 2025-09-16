@@ -228,7 +228,6 @@ public final class SymbolicExecution {
             if (parameterClass.isPrimitive()) {
 
                 String type = parameterClasses[i].getName();
-
                 result.add(scanValue(scanner, type));
 
             } else if (parameterClass.isArray()) {

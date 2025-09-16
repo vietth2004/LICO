@@ -17,6 +17,15 @@ public final class TestDriverRunner {
     private TestDriverRunner() {
     }
 
+    public static List<MarkedStatement> newRunTestDriver(String testDriver, String fullyClonedClassName) throws IOException, InterruptedException {
+        fullyClonedClassName = fullyClonedClassName.contains(".") ? fullyClonedClassName.substring(0, fullyClonedClassName.lastIndexOf('.')) : fullyClonedClassName;
+        String path = FilePath.newTestDriverPath + "/" + fullyClonedClassName.replace(".", "/");
+        writeDataToFile(testDriver, path + "/TestDriver.java");
+        CommandLine.executeCommand("javac -cp " + FilePath.newTestDriverPath + " " + path + "/*.java");
+        CommandLine.executeCommand("java -cp " + FilePath.newTestDriverPath + " " + fullyClonedClassName + ".TestDriver");
+        return getMarkedStatement();
+    }
+
     public static List<MarkedStatement> runTestDriver(String testDriver) throws IOException, InterruptedException {
         writeDataToFile(testDriver, FilePath.testDriverPath);
 

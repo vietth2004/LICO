@@ -307,11 +307,11 @@ public class Utils {
     }
 
     public static String fileNameNormalize(String fileName){
-        if (fileName.chars().anyMatch(Character::isWhitespace) || fileName.contains("'")) {
+        if (fileName.chars().anyMatch(Character::isWhitespace) || fileName.contains("'") || fileName.contains("-")) {
             int dot = fileName.lastIndexOf(".");
             String baseName = fileName.substring(0, dot);
-            baseName = baseName.trim().replaceAll("[\\s']", "_");
-            fileName = baseName + "_clone.java";
+            baseName = baseName.trim().replaceAll("[\\s'-]", "_");
+            fileName = "clone_" + baseName + ".java";
         }
         return fileName;
     }

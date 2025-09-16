@@ -6,5 +6,6 @@ public final class FilePath {
     public final static String generatedTestDataPath = "core-engine/cfg/src/main/java/data/TestData.txt";
     public final static String targetClassesFolderPath = "core-engine/cfg/target/classes";
     public final static String testDriverPath = "core-engine/cfg/src/main/java/data/testDriverData/TestDriver.java";
+    public final static String newTestDriverPath = "core-engine/cfg/src/main/java";
 
 }

@@ -1,5 +1,6 @@
 package core.uploadProjectUtils.cloneProjectUtils;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public final class Parser {
     public static CompilationUnit parseFileToCompilationUnit(String filePath) throws IOException {
@@ -43,10 +45,15 @@ public final class Parser {
     }
 
     private static CompilationUnit parseSourceCodeToCompilationUnit(String sourceCode) {
-        ArrayList<ASTNode> AstFuncList = new ArrayList<>();
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setSource(sourceCode.toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setResolveBindings(true);
+        parser.setBindingsRecovery(true);
+
+        Map options = JavaCore.getOptions();
+        JavaCore.setComplianceOptions(JavaCore.VERSION_1_8, options);
+        parser.setCompilerOptions(options);
         return (CompilationUnit) parser.createAST(null);
     }
 }
