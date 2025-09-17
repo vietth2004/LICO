@@ -26,10 +26,10 @@ public class ArrayAccessNode {
         ExpressionNode result = null;
         if(arrayExpression instanceof ArrayAccess) {
             ArrayNode arrayNode = (ArrayNode) executeArrayAccessNode((ArrayAccess) arrayExpression, memoryModel);
-            result = (ExpressionNode) arrayNode.getElements().get(index);
+            result = (ExpressionNode) arrayNode.getElements(index).get(index);
         } else if(arrayExpression instanceof Name){
             String name = NameNode.getStringName((Name) arrayExpression);
-            result= (ExpressionNode) ((ArrayNode) memoryModel.getValue(name)).getElements().get(index);
+            result= (ExpressionNode) ((ArrayNode) memoryModel.getValue(name)).getElements(index).get(index);
         } else {
             throw new RuntimeException("Can't execute ArrayAccess");
         }

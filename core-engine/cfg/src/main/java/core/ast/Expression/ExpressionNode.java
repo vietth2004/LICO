@@ -6,6 +6,7 @@ import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.OperationExpression.*;
 import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
+import core.ast.Expression.Array.ArrayAccessNode;
 
 public abstract class ExpressionNode extends AstNode {
 

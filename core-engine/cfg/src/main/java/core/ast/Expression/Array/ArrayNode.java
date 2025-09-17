@@ -34,7 +34,13 @@ public class ArrayNode extends ExpressionNode {
         this.type = type;
     }
 
-    public List<ExpressionNode> getElements() {
+    public List<ExpressionNode> getElements(int leastLengthRequire) {
+        if (this.elements.size() <= leastLengthRequire) {
+            for (int i = this.elements.size(); i <= leastLengthRequire; i++) {
+                ExpressionNode defaultValue = getDefaultValue();
+                this.elements.add(defaultValue);
+            }
+        }
         return elements;
     }
 
