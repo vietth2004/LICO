@@ -103,9 +103,9 @@ public final class CloneProject {
         return root;
     }
 
-    public static void cloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage) throws IOException, InterruptedException {
+    public static void cloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage, String fileName) throws IOException, InterruptedException {
         command = new StringBuilder("javac -d " + FilePath.targetClassesFolderPath + " ");
-        iCloneProject(originalDirPath, destinationDirPath, coverage);
+        iCloneProject(originalDirPath, destinationDirPath, coverage, fileName);
         System.out.println(command);
 
         Process p = Runtime.getRuntime().exec(command.toString());
@@ -117,7 +117,7 @@ public final class CloneProject {
         }
     }
 
-    private static void iCloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage) throws IOException {
+    private static void iCloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage, String fileToTestName) throws IOException {
         deleteFilesInDirectory(destinationDirPath);
         boolean existJavaFile = false;
 
@@ -127,8 +127,8 @@ public final class CloneProject {
             if (file.isDirectory()) {
                 String dirName = file.getName();
                 createCloneDirectory(destinationDirPath, dirName);
-                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName, coverage);
-            } else if (file.isFile() && file.getName().endsWith("java")) {
+                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName, coverage, fileToTestName);
+            } else if (file.isFile() && file.getName().endsWith("java") && file.getName().equals(fileToTestName)) {
                 existJavaFile = true;
                 totalClassStatement = 0;
                 String fileName = file.getName();

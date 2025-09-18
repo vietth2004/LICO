@@ -138,7 +138,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         classKey = (TestGeneration.compilationUnit.getPackage() != null ? TestGeneration.compilationUnit.getPackage().getName().toString() : "") + className.replace(".java", "") + "totalStatement";
         String newPath = getRootProjectPath(path);
         java.nio.file.Path rootPackage = CloneProject.findRootPackage(Paths.get(newPath));
-        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath, getCoverageType(coverage));
+        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath, getCoverageType(coverage), className);
         setupFullyClonedClassName(className, path, rootPackage.toString());
         setUpTestFunc(methodName);
         MarkedPath.resetFullTestSuiteCoveredStatements();
