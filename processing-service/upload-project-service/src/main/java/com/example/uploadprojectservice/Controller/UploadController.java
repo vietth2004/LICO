@@ -59,7 +59,7 @@ public class UploadController {
 
             uploadService.preprocessSourceCode(path, ASTHelper.Coverage.BRANCH);
 
-            File jsonFile = new File(path + "\\tmp-prjt.json");
+            File jsonFile = new File(path + "/tmp-prjt.json");
 
             VersionCompareResponse versionCompareResponse = uploadService.compareTwoVersions(files, project, user);
 

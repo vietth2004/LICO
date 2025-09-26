@@ -127,22 +127,22 @@ public final class CloneProject {
             if (file.isDirectory()) {
                 String dirName = file.getName();
                 createCloneDirectory(destinationDirPath, dirName);
-                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName, coverage, fileToTestName);
+                iCloneProject(originalDirPath + "/" + dirName, destinationDirPath + "/" + dirName, coverage, fileToTestName);
             } else if (file.isFile() && file.getName().endsWith("java") && file.getName().equals(fileToTestName)) {
                 existJavaFile = true;
                 totalClassStatement = 0;
                 String fileName = file.getName();
-                String sourcePath = originalDirPath + "\\" + fileName;
+                String sourcePath = originalDirPath + "/" + fileName;
                 CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(sourcePath);
 
                 createCloneFile(destinationDirPath, fileName);
                 String sourceCode = createCloneSourceCode(compilationUnit, destinationDirPath, coverage);
-                writeDataToFile(sourceCode, destinationDirPath + "\\" + fileName);
+                writeDataToFile(sourceCode, destinationDirPath + "/" + fileName);
             }
         }
 
         if (existJavaFile) {
-            command.append(destinationDirPath).append("\\*.java ");
+            command.append(destinationDirPath).append("/*.java ");
         }
     }
 
@@ -290,17 +290,20 @@ public final class CloneProject {
             }
         };
         compilationUnit.accept(methodsVisitor);
-
+        result.append("private static int MAX_RECURSION_DEPTH = ").append(FilePath.MAX_RECURSION_DEPTH).append(";\n");
         for (ASTNode astNode : methods) {
             totalFunctionStatement = 0;
             totalFunctionBranch = 0;
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
-            result.append(methodDeclaration);
+
             if(!((MethodDeclaration) astNode).isConstructor()){
                 //Xử lý tạm thơ constructor
                 result.append(createCloneMethod(methodDeclaration, coverage));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
+            }
+            else {
+                result.append(methodDeclaration);
             }
         }
 
@@ -343,7 +346,6 @@ public final class CloneProject {
 
     private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
         StringBuilder cloneMethod = new StringBuilder();
-
         List<ASTNode> modifiers = method.modifiers();
         for (ASTNode modifier : modifiers) {
             if(modifier.toString().equals("private")){
@@ -353,15 +355,21 @@ public final class CloneProject {
             cloneMethod.append(modifier).append(" ");
         }
 
-        cloneMethod.append(method.getReturnType2() != null ? method.getReturnType2() : "").append(" ").append(method.getName()).append("_clone").append("(");
+        cloneMethod.append(method.getReturnType2() != null ? method.getReturnType2() : "").append(" ").append(method.getName()).append("(");
         List<ASTNode> parameters = method.parameters();
         for (int i = 0; i < parameters.size(); i++) {
             cloneMethod.append(parameters.get(i));
             if (i != parameters.size() - 1) cloneMethod.append(", ");
         }
-        cloneMethod.append(")\n");
+        cloneMethod.append(") {\n");
+        cloneMethod.append("if (MAX_RECURSION_DEPTH <= 0) {\n")
+                .append("System.out.println(\"Recursion depth exceeded. Returning default value.\");\n")
+                .append("return ").append(getDefaultValue(method.getReturnType2())).append(";\n")
+                .append("}\n");
+        cloneMethod.append("MAX_RECURSION_DEPTH--;\n");
         cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)).append("\n");
 
+        cloneMethod.append("}\n");
         return cloneMethod.toString();
     }
 
@@ -650,5 +658,24 @@ public final class CloneProject {
         sb.append(';');
 
         return sb.toString();
+    }
+
+    private static String getDefaultValue(Type returnType) {
+        if (returnType.isPrimitiveType()) {
+            PrimitiveType primitiveType = (PrimitiveType) returnType;
+            switch (primitiveType.getPrimitiveTypeCode().toString()) {
+                case "boolean": return "false";
+                case "char": return "'" + File.separator + "0'";
+                case "byte": return "0";
+                case "short": return "0";
+                case "int": return "0";
+                case "long": return "0";
+                case "float": return "0.0f";
+                case "double": return "0";
+                case "void": return "";
+                default: throw new IllegalArgumentException("Unknown primitive type");
+            }
+        }
+        return "null"; // Default for non-primitive types
     }
 }

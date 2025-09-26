@@ -5,6 +5,7 @@ import core.cfg.utils.ASTHelper;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -114,7 +115,7 @@ public final class TestDriverGenerator {
         else {
             result.append("Object output = new ").append(simpleClassName).append("().");
         }
-        result.append(method.getName().toString()).append("_clone(");
+        result.append(method.getName().toString()).append("(");
         for (int i = 0; i < testData.length; i++) {
             if (testData[i] instanceof Character) {
                 result.append("'").append(testData[i]).append("'");
@@ -305,7 +306,7 @@ public final class TestDriverGenerator {
             PrimitiveType primitiveType = (PrimitiveType) returnType;
             switch (primitiveType.getPrimitiveTypeCode().toString()) {
                 case "boolean": return "false";
-                case "char": return "'\\0'";
+                case "char": return "'" + File.separator + "0'";
                 case "byte": return "0";
                 case "short": return "0";
                 case "int": return "0";
