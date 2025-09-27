@@ -6,6 +6,7 @@ import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.Array.*;
 import core.ast.Expression.ExpressionNode;
+import core.ast.Expression.Literal.BooleanLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.OperationExpression.*;
 import core.ast.Statement.VariableDeclarationStatementNode;
@@ -73,6 +74,13 @@ public class SymbolicExecutionRewrite {
                         newAstNode.setOperand((ExpressionNode) executedAstNode);
 
                         executedAstNode = PrefixExpressionNode.executePrefixExpressionNode(newAstNode, symbolicMap);
+                    }
+
+                    if (executedAstNode instanceof BooleanLiteralNode) {
+                        if (!((BooleanLiteralNode) executedAstNode).getValue()) {
+                            break; // Stop when the condition is false
+                        }
+
                     }
 
                     BoolExpr constrain = (BoolExpr) OperationExpressionNode.createZ3Expression(

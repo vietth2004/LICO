@@ -47,6 +47,9 @@ public class InfixExpressionNode extends OperationExpressionNode {
 
         Expr result = createInfixZ3Expression(ctx, Z3LeftOperand, operator, Z3RightOperand);
 
+        if (extendedOperands == null) {
+            return result;
+        }
         for (int i = 0; i < extendedOperands.size(); i++) {
             Expr extendedOperand = OperationExpressionNode.createZ3Expression((ExpressionNode) extendedOperands.get(i), ctx, vars, memoryModel);
             result = createInfixZ3Expression(ctx, result, operator, extendedOperand);
@@ -110,36 +113,20 @@ public class InfixExpressionNode extends OperationExpressionNode {
         return expressionNode;
     }
 
-    public static ExpressionNode executeInfixExpressionNode(InfixExpressionNode infixExpressionNode, MemoryModel memoryModel) {
+    public static ExpressionNode executeInfixExpressionNode(InfixExpressionNode infixExpressionNode,
+                                                            MemoryModel memoryModel) {
         ExpressionNode leftOperand = infixExpressionNode.leftOperand;
         ExpressionNode rightOperand = infixExpressionNode.rightOperand;
         InfixExpression.Operator operator = infixExpressionNode.operator;
         List<AstNode> extendedOperands = infixExpressionNode.extendedOperands;
 
-//        if(!extendedOperands.isEmpty()) {
-//            List<AstNode> operands = new ArrayList<>();
-//            operands.add(leftOperand);
-//            operands.add(rightOperand);
-//            operands.addAll(extendedOperands);
-//
-//            LiteralNode literalResult = null;
-//
-//            for(AstNode i : operands) {
-//                if(i instanceof LiteralNode) {
-//                    LiteralNode literalOperand = (LiteralNode) i;
-//                    if(literalResult == null) {
-//                        literalResult = literalOperand;
-//                    } else {
-//                        literalResult = LiteralNode.analyzeTwoInfixLiteral(literalResult, operator, literalOperand);
-//
-//                    }
-//
-//                }
-//            }
-//        }
-
-        if (leftOperand.isLiteralNode() && rightOperand.isLiteralNode()) {
-            LiteralNode literalResult = LiteralNode.analyzeTwoInfixLiteral((LiteralNode) leftOperand, operator, (LiteralNode) rightOperand);
+        if (!leftOperand.isLiteralNode() || !rightOperand.isLiteralNode()) {
+            return infixExpressionNode;
+        } else {
+            LiteralNode literalResult
+                    = LiteralNode.analyzeTwoInfixLiteral((LiteralNode) leftOperand,
+                                                        operator,
+                                                        (LiteralNode) rightOperand);
 
             if (extendedOperands.isEmpty()) {
                 return literalResult;
@@ -149,23 +136,6 @@ public class InfixExpressionNode extends OperationExpressionNode {
                 infixExpressionNode.rightOperand = (ExpressionNode) extendedOperands.remove(0);
                 return executeInfixExpressionNode(infixExpressionNode, memoryModel);
             }
-        } else {
-            ExpressionNode oldLeftOperand = infixExpressionNode.leftOperand;
-            ExpressionNode oldRightOperand = infixExpressionNode.rightOperand;
-
-            if (!leftOperand.isLiteralNode()) {
-                infixExpressionNode.leftOperand = OperationExpressionNode.executeOperandNode(leftOperand, memoryModel);
-            }
-            if (!rightOperand.isLiteralNode()) {
-                infixExpressionNode.rightOperand = OperationExpressionNode.executeOperandNode(rightOperand, memoryModel);
-            }
-
-            if (oldLeftOperand != infixExpressionNode.leftOperand || oldRightOperand != infixExpressionNode.rightOperand) {
-                return executeInfixExpressionNode(infixExpressionNode, memoryModel);
-            } else {
-                return infixExpressionNode;
-            }
-            //return infixExpressionNode;
         }
     }
 
