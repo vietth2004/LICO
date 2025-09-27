@@ -3,6 +3,7 @@ package core.path;
 import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;
 import core.testResult.coveredStatement.CoveredStatement;
+import org.eclipse.jdt.core.dom.ASTNode;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ public final class MarkedPath {
     }
 
     private static void addNewStatementToPath(String statement, boolean isTrueCondition, boolean isFalseCondition) {
-        MarkedStatement markedStatement = new MarkedStatement(statement, isTrueCondition, isFalseCondition);
+        MarkedStatement markedStatement = new MarkedStatement(statement, isTrueCondition, isFalseCondition, 0);
         markedStatements.add(markedStatement);
     }
 
@@ -75,6 +76,7 @@ public final class MarkedPath {
         for (MarkedStatement marked : markedStatements) {
             if (marked == null) continue;
             String stmt = marked.getStatement();
+            int lineNumber = marked.getLineNumber();
             if (stmt == null || stmt.trim().isEmpty()) continue;
             String key = stmt.trim();
 
@@ -83,20 +85,12 @@ public final class MarkedPath {
             CfgNode matched = null;
 
             if (candidates != null && !candidates.isEmpty()) {
-                // ưu tiên node chưa được mark để tránh reuse
                 for (CfgNode n : candidates) {
-                    if (!n.isMarked()) { matched = n; break; }
-                }
-                if (matched == null) matched = candidates.get(0); // fallback
-            } else {
-                // fallback tìm tương tự: tìm key chứa/được chứa (giúp giảm mismatch do khoảng trắng)
-                for (Map.Entry<String, List<CfgNode>> e : statementToNodes.entrySet()) {
-                    String k = e.getKey();
-                    if (k.contains(key) || key.contains(k)) {
-                        List<CfgNode> list = e.getValue();
-                        matched = list.stream().filter(n -> !n.isMarked()).findFirst().orElse(list.get(0));
+                    if (n.getLineNumber() == lineNumber) {
+                        matched = n;
                         break;
                     }
+
                 }
             }
 

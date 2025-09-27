@@ -29,6 +29,8 @@ public final class CloneProject {
     private static int totalFunctionStatement;
     private static int totalClassStatement;
     private static int totalFunctionBranch;
+    private static CompilationUnit classCompilationUnit;
+    private static int firstLine;
 
     private enum CoverageType {
         STATEMENT,
@@ -134,6 +136,7 @@ public final class CloneProject {
                 String fileName = file.getName();
                 String sourcePath = originalDirPath + "/" + fileName;
                 CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(sourcePath);
+                classCompilationUnit = compilationUnit;
 
                 createCloneFile(destinationDirPath, fileName);
                 String sourceCode = createCloneSourceCode(compilationUnit, destinationDirPath, coverage);
@@ -267,11 +270,13 @@ public final class CloneProject {
                 "e.printStackTrace();\n" +
                 "}\n" +
                 "}\n" +
-                "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition) {\n" +
+                "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition, int id) {\n" +
                 "StringBuilder markResult = new StringBuilder();\n" +
                 "markResult.append(statement).append(\"===\");\n" +
                 "markResult.append(isTrueCondition).append(\"===\");\n" +
-                "markResult.append(isFalseCondition).append(\"---end---\");\n" +
+//                "markResult.append(isFalseCondition).append(\"---end---\");\n" +
+                "markResult.append(isFalseCondition).append(\"===\");\n" +
+                "markResult.append(id).append(\"---end---\");\n" +
                 "writeDataToFile(markResult.toString(), \"" + FilePath.concreteExecuteResultPath + "\", true);\n" +
                 "if (!isTrueCondition && !isFalseCondition) return true;\n" +
                 "return !isFalseCondition;\n" +
@@ -295,6 +300,7 @@ public final class CloneProject {
             totalFunctionStatement = 0;
             totalFunctionBranch = 0;
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
+            firstLine = compilationUnit.getLineNumber(methodDeclaration.getBody().getStartPosition());
 
             if(!((MethodDeclaration) astNode).isConstructor()){
                 //Xử lý tạm thơ constructor
@@ -525,7 +531,9 @@ public final class CloneProject {
             newStatement.append(charAt);
         }
 
-        result.append("mark(\"").append(newStatement).append("\", false, false)")
+        int lineNumber = classCompilationUnit.getLineNumber(statement.getStartPosition()) - firstLine;
+        result.append("mark(\"").append(newStatement).
+                append("\", false, false, ").append(lineNumber).append(')')
                 .append(markMethodSeparator).append("\n");
         totalFunctionStatement++;
         totalClassStatement++;
@@ -547,8 +555,9 @@ public final class CloneProject {
         totalFunctionStatement++;
         totalClassStatement++;
         totalFunctionBranch += 2;
-        return "((" + condition + ") && mark(\"" + condition + "\", true, false))" +
-                " || mark(\"" + condition + "\", false, true)";
+        int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
+        return "((" + condition + ") && mark(\"" + condition + "\", true, false, " + lineNumber + "))" +
+                " || mark(\"" + condition + "\", false, true, " + lineNumber + ")";
     }
 
     private static String generateCodeForConditionForMCDCCoverage(Expression condition) {
@@ -557,7 +566,8 @@ public final class CloneProject {
         if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
             InfixExpression infixCondition = (InfixExpression) condition;
 
-            result.append("(").append(generateCodeForConditionForMCDCCoverage(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
+            result.append("(").append(generateCodeForConditionForMCDCCoverage(infixCondition.getLeftOperand())).
+                    append(") ").append(infixCondition.getOperator()).append(" (");
             result.append(generateCodeForConditionForMCDCCoverage(infixCondition.getRightOperand())).append(")");
 
             List<ASTNode> extendedOperands = infixCondition.extendedOperands();
@@ -569,8 +579,11 @@ public final class CloneProject {
             totalFunctionStatement++;
             totalClassStatement++;
             totalFunctionBranch += 2;
-            result.append("((").append(condition).append(") && mark(\"").append(condition).append("\", true, false))");
-            result.append(" || mark(\"").append(condition).append("\", false, true)");
+            int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
+            result.append("((").append(condition).append(") && mark(\"").append(condition).
+                    append("\", true, false, ").append(firstLine).append("))");
+            result.append(" || mark(\"").append(condition).append("\", false, true, ").
+                    append(firstLine).append(")");
         }
 
         return result.toString();

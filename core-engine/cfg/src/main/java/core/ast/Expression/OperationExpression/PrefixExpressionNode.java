@@ -54,7 +54,8 @@ public class PrefixExpressionNode extends OperationExpressionNode {
         return expressionNode;
     }
 
-    public static ExpressionNode executePrefixExpressionNode(PrefixExpressionNode prefixExpressionNode, MemoryModel memoryModel) {
+    public static ExpressionNode executePrefixExpressionNode(PrefixExpressionNode prefixExpressionNode,
+                                                             MemoryModel memoryModel) {
         ExpressionNode operand = prefixExpressionNode.operand;
         PrefixExpression.Operator operator = prefixExpressionNode.operator;
         if(operand.isLiteralNode()) {
@@ -81,14 +82,6 @@ public class PrefixExpressionNode extends OperationExpressionNode {
                     memoryModel.assignVariable(key, newValue);
                 }
             }
-            // END RE-ASSIGN
-
-            // CONTINUE executing
-//            if(oldOperand != prefixExpressionNode.operand) {
-//                return PrefixExpressionNode.executePrefixExpressionNode(prefixExpressionNode, memoryModel);
-//            } else {
-//                return prefixExpressionNode;
-//            }
             return prefixExpressionNode;
         }
     }
