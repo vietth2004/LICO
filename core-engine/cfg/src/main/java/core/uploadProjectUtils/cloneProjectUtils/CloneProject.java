@@ -581,9 +581,9 @@ public final class CloneProject {
             totalFunctionBranch += 2;
             int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
             result.append("((").append(condition).append(") && mark(\"").append(condition).
-                    append("\", true, false, ").append(firstLine).append("))");
+                    append("\", true, false, ").append(lineNumber).append("))");
             result.append(" || mark(\"").append(condition).append("\", false, true, ").
-                    append(firstLine).append(")");
+                    append(lineNumber).append(")");
         }
 
         return result.toString();
