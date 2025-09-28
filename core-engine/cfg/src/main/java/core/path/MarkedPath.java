@@ -399,7 +399,8 @@ public final class MarkedPath {
         }
         if (!coveredNodeInPath.contains(rootNode)) {
             coveredNodeInPath.add(rootNode);
-            if (!rootNode.isMarked() && !rootNode.isFakeMarked()) return rootNode;
+            if (!rootNode.isMarked() && !rootNode.isFakeMarked()
+                    && !rootNode.getContent().isEmpty()) return rootNode;
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
                 CfgNode falseBranchUncoveredNode = findUncoveredStatement(boolExprNode.getFalseNode(), duplicateNode);
@@ -457,6 +458,8 @@ public final class MarkedPath {
         }
         if (!coveredNodeInPath.contains(rootNode)) {
             coveredNodeInPath.add(rootNode);
+            if (!rootNode.isMarked() && !rootNode.isFakeMarked()
+                    && !rootNode.getContent().isEmpty()) return rootNode;
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
 
