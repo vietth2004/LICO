@@ -93,7 +93,7 @@ public class UploadController {
 
             uploadService.preprocessSourceCode(path, ASTHelper.Coverage.MCDC);
 
-            path += "\\tmp-prjt.json";
+            path += "/tmp-prjt.json";
             File jsonFile = new File(path);
 
             ObjectMapper objectMapper = new ObjectMapper();

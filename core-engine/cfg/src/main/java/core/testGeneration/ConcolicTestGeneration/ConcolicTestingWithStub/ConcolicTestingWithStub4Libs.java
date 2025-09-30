@@ -153,14 +153,14 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
         // Xóa file .java (bỏ cả tên file)
         String relative = path.substring(rootPackage.toString().length() + 1);
-        relative = relative.replace("\\", "/");
-        int lastSlash = relative.lastIndexOf("/");
+//        relative = relative.replace("\\", "/");
+        int lastSlash = relative.lastIndexOf(File.separator);
         if (lastSlash != -1) {
             relative = relative.substring(0, lastSlash+1);
         } else {relative = "";}
 
         // Đổi "/" thành "."
-        String packetName = relative.replace("/", ".");
+        String packetName = relative.replace(File.separator, ".");
         System.out.println(packetName);
 
         originalFileLocation = "data.clonedProject." + packetName + className;
