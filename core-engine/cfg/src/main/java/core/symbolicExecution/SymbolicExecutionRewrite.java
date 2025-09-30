@@ -77,10 +77,8 @@ public class SymbolicExecutionRewrite {
                     }
 
                     if (executedAstNode instanceof BooleanLiteralNode) {
-                        if (!((BooleanLiteralNode) executedAstNode).getValue()) {
-                            break; // Stop when the condition is false
-                        }
-
+                        currentNode = currentNode.getNext();
+                        continue;
                     }
 
                     BoolExpr constrain = (BoolExpr) OperationExpressionNode.createZ3Expression(
