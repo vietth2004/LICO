@@ -1,6 +1,7 @@
 package core.uploadProjectUtils.cloneProjectUtils;
 
 import core.cfg.utils.ASTHelper;
+import core.cmd.CommandLine;
 import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
 import core.FilePath;
 import core.utils.Utils;
@@ -73,12 +74,11 @@ public final class CloneProject {
         if (javaFiles.isEmpty()) {
             return base; // không có .java, trả về chính thư mục gốc nhập vào
         }
-
         // Tập các package tìm được
         List<Path> candidates = new ArrayList<>();
         for (Path jf : javaFiles) {
             String pkg = readPackageDecl(jf); // null nếu default package
-            int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split("\\.").length;
+            int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split(File.separator + ".").length;
 
             Path p = jf.getParent();
             for (int i = 0; i < depth && p != null; i++) {
@@ -110,13 +110,14 @@ public final class CloneProject {
         iCloneProject(originalDirPath, destinationDirPath, coverage, fileName);
         System.out.println(command);
 
-        Process p = Runtime.getRuntime().exec(command.toString());
-        System.out.println(p.waitFor());
-
-        if (p.waitFor() != 0) {
-            System.out.println("Can't compile project");
-            throw new RuntimeException("Can't compile project");
-        }
+        CommandLine.executeCommand(command.toString());
+//        Process p = Runtime.getRuntime().exec(command.toString());
+//        System.out.println(p.waitFor());
+//
+//        if (p.waitFor() != 0) {
+//            System.out.println("Can't compile project");
+//            throw new RuntimeException("Can't compile project");
+//        }
     }
 
     private static void iCloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage, String fileToTestName) throws IOException {
