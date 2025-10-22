@@ -48,14 +48,14 @@ public abstract class OperationExpressionNode extends ExpressionNode {
         } else if (operand instanceof LiteralNode) {
             if (operand instanceof NumberLiteralNode) {
                 if (operand instanceof IntegerLiteralNode) {
-                    return ctx.mkInt(((IntegerLiteralNode) operand).getIntegerValue());
+                    return ctx.mkBV(((IntegerLiteralNode) operand).getIntegerValue(), 32);
                 } else { // operand instanceof DoubleLiteralNode
-                    return ctx.mkReal(((DoubleLiteralNode) operand).getTokenValue());
+                    return ctx.mkBV(((DoubleLiteralNode) operand).getTokenValue(), 64);
                 }
             } else if (operand instanceof BooleanLiteralNode) {
                 return ctx.mkBool(((BooleanLiteralNode) operand).getValue());
             } else if (operand instanceof CharacterLiteralNode) {
-                return ctx.mkInt(((CharacterLiteralNode) operand).getCharacterValue());
+                return ctx.mkBV(((CharacterLiteralNode) operand).getCharacterValue(), 16);
             } else {
                 throw new RuntimeException("Invalid Literal");
             }

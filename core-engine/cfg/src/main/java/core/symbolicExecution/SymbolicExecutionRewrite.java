@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.*;
 
 public class SymbolicExecutionRewrite {
@@ -36,6 +37,7 @@ public class SymbolicExecutionRewrite {
     private Path testPath;
     private List<ASTNode> parameters;
     private static CfgNode currentCfgNode;
+    public static Map<String, PrimitiveType.Code> variableTypeMap = new HashMap<>();
 
     public SymbolicExecutionRewrite(Path testPath, List<ASTNode> parameters) {
         this.testPath = testPath;
@@ -55,7 +57,7 @@ public class SymbolicExecutionRewrite {
 
         Node currentNode = testPath.getCurrentFirst();
 
-        Expr finalZ3Expression = null;
+        BoolExpr finalZ3Expression = null;
 
         while (currentNode != null) {
             currentCfgNode = currentNode.getData();
@@ -81,12 +83,21 @@ public class SymbolicExecutionRewrite {
                         continue;
                     }
 
-                    BoolExpr constrain = (BoolExpr) OperationExpressionNode.createZ3Expression(
+                    Expr expr = OperationExpressionNode.createZ3Expression(
                             (ExpressionNode) executedAstNode, ctx, Z3Vars, symbolicMap);
 
-                    if (finalZ3Expression == null) finalZ3Expression = constrain;
+                    BoolExpr constraint;
+                    if (expr instanceof BoolExpr) {
+                        constraint = (BoolExpr) expr;
+                    } else if (expr instanceof BitVecExpr) {
+                        constraint = ctx.mkNot(ctx.mkEq((BitVecExpr) expr, ctx.mkBV(0, ((BitVecExpr) expr).getSortSize())));
+                    } else {
+                        throw new RuntimeException("Unsupported constraint type: " + expr);
+                    }
+
+                    if (finalZ3Expression == null) finalZ3Expression = constraint;
                     else {
-                        finalZ3Expression = ctx.mkAnd(finalZ3Expression, constrain);
+                        finalZ3Expression = ctx.mkAnd(finalZ3Expression, constraint);
                     }
                 } else if (astNode instanceof VariableDeclarationStatement) {
                     VariableDeclarationStatement stm = (VariableDeclarationStatement) astNode;
@@ -114,7 +125,16 @@ public class SymbolicExecutionRewrite {
                                     if (lengthOfArray instanceof NameNode) {
                                         String nameNode = NameNode.getStringNameNode((NameNode) lengthOfArray);
                                         Expr nameNodeExpr = Variable.createZ3Variable(symbolicMap.getVariable(nameNode), ctx);
-                                        BoolExpr constraint = ctx.mkGe((ArithExpr) nameNodeExpr, ctx.mkInt(0));
+
+                                        BoolExpr constraint;
+                                        if (nameNodeExpr instanceof BitVecExpr) {
+                                            constraint = ctx.mkBVSGE((BitVecExpr) nameNodeExpr, ctx.mkBV(0, ((BitVecExpr) nameNodeExpr).getSortSize()));
+                                        } else if (nameNodeExpr instanceof ArithExpr) {
+                                            constraint = ctx.mkGe((ArithExpr) nameNodeExpr, ctx.mkInt(0));
+                                        } else {
+                                            throw new RuntimeException("Unexpected type for array length: " + nameNodeExpr);
+                                        }
+
                                         if (finalZ3Expression == null) finalZ3Expression = constraint;
                                         else finalZ3Expression = ctx.mkAnd(finalZ3Expression, constraint);
                                     }
@@ -142,7 +162,8 @@ public class SymbolicExecutionRewrite {
         }
 
         currentCfgNode = null;
-        System.out.println(finalZ3Expression);
+//        System.out.println("=== Final Z3 Constraint ===");
+//        System.out.println(finalZ3Expression.simplify());
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
         evaluateAndSaveTestDataCreated(ctx);
@@ -226,8 +247,43 @@ public class SymbolicExecutionRewrite {
                     Expr evaluateResult = model.evaluate(primitiveVar, false);
 
                     String name = primitiveVar.toString();
+                    PrimitiveType.Code originalType = variableTypeMap.get(name);
+                    if (evaluateResult instanceof BitVecNum) {
+                        BitVecNum bvNum = (BitVecNum) evaluateResult;
+                        BigInteger value = bvNum.getBigInteger();
 
-                    if (evaluateResult instanceof IntNum) {
+                        if (originalType != null) {
+                            switch (originalType.toString()) {
+                                case "byte":
+                                    result.append(value.byteValue());
+                                    break;
+                                case "short":
+                                    result.append(value.shortValue());
+                                    break;
+                                case "char":
+                                    result.append((int) (char) value.intValue());
+                                    break;
+                                case "int":
+                                    result.append(value.intValue());
+                                    break;
+                                case "long":
+                                    result.append(value.longValue());
+                                    break;
+                            }
+                        } else {
+                            result.append(value);
+                        }
+                    } else if (evaluateResult instanceof BitVecExpr) {
+                        switch (originalType.toString()) {
+                            case "char":
+                                result.append((int) 'a');
+                                break;
+                            default:
+                                result.append("0");
+                                break;
+                        }
+                    }
+                    else if (evaluateResult instanceof IntNum) {
 
                         result.append(evaluateResult);
                     } else if (evaluateResult instanceof IntExpr) {

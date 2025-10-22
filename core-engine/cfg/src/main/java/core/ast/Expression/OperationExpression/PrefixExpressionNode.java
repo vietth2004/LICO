@@ -1,5 +1,7 @@
 package core.ast.Expression.OperationExpression;
 
+import com.microsoft.z3.BitVecExpr;
+import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import core.Z3Vars.Z3VariableWrapper;
@@ -15,6 +17,7 @@ import java.util.List;
 public class PrefixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PrefixExpression.Operator operator;
+    private Expression originalOperand;
 
     public static void replaceMethodInvocationWithStub(PrefixExpression originPrefixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
         Expression operand = originPrefixExpression.getOperand();
@@ -29,17 +32,18 @@ public class PrefixExpressionNode extends OperationExpressionNode {
         Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
 
         if(operator.equals(PrefixExpression.Operator.INCREMENT)) {
-            return ctx.mkAdd(Z3Operand, ctx.mkInt(1));
+            return ctx.mkBVAdd((BitVecExpr) Z3Operand, ctx.mkBV(1, 32));
+
         } else if (operator.equals(PrefixExpression.Operator.DECREMENT)) {
-            return ctx.mkSub(Z3Operand, ctx.mkInt(1));
+            return ctx.mkBVSub((BitVecExpr) Z3Operand, ctx.mkBV(1, 32));
         } else if (operator.equals(PrefixExpression.Operator.PLUS)) {
-            return ctx.mkMul(Z3Operand, ctx.mkInt(1));
+            return Z3Operand;
         } else if (operator.equals(PrefixExpression.Operator.MINUS)) {
-            return ctx.mkMul(Z3Operand, ctx.mkInt(-1));
+            return ctx.mkBVSub(ctx.mkBV(0, 32), (BitVecExpr) Z3Operand);
         } else if (operator.equals(PrefixExpression.Operator.NOT)) {
-            return ctx.mkNot(Z3Operand);
+            return ctx.mkNot((BoolExpr) Z3Operand);
         } else if (operator.equals(PrefixExpression.Operator.COMPLEMENT)) {
-            return ctx.mkMul(ctx.mkAdd(Z3Operand, ctx.mkInt(1)), ctx.mkInt(-1));
+            return ctx.mkBVNot((BitVecExpr) Z3Operand);
         } else {
             throw new RuntimeException("Invalid operator");
         }
@@ -47,6 +51,7 @@ public class PrefixExpressionNode extends OperationExpressionNode {
 
     public static ExpressionNode executePrefixExpression(PrefixExpression prefixExpression, MemoryModel memoryModel) {
         PrefixExpressionNode prefixExpressionNode = new PrefixExpressionNode();
+        prefixExpressionNode.originalOperand = prefixExpression.getOperand();
         prefixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(prefixExpression.getOperand(), memoryModel);
         prefixExpressionNode.operator = prefixExpression.getOperator();
 
@@ -62,15 +67,16 @@ public class PrefixExpressionNode extends OperationExpressionNode {
             LiteralNode literalResult = LiteralNode.analyzeOnePrefixLiteral(operator, (LiteralNode) operand);
             return literalResult;
         } else {
-            ExpressionNode oldOperand = prefixExpressionNode.operand;
-
-            prefixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
-            // PAUSE executing
-
-            // RE_ASSIGN
-            if(operand instanceof NameNode && (operator.equals(PrefixExpression.Operator.INCREMENT)
+//            ExpressionNode oldOperand = prefixExpressionNode.operand;
+//
+//            prefixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
+//            // PAUSE executing
+//
+//            // RE_ASSIGN
+            if((operator.equals(PrefixExpression.Operator.INCREMENT)
                     || operator.equals(PrefixExpression.Operator.DECREMENT))) {
-                String key = NameNode.getStringNameNode((NameNode) operand);
+//                String key = NameNode.getStringNameNode((NameNode) operand);
+                String key = prefixExpressionNode.originalOperand.toString();
                 AstNode value = memoryModel.getValue(key);
 
                 if(value instanceof LiteralNode) {

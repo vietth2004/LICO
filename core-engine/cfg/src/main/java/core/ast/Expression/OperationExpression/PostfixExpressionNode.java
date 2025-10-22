@@ -16,6 +16,7 @@ import java.util.List;
 public class PostfixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PostfixExpression.Operator operator;
+    private Expression originalOperand;
 
     public static void replaceMethodInvocationWithStub(PostfixExpression originPostfixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
         Expression operand = originPostfixExpression.getOperand();
@@ -33,13 +34,8 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
     public static ExpressionNode executePostfixExpression(PostfixExpression postfixExpression, MemoryModel memoryModel) {
         PostfixExpressionNode postfixExpressionNode = new PostfixExpressionNode();
-        Expression operand = postfixExpression.getOperand();
-        if (operand instanceof SimpleName) {
-            postfixExpressionNode.operand = SimpleNameNode.executeSimpleName((SimpleName) operand);
-        } else {
-            //Xem lai
-            postfixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(postfixExpression.getOperand(), memoryModel);
-        }
+        postfixExpressionNode.originalOperand = postfixExpression.getOperand();
+        postfixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(postfixExpression.getOperand(), memoryModel);
         postfixExpressionNode.operator = postfixExpression.getOperator();
 
         ExpressionNode expressionNode = executePostfixExpressionNode(postfixExpressionNode, memoryModel);
@@ -50,18 +46,10 @@ public class PostfixExpressionNode extends OperationExpressionNode {
         ExpressionNode operand = postfixExpressionNode.operand;
         PostfixExpression.Operator operator = postfixExpressionNode.operator;
 
-        ExpressionNode oldOperand = postfixExpressionNode.operand;
-
-        if(!operand.isLiteralNode()) {
-            postfixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
-        } else {
-            return operand;
-        }
         // PAUSE executing
 
         // RE-ASSIGN
-        if(operand instanceof NameNode) {
-            String key = NameNode.getStringNameNode((NameNode) operand);
+            String key = postfixExpressionNode.originalOperand.toString();
             AstNode value = memoryModel.getValue(key);
 
             if(value instanceof LiteralNode) {
@@ -72,7 +60,6 @@ public class PostfixExpressionNode extends OperationExpressionNode {
                 newValue.operand = (OperationExpressionNode) value;
                 memoryModel.assignVariable(key, newValue);
             }
-        }
 
         // CONTINUE executing
 //        if(oldOperand != postfixExpressionNode.operand) {

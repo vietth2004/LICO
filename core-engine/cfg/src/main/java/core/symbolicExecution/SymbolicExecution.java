@@ -323,7 +323,7 @@ public final class SymbolicExecution {
             return 16;
         } else if ("float".equals(className)) {
 //            return random.nextFloat();
-            return 8.0;
+            return 8.0f;
         } else if ("double".equals(className)) {
 //            return random.nextDouble();
             return 8.0;
