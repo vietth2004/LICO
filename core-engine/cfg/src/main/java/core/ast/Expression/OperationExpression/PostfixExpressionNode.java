@@ -1,7 +1,6 @@
 package core.ast.Expression.OperationExpression;
 
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
+import com.microsoft.z3.*;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
@@ -28,8 +27,34 @@ public class PostfixExpressionNode extends OperationExpressionNode {
         ExpressionNode operand = postfixExpressionNode.operand;
         PostfixExpression.Operator operator = postfixExpressionNode.operator;
 
-        Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
-        return Z3Operand;
+        Expr oldValue = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
+        Expr newValue = null;
+        if (oldValue instanceof BitVecExpr) {
+            BitVecExpr bvOld = (BitVecExpr) oldValue;
+            int size = bvOld.getSortSize();
+            BitVecExpr one = ctx.mkBV(1, size);
+
+            if (operator == PostfixExpression.Operator.INCREMENT) {
+                newValue = ctx.mkBVAdd(bvOld, one);
+            } else if (operator == PostfixExpression.Operator.DECREMENT) {
+                newValue = ctx.mkBVSub(bvOld, one);
+            }
+        }
+        else if (oldValue instanceof FPExpr) {
+            FPExpr fpOld = (FPExpr) oldValue;
+            FPSort sort = (FPSort) fpOld.getSort();
+            // Tạo số 1.0 đúng định dạng FP (Float hoặc Double)
+            FPExpr one = ctx.mkFP(1.0, sort);
+            FPRMExpr rm = ctx.mkFPRoundNearestTiesToEven();
+
+            if (operator == PostfixExpression.Operator.INCREMENT) {
+                newValue = ctx.mkFPAdd(rm, fpOld, one);
+            } else if (operator == PostfixExpression.Operator.DECREMENT) {
+                newValue = ctx.mkFPSub(rm, fpOld, one);
+            }
+        }
+        //Cần bổ sung bước cập nhật giá trị mới vào MemoryModel
+        return newValue;
     }
 
     public static ExpressionNode executePostfixExpression(PostfixExpression postfixExpression, MemoryModel memoryModel) {

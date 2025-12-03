@@ -1,9 +1,6 @@
 package core.ast.Expression.OperationExpression;
 
-import com.microsoft.z3.BitVecExpr;
-import com.microsoft.z3.BoolExpr;
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
+import com.microsoft.z3.*;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
@@ -31,21 +28,42 @@ public class PrefixExpressionNode extends OperationExpressionNode {
 
         Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
 
-        if(operator.equals(PrefixExpression.Operator.INCREMENT)) {
-            return ctx.mkBVAdd((BitVecExpr) Z3Operand, ctx.mkBV(1, 32));
-
-        } else if (operator.equals(PrefixExpression.Operator.DECREMENT)) {
-            return ctx.mkBVSub((BitVecExpr) Z3Operand, ctx.mkBV(1, 32));
+        boolean isFP = Z3Operand instanceof FPExpr;
+        Expr result = null;
+        if(operator.equals(PrefixExpression.Operator.INCREMENT) || operator.equals(PrefixExpression.Operator.DECREMENT)) {
+            if(isFP) {
+                FPExpr one = ctx.mkFP(1.0, (FPSort) Z3Operand.getSort());
+                FPRMExpr rm = ctx.mkFPRoundNearestTiesToEven();
+                if (operator.equals(PrefixExpression.Operator.INCREMENT)) {
+                    return ctx.mkFPAdd(rm, (FPExpr) Z3Operand, one);
+                } else {
+                    return ctx.mkFPSub(rm, (FPExpr) Z3Operand, one);
+                }
+            } else {
+                BitVecExpr bvVal = (BitVecExpr) Z3Operand;
+                BitVecExpr one = ctx.mkBV(1, bvVal.getSortSize());
+                if (operator.equals(PrefixExpression.Operator.INCREMENT)) {
+                    return ctx.mkBVAdd(bvVal, one);
+                } else {
+                    return ctx.mkBVSub(bvVal, one);
+                }
+            }
         } else if (operator.equals(PrefixExpression.Operator.PLUS)) {
             return Z3Operand;
         } else if (operator.equals(PrefixExpression.Operator.MINUS)) {
-            return ctx.mkBVSub(ctx.mkBV(0, 32), (BitVecExpr) Z3Operand);
+            if(isFP) {
+                FPExpr bvVal = (FPExpr) Z3Operand;
+                return ctx.mkFPNeg(bvVal);
+            } else {
+                BitVecExpr bvVal = (BitVecExpr) Z3Operand;
+                return ctx.mkBVNeg(bvVal);
+            }
         } else if (operator.equals(PrefixExpression.Operator.NOT)) {
-            return ctx.mkNot((BoolExpr) Z3Operand);
+            return ctx.mkNot(Z3Operand);
         } else if (operator.equals(PrefixExpression.Operator.COMPLEMENT)) {
-            return ctx.mkBVNot((BitVecExpr) Z3Operand);
+            return ctx.mkBVNot(Z3Operand);
         } else {
-            throw new RuntimeException("Invalid operator");
+            throw new RuntimeException("Unknown Prefix Op: " + operator);
         }
     }
 

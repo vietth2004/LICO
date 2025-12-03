@@ -244,73 +244,82 @@ public class SymbolicExecutionRewrite {
                 if (z3VariableWrapper.getPrimitiveVar() != null) {
                     Expr primitiveVar = z3VariableWrapper.getPrimitiveVar();
 
-                    Expr evaluateResult = model.evaluate(primitiveVar, false);
+                    Expr evaluateResult = model.evaluate(primitiveVar, true);
 
                     String name = primitiveVar.toString();
-                    PrimitiveType.Code originalType = variableTypeMap.get(name);
+                    PrimitiveType.Code originalTypeCode = variableTypeMap.get(name);
+                    String typeName = (originalTypeCode != null) ? originalTypeCode.toString() : "";
                     if (evaluateResult instanceof BitVecNum) {
                         BitVecNum bvNum = (BitVecNum) evaluateResult;
-                        BigInteger value = bvNum.getBigInteger();
+                        BigInteger val = bvNum.getBigInteger();
 
-                        if (originalType != null) {
-                            switch (originalType.toString()) {
-                                case "byte":
-                                    result.append(value.byteValue());
-                                    break;
-                                case "short":
-                                    result.append(value.shortValue());
-                                    break;
-                                case "char":
-                                    result.append((int) (char) value.intValue());
-                                    break;
-                                case "int":
-                                    result.append(value.intValue());
-                                    break;
-                                case "long":
-                                    result.append(value.longValue());
-                                    break;
-                            }
-                        } else {
-                            result.append(value);
-                        }
-                    } else if (evaluateResult instanceof BitVecExpr) {
-                        switch (originalType.toString()) {
+                        switch (typeName) {
+                            case "byte":
+                                result.append(val.byteValue()); // Ép về byte có dấu (-128 to 127)
+                                break;
+                            case "short":
+                                result.append(val.shortValue());
+                                break;
                             case "char":
-                                result.append((int) 'a');
+                                result.append(val.intValue() & 0xFFFF);
                                 break;
+                            case "long":
+                                result.append(val.longValue());
+                                break;
+                            case "int":
                             default:
-                                result.append("0");
+                                result.append(val.intValue());
                                 break;
+                        }
+                    } else if (evaluateResult instanceof FPNum) {
+                        FPNum fpNum = (FPNum) evaluateResult;
+                        if (fpNum.isNaN()) {
+                            result.append("NaN");
+                        } else if (fpNum.isInf()) {
+                            result.append(fpNum.isNegative() ? "-Infinity" : "Infinity");
+                        } else {
+                            int eBits = fpNum.getEBits();
+                            int sBits = fpNum.getSBits();
+                            boolean isFloat32 = (eBits == 8 && sBits == 24);
+                            Expr bvExpr = ctx.mkFPToIEEEBV(fpNum).simplify();
+                            if (bvExpr instanceof BitVecNum) {
+                                BigInteger bits = ((BitVecNum) bvExpr).getBigInteger();
+                                if (isFloat32) {
+                                    int intBits = bits.intValue();
+                                    float floatValue = Float.intBitsToFloat(intBits);
+                                    result.append(floatValue);
+                                } else {
+                                    long longBits = bits.longValue();
+                                    double doubleValue = Double.longBitsToDouble(longBits);
+                                    result.append(doubleValue);
+                                }
+                            } else {
+                                try {
+                                    double d = Double.parseDouble(fpNum.toString());
+                                    result.append(d);
+                                } catch (Exception e) {
+                                    result.append(fpNum);
+                                }
+                            }
                         }
                     }
-                    else if (evaluateResult instanceof IntNum) {
-
-                        result.append(evaluateResult);
-                    } else if (evaluateResult instanceof IntExpr) {
-
-                        result.append("1");
-                    } else if (evaluateResult instanceof RatNum) {
-                        RatNum ratNum = (RatNum) evaluateResult;
-                        IntNum numerator = ratNum.getNumerator();
-                        IntNum denominator = ratNum.getDenominator();
-                        double value = (numerator.getInt64() * 1.0) / denominator.getInt64();
-                        result.append(value);
-                    } else if (evaluateResult instanceof RealExpr) {
-
-                        result.append("1.0");
-                    } else if (evaluateResult instanceof BoolExpr) {
-
-                        BoolExpr boolExpr = (BoolExpr) evaluateResult;
-                        if (!boolExpr.toString().equals("false") && !boolExpr.toString().equals("true")) {
+                    else if (evaluateResult instanceof BoolExpr) {
+                        if (evaluateResult.isTrue()) {
+                            result.append("true");
+                        } else if (evaluateResult.isFalse()) {
                             result.append("false");
                         } else {
-                            result.append(boolExpr);
+                            // Fallback hiếm gặp nếu model chưa complete
+                            result.append("false");
                         }
+                    } else {
+                        result.append(evaluateResult.toString());
                     }
-
                 } else {
                     ArrayTypeVariable arrayTypeVariable = z3VariableWrapper.getArrayVar();
-                    result.append(arrayTypeVariable.getConstraints());
+                    if(arrayTypeVariable != null) {
+                        result.append(arrayTypeVariable.getConstraints());
+                    }
                 }
 
                 if (i != Z3Vars.size() - 1) {
