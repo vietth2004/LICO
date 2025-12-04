@@ -59,7 +59,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         TestResult testResult = new TestResult();
         testResult.setId(id);
 
-        Object[] evaluatedValues = SymbolicExecution.createRandomTestData(TestGeneration.parameterClasses);
+        Object[] evaluatedValues = SymbolicExecutionRewrite.createRandomTestData(TestGeneration.parameterClasses);
 
         TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 

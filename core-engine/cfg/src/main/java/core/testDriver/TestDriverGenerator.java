@@ -6,7 +6,9 @@ import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -117,13 +119,18 @@ public final class TestDriverGenerator {
         }
         result.append(method.getName().toString()).append("(");
         for (int i = 0; i < testData.length; i++) {
-            if (testData[i] instanceof Float) {
+             if (testData[i] instanceof Float) {
                 result.append(testData[i]).append("f");
             } else if (testData[i] instanceof Character) {
                 result.append("'").append(testData[i]).append("'");
-            } else {
+            } else if (testData[i] instanceof Long) {
+                result.append(testData[i]).append("L");
+            } else if (testData[i] instanceof Short) {
+                result.append("(short)").append(testData[i]);
+             }
+             else {
                 result.append(testData[i]);
-            }
+             }
 
             if (i != testData.length - 1) result.append(", ");
         }
