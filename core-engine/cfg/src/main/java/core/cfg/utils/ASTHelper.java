@@ -4,9 +4,7 @@ import core.cfg.*;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class ASTHelper {
     public enum Coverage {
@@ -24,6 +22,7 @@ public class ASTHelper {
     private static Stack<CfgNode> endNodeStack = new Stack<>();// for break statements
     private static Stack<CfgNode> conditionNodeStack = new Stack<>(); // for continue statements
     private static CfgEndBlockNode endCfgNode = null; // for return statements
+    public static Map<ASTNode, ASTNode> syntheticToOriginalMap = new HashMap<>(); // tạo map để lưu trữ node gốc khi chuyển đổi mã nguồn
 
     private static int totalStatement;
     private static int totalBranch;
@@ -165,6 +164,8 @@ public class ASTHelper {
                 for (int i = 0; i < statements.size(); i++) {
                     ASTNode statement = statements.get(i);
 
+                    statement = convertTernaryToIf(statement);
+
                     CfgNode currentNode = generateCFGForOneStatement(statement, beginStatementNode, endStatementNode, compilationUnit, firstLine, coverage);
 
                     if (currentNode instanceof CfgBeginSwitchNode) {
@@ -204,6 +205,150 @@ public class ASTHelper {
         }
 
     }
+
+    public static ASTNode convertTernaryToIf(ASTNode statement) {
+        AST ast = statement.getAST();
+
+        // TRƯỜNG HỢP 1: Return (return ... ? ... :)
+        if (statement instanceof ReturnStatement) {
+            ReturnStatement returnStmt = (ReturnStatement) statement;
+            Expression expr = returnStmt.getExpression();
+
+            if (expr instanceof ConditionalExpression) {
+                // Target = null, isReturn = true
+                return transformTernaryRecursive(ast, (ConditionalExpression) expr, statement, null, true);
+            }
+        }
+
+        // TRƯỜNG HỢP 2: Phép gán (x = ... ? ... :)
+        else if (statement instanceof ExpressionStatement) {
+            Expression expr = ((ExpressionStatement) statement).getExpression();
+            if (expr instanceof Assignment) {
+                Assignment assign = (Assignment) expr;
+                if (assign.getRightHandSide() instanceof ConditionalExpression) {
+                    // Target = vế trái (x), isReturn = false
+                    // Hàm trả về IfStatement
+                    return transformTernaryRecursive(ast, (ConditionalExpression) assign.getRightHandSide(), statement, assign.getLeftHandSide(), false);
+                }
+            }
+        }
+
+        // TRƯỜNG HỢP 3: Khai báo biến (int x = ... ? ... :)
+        else if (statement instanceof VariableDeclarationStatement) {
+            VariableDeclarationStatement varDecl = (VariableDeclarationStatement) statement;
+            // Lấy fragment đầu tiên (ví dụ: "x = ...")
+            VariableDeclarationFragment frag = (VariableDeclarationFragment) varDecl.fragments().get(0);
+
+            if (frag.getInitializer() instanceof ConditionalExpression) {
+                // 1. Tạo dòng khai báo tách rời: "int x;" (Bỏ phần gán)
+                VariableDeclarationStatement newDecl = (VariableDeclarationStatement) ASTNode.copySubtree(ast, varDecl);
+                ((VariableDeclarationFragment) newDecl.fragments().get(0)).setInitializer(null);
+
+                // 2. Tạo khối If-Else gán giá trị: "if(...) x=... else x=..."
+                // Target = tên biến (x), isReturn = false
+                Statement ifStmt = transformTernaryRecursive(
+                        ast,
+                        (ConditionalExpression) frag.getInitializer(),
+                        statement,
+                        ast.newSimpleName(frag.getName().getIdentifier()),
+                        false
+                );
+
+                // 3. Gói cả 2 vào trong 1 Block để trả về
+                Block wrapperBlock = ast.newBlock();
+                wrapperBlock.statements().add(newDecl); // int x;
+                wrapperBlock.statements().add(ifStmt);  // if (...) ...
+
+                return wrapperBlock;
+            }
+        }
+
+        // Nếu không phải 3 trường hợp trên, trả về nguyên gốc
+        return statement;
+    }
+
+    // Hàm tạo câu lệnh Gán (x = y;)
+    private static Statement createAssignment(AST ast, Expression leftHandSide, Expression rightHandSide) {
+        Assignment assignment = ast.newAssignment();
+        assignment.setLeftHandSide((Expression) ASTNode.copySubtree(ast, leftHandSide));
+        assignment.setRightHandSide((Expression) ASTNode.copySubtree(ast, rightHandSide));
+        return ast.newExpressionStatement(assignment);
+    }
+
+    // Hàm đệ quy tổng quát (Xử lý cả Return và Gán) cho toán tử 3 ngôi
+    private static Statement transformTernaryRecursive(AST ast, ConditionalExpression condExpr, ASTNode originalNode, Expression assignTarget, boolean isReturn) {
+        IfStatement ifStmt = ast.newIfStatement();
+
+        // Map và Set vị trí (Quan trọng cho Pha 3)
+        ifStmt.setSourceRange(condExpr.getStartPosition(), condExpr.getLength());
+        if (syntheticToOriginalMap != null) syntheticToOriginalMap.put(ifStmt, originalNode);
+
+        // Điều kiện
+        ifStmt.setExpression((Expression) ASTNode.copySubtree(ast, condExpr.getExpression()));
+
+        // --- THEN ---
+        Statement thenStmt;
+        Expression thenExpr = condExpr.getThenExpression();
+
+        // Đệ quy nếu lồng nhau
+        if (thenExpr instanceof ConditionalExpression) {
+            thenStmt = transformTernaryRecursive(ast, (ConditionalExpression) thenExpr, originalNode, assignTarget, isReturn);
+        } else {
+            // Tạo câu lệnh đích (Return hoặc Gán)
+            Statement targetStmt;
+            if (isReturn) {
+                ReturnStatement ret = ast.newReturnStatement();
+                ret.setExpression((Expression) ASTNode.copySubtree(ast, thenExpr));
+                targetStmt = ret;
+            } else {
+                targetStmt = createAssignment(ast, assignTarget, thenExpr);
+            }
+
+            // Set vị trí và Map
+            targetStmt.setSourceRange(thenExpr.getStartPosition(), thenExpr.getLength());
+            if (syntheticToOriginalMap != null) syntheticToOriginalMap.put(targetStmt, originalNode);
+
+            // Bọc trong Block
+            Block block = ast.newBlock();
+            block.statements().add(targetStmt);
+            block.setSourceRange(targetStmt.getStartPosition(), targetStmt.getLength());
+            if (syntheticToOriginalMap != null) syntheticToOriginalMap.put(block, originalNode);
+
+            thenStmt = block;
+        }
+        ifStmt.setThenStatement(thenStmt);
+
+        // --- ELSE ---
+        Statement elseStmt;
+        Expression elseExpr = condExpr.getElseExpression();
+
+        if (elseExpr instanceof ConditionalExpression) {
+            elseStmt = transformTernaryRecursive(ast, (ConditionalExpression) elseExpr, originalNode, assignTarget, isReturn);
+        } else {
+            Statement targetStmt;
+            if (isReturn) {
+                ReturnStatement ret = ast.newReturnStatement();
+                ret.setExpression((Expression) ASTNode.copySubtree(ast, elseExpr));
+                targetStmt = ret;
+            } else {
+                targetStmt = createAssignment(ast, assignTarget, elseExpr);
+            }
+
+            targetStmt.setSourceRange(elseExpr.getStartPosition(), elseExpr.getLength());
+            if (syntheticToOriginalMap != null) syntheticToOriginalMap.put(targetStmt, originalNode);
+
+            Block block = ast.newBlock();
+            block.statements().add(targetStmt);
+            block.setSourceRange(targetStmt.getStartPosition(), targetStmt.getLength());
+            if (syntheticToOriginalMap != null) syntheticToOriginalMap.put(block, originalNode);
+
+            elseStmt = block;
+        }
+        ifStmt.setElseStatement(elseStmt);
+
+        return ifStmt;
+    }
+
 
     //Trong TH beforeNode là câu lệnh điều kiện boolean CfgBoolExprNode thì thenOrElse sẽ xác định ta gắn
     //câu lệnh mới vào afterNode hay falseNode của beforeNode

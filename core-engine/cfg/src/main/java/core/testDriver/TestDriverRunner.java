@@ -43,6 +43,9 @@ public final class TestDriverRunner {
         for (int i = 0; i < markedStatements.length; i++) {
             String[] markedStatementData = markedStatements[i].split("===");
             if(i == markedStatements.length - 1) {
+                if (markedStatementData.length == 0 || markedStatementData[0].isBlank()) {
+                    continue; // bỏ qua dòng trống
+                }
                 runtime = Double.parseDouble(markedStatementData[0]);
                 output = markedStatementData[1];
             } else {

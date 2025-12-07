@@ -78,6 +78,10 @@ public class TestData {
         return status;
     }
 
+    public void setCoveredStatements(List<CoveredStatement> coveredStatements) {
+        this.coveredStatements = coveredStatements;
+    }
+
     public List<Object> getTestDataSet() {
         List<Object> result = new ArrayList<>();
         for (ParameterData parameterData : parameterDataList) {

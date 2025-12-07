@@ -4,13 +4,14 @@ import com.microsoft.z3.*;
 import core.FilePath;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
-import core.ast.Expression.Array.*;
+import core.ast.Expression.Array.ArrayCreationNode;
+import core.ast.Expression.Array.ArrayCreationWithNewKeyWord;
+import core.ast.Expression.Array.ArrayNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Name.NameNode;
-import core.ast.Expression.OperationExpression.*;
-import core.ast.Statement.VariableDeclarationStatementNode;
+import core.ast.Expression.OperationExpression.OperationExpressionNode;
+import core.ast.Expression.OperationExpression.PrefixExpressionNode;
 import core.ast.Type.AnnotatableType.PrimitiveTypeNode;
-import core.ast.VariableDeclaration.VariableDeclarationFragmentNode;
 import core.ast.additionalNodes.Node;
 import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgNode;
@@ -19,7 +20,6 @@ import core.variable.ArrayTypeVariable;
 import core.variable.PrimitiveTypeVariable;
 import core.variable.Variable;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.AST;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -132,6 +132,10 @@ public class SymbolicExecutionRewrite {
 
                 }
             }
+
+            if (astNode instanceof ThrowStatement) {
+                break;
+            }
             currentNode = currentNode.getNext();
         }
 
@@ -191,7 +195,9 @@ public class SymbolicExecutionRewrite {
 
     private Model createModel(Context ctx, BoolExpr f) {
         Solver s = ctx.mkSolver();
-        s.add(f);
+        if (f != null) {
+            s.add(f);
+        }
 //        System.out.println(s);
 
         Status satisfaction = s.check();

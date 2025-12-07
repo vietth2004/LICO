@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.eclipse.jdt.core.dom.PrimitiveType.*;
-
 public final class TestDriverGenerator {
 
     private static String markMethodUtility =
@@ -90,7 +88,7 @@ public final class TestDriverGenerator {
         result.append(");\n");
         result.append("long endRunTestTime = System.nanoTime();\n");
         result.append("double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;\n");
-        result.append("writeDataToFile(runTestDuration + \"===\" + output, \""+ FilePath.concreteExecuteResultPath + "\", true);\n");
+        result.append("writeDataToFile(runTestDuration + \"===\" + output, \"" + FilePath.concreteExecuteResultPath + "\", true);\n");
         result.append("}\n");
         return result.toString();
     }
@@ -100,33 +98,68 @@ public final class TestDriverGenerator {
         result.append("public static void main(String[] args) {\n");
         result.append("writeDataToFile(\"\", \"" + FilePath.concreteExecuteResultPath + "\", false);\n");
         result.append("long startRunTestTime = System.nanoTime();\n");
+        result.append("long endRunTestTime = System.nanoTime();\n");
+        result.append("Object output = null;\n");
+        result.append("try {\n");
         List<ASTNode> modifiers = method.modifiers();
         boolean isStatic = false;
         for (ASTNode modifier : modifiers) {
-            if (modifier.toString().equals("static")){
+            if (modifier.toString().equals("static")) {
                 isStatic = true;
                 break;
             }
         }
-        if(isStatic){
-            result.append("Object output = ").append(simpleClassName).append(".");
-        }
-        else {
-            result.append("Object output = new ").append(simpleClassName).append("().");
+        if (isStatic) {
+            result.append("output = ").append(simpleClassName).append(".");
+        } else {
+            result.append("output = new ").append(simpleClassName).append("().");
         }
         result.append(method.getName().toString()).append("_clone(");
         for (int i = 0; i < testData.length; i++) {
-            if (testData[i] instanceof Character) {
-                result.append("'").append(testData[i]).append("'");
+            Object value = testData[i];
+            String valueAsString = "";
+
+            // kiểm tra mảng
+            if (value == null) {
+                valueAsString = "null";
+            } else if (value.getClass().isArray()) {
+
+                if (value instanceof int[]) {
+                    valueAsString = java.util.Arrays.toString((int[]) value)
+                            .replace('[', '{')
+                            .replace(']', '}');
+                    valueAsString = "new int[]" + valueAsString;
+                }
             } else {
-                result.append(testData[i]);
+                // KHÔNG PHẢI MẢNG (xử lý kiểu nguyên thủy)
+                valueAsString = String.valueOf(value);
+
+                if (value instanceof String) {
+                    valueAsString = "\"" + valueAsString + "\"";
+                } else if (value instanceof Long) {
+                    valueAsString = valueAsString + "L";
+                } else if (value instanceof Character) {
+                    valueAsString = "'" + valueAsString + "'";
+                } else if (value instanceof Float) {
+                    valueAsString = valueAsString + "f";
+                }
             }
-            if (i != testData.length - 1) result.append(", ");
+
+            result.append(valueAsString);
+
+            if (i < testData.length - 1) {
+                result.append(", ");
+            }
         }
         result.append(");\n");
-        result.append("long endRunTestTime = System.nanoTime();\n");
+        result.append("endRunTestTime = System.nanoTime();\n");
+        result.append("} catch (Throwable e) {\n");
+        result.append("endRunTestTime = System.nanoTime();\n");
+        result.append("e.printStackTrace();\n");
+        result.append("}\n");
+
         result.append("double runTestDuration = (endRunTestTime - startRunTestTime) / 1000000.0;\n");
-        result.append("writeDataToFile(runTestDuration + \"===\" + output, \""+ FilePath.concreteExecuteResultPath + "\", true);\n");
+        result.append("writeDataToFile(runTestDuration + \"===\" + output, \"" + FilePath.concreteExecuteResultPath + "\", true);\n");
         result.append("}\n");
         return result.toString();
     }
@@ -266,7 +299,6 @@ public final class TestDriverGenerator {
         cloneMethod.append(generateCodeForBlock(method.getBody(), coverage));
 
 
-
         cloneMethod.append("}\n");
 
         return cloneMethod.toString();
@@ -304,16 +336,26 @@ public final class TestDriverGenerator {
         if (returnType.isPrimitiveType()) {
             PrimitiveType primitiveType = (PrimitiveType) returnType;
             switch (primitiveType.getPrimitiveTypeCode().toString()) {
-                case "boolean": return "false";
-                case "char": return "'\\0'";
-                case "byte": return "0";
-                case "short": return "0";
-                case "int": return "0";
-                case "long": return "0";
-                case "float": return "0.0f";
-                case "double": return "0";
-                case "void": return "";
-                default: throw new IllegalArgumentException("Unknown primitive type");
+                case "boolean":
+                    return "false";
+                case "char":
+                    return "'\\0'";
+                case "byte":
+                    return "0";
+                case "short":
+                    return "0";
+                case "int":
+                    return "0";
+                case "long":
+                    return "0";
+                case "float":
+                    return "0.0f";
+                case "double":
+                    return "0";
+                case "void":
+                    return "";
+                default:
+                    throw new IllegalArgumentException("Unknown primitive type");
             }
         }
         return "null"; // Default for non-primitive types

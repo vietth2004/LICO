@@ -1,9 +1,9 @@
 package core.uploadProjectUtils.cloneProjectUtils;
 
+import core.FilePath;
 import core.cfg.utils.ASTHelper;
 import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
-import core.FilePath;
-import core.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.BufferedReader;
@@ -20,10 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.TextEdit;
+import static core.cfg.utils.ASTHelper.convertTernaryToIf;
 
 public final class CloneProject {
     private static int totalFunctionStatement;
@@ -296,7 +293,7 @@ public final class CloneProject {
             totalFunctionBranch = 0;
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
             result.append(methodDeclaration);
-            if(!((MethodDeclaration) astNode).isConstructor()){
+            if (!((MethodDeclaration) astNode).isConstructor()) {
                 //Xử lý tạm thơ constructor
                 result.append(createCloneMethod(methodDeclaration, coverage));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
@@ -346,7 +343,7 @@ public final class CloneProject {
 
         List<ASTNode> modifiers = method.modifiers();
         for (ASTNode modifier : modifiers) {
-            if(modifier.toString().equals("private")){
+            if (modifier.toString().equals("private")) {
                 cloneMethod.append("public").append(" ");
                 continue;
             }
@@ -380,10 +377,21 @@ public final class CloneProject {
             return generateCodeForWhileStatement((WhileStatement) statement, coverage);
         } else if (statement instanceof DoStatement) {
             return generateCodeForDoStatement((DoStatement) statement, coverage);
-        } else {
-            return generateCodeForNormalStatement(statement, markMethodSeparator);
+        } else if (statement instanceof EnhancedForStatement) {
+            return generateCodeForForEachStatement((EnhancedForStatement) statement, coverage);
         }
 
+        if (statement instanceof ReturnStatement ||
+                statement instanceof ExpressionStatement ||
+                statement instanceof VariableDeclarationStatement) {
+
+            ASTNode converted = convertTernaryToIf(statement);
+            if (converted != statement) {
+                return generateCodeForOneStatement(converted, markMethodSeparator, coverage);
+            }
+        }
+
+        return generateCodeForNormalStatement(statement, markMethodSeparator);
     }
 
     private static String generateCodeForBlock(Block block, ASTHelper.Coverage coverage) {
@@ -480,6 +488,50 @@ public final class CloneProject {
         result.append(");\n");
 
         return result.toString();
+    }
+
+    private static String generateCodeForForEachStatement(EnhancedForStatement forEachStatement, ASTHelper.Coverage coverage) {
+        StringBuilder result = new StringBuilder();
+
+        String paramType = forEachStatement.getParameter().getType().toString();
+        String paramName = forEachStatement.getParameter().getName().toString();
+        String collectionName = forEachStatement.getExpression().toString();
+
+        // Biến tấu: Dùng chuỗi gốc để mark, nhưng biến đổi code để chạy
+        String markContent = collectionName.trim();
+
+        String indexVar = "i_" + java.util.UUID.randomUUID().toString().substring(0, 4);
+
+        result.append("for (int ").append(indexVar).append(" = 0; ");
+
+        // Điều kiện giả lập: i < arr.length
+        String realCondition = indexVar + " < " + collectionName + ".length";
+
+        result.append("((").append(realCondition).append(")");
+        result.append(" && mark(\"").append(markContent).append("\", true, false))");
+        result.append(" || mark(\"").append(markContent).append("\", false, true)");
+
+        result.append("; ").append(indexVar).append("++) {\n");
+
+        // Tái tạo biến parameter
+        String newAssignment = paramType + " " + paramName + " = " + collectionName + "[" + indexVar + "];";
+
+        Statement newAssignmentAST = parseFakeStatement(newAssignment);
+        result.append(generateCodeForMarkMethod(newAssignmentAST, ";"));
+
+        result.append(newAssignment).append("\n");
+        result.append(generateCodeForOneStatement(forEachStatement.getBody(), ";", coverage));
+
+        result.append("}\n");
+        return result.toString();
+    }
+
+    private static Statement parseFakeStatement(String code) {
+        ASTParser parser = ASTParser.newParser(AST.JLS8);
+        parser.setKind(ASTParser.K_STATEMENTS);
+        parser.setSource(("{\n" + code + "\n}").toCharArray());
+        Block block = (Block) parser.createAST(null);
+        return (Statement) block.statements().get(0);
     }
 
     private static String generateCodeForNormalStatement(ASTNode statement, String markMethodSeparator) {

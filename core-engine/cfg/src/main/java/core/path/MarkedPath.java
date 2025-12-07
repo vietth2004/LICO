@@ -1,6 +1,7 @@
 package core.path;
 
 import core.cfg.CfgBoolExprNode;
+import core.cfg.CfgForEachExpressionNode;
 import core.cfg.CfgNode;
 import core.testResult.coveredStatement.CoveredStatement;
 
@@ -49,7 +50,10 @@ public final class MarkedPath {
         Map<String, List<CfgNode>> statementToNodes = new HashMap<>();
         Queue<CfgNode> queue = new LinkedList<>();
         Set<CfgNode> visited = new HashSet<>();
-        queue.add(rootNode);
+
+        if (rootNode != null) {
+            queue.add(rootNode);
+        }
 
         while (!queue.isEmpty()) {
             CfgNode node = queue.poll();
@@ -62,13 +66,25 @@ public final class MarkedPath {
                 statementToNodes.computeIfAbsent(key, k -> new ArrayList<>()).add(node);
             }
 
-            // mở rộng theo các cạnh của CFG
-            if (node instanceof CfgBoolExprNode) {
-                CfgBoolExprNode b = (CfgBoolExprNode) node;
-                queue.add(b.getTrueNode());
-                queue.add(b.getFalseNode());
+            // 1. Luôn thêm node "sau"
+            if (node.getAfterStatementNode() != null) {
+                queue.add(node.getAfterStatementNode());
             }
-            queue.add(node.getAfterStatementNode());
+
+            // 2. Xử lý các node rẽ nhánh IF
+            if (node instanceof core.cfg.CfgBoolExprNode) {
+                core.cfg.CfgBoolExprNode b = (core.cfg.CfgBoolExprNode) node;
+                if (b.getTrueNode() != null) queue.add(b.getTrueNode());
+                if (b.getFalseNode() != null) queue.add(b.getFalseNode());
+            }
+//
+            // 3. Xử lý For-Each
+            else if (node instanceof CfgForEachExpressionNode) {
+                CfgForEachExpressionNode fe = (CfgForEachExpressionNode) node;
+                if (fe.getHasElementAfterNode() != null) queue.add(fe.getHasElementAfterNode());
+                if (fe.getNoMoreElementAfterNode() != null) queue.add(fe.getNoMoreElementAfterNode());
+            }
+
         }
 
         // ===== BƯỚC 2: ánh xạ MarkedStatement -> CfgNode và cập nhật các tập coverage =====
@@ -85,7 +101,10 @@ public final class MarkedPath {
             if (candidates != null && !candidates.isEmpty()) {
                 // ưu tiên node chưa được mark để tránh reuse
                 for (CfgNode n : candidates) {
-                    if (!n.isMarked()) { matched = n; break; }
+                    if (!n.isMarked()) {
+                        matched = n;
+                        break;
+                    }
                 }
                 if (matched == null) matched = candidates.get(0); // fallback
             } else {
@@ -267,9 +286,9 @@ public final class MarkedPath {
 //
 //        reset();
 //        return result;
-////        return coveredStatements;
-//    }
 
+    /// /        return coveredStatements;
+//    }
     public static int getTotalCoveredStatement() {
         return totalCoveredStatement.size();
     }
@@ -380,11 +399,11 @@ public final class MarkedPath {
 //
 //            CfgNode falseBranchUncoveredNode = findUncoveredNode(boolExprNode.getFalseNode(), duplicateNode);
 //            CfgNode trueBranchUncoveredNode = findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
-////            if(tmpUncoveredNode == null) {
-////                return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
-////            } else {
-////                return tmpUncoveredNode;
-////            }
+    /// /            if(tmpUncoveredNode == null) {
+    /// /                return findUncoveredNode(boolExprNode.getTrueNode(), duplicateNode);
+    /// /            } else {
+    /// /                return tmpUncoveredNode;
+    /// /            }
 //            return falseBranchUncoveredNode == null ? trueBranchUncoveredNode : falseBranchUncoveredNode;
 //        }
 //
@@ -405,7 +424,8 @@ public final class MarkedPath {
         }
         if (!coveredNodeInPath.contains(rootNode)) {
             coveredNodeInPath.add(rootNode);
-            if (!rootNode.isMarked() && !rootNode.isFakeMarked()) return rootNode;
+            if (!rootNode.isMarked() && !rootNode.isFakeMarked()
+                    && rootNode.getContent() != null && !rootNode.getContent().isEmpty()) return rootNode;
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
                 CfgNode falseBranchUncoveredNode = findUncoveredStatement(boolExprNode.getFalseNode(), duplicateNode);
@@ -437,12 +457,13 @@ public final class MarkedPath {
 //                return boolExprNode.getFalseNode();
 //            }
 //
-////            if (boolExprNode != duplicateNode) {
-////                duplicateNode = boolExprNode;
-////                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
-////            } else {
-////                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
-////            }
+
+    /// /            if (boolExprNode != duplicateNode) {
+    /// /                duplicateNode = boolExprNode;
+    /// /                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
+    /// /            } else {
+    /// /                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
+    /// /            }
 //            if(coveredNodeInPath.contains(boolExprNode)) {
 //                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
 //            } else {
@@ -456,7 +477,6 @@ public final class MarkedPath {
 //        coveredNodeInPath.add(rootNode);
 //        return findUncoveredBranch(rootNode.getAfterStatementNode(), duplicateNode);
 //    }
-
     private static CfgNode findUncoveredBranch(CfgNode rootNode, CfgNode duplicateNode) {
         if (rootNode == null) {
             return null;
@@ -476,7 +496,31 @@ public final class MarkedPath {
                 CfgNode falseBranchUncoveredNode = findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
                 CfgNode trueBranchUncoveredNode = findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
                 return falseBranchUncoveredNode == null ? trueBranchUncoveredNode : falseBranchUncoveredNode;
-            } else {
+            }
+//            else if (rootNode instanceof CfgForEachExpressionNode) {
+//                CfgForEachExpressionNode feNode = (CfgForEachExpressionNode) rootNode;
+//
+//                if (!feNode.isTrueMarked() && !feNode.isFakeTrueMarked()) {
+//                    return feNode.getHasElementAfterNode(); // Tìm thấy! (nhánh "vào")
+//                }
+//                if (!feNode.isFalseMarked() && !feNode.isFakeFalseMarked()) {
+//                    return feNode.getNoMoreElementAfterNode(); // Tìm thấy! (nhánh "thoát")
+//                }
+//
+//                CfgNode bodyNode = findUncoveredBranch(feNode.getHasElementAfterNode(), duplicateNode);
+//                CfgNode exitNode = findUncoveredBranch(feNode.getNoMoreElementAfterNode(), duplicateNode);
+//                return bodyNode == null ? exitNode : bodyNode;
+//            }
+//
+//            // 3. THÊM LOGIC CHO SWITCH
+//            else if (rootNode instanceof CfgBeginSwitchNode) {
+//                CfgBeginSwitchNode sNode = (CfgBeginSwitchNode) rootNode;
+//                // Switch node không tự nó có nhánh, nó chỉ "dẫn"
+//                // đến các `case` (là các CfgBoolExprNode).
+//                // Chúng ta chỉ cần duyệt đệ quy vào "sau" nó.
+//                return findUncoveredBranch(sNode.getAfterStatementNode(), duplicateNode);
+//            }
+            else {
                 return findUncoveredBranch(rootNode.getAfterStatementNode(), duplicateNode);
             }
         } else {

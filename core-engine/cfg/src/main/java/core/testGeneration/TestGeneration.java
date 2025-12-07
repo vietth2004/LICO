@@ -28,7 +28,7 @@ public abstract class TestGeneration {
     protected static CompilationUnit compilationUnit;
     protected static ArrayList<ASTNode> funcAstNodeList;
     protected static CfgNode cfgBeginNode;
-    protected static CfgEndBlockNode cfgEndNode;
+    public static CfgEndBlockNode cfgEndNode;
     protected static List<ASTNode> parameters;
     protected static Class<?>[] parameterClasses;
     protected static List<String> parameterNames;
@@ -103,7 +103,7 @@ public abstract class TestGeneration {
 
     public static MethodDeclaration getTestFunc() {
 //        if (isSetup) {
-            return (MethodDeclaration) testFunc;
+        return (MethodDeclaration) testFunc;
 //        } else {
 //            throw new RuntimeException("Value has not been setup");
 //        }

@@ -89,6 +89,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+        <dependency>
+            <groupId>mrmathami.cia.java</groupId>
+            <artifactId>mrmathami.cia.java.core</artifactId>
+            <version>1.0.4</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
