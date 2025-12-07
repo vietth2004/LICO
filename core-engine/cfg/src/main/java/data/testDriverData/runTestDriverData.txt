@@ -18,8 +18,5 @@ int previous=2;
 ===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
 ===false===false---end---previous=current;
 ===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
 ===false===false---end---i++===false===false---end---i < n===false===true---end---return previous;
-===false===false---end---8.2122===29
+===false===false---end---9.7111===18

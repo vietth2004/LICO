@@ -9,11 +9,15 @@ import java.util.*;
 
 public class LoopPathGenerator {
 
+    private static final int MAX_DEPTH = 200;
+    private static final int MAX_PATHS = 100;
+
     // hàm tìm đường đi
     public static List<Path> generateLicoPaths(CfgNode cfgNode, CfgNode endNode) {
         List<Path> result = new ArrayList<Path>();
+        Set<String> uniquePaths = new HashSet<>();
 
-        Map<CfgNode, CfgNode> loops = detectLoops(cfgNode);
+        Map<CfgNode, Set<CfgNode>> loops = detectLoops(cfgNode);
 
         if (loops.isEmpty()) {
             return result;
@@ -21,13 +25,13 @@ public class LoopPathGenerator {
 
         CfgNode loopHeader = loops.keySet().iterator().next();
 
-        int[] scenarios = {0, 2, 5, 10};
+        int[] scenarios = {0, 1, 2, 5};
 
         for (int k : scenarios) {
             Map<CfgNode, Integer> targets = new HashMap<>();
             targets.put(loopHeader, k);
 
-            dfsLico(cfgNode, new Path(), new HashMap<>(), targets, result, loops, endNode);
+            dfsLico(cfgNode, new Path(), new HashMap<>(), targets, result, loops, endNode, 0, uniquePaths);
         }
         return result;
     }
@@ -40,8 +44,8 @@ public class LoopPathGenerator {
      * @param root cây cfg
      * @return trả về map
      */
-    private static Map<CfgNode, CfgNode> detectLoops(CfgNode root) {
-        HashMap<CfgNode, CfgNode> loops = new HashMap<>();
+    private static Map<CfgNode, Set<CfgNode>> detectLoops(CfgNode root) {
+        Map<CfgNode, Set<CfgNode>> loops = new HashMap<>();
         Set<CfgNode> visited = new HashSet<>(); // đánh dấu node đã thăm
         Set<CfgNode> recursionStack = new HashSet<>(); // những node đang thăm
 
@@ -50,7 +54,7 @@ public class LoopPathGenerator {
     }
 
     private static void detectLoopsRecursive(CfgNode root, Set<CfgNode> visited,
-                                             Set<CfgNode> recursionStack, HashMap<CfgNode, CfgNode> loops) {
+                                             Set<CfgNode> recursionStack, Map<CfgNode, Set<CfgNode>> loops) {
         if (root == null) return;
 
         visited.add(root);
@@ -64,7 +68,7 @@ public class LoopPathGenerator {
             } else if (recursionStack.contains(child)) {
                 // child đã được thăm và đang ở trong stack nghĩa là nó đang bị lặp lại --> đây là back-edge
                 // child chính là loop header, còn root chính là nút cuối của vòng lặp
-                loops.put(child, root);
+                loops.computeIfAbsent(child, k -> new HashSet<>()).add(root);
             }
         }
 
@@ -82,55 +86,81 @@ public class LoopPathGenerator {
      */
     private static void dfsLico(CfgNode currentNode, Path currentPath, Map<CfgNode,
                                         Integer> loopCounters, Map<CfgNode, Integer> targetIterations, List<Path> resultPaths,
-                                Map<CfgNode, CfgNode> loops, CfgNode targetEndNode) {
-        currentPath.addLast(currentNode);
+                                Map<CfgNode, Set<CfgNode>> loops, CfgNode endNode, int currentLength, Set<String> uniquePaths) {
 
         currentPath.addLast(currentNode);
 
-        if (currentNode == targetEndNode) {
-            resultPaths.add(new Path(currentPath));
+        // 1. Check giới hạn
+        if (resultPaths.size() >= MAX_PATHS) return;
+        if (currentLength > MAX_DEPTH) {
+            currentPath.removeLast();
+            return;
+        }
+
+        // 2. Check đích đến
+        if (currentNode == endNode) {
+            String pathSignature = currentPath.toString();
+            if (!uniquePaths.contains(pathSignature)) {
+                uniquePaths.add(pathSignature);
+                resultPaths.add(new Path(currentPath));
+            }
             currentPath.removeLast();
             return;
         }
 
         List<CfgNode> nextNodes = getChildren(currentNode);
 
-        for (CfgNode nextNode : nextNodes) {
-            boolean isBackEdge = false;
+        if (nextNodes.isEmpty()) {
+            currentPath.removeLast();
+            return;
+        }
 
+        // LỌC ĐƯỜNG ĐI NGAY KHI ĐỨNG TẠI HEADER
+        // Nếu currentNode chính là Header của một vòng lặp nào đó
+        if (targetIterations.containsKey(currentNode) && currentNode instanceof CfgBoolExprNode) {
+
+            int target = targetIterations.get(currentNode);
+            int current = loopCounters.getOrDefault(currentNode, 0);
+
+            CfgBoolExprNode boolNode = (CfgBoolExprNode) currentNode;
+            CfgNode trueNode = boolNode.getTrueNode();
+            CfgNode falseNode = boolNode.getFalseNode();
+
+            List<CfgNode> allowedNodes = new ArrayList<>();
+
+            // Chưa đủ số lần -> BẮT BUỘC vào thân
+            if (current < target) {
+                if (trueNode != null) allowedNodes.add(trueNode);
+                // (Không add falseNode -> Chặn thoát)
+            }
+            //Đã đủ (hoặc thừa) số lần -> BẮT BUỘC thoát
+            else {
+                if (falseNode != null) allowedNodes.add(falseNode);
+                // (Không add trueNode -> Chặn lặp tiếp)
+            }
+
+            // Cập nhật lại danh sách cần duyệt
+            nextNodes = allowedNodes;
+        }
+
+
+        for (CfgNode nextNode : nextNodes) {
+            if (resultPaths.size() >= MAX_PATHS) break;
+
+            boolean isBackEdge = false;
             if (loops.containsKey(nextNode)) {
-                if (loops.get(nextNode) == currentNode) {
+                if (loops.get(nextNode).contains(currentNode)) {
                     isBackEdge = true;
                 }
             }
 
-            // kiểm tra xem nextNode có là loop header không ?
-            if (targetIterations.containsKey(nextNode)) {
-                int target = targetIterations.get(nextNode); // lấy số lần muốn lặp loop này
-                int current = loopCounters.getOrDefault(nextNode, 0); // số lần lặp hiện tại
-
-                // Nếu current < target: Bắt buộc ta phải đi tiếp vào thân
-                // Nếu current = target: thì ta lập tức ngắt đường đi và thoát ra ngoài
-
-                if (currentNode instanceof CfgBoolExprNode) {
-                    CfgBoolExprNode boolExprNode = (CfgBoolExprNode) currentNode;
-
-                    if (nextNode == boolExprNode.getTrueNode()) {
-                        if (current >= target) continue;
-                    }
-                    if (nextNode == boolExprNode.getFalseNode()) {
-                        if (current < target) continue;
-                    }
-                }
-            }
-
-            // cập nhật bộ đếm khi đi qua Back-edge
             if (isBackEdge) {
                 loopCounters.put(nextNode, loopCounters.getOrDefault(nextNode, 0) + 1);
             }
 
-            dfsLico(nextNode, currentPath, loopCounters, targetIterations, resultPaths, loops, targetEndNode);
+            dfsLico(nextNode, currentPath, loopCounters, targetIterations, resultPaths, loops, endNode, currentLength + 1, uniquePaths);
 
+            // Backtrack: Cập nhật bộ đếm GIẢM
             if (isBackEdge) {
                 int count = loopCounters.get(nextNode);
                 if (count > 0) {

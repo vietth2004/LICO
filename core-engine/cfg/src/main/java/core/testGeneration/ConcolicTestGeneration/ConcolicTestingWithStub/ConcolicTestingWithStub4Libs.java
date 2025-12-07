@@ -14,6 +14,7 @@ import core.path.MarkedStatement;
 import core.path.Path;
 import core.symbolicExecution.SymbolicExecution;
 import core.symbolicExecution.SymbolicExecutionRewrite;
+import core.testDriver.LoopPathGenerator;
 import core.testDriver.TestDriverGenerator;
 import core.testDriver.TestDriverRunner;
 import core.testDriver.TestDriverUtils;
@@ -72,13 +73,13 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         testResult.addToFullTestData(new TestData(TestGeneration.parameterNames, TestGeneration.parameterClasses, evaluatedValues, coveredStatements,
                 TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
-//        // test Lico
-//        List<Path> licoPaths = LoopPathGenerator.generateLicoPaths(TestGeneration.cfgBeginNode, TestGeneration.cfgEndNode);
-//
-//        for (Path path : licoPaths) {
-//            System.out.println("LICO đang chạy path: " + path);
-//            solveAndRunTest(path, testResult, coverage);
-//        }
+        // test Lico
+        List<Path> licoPaths = LoopPathGenerator.generateLicoPaths(TestGeneration.cfgBeginNode, TestGeneration.cfgEndNode);
+
+        for (Path path : licoPaths) {
+            System.out.println("LICO đang chạy path: " + path);
+            solveAndRunTest(path, testResult, coverage);
+        }
 
         boolean isTestedSuccessfully = true;
 
