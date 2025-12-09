@@ -351,6 +351,8 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
         Object[] evaluatedValues = solution.getEvaluatedTestData(TestGeneration.parameterClasses);
 
+        System.out.println("Z3 giải ra input: " + Arrays.toString(evaluatedValues));
+
         TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
         String testDriver = TestDriverGenerator.generateTestDriverNew(

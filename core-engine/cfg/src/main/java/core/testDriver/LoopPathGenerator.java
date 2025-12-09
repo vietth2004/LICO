@@ -9,13 +9,12 @@ import java.util.*;
 
 public class LoopPathGenerator {
 
-    private static final int MAX_DEPTH = 200;
-    private static final int MAX_PATHS = 100;
+    private static final int MAX_DEPTH = 400;
+    private static final int MAX_PATHS_PER_SCENARIO = 50;
 
     // hàm tìm đường đi
     public static List<Path> generateLicoPaths(CfgNode cfgNode, CfgNode endNode) {
         List<Path> result = new ArrayList<Path>();
-        Set<String> uniquePaths = new HashSet<>();
 
         Map<CfgNode, Set<CfgNode>> loops = detectLoops(cfgNode);
 
@@ -31,7 +30,11 @@ public class LoopPathGenerator {
             Map<CfgNode, Integer> targets = new HashMap<>();
             targets.put(loopHeader, k);
 
-            dfsLico(cfgNode, new Path(), new HashMap<>(), targets, result, loops, endNode, 0, uniquePaths);
+            List<Path> pathsForThisScenario = new ArrayList<>();
+            Set<String> uniquePaths = new HashSet<>();
+
+            dfsLico(cfgNode, new Path(), new HashMap<>(), targets, pathsForThisScenario, loops, endNode, 0, uniquePaths);
+            result.addAll(pathsForThisScenario);
         }
         return result;
     }
@@ -76,7 +79,9 @@ public class LoopPathGenerator {
     }
 
     /**
-     * sinh đường đi
+     * sinh đường đi.
+     * Hàm DFS tìm kiếm kiểu "Tham lam".
+     * Trả về true ngay khi tìm thấy 1 đường đi thỏa mãn để dừng toàn bộ quá trình tìm kiếm cho kịch bản đó.
      *
      * @param currentNode      node hiện tại đang xét
      * @param currentPath      đường đi đang xét
@@ -86,22 +91,20 @@ public class LoopPathGenerator {
      */
     private static void dfsLico(CfgNode currentNode, Path currentPath, Map<CfgNode,
                                         Integer> loopCounters, Map<CfgNode, Integer> targetIterations, List<Path> resultPaths,
-                                Map<CfgNode, Set<CfgNode>> loops, CfgNode endNode, int currentLength, Set<String> uniquePaths) {
+                                Map<CfgNode, Set<CfgNode>> loops, CfgNode endNode, int currentLength,
+                                Set<String> uniquePaths) {
+
+        // 1. Giới hạn độ sâu
+        if (resultPaths.size() >= MAX_PATHS_PER_SCENARIO) return;
+        if (currentLength > MAX_DEPTH) return;
 
         currentPath.addLast(currentNode);
 
-        // 1. Check giới hạn
-        if (resultPaths.size() >= MAX_PATHS) return;
-        if (currentLength > MAX_DEPTH) {
-            currentPath.removeLast();
-            return;
-        }
-
-        // 2. Check đích đến
+        // 2. ĐẾN ĐÍCH
         if (currentNode == endNode) {
-            String pathSignature = currentPath.toString();
-            if (!uniquePaths.contains(pathSignature)) {
-                uniquePaths.add(pathSignature);
+            String signature = currentPath.toString();
+            if (!uniquePaths.contains(signature)) {
+                uniquePaths.add(signature);
                 resultPaths.add(new Path(currentPath));
             }
             currentPath.removeLast();
@@ -109,68 +112,43 @@ public class LoopPathGenerator {
         }
 
         List<CfgNode> nextNodes = getChildren(currentNode);
-
         if (nextNodes.isEmpty()) {
             currentPath.removeLast();
             return;
         }
 
-        // LỌC ĐƯỜNG ĐI NGAY KHI ĐỨNG TẠI HEADER
-        // Nếu currentNode chính là Header của một vòng lặp nào đó
+        // Chặn Loop Header
         if (targetIterations.containsKey(currentNode) && currentNode instanceof CfgBoolExprNode) {
-
             int target = targetIterations.get(currentNode);
             int current = loopCounters.getOrDefault(currentNode, 0);
-
             CfgBoolExprNode boolNode = (CfgBoolExprNode) currentNode;
-            CfgNode trueNode = boolNode.getTrueNode();
-            CfgNode falseNode = boolNode.getFalseNode();
-
             List<CfgNode> allowedNodes = new ArrayList<>();
 
-            // Chưa đủ số lần -> BẮT BUỘC vào thân
             if (current < target) {
-                if (trueNode != null) allowedNodes.add(trueNode);
-                // (Không add falseNode -> Chặn thoát)
+                if (boolNode.getTrueNode() != null) allowedNodes.add(boolNode.getTrueNode());
+            } else {
+                if (boolNode.getFalseNode() != null) allowedNodes.add(boolNode.getFalseNode());
             }
-            //Đã đủ (hoặc thừa) số lần -> BẮT BUỘC thoát
-            else {
-                if (falseNode != null) allowedNodes.add(falseNode);
-                // (Không add trueNode -> Chặn lặp tiếp)
-            }
-
-            // Cập nhật lại danh sách cần duyệt
             nextNodes = allowedNodes;
         }
 
-
         for (CfgNode nextNode : nextNodes) {
-            if (resultPaths.size() >= MAX_PATHS) break;
+            if (resultPaths.size() >= MAX_PATHS_PER_SCENARIO) break;
 
-            boolean isBackEdge = false;
-            if (loops.containsKey(nextNode)) {
-                if (loops.get(nextNode).contains(currentNode)) {
-                    isBackEdge = true;
-                }
-            }
 
-            if (isBackEdge) {
-                loopCounters.put(nextNode, loopCounters.getOrDefault(nextNode, 0) + 1);
-            }
+            boolean isBackEdge = loops.containsKey(nextNode) && loops.get(nextNode).contains(currentNode);
 
-            dfsLico(nextNode, currentPath, loopCounters, targetIterations, resultPaths, loops, endNode, currentLength + 1, uniquePaths);
+            if (isBackEdge) loopCounters.put(nextNode, loopCounters.getOrDefault(nextNode, 0) + 1);
 
-            // Backtrack: Cập nhật bộ đếm GIẢM
+            dfsLico(nextNode, currentPath, loopCounters, targetIterations,
+                    resultPaths, loops, endNode, currentLength + 1, uniquePaths);
+
             if (isBackEdge) {
                 int count = loopCounters.get(nextNode);
-                if (count > 0) {
-                    loopCounters.put(nextNode, count - 1);
-                } else {
-                    loopCounters.remove(nextNode);
-                }
+                if (count > 0) loopCounters.put(nextNode, count - 1);
+                else loopCounters.remove(nextNode);
             }
         }
-
         currentPath.removeLast();
     }
 

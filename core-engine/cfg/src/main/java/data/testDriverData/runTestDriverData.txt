@@ -1,22 +1,2 @@
-int previous=2;
-===false===false---end---int current=1;
-===false===false---end---int i=1===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===true===false---end---int next=previous + current;
-===false===false---end---previous=current;
-===false===false---end---current=next;
-===false===false---end---i++===false===false---end---i < n===false===true---end---return previous;
-===false===false---end---9.7111===18
+year % 4 == 0===true===false---end---year % 100 == 0===true===false---end---year % 400 == 0===false===true---end---return false;
+===false===false---end---15.0521===false

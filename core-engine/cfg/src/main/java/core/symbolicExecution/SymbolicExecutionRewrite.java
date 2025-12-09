@@ -65,9 +65,20 @@ public class SymbolicExecutionRewrite {
                 AstNode executedAstNode = Rewrite.reStm(astNode, symbolicMap);
 
                 if (currentNode.getData() instanceof CfgBoolExprNode) { // Condition
+                    CfgBoolExprNode boolNode = (CfgBoolExprNode) currentCfgNode;
 
-                    // Kiểm tra xem path hiện tại chứa node bool phủ định
-                    if (currentNode.getNext() != null && currentNode.getNext().getData().isFalseNode()) {
+                    boolean isGoingToFalseBranch = false;
+
+                    if (currentNode.getNext() != null) {
+                        CfgNode nextCfgNode = currentNode.getNext().getData(); // Node tiếp theo trong đường đi
+
+                        // kiểm tra: Node tiếp theo có phải là con ở nhánh False của Node hiện tại không
+                        if (nextCfgNode == boolNode.getFalseNode()) {
+                            isGoingToFalseBranch = true;
+                        }
+                    }
+                    // Nếu xác định là đi nhánh False -> Phủ định biểu thức
+                    if (isGoingToFalseBranch) {
                         PrefixExpressionNode newAstNode = new PrefixExpressionNode();
                         newAstNode.setOperator(PrefixExpression.Operator.NOT);
                         newAstNode.setOperand((ExpressionNode) executedAstNode);
