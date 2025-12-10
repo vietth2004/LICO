@@ -80,6 +80,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
             System.out.println("LICO đang chạy path: " + path);
             solveAndRunTest(path, testResult, coverage);
         }
+        //----- End test Lico
 
         boolean isTestedSuccessfully = true;
 

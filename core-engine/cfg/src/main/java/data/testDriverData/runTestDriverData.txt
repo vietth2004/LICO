@@ -1,2 +1,4 @@
-year % 4 == 0===true===false---end---year % 100 == 0===true===false---end---year % 400 == 0===false===true---end---return false;
-===false===false---end---15.0521===false
+long exp=n;
+===false===false---end---exp < 0===false===true---end---double result=1.0;
+===false===false---end---exp > 0===false===true---end---return result;
+===false===false---end---6.031===1.0
