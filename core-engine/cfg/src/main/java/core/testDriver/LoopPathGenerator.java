@@ -31,7 +31,8 @@ public class LoopPathGenerator {
         }
 
         // Các kịch bản số lần lặp cần test
-        int[] scenarios = {0, 1, 2, 4, M, M + 1};
+        //int[] scenarios = {0, 1, 2, 4, M, M + 1};
+        int[] scenarios = {3};
         Set<String> globalUniquePaths = new HashSet<>(); // Lưu trữ các đường đi duy nhất trên toàn bộ kịch bản
 
         for (int k : scenarios) {

@@ -59,7 +59,7 @@ public class UploadController {
 
             uploadService.preprocessSourceCode(path, ASTHelper.Coverage.BRANCH);
 
-            File jsonFile = new File(path + "\\tmp-prjt.json");
+            File jsonFile = new File(path + "/tmp-prjt.json");
 
             VersionCompareResponse versionCompareResponse = uploadService.compareTwoVersions(files, project, user);
 
@@ -93,7 +93,7 @@ public class UploadController {
 
             uploadService.preprocessSourceCode(path, ASTHelper.Coverage.MCDC);
 
-            path += "\\tmp-prjt.json";
+            path += "/tmp-prjt.json";
             File jsonFile = new File(path);
 
             ObjectMapper objectMapper = new ObjectMapper();

@@ -58,7 +58,7 @@ public class SymbolicExecutionRewrite {
 
         while (currentNode != null) {
             currentCfgNode = currentNode.getData();
-
+            System.out.println(currentCfgNode.getContentReport());
             ASTNode astNode = currentCfgNode.getAst();
 
             if (astNode != null) {

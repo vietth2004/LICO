@@ -236,12 +236,12 @@ public class CfgNode {
         return "CFGNode{" +
 //                "start=" + startPosition +
 //                ", end=" + endPosition +
-                ("".equals(content) ? "null" : ", content='" + content + '\'') +
-                ", isRootNode=" + isBeginCfgNode +
-                ", isEndNode=" + isEndCfgNode +
+                ("".equals(content) ? "null" : ", content='" + content + '}');
+//                ", isRootNode=" + isBeginCfgNode +
+//                ", isEndNode=" + isEndCfgNode +
                 //", children=" + children +
 //                ", isVisited=" + isVisited +
-                '}';
+//                '}';
     }
 
     public CfgNode getBeforeStatementNode() {

@@ -6,11 +6,17 @@ import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
+import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
+import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.Name.SimpleNameNode;
 import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.InfixExpression;
 
+
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostfixExpressionNode extends OperationExpressionNode {
@@ -64,7 +70,61 @@ public class PostfixExpressionNode extends OperationExpressionNode {
             String key = NameNode.getStringNameNode((NameNode) operand);
             AstNode value = memoryModel.getValue(key);
 
-            if(value instanceof LiteralNode) {
+            if (value instanceof NameNode) {
+                InfixExpressionNode expr = new InfixExpressionNode();
+
+                // map ++ / -- -> + / -
+                if (operator == PostfixExpression.Operator.INCREMENT) {
+                    expr.setOperator(InfixExpression.Operator.PLUS);
+                } else if (operator == PostfixExpression.Operator.DECREMENT) {
+                    expr.setOperator(InfixExpression.Operator.MINUS);
+                } else {
+                    throw new IllegalStateException(
+                            "Unsupported postfix operator (only ++/-- supported): " + operator);
+                }
+
+                expr.setLeftOperand((ExpressionNode) value);
+
+                IntegerLiteralNode one = new IntegerLiteralNode();
+                one.setTokenValue(1);
+                expr.setRightOperand(one);
+                //InfixExpressionNode.executeInfixExpression((InfixExpression) expression, memoryModel);
+
+
+                memoryModel.assignVariable(key, expr);
+            }
+            else if (value instanceof InfixExpressionNode) {
+
+                if (operator != PostfixExpression.Operator.INCREMENT
+                        && operator != PostfixExpression.Operator.DECREMENT) {
+                    throw new IllegalStateException(
+                            "Unsupported postfix operator on infix expression: " + operator);
+                }
+
+                InfixExpressionNode inf = (InfixExpressionNode) value;
+
+                // chỉ xử lý pattern: (<base> +/- <IntegerLiteral>)
+                if (!(inf.getRightOperand() instanceof IntegerLiteralNode)) {
+                    throw new IllegalStateException(
+                            "Right operand is not IntegerLiteralNode: " + inf.getRightOperand());
+                }
+
+                IntegerLiteralNode kNode = (IntegerLiteralNode) inf.getRightOperand();
+                int k = kNode.getIntegerValue();
+
+                // cập nhật k theo ++ / --
+                if (operator == PostfixExpression.Operator.INCREMENT) {
+                    k++;
+                } else { // DECREMENT
+                    k--;
+                }
+
+                IntegerLiteralNode newK = new IntegerLiteralNode();
+                newK.setTokenValue(k);
+                inf.setRightOperand(newK);
+
+                memoryModel.assignVariable(key, inf);
+            } else if(value instanceof LiteralNode) {
                 memoryModel.assignVariable(key, LiteralNode.analyzeOnePostfixLiteral((LiteralNode) value, operator));
             } else if (value instanceof OperationExpressionNode) {
                 PostfixExpressionNode newValue = new PostfixExpressionNode();
@@ -91,4 +151,6 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
         return result.toString();
     }
+
+
 }

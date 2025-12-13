@@ -1,9 +1,11 @@
 package core.uploadProjectUtils.cloneProjectUtils;
 
-import core.FilePath;
+import core.cfg.CfgSwitchStatementBlockNode;
 import core.cfg.utils.ASTHelper;
+import core.cmd.CommandLine;
 import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
-import org.apache.commons.io.FileUtils;
+import core.FilePath;
+import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.BufferedReader;
@@ -15,17 +17,23 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static core.cfg.utils.ASTHelper.convertTernaryToIf;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.TextEdit;
 
 public final class CloneProject {
     private static int totalFunctionStatement;
     private static int totalClassStatement;
     private static int totalFunctionBranch;
+    private static CompilationUnit classCompilationUnit;
+    private static int firstLine;
 
     private enum CoverageType {
         STATEMENT,
@@ -68,13 +76,16 @@ public final class CloneProject {
         if (javaFiles.isEmpty()) {
             return base; // không có .java, trả về chính thư mục gốc nhập vào
         }
-
         // Tập các package tìm được
         List<Path> candidates = new ArrayList<>();
+        int count = 0;
         for (Path jf : javaFiles) {
+            count++;
+            System.out.println(jf.toString());
             String pkg = readPackageDecl(jf); // null nếu default package
             int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split("\\.").length;
 
+            System.out.println(depth);
             Path p = jf.getParent();
             for (int i = 0; i < depth && p != null; i++) {
                 p = p.getParent();
@@ -82,7 +93,11 @@ public final class CloneProject {
             if (p != null) {
                 candidates.add(p.toAbsolutePath().normalize());
             }
+
+            if (count == 1) break ;
         }
+
+        System.out.println("pp");
 
         // Lấy giao đường dẫn của tất cả package tìm được
         Path root = candidates.get(0);
@@ -105,13 +120,14 @@ public final class CloneProject {
         iCloneProject(originalDirPath, destinationDirPath, coverage, fileName);
         System.out.println(command);
 
-        Process p = Runtime.getRuntime().exec(command.toString());
-        System.out.println(p.waitFor());
-
-        if (p.waitFor() != 0) {
-            System.out.println("Can't compile project");
-            throw new RuntimeException("Can't compile project");
-        }
+        CommandLine.executeCommand(command.toString());
+//        Process p = Runtime.getRuntime().exec(command.toString());
+//        System.out.println(p.waitFor());
+//
+//        if (p.waitFor() != 0) {
+//            System.out.println("Can't compile project");
+//            throw new RuntimeException("Can't compile project");
+//        }
     }
 
     private static void iCloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage, String fileToTestName) throws IOException {
@@ -124,22 +140,23 @@ public final class CloneProject {
             if (file.isDirectory()) {
                 String dirName = file.getName();
                 createCloneDirectory(destinationDirPath, dirName);
-                iCloneProject(originalDirPath + "\\" + dirName, destinationDirPath + "\\" + dirName, coverage, fileToTestName);
+                iCloneProject(originalDirPath + "/" + dirName, destinationDirPath + "/" + dirName, coverage, fileToTestName);
             } else if (file.isFile() && file.getName().endsWith("java") && file.getName().equals(fileToTestName)) {
                 existJavaFile = true;
                 totalClassStatement = 0;
                 String fileName = file.getName();
-                String sourcePath = originalDirPath + "\\" + fileName;
+                String sourcePath = originalDirPath + "/" + fileName;
                 CompilationUnit compilationUnit = Parser.parseFileToCompilationUnit(sourcePath);
+                classCompilationUnit = compilationUnit;
 
                 createCloneFile(destinationDirPath, fileName);
                 String sourceCode = createCloneSourceCode(compilationUnit, destinationDirPath, coverage);
-                writeDataToFile(sourceCode, destinationDirPath + "\\" + fileName);
+                writeDataToFile(sourceCode, destinationDirPath + "/" + fileName);
             }
         }
 
         if (existJavaFile) {
-            command.append(destinationDirPath).append("\\*.java ");
+            command.append(destinationDirPath).append("/*.java ");
         }
     }
 
@@ -264,11 +281,13 @@ public final class CloneProject {
                 "e.printStackTrace();\n" +
                 "}\n" +
                 "}\n" +
-                "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition) {\n" +
+                "private static boolean mark(String statement, boolean isTrueCondition, boolean isFalseCondition, int id) {\n" +
                 "StringBuilder markResult = new StringBuilder();\n" +
                 "markResult.append(statement).append(\"===\");\n" +
                 "markResult.append(isTrueCondition).append(\"===\");\n" +
-                "markResult.append(isFalseCondition).append(\"---end---\");\n" +
+//                "markResult.append(isFalseCondition).append(\"---end---\");\n" +
+                "markResult.append(isFalseCondition).append(\"===\");\n" +
+                "markResult.append(id).append(\"---end---\");\n" +
                 "writeDataToFile(markResult.toString(), \"" + FilePath.concreteExecuteResultPath + "\", true);\n" +
                 "if (!isTrueCondition && !isFalseCondition) return true;\n" +
                 "return !isFalseCondition;\n" +
@@ -287,17 +306,21 @@ public final class CloneProject {
             }
         };
         compilationUnit.accept(methodsVisitor);
-
+        result.append("private static int MAX_RECURSION_DEPTH = ").append(1).append(";\n");
         for (ASTNode astNode : methods) {
             totalFunctionStatement = 0;
             totalFunctionBranch = 0;
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
-            result.append(methodDeclaration);
-            if (!((MethodDeclaration) astNode).isConstructor()) {
+            firstLine = compilationUnit.getLineNumber(methodDeclaration.getBody().getStartPosition());
+
+            if(!((MethodDeclaration) astNode).isConstructor()){
                 //Xử lý tạm thơ constructor
                 result.append(createCloneMethod(methodDeclaration, coverage));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
+            }
+            else {
+                result.append(methodDeclaration);
             }
         }
 
@@ -340,25 +363,30 @@ public final class CloneProject {
 
     private static String createCloneMethod(MethodDeclaration method, ASTHelper.Coverage coverage) {
         StringBuilder cloneMethod = new StringBuilder();
-
         List<ASTNode> modifiers = method.modifiers();
         for (ASTNode modifier : modifiers) {
-            if (modifier.toString().equals("private")) {
+            if(modifier.toString().equals("private")){
                 cloneMethod.append("public").append(" ");
                 continue;
             }
             cloneMethod.append(modifier).append(" ");
         }
 
-        cloneMethod.append(method.getReturnType2() != null ? method.getReturnType2() : "").append(" ").append(method.getName()).append("_clone").append("(");
+        cloneMethod.append(method.getReturnType2() != null ? method.getReturnType2() : "").append(" ").append(method.getName()).append("(");
         List<ASTNode> parameters = method.parameters();
         for (int i = 0; i < parameters.size(); i++) {
             cloneMethod.append(parameters.get(i));
             if (i != parameters.size() - 1) cloneMethod.append(", ");
         }
-        cloneMethod.append(")\n");
+        cloneMethod.append(") {\n");
+        cloneMethod.append("if (MAX_RECURSION_DEPTH <= 0) {\n")
+                .append("System.out.println(\"Recursion depth exceeded. Returning default value.\");\n")
+                .append("return ").append(getDefaultValue(method.getReturnType2())).append(";\n")
+                .append("}\n");
+        cloneMethod.append("MAX_RECURSION_DEPTH--;\n");
         cloneMethod.append(generateCodeForBlock(method.getBody(), coverage)).append("\n");
 
+        cloneMethod.append("}\n");
         return cloneMethod.toString();
     }
 
@@ -377,22 +405,39 @@ public final class CloneProject {
             return generateCodeForWhileStatement((WhileStatement) statement, coverage);
         } else if (statement instanceof DoStatement) {
             return generateCodeForDoStatement((DoStatement) statement, coverage);
-        } else if (statement instanceof EnhancedForStatement) {
-            return generateCodeForForEachStatement((EnhancedForStatement) statement, coverage);
+        } else {
+            return generateCodeForNormalStatement(statement, markMethodSeparator);
         }
+    }
 
-        if (statement instanceof ReturnStatement ||
-                statement instanceof ExpressionStatement ||
-                statement instanceof VariableDeclarationStatement) {
-
-            ASTNode converted = convertTernaryToIf(statement);
-            if (converted != statement) {
-                return generateCodeForOneStatement(converted, markMethodSeparator, coverage);
+    // Sinh code cho một danh sách statement, mỗi statement đi qua generator chung
+    private static String generateBodyFromStatements(List<Statement> stmts,
+                                                     ASTHelper.Coverage coverage) {
+        StringBuilder body = new StringBuilder();
+        for (Statement stmt : stmts) {
+            String code = generateCodeForOneStatement(stmt, ";", coverage);
+            body.append(code);
+            if (!code.endsWith("\n")) {
+                body.append("\n");
             }
         }
-
-        return generateCodeForNormalStatement(statement, markMethodSeparator);
+        return body.toString();
     }
+
+    private static String escapeForJavaString(String s) {
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    private static String indent(String s) {
+        String[] lines = s.split("\n");
+        StringBuilder out = new StringBuilder();
+        for (String line : lines) {
+            if (line.isEmpty()) continue;
+            out.append("    ").append(line).append("\n");
+        }
+        return out.toString();
+    }
+
 
     private static String generateCodeForBlock(Block block, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
@@ -490,50 +535,6 @@ public final class CloneProject {
         return result.toString();
     }
 
-    private static String generateCodeForForEachStatement(EnhancedForStatement forEachStatement, ASTHelper.Coverage coverage) {
-        StringBuilder result = new StringBuilder();
-
-        String paramType = forEachStatement.getParameter().getType().toString();
-        String paramName = forEachStatement.getParameter().getName().toString();
-        String collectionName = forEachStatement.getExpression().toString();
-
-        // Biến tấu: Dùng chuỗi gốc để mark, nhưng biến đổi code để chạy
-        String markContent = collectionName.trim();
-
-        String indexVar = "i_" + java.util.UUID.randomUUID().toString().substring(0, 4);
-
-        result.append("for (int ").append(indexVar).append(" = 0; ");
-
-        // Điều kiện giả lập: i < arr.length
-        String realCondition = indexVar + " < " + collectionName + ".length";
-
-        result.append("((").append(realCondition).append(")");
-        result.append(" && mark(\"").append(markContent).append("\", true, false))");
-        result.append(" || mark(\"").append(markContent).append("\", false, true)");
-
-        result.append("; ").append(indexVar).append("++) {\n");
-
-        // Tái tạo biến parameter
-        String newAssignment = paramType + " " + paramName + " = " + collectionName + "[" + indexVar + "];";
-
-        Statement newAssignmentAST = parseFakeStatement(newAssignment);
-        result.append(generateCodeForMarkMethod(newAssignmentAST, ";"));
-
-        result.append(newAssignment).append("\n");
-        result.append(generateCodeForOneStatement(forEachStatement.getBody(), ";", coverage));
-
-        result.append("}\n");
-        return result.toString();
-    }
-
-    private static Statement parseFakeStatement(String code) {
-        ASTParser parser = ASTParser.newParser(AST.JLS8);
-        parser.setKind(ASTParser.K_STATEMENTS);
-        parser.setSource(("{\n" + code + "\n}").toCharArray());
-        Block block = (Block) parser.createAST(null);
-        return (Statement) block.statements().get(0);
-    }
-
     private static String generateCodeForNormalStatement(ASTNode statement, String markMethodSeparator) {
         StringBuilder result = new StringBuilder();
 
@@ -569,7 +570,9 @@ public final class CloneProject {
             newStatement.append(charAt);
         }
 
-        result.append("mark(\"").append(newStatement).append("\", false, false)")
+        int lineNumber = classCompilationUnit.getLineNumber(statement.getStartPosition()) - firstLine;
+        result.append("mark(\"").append(newStatement).
+                append("\", false, false, ").append(lineNumber).append(')')
                 .append(markMethodSeparator).append("\n");
         totalFunctionStatement++;
         totalClassStatement++;
@@ -591,8 +594,9 @@ public final class CloneProject {
         totalFunctionStatement++;
         totalClassStatement++;
         totalFunctionBranch += 2;
-        return "((" + condition + ") && mark(\"" + condition + "\", true, false))" +
-                " || mark(\"" + condition + "\", false, true)";
+        int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
+        return "((" + condition + ") && mark(\"" + condition + "\", true, false, " + lineNumber + "))" +
+                " || mark(\"" + condition + "\", false, true, " + lineNumber + ")";
     }
 
     private static String generateCodeForConditionForMCDCCoverage(Expression condition) {
@@ -601,7 +605,8 @@ public final class CloneProject {
         if (condition instanceof InfixExpression && isSeparableOperator(((InfixExpression) condition).getOperator())) {
             InfixExpression infixCondition = (InfixExpression) condition;
 
-            result.append("(").append(generateCodeForConditionForMCDCCoverage(infixCondition.getLeftOperand())).append(") ").append(infixCondition.getOperator()).append(" (");
+            result.append("(").append(generateCodeForConditionForMCDCCoverage(infixCondition.getLeftOperand())).
+                    append(") ").append(infixCondition.getOperator()).append(" (");
             result.append(generateCodeForConditionForMCDCCoverage(infixCondition.getRightOperand())).append(")");
 
             List<ASTNode> extendedOperands = infixCondition.extendedOperands();
@@ -613,8 +618,11 @@ public final class CloneProject {
             totalFunctionStatement++;
             totalClassStatement++;
             totalFunctionBranch += 2;
-            result.append("((").append(condition).append(") && mark(\"").append(condition).append("\", true, false))");
-            result.append(" || mark(\"").append(condition).append("\", false, true)");
+            int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
+            result.append("((").append(condition).append(") && mark(\"").append(condition).
+                    append("\", true, false, ").append(lineNumber).append("))");
+            result.append(" || mark(\"").append(condition).append("\", false, true, ").
+                    append(lineNumber).append(")");
         }
 
         return result.toString();
@@ -702,5 +710,24 @@ public final class CloneProject {
         sb.append(';');
 
         return sb.toString();
+    }
+
+    private static String getDefaultValue(Type returnType) {
+        if (returnType.isPrimitiveType()) {
+            PrimitiveType primitiveType = (PrimitiveType) returnType;
+            switch (primitiveType.getPrimitiveTypeCode().toString()) {
+                case "boolean": return "false";
+                case "char": return "'" + File.separator + "0'";
+                case "byte": return "0";
+                case "short": return "0";
+                case "int": return "0";
+                case "long": return "0";
+                case "float": return "0.0f";
+                case "double": return "0";
+                case "void": return "";
+                default: throw new IllegalArgumentException("Unknown primitive type");
+            }
+        }
+        return "null"; // Default for non-primitive types
     }
 }

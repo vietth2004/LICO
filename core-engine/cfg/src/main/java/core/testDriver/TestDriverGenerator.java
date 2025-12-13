@@ -114,7 +114,7 @@ public final class TestDriverGenerator {
         } else {
             result.append("output = new ").append(simpleClassName).append("().");
         }
-        result.append(method.getName().toString()).append("_clone(");
+        result.append(method.getName().toString()).append("(");
         for (int i = 0; i < testData.length; i++) {
             Object value = testData[i];
             String valueAsString = "";

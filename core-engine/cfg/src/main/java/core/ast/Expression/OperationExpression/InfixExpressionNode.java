@@ -19,6 +19,10 @@ public class InfixExpressionNode extends OperationExpressionNode {
     private InfixExpression.Operator operator;
     private List<AstNode> extendedOperands;
 
+    public InfixExpressionNode() {
+        extendedOperands = new ArrayList<>();
+    }
+
     public static void replaceMethodInvocationWithStub(InfixExpression originInfixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
         Expression leftOperand = originInfixExpression.getLeftOperand();
         Expression rightOperand = originInfixExpression.getRightOperand();
