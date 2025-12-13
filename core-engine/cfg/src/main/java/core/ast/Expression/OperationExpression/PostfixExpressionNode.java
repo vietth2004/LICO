@@ -72,8 +72,7 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
             if (value instanceof NameNode) {
                 InfixExpressionNode expr = new InfixExpressionNode();
-
-                // map ++ / -- -> + / -
+                
                 if (operator == PostfixExpression.Operator.INCREMENT) {
                     expr.setOperator(InfixExpression.Operator.PLUS);
                 } else if (operator == PostfixExpression.Operator.DECREMENT) {
@@ -92,8 +91,7 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
 
                 memoryModel.assignVariable(key, expr);
-            }
-            else if (value instanceof InfixExpressionNode) {
+            } else if (value instanceof InfixExpressionNode) {
 
                 if (operator != PostfixExpression.Operator.INCREMENT
                         && operator != PostfixExpression.Operator.DECREMENT) {
@@ -103,7 +101,6 @@ public class PostfixExpressionNode extends OperationExpressionNode {
 
                 InfixExpressionNode inf = (InfixExpressionNode) value;
 
-                // chỉ xử lý pattern: (<base> +/- <IntegerLiteral>)
                 if (!(inf.getRightOperand() instanceof IntegerLiteralNode)) {
                     throw new IllegalStateException(
                             "Right operand is not IntegerLiteralNode: " + inf.getRightOperand());
@@ -112,10 +109,9 @@ public class PostfixExpressionNode extends OperationExpressionNode {
                 IntegerLiteralNode kNode = (IntegerLiteralNode) inf.getRightOperand();
                 int k = kNode.getIntegerValue();
 
-                // cập nhật k theo ++ / --
                 if (operator == PostfixExpression.Operator.INCREMENT) {
                     k++;
-                } else { // DECREMENT
+                } else {
                     k--;
                 }
 
