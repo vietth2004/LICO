@@ -79,8 +79,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         int cnt = 1;
         for (Path path : licoPaths) {
             System.out.println("LICO đang chạy path: " + cnt);
-            System.out.println(path);
-            cnt ++;
+            cnt++;
             solveAndRunTest(path, testResult, coverage);
         }
         //----- End test Lico

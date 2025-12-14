@@ -56,7 +56,26 @@ public class SymbolicExecutionRewrite {
 
         Expr finalZ3Expression = null;
 
-        int limit = 0;
+        if (this.parameters != null) {
+            for (ASTNode param : this.parameters) {
+                if (param instanceof SingleVariableDeclaration) {
+                    SingleVariableDeclaration decl = (SingleVariableDeclaration) param;
+                    if (decl.getType().toString().equals("char")) {
+                        String name = decl.getName().getIdentifier();
+                        Variable v = symbolicMap.getVariable(name);
+                        Expr z3Var = Variable.createZ3Variable(v, ctx);
+
+                        BoolExpr charConstraint = ctx.mkAnd(
+                                ctx.mkGe((ArithExpr) z3Var, ctx.mkInt(48)),
+                                ctx.mkLe((ArithExpr) z3Var, ctx.mkInt(126))
+                        );
+
+                        if (finalZ3Expression == null) finalZ3Expression = charConstraint;
+                        else finalZ3Expression = ctx.mkAnd(finalZ3Expression, charConstraint);
+                    }
+                }
+            }
+        }
 
         while (currentNode != null) {
             if (++limit > 100) break;

@@ -5,6 +5,8 @@ import com.microsoft.z3.Expr;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.Type;
 
+import java.util.Objects;
+
 public class PrimitiveTypeVariable extends Variable {
     private PrimitiveType primitiveType;
 
@@ -32,6 +34,21 @@ public class PrimitiveTypeVariable extends Variable {
             throw new RuntimeException("Invalid type");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PrimitiveTypeVariable that = (PrimitiveTypeVariable) o;
+        // So sánh dựa trên tên biến (name). Giả sử bạn có field 'name'
+        return Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
+
 
     public PrimitiveType.Code getCode() {
         return primitiveType.getPrimitiveTypeCode();
