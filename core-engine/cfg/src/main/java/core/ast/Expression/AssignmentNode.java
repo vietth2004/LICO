@@ -88,7 +88,7 @@ public class AssignmentNode extends ExpressionNode {
             throw new RuntimeException("Invalid operator");
         }
 
-        if(initialValue instanceof LiteralNode) {
+        if(initialValue instanceof LiteralNode && variable instanceof LiteralNode) {
             return LiteralNode.analyzeTwoInfixLiteral((LiteralNode) initialValue, assignValue.getOperator(), (LiteralNode) assignValue.getRightOperand());
         } else {
             return assignValue;

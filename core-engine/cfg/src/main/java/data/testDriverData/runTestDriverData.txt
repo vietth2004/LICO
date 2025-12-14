@@ -1,6 +1,9 @@
-int sum=0;
-===false===false===1---end---char ch=start===false===false===2---end---ch <= end===true===false===2---end---sum+=1;
-===false===false===3---end---ch++===false===false===2---end---ch <= end===true===false===2---end---sum+=1;
-===false===false===3---end---ch++===false===false===2---end---ch <= end===true===false===2---end---sum+=1;
-===false===false===3---end---ch++===false===false===2---end---ch <= end===false===true===2---end---return sum;
-===false===false===5---end---1.320958===3
+n < 0===false===true===1---end---int cnt=0;
+===false===false===2---end---n > 0===true===false===3---end---n/=10;
+===false===false===4---end---cnt++;
+===false===false===5---end---n > 0===true===false===3---end---n/=10;
+===false===false===4---end---cnt++;
+===false===false===5---end---n > 0===true===false===3---end---n/=10;
+===false===false===4---end---cnt++;
+===false===false===5---end---n > 0===false===true===3---end---return cnt;
+===false===false===7---end---1.453708===3

@@ -87,8 +87,6 @@ public class PostfixExpressionNode extends OperationExpressionNode {
                 IntegerLiteralNode one = new IntegerLiteralNode();
                 one.setTokenValue(1);
                 expr.setRightOperand(one);
-                //InfixExpressionNode.executeInfixExpression((InfixExpression) expression, memoryModel);
-
 
                 memoryModel.assignVariable(key, expr);
             } else if (value instanceof InfixExpressionNode) {

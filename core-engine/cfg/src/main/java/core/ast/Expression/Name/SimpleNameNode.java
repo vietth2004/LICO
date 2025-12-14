@@ -22,6 +22,7 @@ public class SimpleNameNode extends NameNode {
     }
 
     public static ExpressionNode executeSimpleNameNode(SimpleNameNode simpleNameNode, MemoryModel memoryModel) {
+        if (simpleNameNode.isFake()) return simpleNameNode;
         return (ExpressionNode) memoryModel.getValue(simpleNameNode);
     }
 

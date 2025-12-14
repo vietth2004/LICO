@@ -81,6 +81,7 @@ public class PrefixExpressionNode extends OperationExpressionNode {
                     memoryModel.assignVariable(key, newValue);
                 }
             }
+            // em thấy mới có phần xử lý tăng giảm -> chưa có xử lý số âm (ví dụ: n = -n)
             // END RE-ASSIGN
 
             // CONTINUE executing

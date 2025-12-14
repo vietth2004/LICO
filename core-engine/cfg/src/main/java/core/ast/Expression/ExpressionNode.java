@@ -68,4 +68,23 @@ public abstract class ExpressionNode extends AstNode {
             VariableDeclarationExpressionNode.replaceMethodInvocationWithStub((VariableDeclarationExpression) originExpression, originMethodInvocation, replacement);
         }
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() +
+                "@" + System.identityHashCode(this) +
+                fieldsToString();
+    }
+
+    protected String fieldsToString() {
+        return "";
+    }
+
+    private boolean isFake = false;
+    public void markFake() {
+        isFake = true;
+    }
+    public boolean isFake() {
+        return isFake;
+    }
 }

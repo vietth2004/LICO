@@ -44,7 +44,13 @@ public abstract class OperationExpressionNode extends ExpressionNode {
         } else if (operand instanceof ParenthesizedExpressionNode) {
             return ParenthesizedExpressionNode.createZ3Expression((ParenthesizedExpressionNode) operand, ctx, vars, memoryModel);
         } else if (operand instanceof NameNode) {
-            return createZ3Variable((NameNode) operand, ctx, vars, memoryModel);
+            NameNode n = (NameNode) operand;
+            String name = NameNode.getStringNameNode(n);
+
+            if (operand.isFake()) {
+                return ctx.mkIntConst(name);   // bypass memory + không gọi toString()
+            }
+            return createZ3Variable(n, ctx, vars, memoryModel);
         } else if (operand instanceof LiteralNode) {
             if (operand instanceof NumberLiteralNode) {
                 if (operand instanceof IntegerLiteralNode) {

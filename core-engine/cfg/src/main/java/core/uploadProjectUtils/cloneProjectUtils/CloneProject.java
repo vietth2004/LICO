@@ -424,20 +424,6 @@ public final class CloneProject {
         return body.toString();
     }
 
-    private static String escapeForJavaString(String s) {
-        return s.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
-
-    private static String indent(String s) {
-        String[] lines = s.split("\n");
-        StringBuilder out = new StringBuilder();
-        for (String line : lines) {
-            if (line.isEmpty()) continue;
-            out.append("    ").append(line).append("\n");
-        }
-        return out.toString();
-    }
-
 
     private static String generateCodeForBlock(Block block, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();

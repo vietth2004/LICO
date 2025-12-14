@@ -56,7 +56,10 @@ public class SymbolicExecutionRewrite {
 
         Expr finalZ3Expression = null;
 
+        int limit = 0;
+
         while (currentNode != null) {
+            if (++limit > 100) break;
             currentCfgNode = currentNode.getData();
             System.out.println(currentCfgNode.getContentReport());
             ASTNode astNode = currentCfgNode.getAst();

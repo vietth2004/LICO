@@ -6,6 +6,7 @@ import core.Z3Vars.Z3VariableWrapper;
 import core.ast.*;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
+import core.ast.Expression.Name.NameNode;
 import core.symbolicExecution.MemoryModel;
 import org.eclipse.jdt.core.dom.*;
 
@@ -18,10 +19,6 @@ public class InfixExpressionNode extends OperationExpressionNode {
     private ExpressionNode rightOperand;
     private InfixExpression.Operator operator;
     private List<AstNode> extendedOperands;
-
-    public InfixExpressionNode() {
-        extendedOperands = new ArrayList<>();
-    }
 
     public static void replaceMethodInvocationWithStub(InfixExpression originInfixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
         Expression leftOperand = originInfixExpression.getLeftOperand();
@@ -51,9 +48,11 @@ public class InfixExpressionNode extends OperationExpressionNode {
 
         Expr result = createInfixZ3Expression(ctx, Z3LeftOperand, operator, Z3RightOperand);
 
-        for (int i = 0; i < extendedOperands.size(); i++) {
-            Expr extendedOperand = OperationExpressionNode.createZ3Expression((ExpressionNode) extendedOperands.get(i), ctx, vars, memoryModel);
-            result = createInfixZ3Expression(ctx, result, operator, extendedOperand);
+        if (extendedOperands != null) {
+            for (int i = 0; i < extendedOperands.size(); i++) {
+                Expr extendedOperand = OperationExpressionNode.createZ3Expression((ExpressionNode) extendedOperands.get(i), ctx, vars, memoryModel);
+                result = createInfixZ3Expression(ctx, result, operator, extendedOperand);
+            }
         }
 
         return result;
@@ -104,8 +103,10 @@ public class InfixExpressionNode extends OperationExpressionNode {
         infixExpressionNode.operator = infixExpression.getOperator();
 
         List<AstNode> extendedOperands = new ArrayList<>();
-        for (int i = 0; i < infixExpression.extendedOperands().size(); i++) {
-            extendedOperands.add(AstNode.executeASTNode((ASTNode) infixExpression.extendedOperands().get(i), memoryModel));
+        if (infixExpression.extendedOperands().size() > 0) {
+            for (int i = 0; i < infixExpression.extendedOperands().size(); i++) {
+                extendedOperands.add(AstNode.executeASTNode((ASTNode) infixExpression.extendedOperands().get(i), memoryModel));
+            }
         }
         infixExpressionNode.extendedOperands = extendedOperands;
 
@@ -145,8 +146,10 @@ public class InfixExpressionNode extends OperationExpressionNode {
         if (leftOperand.isLiteralNode() && rightOperand.isLiteralNode()) {
             LiteralNode literalResult = LiteralNode.analyzeTwoInfixLiteral((LiteralNode) leftOperand, operator, (LiteralNode) rightOperand);
 
-            if (extendedOperands.isEmpty()) {
-                return literalResult;
+            if (extendedOperands != null) {
+                if (extendedOperands.isEmpty()) {
+                    return literalResult;
+                }
             }
             else {
                 infixExpressionNode.leftOperand = literalResult;
@@ -157,8 +160,13 @@ public class InfixExpressionNode extends OperationExpressionNode {
             ExpressionNode oldLeftOperand = infixExpressionNode.leftOperand;
             ExpressionNode oldRightOperand = infixExpressionNode.rightOperand;
 
-            if (!leftOperand.isLiteralNode()) {
-                infixExpressionNode.leftOperand = OperationExpressionNode.executeOperandNode(leftOperand, memoryModel);
+            if (!leftOperand.isLiteralNode() ) {
+                ExpressionNode tmp = OperationExpressionNode.executeOperandNode(leftOperand, memoryModel);
+                if (tmp != infixExpressionNode) {
+                    infixExpressionNode.leftOperand = tmp;
+                } else if (infixExpressionNode.leftOperand instanceof NameNode) {
+                    infixExpressionNode.leftOperand.markFake();
+                }
             }
             if (!rightOperand.isLiteralNode()) {
                 infixExpressionNode.rightOperand = OperationExpressionNode.executeOperandNode(rightOperand, memoryModel);
@@ -169,8 +177,8 @@ public class InfixExpressionNode extends OperationExpressionNode {
             } else {
                 return infixExpressionNode;
             }
-            //return infixExpressionNode;
         }
+        return infixExpressionNode;
     }
 
     public static boolean isBitwiseOperator(InfixExpression.Operator operator) {
