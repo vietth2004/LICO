@@ -77,6 +77,7 @@ public class SymbolicExecutionRewrite {
             }
         }
 
+        int limit = 0;
         while (currentNode != null) {
             if (++limit > 100) break;
             currentCfgNode = currentNode.getData();
