@@ -78,14 +78,10 @@ public final class CloneProject {
         }
         // Tập các package tìm được
         List<Path> candidates = new ArrayList<>();
-        int count = 0;
         for (Path jf : javaFiles) {
-            count++;
-            System.out.println(jf.toString());
             String pkg = readPackageDecl(jf); // null nếu default package
-            int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split("\\.").length;
+            int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split(File.separator + ".").length;
 
-            System.out.println(depth);
             Path p = jf.getParent();
             for (int i = 0; i < depth && p != null; i++) {
                 p = p.getParent();
@@ -93,11 +89,7 @@ public final class CloneProject {
             if (p != null) {
                 candidates.add(p.toAbsolutePath().normalize());
             }
-
-            if (count == 1) break ;
         }
-
-        System.out.println("pp");
 
         // Lấy giao đường dẫn của tất cả package tìm được
         Path root = candidates.get(0);
@@ -306,7 +298,7 @@ public final class CloneProject {
             }
         };
         compilationUnit.accept(methodsVisitor);
-        result.append("private static int MAX_RECURSION_DEPTH = ").append(1).append(";\n");
+        result.append("private static int MAX_RECURSION_DEPTH = ").append(FilePath.MAX_RECURSION_DEPTH).append(";\n");
         for (ASTNode astNode : methods) {
             totalFunctionStatement = 0;
             totalFunctionBranch = 0;
@@ -408,22 +400,8 @@ public final class CloneProject {
         } else {
             return generateCodeForNormalStatement(statement, markMethodSeparator);
         }
-    }
 
-    // Sinh code cho một danh sách statement, mỗi statement đi qua generator chung
-    private static String generateBodyFromStatements(List<Statement> stmts,
-                                                     ASTHelper.Coverage coverage) {
-        StringBuilder body = new StringBuilder();
-        for (Statement stmt : stmts) {
-            String code = generateCodeForOneStatement(stmt, ";", coverage);
-            body.append(code);
-            if (!code.endsWith("\n")) {
-                body.append("\n");
-            }
-        }
-        return body.toString();
     }
-
 
     private static String generateCodeForBlock(Block block, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();

@@ -8,6 +8,7 @@ import core.ast.Expression.Array.ArrayCreationNode;
 import core.ast.Expression.Array.ArrayCreationWithNewKeyWord;
 import core.ast.Expression.Array.ArrayNode;
 import core.ast.Expression.ExpressionNode;
+import core.ast.Expression.Literal.BooleanLiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.ast.Expression.OperationExpression.OperationExpressionNode;
 import core.ast.Expression.OperationExpression.PrefixExpressionNode;
@@ -26,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.*;
 
 public class SymbolicExecutionRewrite {
@@ -35,6 +37,7 @@ public class SymbolicExecutionRewrite {
     private Path testPath;
     private List<ASTNode> parameters;
     private static CfgNode currentCfgNode;
+    public static Map<String, PrimitiveType.Code> variableTypeMap = new HashMap<>();
 
     public SymbolicExecutionRewrite(Path testPath, List<ASTNode> parameters) {
         this.testPath = testPath;
@@ -54,7 +57,7 @@ public class SymbolicExecutionRewrite {
 
         Node currentNode = testPath.getCurrentFirst();
 
-        Expr finalZ3Expression = null;
+        BoolExpr finalZ3Expression = null;
 
         if (this.parameters != null) {
             for (ASTNode param : this.parameters) {
@@ -109,12 +112,26 @@ public class SymbolicExecutionRewrite {
                         executedAstNode = PrefixExpressionNode.executePrefixExpressionNode(newAstNode, symbolicMap);
                     }
 
-                    BoolExpr constrain = (BoolExpr) OperationExpressionNode.createZ3Expression(
+                    if (executedAstNode instanceof BooleanLiteralNode) {
+                        currentNode = currentNode.getNext();
+                        continue;
+                    }
+
+                    Expr expr = OperationExpressionNode.createZ3Expression(
                             (ExpressionNode) executedAstNode, ctx, Z3Vars, symbolicMap);
 
-                    if (finalZ3Expression == null) finalZ3Expression = constrain;
+                    BoolExpr constraint;
+                    if (expr instanceof BoolExpr) {
+                        constraint = (BoolExpr) expr;
+                    } else if (expr instanceof BitVecExpr) {
+                        constraint = ctx.mkNot(ctx.mkEq((BitVecExpr) expr, ctx.mkBV(0, ((BitVecExpr) expr).getSortSize())));
+                    } else {
+                        throw new RuntimeException("Unsupported constraint type: " + expr);
+                    }
+
+                    if (finalZ3Expression == null) finalZ3Expression = constraint;
                     else {
-                        finalZ3Expression = ctx.mkAnd(finalZ3Expression, constrain);
+                        finalZ3Expression = ctx.mkAnd(finalZ3Expression, constraint);
                     }
                 } else if (astNode instanceof VariableDeclarationStatement) {
                     VariableDeclarationStatement stm = (VariableDeclarationStatement) astNode;
@@ -142,7 +159,16 @@ public class SymbolicExecutionRewrite {
                                     if (lengthOfArray instanceof NameNode) {
                                         String nameNode = NameNode.getStringNameNode((NameNode) lengthOfArray);
                                         Expr nameNodeExpr = Variable.createZ3Variable(symbolicMap.getVariable(nameNode), ctx);
-                                        BoolExpr constraint = ctx.mkGe((ArithExpr) nameNodeExpr, ctx.mkInt(0));
+
+                                        BoolExpr constraint;
+                                        if (nameNodeExpr instanceof BitVecExpr) {
+                                            constraint = ctx.mkBVSGE((BitVecExpr) nameNodeExpr, ctx.mkBV(0, ((BitVecExpr) nameNodeExpr).getSortSize()));
+                                        } else if (nameNodeExpr instanceof ArithExpr) {
+                                            constraint = ctx.mkGe((ArithExpr) nameNodeExpr, ctx.mkInt(0));
+                                        } else {
+                                            throw new RuntimeException("Unexpected type for array length: " + nameNodeExpr);
+                                        }
+
                                         if (finalZ3Expression == null) finalZ3Expression = constraint;
                                         else finalZ3Expression = ctx.mkAnd(finalZ3Expression, constraint);
                                     }
@@ -174,7 +200,8 @@ public class SymbolicExecutionRewrite {
         }
 
         currentCfgNode = null;
-        System.out.println(finalZ3Expression);
+//        System.out.println("=== Final Z3 Constraint ===");
+//        System.out.println(finalZ3Expression.simplify());
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
         evaluateAndSaveTestDataCreated(ctx);
@@ -257,38 +284,82 @@ public class SymbolicExecutionRewrite {
                 if (z3VariableWrapper.getPrimitiveVar() != null) {
                     Expr primitiveVar = z3VariableWrapper.getPrimitiveVar();
 
-                    Expr evaluateResult = model.evaluate(primitiveVar, false);
+                    Expr evaluateResult = model.evaluate(primitiveVar, true);
 
                     String name = primitiveVar.toString();
+                    PrimitiveType.Code originalTypeCode = variableTypeMap.get(name);
+                    String typeName = (originalTypeCode != null) ? originalTypeCode.toString() : "";
+                    if (evaluateResult instanceof BitVecNum) {
+                        BitVecNum bvNum = (BitVecNum) evaluateResult;
+                        BigInteger val = bvNum.getBigInteger();
 
-                    if (evaluateResult instanceof IntNum) {
-
-                        result.append(evaluateResult);
-                    } else if (evaluateResult instanceof IntExpr) {
-
-                        result.append("1");
-                    } else if (evaluateResult instanceof RatNum) {
-                        RatNum ratNum = (RatNum) evaluateResult;
-                        IntNum numerator = ratNum.getNumerator();
-                        IntNum denominator = ratNum.getDenominator();
-                        double value = (numerator.getInt64() * 1.0) / denominator.getInt64();
-                        result.append(value);
-                    } else if (evaluateResult instanceof RealExpr) {
-
-                        result.append("1.0");
-                    } else if (evaluateResult instanceof BoolExpr) {
-
-                        BoolExpr boolExpr = (BoolExpr) evaluateResult;
-                        if (!boolExpr.toString().equals("false") && !boolExpr.toString().equals("true")) {
-                            result.append("false");
+                        switch (typeName) {
+                            case "byte":
+                                result.append(val.byteValue()); // Ép về byte có dấu (-128 to 127)
+                                break;
+                            case "short":
+                                result.append(val.shortValue());
+                                break;
+                            case "char":
+                                result.append(val.intValue() & 0xFFFF);
+                                break;
+                            case "long":
+                                result.append(val.longValue());
+                                break;
+                            case "int":
+                            default:
+                                result.append(val.intValue());
+                                break;
+                        }
+                    } else if (evaluateResult instanceof FPNum) {
+                        FPNum fpNum = (FPNum) evaluateResult;
+                        if (fpNum.isNaN()) {
+                            result.append("NaN");
+                        } else if (fpNum.isInf()) {
+                            result.append(fpNum.isNegative() ? "-Infinity" : "Infinity");
                         } else {
-                            result.append(boolExpr);
+                            int eBits = fpNum.getEBits();
+                            int sBits = fpNum.getSBits();
+                            boolean isFloat32 = (eBits == 8 && sBits == 24);
+                            Expr bvExpr = ctx.mkFPToIEEEBV(fpNum).simplify();
+                            if (bvExpr instanceof BitVecNum) {
+                                BigInteger bits = ((BitVecNum) bvExpr).getBigInteger();
+                                if (isFloat32) {
+                                    int intBits = bits.intValue();
+                                    float floatValue = Float.intBitsToFloat(intBits);
+                                    result.append(floatValue);
+                                } else {
+                                    long longBits = bits.longValue();
+                                    double doubleValue = Double.longBitsToDouble(longBits);
+                                    result.append(doubleValue);
+                                }
+                            } else {
+                                try {
+                                    double d = Double.parseDouble(fpNum.toString());
+                                    result.append(d);
+                                } catch (Exception e) {
+                                    result.append(fpNum);
+                                }
+                            }
                         }
                     }
-
+                    else if (evaluateResult instanceof BoolExpr) {
+                        if (evaluateResult.isTrue()) {
+                            result.append("true");
+                        } else if (evaluateResult.isFalse()) {
+                            result.append("false");
+                        } else {
+                            // Fallback hiếm gặp nếu model chưa complete
+                            result.append("false");
+                        }
+                    } else {
+                        result.append(evaluateResult.toString());
+                    }
                 } else {
                     ArrayTypeVariable arrayTypeVariable = z3VariableWrapper.getArrayVar();
-                    result.append(arrayTypeVariable.getConstraints());
+                    if(arrayTypeVariable != null) {
+                        result.append(arrayTypeVariable.getConstraints());
+                    }
                 }
 
                 if (i != Z3Vars.size() - 1) {

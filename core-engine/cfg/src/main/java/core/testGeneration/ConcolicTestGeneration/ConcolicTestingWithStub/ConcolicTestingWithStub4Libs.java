@@ -59,7 +59,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         TestResult testResult = new TestResult();
         testResult.setId(id);
 
-        Object[] evaluatedValues = SymbolicExecution.createRandomTestData(TestGeneration.parameterClasses);
+        Object[] evaluatedValues = SymbolicExecutionRewrite.createRandomTestData(TestGeneration.parameterClasses);
 
         TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
@@ -173,40 +173,25 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         TestGeneration.funcAstNodeList = ProjectParser.parseFile(path);
         TestGeneration.compilationUnit = ProjectParser.parseFileToCompilationUnit(path);
         classKey = (TestGeneration.compilationUnit.getPackage() != null ? TestGeneration.compilationUnit.getPackage().getName().toString() : "") + className.replace(".java", "") + "totalStatement";
-        String newPath = getRootProjectPath(path);
-        java.nio.file.Path rootPackage = CloneProject.findRootPackage(Paths.get(newPath));
-        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath, getCoverageType(coverage), className);
-        setupFullyClonedClassName(className, path, rootPackage.toString());
+
+        setupFullyClonedClassName(className, path, coverage);
         setUpTestFunc(methodName);
         MarkedPath.resetFullTestSuiteCoveredStatements();
 
         MethodInvocationNode.resetNumberOfFunctionsCall();
     }
 
-    private static String getRootProjectPath(String path) {
-        // Chuẩn hóa dấu gạch chéo
-        String newPath = path.replace("\\", "/");
-
-        // Tách các phần theo "/"
-        String[] parts = newPath.split("/");
-
-        // Nối lại từ đầu tới folder thứ 6
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 7; i++) {
-            if (i > 0) sb.append("/");
-            sb.append(parts[i]);
-        }
-
-        return sb.toString();
-    }
-
-    private static void setupFullyClonedClassName(String className, String path, String rootPackage) throws IOException {
+    private static void setupFullyClonedClassName(String className, String path, TestGeneration.Coverage coverage) throws IOException, InterruptedException {
+        String newPath = getRootProjectPath(path);
+        java.nio.file.Path rootPackage = CloneProject.findRootPackage(Paths.get(newPath));
+        CloneProject.cloneProject(rootPackage.toString(), FilePath.clonedProjectPath, getCoverageType(coverage), className);
         className = className.replace(".java", "");
         simpleClassName = getClassFromCU(compilationUnit);
 
         // Xóa file .java (bỏ cả tên file)
-        String relative = path.substring(rootPackage.length() + 1);
-        int lastSlash = relative.lastIndexOf("\\");
+        String relative = path.substring(rootPackage.toString().length() + 1);
+//        relative = relative.replace("\\", "/");
+        int lastSlash = relative.lastIndexOf(File.separator);
         if (lastSlash != -1) {
             relative = relative.substring(0, lastSlash + 1);
         } else {
@@ -214,7 +199,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         }
 
         // Đổi "/" thành "."
-        String packetName = relative.replace("\\", ".");
+        String packetName = relative.replace(File.separator, ".");
         System.out.println(packetName);
 
         originalFileLocation = "data.clonedProject." + packetName + className;
@@ -418,6 +403,23 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
                 .replace("[", "").replace("]", "")
                 .replace("<", "").replace(">", "")
                 .replace(",", "");
+    }
+
+    private static String getRootProjectPath(String path) {
+        // Chuẩn hóa dấu gạch chéo
+        String newPath = path.replace("\\", "/");
+
+        // Tách các phần theo "/"
+        String[] parts = newPath.split("/");
+
+        // Nối lại từ đầu tới folder thứ 6
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 7; i++) {
+            if (i > 0) sb.append("/");
+            sb.append(parts[i]);
+        }
+
+        return sb.toString();
     }
 }
 

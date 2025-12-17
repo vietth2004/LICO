@@ -4,6 +4,7 @@ import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
+import core.ast.Expression.CastExpressionNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.BooleanLiteralNode;
 import core.ast.Expression.Literal.CharacterLiteralNode;
@@ -53,19 +54,50 @@ public abstract class OperationExpressionNode extends ExpressionNode {
             return createZ3Variable(n, ctx, vars, memoryModel);
         } else if (operand instanceof LiteralNode) {
             if (operand instanceof NumberLiteralNode) {
+                String tokenVal = ((NumberLiteralNode) operand).getTokenValue();
+
                 if (operand instanceof IntegerLiteralNode) {
-                    return ctx.mkInt(((IntegerLiteralNode) operand).getIntegerValue());
-                } else { // operand instanceof DoubleLiteralNode
-                    return ctx.mkReal(((DoubleLiteralNode) operand).getTokenValue());
+                    boolean isLong = tokenVal.toUpperCase().endsWith("L");
+                    String numStr = isLong ? tokenVal.substring(0, tokenVal.length() - 1) : tokenVal;
+                    numStr = numStr.replace("_", ""); // Remove underscores
+                    boolean isHex = numStr.toLowerCase().startsWith("0x");
+                    boolean isBinary = numStr.toLowerCase().startsWith("0b");
+                    boolean isOctal = numStr.startsWith("0") && !isHex && !isBinary && numStr.length() > 1;
+                    long val;
+                    if (isHex) {
+                        val = Long.parseLong(numStr.substring(2), 16);
+                    } else if (isBinary) {
+                        val = Long.parseLong(numStr.substring(2), 2);
+                    } else if (isOctal) {
+                        val = Long.parseLong(numStr, 8);
+                    } else {
+                        val = Long.parseLong(numStr, 10);
+                    }
+                    if (isLong) {
+                        return ctx.mkBV(val, 64);
+                    } else {
+                        return ctx.mkBV(val, 32);
+                    }
+                } else {
+                    double val = Double.parseDouble(tokenVal.replace("_", ""));
+                    boolean isFloat = tokenVal.toUpperCase().endsWith("F");
+                    if (isFloat) {
+                        return ctx.mkFP(val, ctx.mkFPSort32());
+                    } else {
+                        return ctx.mkFP(val, ctx.mkFPSort64());
+                    }
                 }
             } else if (operand instanceof BooleanLiteralNode) {
                 return ctx.mkBool(((BooleanLiteralNode) operand).getValue());
             } else if (operand instanceof CharacterLiteralNode) {
-                return ctx.mkInt(((CharacterLiteralNode) operand).getCharacterValue());
+                return ctx.mkBV(((CharacterLiteralNode) operand).getCharacterValue(), 16);
             } else {
                 throw new RuntimeException("Invalid Literal");
             }
-        } else {
+        } else if (operand instanceof CastExpressionNode) {
+            throw new RuntimeException(operand.getClass() + " is not an Expression");
+        }
+        else {
             throw new RuntimeException(operand.getClass() + " is not an Expression");
         }
     }

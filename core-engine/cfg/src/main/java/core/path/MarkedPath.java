@@ -4,6 +4,7 @@ import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgForEachExpressionNode;
 import core.cfg.CfgNode;
 import core.testResult.coveredStatement.CoveredStatement;
+import org.eclipse.jdt.core.dom.ASTNode;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public final class MarkedPath {
     }
 
     private static void addNewStatementToPath(String statement, boolean isTrueCondition, boolean isFalseCondition) {
-        MarkedStatement markedStatement = new MarkedStatement(statement, isTrueCondition, isFalseCondition);
+        MarkedStatement markedStatement = new MarkedStatement(statement, isTrueCondition, isFalseCondition, 0);
         markedStatements.add(markedStatement);
     }
 
@@ -66,10 +67,14 @@ public final class MarkedPath {
                 statementToNodes.computeIfAbsent(key, k -> new ArrayList<>()).add(node);
             }
 
-            // 1. Luôn thêm node "sau"
-            if (node.getAfterStatementNode() != null) {
-                queue.add(node.getAfterStatementNode());
+            // mở rộng theo các cạnh của CFG
+            if (node instanceof CfgBoolExprNode) {
+                CfgBoolExprNode b = (CfgBoolExprNode) node;
+                queue.add(b.getTrueNode());
+                queue.add(b.getFalseNode());
             }
+            queue.add(node.getAfterStatementNode());
+        }
 
             // 2. Xử lý các node rẽ nhánh IF
             if (node instanceof core.cfg.CfgBoolExprNode) {
@@ -91,6 +96,7 @@ public final class MarkedPath {
         for (MarkedStatement marked : markedStatements) {
             if (marked == null) continue;
             String stmt = marked.getStatement();
+            int lineNumber = marked.getLineNumber();
             if (stmt == null || stmt.trim().isEmpty()) continue;
             String key = stmt.trim();
 
@@ -116,6 +122,7 @@ public final class MarkedPath {
                         matched = list.stream().filter(n -> !n.isMarked()).findFirst().orElse(list.get(0));
                         break;
                     }
+
                 }
             }
 
@@ -425,7 +432,7 @@ public final class MarkedPath {
         if (!coveredNodeInPath.contains(rootNode)) {
             coveredNodeInPath.add(rootNode);
             if (!rootNode.isMarked() && !rootNode.isFakeMarked()
-                    && rootNode.getContent() != null && !rootNode.getContent().isEmpty()) return rootNode;
+                    && !rootNode.getContent().isEmpty()) return rootNode;
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
                 CfgNode falseBranchUncoveredNode = findUncoveredStatement(boolExprNode.getFalseNode(), duplicateNode);
@@ -457,13 +464,12 @@ public final class MarkedPath {
 //                return boolExprNode.getFalseNode();
 //            }
 //
-
-    /// /            if (boolExprNode != duplicateNode) {
-    /// /                duplicateNode = boolExprNode;
-    /// /                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
-    /// /            } else {
-    /// /                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
-    /// /            }
+////            if (boolExprNode != duplicateNode) {
+////                duplicateNode = boolExprNode;
+////                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
+////            } else {
+////                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
+////            }
 //            if(coveredNodeInPath.contains(boolExprNode)) {
 //                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
 //            } else {
@@ -483,6 +489,8 @@ public final class MarkedPath {
         }
         if (!coveredNodeInPath.contains(rootNode)) {
             coveredNodeInPath.add(rootNode);
+            if (!rootNode.isMarked() && !rootNode.isFakeMarked()
+                    && !rootNode.getContent().isEmpty()) return rootNode;
             if (rootNode instanceof CfgBoolExprNode) {
                 CfgBoolExprNode boolExprNode = (CfgBoolExprNode) rootNode;
 
@@ -496,31 +504,7 @@ public final class MarkedPath {
                 CfgNode falseBranchUncoveredNode = findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
                 CfgNode trueBranchUncoveredNode = findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
                 return falseBranchUncoveredNode == null ? trueBranchUncoveredNode : falseBranchUncoveredNode;
-            }
-//            else if (rootNode instanceof CfgForEachExpressionNode) {
-//                CfgForEachExpressionNode feNode = (CfgForEachExpressionNode) rootNode;
-//
-//                if (!feNode.isTrueMarked() && !feNode.isFakeTrueMarked()) {
-//                    return feNode.getHasElementAfterNode(); // Tìm thấy! (nhánh "vào")
-//                }
-//                if (!feNode.isFalseMarked() && !feNode.isFakeFalseMarked()) {
-//                    return feNode.getNoMoreElementAfterNode(); // Tìm thấy! (nhánh "thoát")
-//                }
-//
-//                CfgNode bodyNode = findUncoveredBranch(feNode.getHasElementAfterNode(), duplicateNode);
-//                CfgNode exitNode = findUncoveredBranch(feNode.getNoMoreElementAfterNode(), duplicateNode);
-//                return bodyNode == null ? exitNode : bodyNode;
-//            }
-//
-//            // 3. THÊM LOGIC CHO SWITCH
-//            else if (rootNode instanceof CfgBeginSwitchNode) {
-//                CfgBeginSwitchNode sNode = (CfgBeginSwitchNode) rootNode;
-//                // Switch node không tự nó có nhánh, nó chỉ "dẫn"
-//                // đến các `case` (là các CfgBoolExprNode).
-//                // Chúng ta chỉ cần duyệt đệ quy vào "sau" nó.
-//                return findUncoveredBranch(sNode.getAfterStatementNode(), duplicateNode);
-//            }
-            else {
+            } else {
                 return findUncoveredBranch(rootNode.getAfterStatementNode(), duplicateNode);
             }
         } else {

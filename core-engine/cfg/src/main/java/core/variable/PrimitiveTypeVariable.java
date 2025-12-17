@@ -2,6 +2,9 @@ package core.variable;
 
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
+import com.microsoft.z3.FPExpr;
+import com.microsoft.z3.FPSort;
+import core.symbolicExecution.SymbolicExecutionRewrite;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.Type;
 
@@ -18,20 +21,34 @@ public class PrimitiveTypeVariable extends Variable {
     public static Expr createZ3PrimitiveTypeVariable(PrimitiveTypeVariable primitiveTypeVariable, Context ctx) {
         PrimitiveType.Code code = primitiveTypeVariable.getCode();
         String name = primitiveTypeVariable.getName();
+        SymbolicExecutionRewrite.variableTypeMap.put(name, code);
+        int bitSize;
 
-        if (code.equals(PrimitiveType.INT) ||
-                code.equals(PrimitiveType.LONG) ||
-                code.equals(PrimitiveType.SHORT) ||
-                code.equals(PrimitiveType.BYTE) ||
-                code.equals(PrimitiveType.CHAR)) {
-            return ctx.mkIntConst(name);
-        } else if (code.equals(PrimitiveType.DOUBLE) ||
-                code.equals(PrimitiveType.FLOAT)) {
-            return ctx.mkRealConst(name);
+        if (code.equals(PrimitiveType.BYTE)) {
+            bitSize = 8;
+            return ctx.mkBVConst(name, bitSize);
+        } else if (code.equals(PrimitiveType.SHORT)) {
+            bitSize = 16;
+            return ctx.mkBVConst(name, bitSize);
+        } else if (code.equals(PrimitiveType.CHAR)) {
+            bitSize = 16; // unsigned
+            return ctx.mkBVConst(name, bitSize);
+        } else if (code.equals(PrimitiveType.INT)) {
+            bitSize = 32;
+            return ctx.mkBVConst(name, bitSize);
+        } else if (code.equals(PrimitiveType.LONG)) {
+            bitSize = 64;
+            return ctx.mkBVConst(name, bitSize);
+        } else if (code.equals(PrimitiveType.FLOAT)) {
+            FPSort f32 = ctx.mkFPSort32(); // tạo sort float (1/8/23) cho biến
+            return ctx.mkConst(name, f32);
+        } else if (code.equals(PrimitiveType.DOUBLE)) {
+            FPSort f64 = ctx.mkFPSort64(); // tạo sort double (1/11/52) cho biến
+            return ctx.mkConst(name, f64);
         } else if (code.equals(PrimitiveType.BOOLEAN)) {
             return ctx.mkBoolConst(name);
         } else {
-            throw new RuntimeException("Invalid type");
+            throw new RuntimeException("Invalid type: " + code);
         }
     }
 
