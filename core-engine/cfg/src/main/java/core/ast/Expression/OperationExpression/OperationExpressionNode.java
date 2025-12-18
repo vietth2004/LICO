@@ -4,12 +4,10 @@ import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
-import core.ast.Expression.CastExpressionNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.BooleanLiteralNode;
 import core.ast.Expression.Literal.CharacterLiteralNode;
 import core.ast.Expression.Literal.LiteralNode;
-import core.ast.Expression.Literal.NumberLiteral.DoubleLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.IntegerLiteralNode;
 import core.ast.Expression.Literal.NumberLiteral.NumberLiteralNode;
 import core.ast.Expression.Name.NameNode;
@@ -94,10 +92,7 @@ public abstract class OperationExpressionNode extends ExpressionNode {
             } else {
                 throw new RuntimeException("Invalid Literal");
             }
-        } else if (operand instanceof CastExpressionNode) {
-            throw new RuntimeException(operand.getClass() + " is not an Expression");
-        }
-        else {
+        } else {
             throw new RuntimeException(operand.getClass() + " is not an Expression");
         }
     }

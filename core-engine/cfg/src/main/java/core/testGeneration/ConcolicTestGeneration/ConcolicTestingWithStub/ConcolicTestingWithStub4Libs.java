@@ -12,7 +12,6 @@ import core.path.FindPath;
 import core.path.MarkedPath;
 import core.path.MarkedStatement;
 import core.path.Path;
-import core.symbolicExecution.SymbolicExecution;
 import core.symbolicExecution.SymbolicExecutionRewrite;
 import core.testDriver.LoopPathGenerator;
 import core.testDriver.TestDriverGenerator;
@@ -27,6 +26,7 @@ import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

@@ -6,9 +6,7 @@ import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -101,6 +99,9 @@ public final class TestDriverGenerator {
         result.append("public static void main(String[] args) {\n");
         result.append("writeDataToFile(\"\", \"" + FilePath.concreteExecuteResultPath + "\", false);\n");
         result.append("long startRunTestTime = System.nanoTime();\n");
+        result.append("long endRunTestTime = System.nanoTime();\n");
+        result.append("Object output = null;\n");
+        result.append("try {\n");
         List<ASTNode> modifiers = method.modifiers();
         boolean isStatic = false;
         for (ASTNode modifier : modifiers) {
@@ -109,8 +110,10 @@ public final class TestDriverGenerator {
                 break;
             }
         }
-        if(isStatic){
-            result.append("Object output = ").append(simpleClassName).append(".");
+        if (isStatic) {
+            result.append("output = ").append(simpleClassName).append(".");
+        } else {
+            result.append("output = new ").append(simpleClassName).append("().");
         }
         result.append(method.getName().toString()).append("(");
         for (int i = 0; i < testData.length; i++) {
@@ -334,16 +337,26 @@ public final class TestDriverGenerator {
         if (returnType.isPrimitiveType()) {
             PrimitiveType primitiveType = (PrimitiveType) returnType;
             switch (primitiveType.getPrimitiveTypeCode().toString()) {
-                case "boolean": return "false";
-                case "char": return "'" + File.separator + "0'";
-                case "byte": return "0";
-                case "short": return "0";
-                case "int": return "0";
-                case "long": return "0";
-                case "float": return "0.0f";
-                case "double": return "0";
-                case "void": return "";
-                default: throw new IllegalArgumentException("Unknown primitive type");
+                case "boolean":
+                    return "false";
+                case "char":
+                    return "'" + File.separator + "0'";
+                case "byte":
+                    return "0";
+                case "short":
+                    return "0";
+                case "int":
+                    return "0";
+                case "long":
+                    return "0";
+                case "float":
+                    return "0.0f";
+                case "double":
+                    return "0";
+                case "void":
+                    return "";
+                default:
+                    throw new IllegalArgumentException("Unknown primitive type");
             }
         }
         return "null"; // Default for non-primitive types

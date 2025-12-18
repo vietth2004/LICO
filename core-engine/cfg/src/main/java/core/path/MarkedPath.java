@@ -4,7 +4,6 @@ import core.cfg.CfgBoolExprNode;
 import core.cfg.CfgForEachExpressionNode;
 import core.cfg.CfgNode;
 import core.testResult.coveredStatement.CoveredStatement;
-import org.eclipse.jdt.core.dom.ASTNode;
 
 import java.util.*;
 
@@ -67,14 +66,10 @@ public final class MarkedPath {
                 statementToNodes.computeIfAbsent(key, k -> new ArrayList<>()).add(node);
             }
 
-            // mở rộng theo các cạnh của CFG
-            if (node instanceof CfgBoolExprNode) {
-                CfgBoolExprNode b = (CfgBoolExprNode) node;
-                queue.add(b.getTrueNode());
-                queue.add(b.getFalseNode());
+            // 1. Luôn thêm node "sau"
+            if (node.getAfterStatementNode() != null) {
+                queue.add(node.getAfterStatementNode());
             }
-            queue.add(node.getAfterStatementNode());
-        }
 
             // 2. Xử lý các node rẽ nhánh IF
             if (node instanceof core.cfg.CfgBoolExprNode) {
@@ -96,7 +91,6 @@ public final class MarkedPath {
         for (MarkedStatement marked : markedStatements) {
             if (marked == null) continue;
             String stmt = marked.getStatement();
-            int lineNumber = marked.getLineNumber();
             if (stmt == null || stmt.trim().isEmpty()) continue;
             String key = stmt.trim();
 
@@ -122,7 +116,6 @@ public final class MarkedPath {
                         matched = list.stream().filter(n -> !n.isMarked()).findFirst().orElse(list.get(0));
                         break;
                     }
-
                 }
             }
 
@@ -464,12 +457,13 @@ public final class MarkedPath {
 //                return boolExprNode.getFalseNode();
 //            }
 //
-////            if (boolExprNode != duplicateNode) {
-////                duplicateNode = boolExprNode;
-////                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
-////            } else {
-////                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
-////            }
+
+    /// /            if (boolExprNode != duplicateNode) {
+    /// /                duplicateNode = boolExprNode;
+    /// /                return findUncoveredBranch(boolExprNode.getTrueNode(), duplicateNode);
+    /// /            } else {
+    /// /                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
+    /// /            }
 //            if(coveredNodeInPath.contains(boolExprNode)) {
 //                return findUncoveredBranch(boolExprNode.getFalseNode(), duplicateNode);
 //            } else {

@@ -200,8 +200,8 @@ public class SymbolicExecutionRewrite {
         }
 
         currentCfgNode = null;
-//        System.out.println("=== Final Z3 Constraint ===");
-//        System.out.println(finalZ3Expression.simplify());
+        System.out.println("=== Final Z3 Constraint ===");
+        System.out.println(finalZ3Expression.simplify());
 
         model = createModel(ctx, (BoolExpr) finalZ3Expression);
         evaluateAndSaveTestDataCreated(ctx);
@@ -342,8 +342,7 @@ public class SymbolicExecutionRewrite {
                                 }
                             }
                         }
-                    }
-                    else if (evaluateResult instanceof BoolExpr) {
+                    } else if (evaluateResult instanceof BoolExpr) {
                         if (evaluateResult.isTrue()) {
                             result.append("true");
                         } else if (evaluateResult.isFalse()) {
@@ -357,7 +356,7 @@ public class SymbolicExecutionRewrite {
                     }
                 } else {
                     ArrayTypeVariable arrayTypeVariable = z3VariableWrapper.getArrayVar();
-                    if(arrayTypeVariable != null) {
+                    if (arrayTypeVariable != null) {
                         result.append(arrayTypeVariable.getConstraints());
                     }
                 }
@@ -489,7 +488,7 @@ public class SymbolicExecutionRewrite {
             return 16;
         } else if ("float".equals(className)) {
 //            return random.nextFloat();
-            return 8.0;
+            return 8.0f;
         } else if ("double".equals(className)) {
 //            return random.nextDouble();
             return 8.0;
