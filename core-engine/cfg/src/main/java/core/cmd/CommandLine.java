@@ -41,7 +41,14 @@ public class CommandLine {
             }
         }
 
-        process.waitFor(30, TimeUnit.SECONDS);
+        process.destroyForcibly();
+
+        try {
+            process.waitFor(2, TimeUnit.SECONDS);
+        } catch (InterruptedException ie) {
+            System.out.println("ui ui ui");
+        }
+
     }
     public static void executeCommand(String command, String cdFolder) throws IOException, InterruptedException {
         Process p = Runtime.getRuntime().exec(command, null , new File(cdFolder));
