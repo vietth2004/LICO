@@ -1,11 +1,10 @@
 package core.uploadProjectUtils.cloneProjectUtils;
 
-import core.cfg.CfgSwitchStatementBlockNode;
+import core.FilePath;
 import core.cfg.utils.ASTHelper;
 import core.cmd.CommandLine;
 import core.uploadProjectUtils.cloneProjectUtils.dataModel.ClassData;
-import core.FilePath;
-import core.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.BufferedReader;
@@ -17,16 +16,12 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.TextEdit;
+import static core.cfg.utils.ASTHelper.convertTernaryToIf;
 
 public final class CloneProject {
     private static int totalFunctionStatement;
@@ -65,7 +60,6 @@ public final class CloneProject {
         if (!Files.exists(sourceDir)) {
             throw new NoSuchFileException(sourceDir.toString());
         }
-        // Nếu lỡ truyền vào là file -> lấy thư mục chứa nó
         Path base = Files.isDirectory(sourceDir) ? sourceDir : sourceDir.getParent();
 
         List<Path> javaFiles;
@@ -74,18 +68,17 @@ public final class CloneProject {
                     .collect(Collectors.toList());
         }
         if (javaFiles.isEmpty()) {
-            return base; // không có .java, trả về chính thư mục gốc nhập vào
+            return base;
         }
-        // Tập các package tìm được
         List<Path> candidates = new ArrayList<>();
         int count = 0;
         for (Path jf : javaFiles) {
             count++;
-            System.out.println(jf.toString());
-            String pkg = readPackageDecl(jf); // null nếu default package
+            // System.out.println(jf.toString());
+            String pkg = readPackageDecl(jf);
             int depth = (pkg == null || pkg.isEmpty()) ? 0 : pkg.split("\\.").length;
 
-            System.out.println(depth);
+            // System.out.println(depth);
             Path p = jf.getParent();
             for (int i = 0; i < depth && p != null; i++) {
                 p = p.getParent();
@@ -94,21 +87,19 @@ public final class CloneProject {
                 candidates.add(p.toAbsolutePath().normalize());
             }
 
-            if (count == 1) break ;
+            if (count == 1) break;
         }
 
-        System.out.println("pp");
+        // System.out.println("pp");
 
-        // Lấy giao đường dẫn của tất cả package tìm được
         Path root = candidates.get(0);
         for (int i = 1; i < candidates.size(); i++) {
             root = commonPrefix(root, candidates.get(i));
-            if (root == null) { // khác ổ đĩa
+            if (root == null) {
                 return base.toAbsolutePath().normalize();
             }
         }
 
-        // Đảm bảo không vượt ra ngoài base
         if (!root.startsWith(base.toAbsolutePath().normalize())) {
             return base.toAbsolutePath().normalize();
         }
@@ -121,13 +112,6 @@ public final class CloneProject {
         System.out.println(command);
 
         CommandLine.executeCommand(command.toString());
-//        Process p = Runtime.getRuntime().exec(command.toString());
-//        System.out.println(p.waitFor());
-//
-//        if (p.waitFor() != 0) {
-//            System.out.println("Can't compile project");
-//            throw new RuntimeException("Can't compile project");
-//        }
     }
 
     private static void iCloneProject(String originalDirPath, String destinationDirPath, ASTHelper.Coverage coverage, String fileToTestName) throws IOException {
@@ -186,7 +170,6 @@ public final class CloneProject {
 
         if (!created) {
             System.out.println("Existed Dir");
-//            deleteFilesInDirectory(newDirectory.getPath());
         }
     }
 
@@ -221,15 +204,10 @@ public final class CloneProject {
 
         //Imports
         for (ASTNode iImport : (List<ASTNode>) compilationUnit.imports()) {
-//            result.append("import data.clonedProject.");
-//            ImportDeclaration importDeclaration = (ImportDeclaration) iImport;
-//            result.append(importDeclaration.getName()).append(";\n");
-
             result.append(iImport);
         }
         result.append("import java.io.FileWriter;\n");
 
-//        final ClassData[] classDataArr = {new ClassData()};
         List<ClassData> classDataArr = new ArrayList<>();
         ASTVisitor classVisitor = new ASTVisitor() {
             @Override
@@ -240,10 +218,8 @@ public final class CloneProject {
         };
         compilationUnit.accept(classVisitor);
 
-        // Class type (interface/class) and class name
         ClassData classData = classDataArr.get(0);
 
-        // Class modifier
         String modifier = classData.getClassModifier();
         if (modifier.equals("default") || modifier.equals("private")) {
             result.append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
@@ -251,12 +227,10 @@ public final class CloneProject {
             result.append(modifier).append(" ").append(classData.getTypeOfClass()).append(" ").append(classData.getClassName());
         }
 
-        //Extensions
         if (classData.getSuperClassName() != null) {
             result.append(" extends ").append(classData.getSuperClassName());
         }
 
-        //implementations
         if (classData.getSuperInterfaceName() != null) {
             result.append(" implements ");
             List<String> interfaceList = classData.getSuperInterfaceName();
@@ -285,7 +259,6 @@ public final class CloneProject {
                 "StringBuilder markResult = new StringBuilder();\n" +
                 "markResult.append(statement).append(\"===\");\n" +
                 "markResult.append(isTrueCondition).append(\"===\");\n" +
-//                "markResult.append(isFalseCondition).append(\"---end---\");\n" +
                 "markResult.append(isFalseCondition).append(\"===\");\n" +
                 "markResult.append(id).append(\"---end---\");\n" +
                 "writeDataToFile(markResult.toString(), \"" + FilePath.concreteExecuteResultPath + "\", true);\n" +
@@ -298,9 +271,7 @@ public final class CloneProject {
             @Override
             public boolean visit(TypeDeclaration node) {
                 for (MethodDeclaration method : node.getMethods()) {
-//                    if (!method.isConstructor()) {
                     methods.add(method);
-//                    }
                 }
                 return true;
             }
@@ -313,13 +284,11 @@ public final class CloneProject {
             MethodDeclaration methodDeclaration = (MethodDeclaration) astNode;
             firstLine = compilationUnit.getLineNumber(methodDeclaration.getBody().getStartPosition());
 
-            if(!((MethodDeclaration) astNode).isConstructor()){
-                //Xử lý tạm thơ constructor
+            if (!((MethodDeclaration) astNode).isConstructor()) {
                 result.append(createCloneMethod(methodDeclaration, coverage));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionStatement, CoverageType.STATEMENT));
                 result.append(createTotalFunctionCoverageVariable(methodDeclaration, totalFunctionBranch, CoverageType.BRANCH));
-            }
-            else {
+            } else {
                 result.append(methodDeclaration);
             }
         }
@@ -365,7 +334,7 @@ public final class CloneProject {
         StringBuilder cloneMethod = new StringBuilder();
         List<ASTNode> modifiers = method.modifiers();
         for (ASTNode modifier : modifiers) {
-            if(modifier.toString().equals("private")){
+            if (modifier.toString().equals("private")) {
                 cloneMethod.append("public").append(" ");
                 continue;
             }
@@ -405,25 +374,24 @@ public final class CloneProject {
             return generateCodeForWhileStatement((WhileStatement) statement, coverage);
         } else if (statement instanceof DoStatement) {
             return generateCodeForDoStatement((DoStatement) statement, coverage);
-        } else {
-            return generateCodeForNormalStatement(statement, markMethodSeparator);
+        } else if (statement instanceof EnhancedForStatement) {
+            return generateCodeForForEachStatement((EnhancedForStatement) statement, coverage);
         }
-    }
 
-    // Sinh code cho một danh sách statement, mỗi statement đi qua generator chung
-    private static String generateBodyFromStatements(List<Statement> stmts,
-                                                     ASTHelper.Coverage coverage) {
-        StringBuilder body = new StringBuilder();
-        for (Statement stmt : stmts) {
-            String code = generateCodeForOneStatement(stmt, ";", coverage);
-            body.append(code);
-            if (!code.endsWith("\n")) {
-                body.append("\n");
+        // Xử lý tách toán tử 3 ngôi (Ternary)
+        if (statement instanceof ReturnStatement ||
+                statement instanceof ExpressionStatement ||
+                statement instanceof VariableDeclarationStatement) {
+
+            ASTNode converted = convertTernaryToIf(statement);
+            // Nếu có sự thay đổi (đã tách thành công), gọi đệ quy cho node mới
+            if (converted != statement) {
+                return generateCodeForOneStatement(converted, markMethodSeparator, coverage);
             }
         }
-        return body.toString();
-    }
 
+        return generateCodeForNormalStatement(statement, markMethodSeparator);
+    }
 
     private static String generateCodeForBlock(Block block, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
@@ -457,6 +425,35 @@ public final class CloneProject {
         return result.toString();
     }
 
+    private static String generateCodeForForEachStatement(EnhancedForStatement forEachStatement, ASTHelper.Coverage coverage) {
+        StringBuilder result = new StringBuilder();
+
+        result.append("for (");
+        result.append(forEachStatement.getParameter());
+        result.append(" : ");
+        result.append(forEachStatement.getExpression());
+        result.append(") {\n");
+
+        // Lấy dòng code để mark
+        int lineNumber = 0;
+        if (classCompilationUnit != null && forEachStatement.getStartPosition() != -1) {
+            lineNumber = classCompilationUnit.getLineNumber(forEachStatement.getStartPosition()) - firstLine;
+        }
+
+        // Tạo mark cho việc vào vòng lặp
+        String exprStr = forEachStatement.getExpression().toString().replace("\"", "\\\"");
+        result.append("mark(\"").append(exprStr).append("\", true, false, ").append(lineNumber).append(");\n");
+        totalFunctionStatement++;
+        totalClassStatement++;
+        totalFunctionBranch++; // Đếm nhánh True
+
+        result.append(generateCodeForOneStatement(forEachStatement.getBody(), ";", coverage));
+
+        result.append("}\n");
+
+        return result.toString();
+    }
+
     private static String generateCodeForForStatement(ForStatement forStatement, ASTHelper.Coverage coverage) {
         StringBuilder result = new StringBuilder();
 
@@ -473,7 +470,9 @@ public final class CloneProject {
 
         // Condition
         result.append("; ");
-        result.append(generateCodeForCondition(forStatement.getExpression(), coverage));
+        if (forStatement.getExpression() != null) {
+            result.append(generateCodeForCondition(forStatement.getExpression(), coverage));
+        }
 
         // Updaters
         result.append("; ");
@@ -533,11 +532,9 @@ public final class CloneProject {
     private static String generateCodeForMarkMethod(ASTNode statement, String markMethodSeparator) {
         StringBuilder result = new StringBuilder();
 
-        // Lấy đúng code gốc thay vì toString()
         String stringStatement = statement.toString();
         StringBuilder newStatement = new StringBuilder();
 
-        // Rewrite Statement for mark method (escape \n, " ...)
         for (int i = 0; i < stringStatement.length(); i++) {
             char charAt = stringStatement.charAt(i);
 
@@ -556,7 +553,17 @@ public final class CloneProject {
             newStatement.append(charAt);
         }
 
-        int lineNumber = classCompilationUnit.getLineNumber(statement.getStartPosition()) - firstLine;
+        // Kiểm tra xem node có vị trí thực trong source file không
+        int lineNumber = 0;
+        int startPos = statement.getStartPosition();
+
+        if (startPos != -1 && classCompilationUnit != null) {
+            // Node thật -> Lấy line number từ compilation unit
+            lineNumber = classCompilationUnit.getLineNumber(startPos) - firstLine;
+        } else {
+            lineNumber = 0;
+        }
+
         result.append("mark(\"").append(newStatement).
                 append("\", false, false, ").append(lineNumber).append(')')
                 .append(markMethodSeparator).append("\n");
@@ -580,7 +587,13 @@ public final class CloneProject {
         totalFunctionStatement++;
         totalClassStatement++;
         totalFunctionBranch += 2;
-        int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
+
+        int lineNumber = 0;
+        int startPos = condition.getStartPosition();
+        if (startPos != -1 && classCompilationUnit != null) {
+            lineNumber = classCompilationUnit.getLineNumber(startPos) - firstLine;
+        }
+
         return "((" + condition + ") && mark(\"" + condition + "\", true, false, " + lineNumber + "))" +
                 " || mark(\"" + condition + "\", false, true, " + lineNumber + ")";
     }
@@ -604,7 +617,13 @@ public final class CloneProject {
             totalFunctionStatement++;
             totalClassStatement++;
             totalFunctionBranch += 2;
-            int lineNumber = classCompilationUnit.getLineNumber(condition.getStartPosition()) - firstLine;
+
+            int lineNumber = 0;
+            int startPos = condition.getStartPosition();
+            if (startPos != -1 && classCompilationUnit != null) {
+                lineNumber = classCompilationUnit.getLineNumber(startPos) - firstLine;
+            }
+
             result.append("((").append(condition).append(") && mark(\"").append(condition).
                     append("\", true, false, ").append(lineNumber).append("))");
             result.append(" || mark(\"").append(condition).append("\", false, true, ").
@@ -637,7 +656,6 @@ public final class CloneProject {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // bỏ qua dòng comment //... và /* ... */ mở đầu
                 if (line.startsWith("//") || line.startsWith("/*") || line.isEmpty()) continue;
                 if (line.startsWith("package ")) {
                     int semi = line.indexOf(';');
@@ -645,7 +663,6 @@ public final class CloneProject {
                         return line.substring("package ".length(), semi).trim();
                     }
                 }
-                // nếu gặp class/enum/interface trước package thì coi như default package
                 if (line.startsWith("class ") || line.startsWith("interface ")
                         || line.startsWith("enum ") || line.startsWith("@interface ")) {
                     return null;
@@ -655,7 +672,6 @@ public final class CloneProject {
         return null;
     }
 
-    // Tìm prefix chung của hai path tuyệt đối đã normalize
     private static Path commonPrefix(Path a, Path b) {
         a = a.toAbsolutePath().normalize();
         b = b.toAbsolutePath().normalize();
@@ -673,13 +689,8 @@ public final class CloneProject {
     }
 
     public static String buildPackage(String sourceDir) {
-        // Chuẩn hóa dấu phân cách: đổi \ thành /
         String normalized = sourceDir.replace("\\", "/");
-
-        // Tách thành các phần
         String[] parts = normalized.split("/");
-
-        // Tìm vị trí "clonedProject"
         int idx = -1;
         for (int i = 0; i < parts.length; i++) {
             if (parts[i].equals("clonedProject")) {
@@ -687,14 +698,11 @@ public final class CloneProject {
                 break;
             }
         }
-
-        // Xây package
         StringBuilder sb = new StringBuilder("package data.clonedProject");
         for (int i = idx + 1; i < parts.length; i++) {
             sb.append('.').append(parts[i]);
         }
         sb.append(';');
-
         return sb.toString();
     }
 
@@ -702,18 +710,28 @@ public final class CloneProject {
         if (returnType.isPrimitiveType()) {
             PrimitiveType primitiveType = (PrimitiveType) returnType;
             switch (primitiveType.getPrimitiveTypeCode().toString()) {
-                case "boolean": return "false";
-                case "char": return "'" + File.separator + "0'";
-                case "byte": return "0";
-                case "short": return "0";
-                case "int": return "0";
-                case "long": return "0";
-                case "float": return "0.0f";
-                case "double": return "0";
-                case "void": return "";
-                default: throw new IllegalArgumentException("Unknown primitive type");
+                case "boolean":
+                    return "false";
+                case "char":
+                    return "'" + File.separator + "0'";
+                case "byte":
+                    return "0";
+                case "short":
+                    return "0";
+                case "int":
+                    return "0";
+                case "long":
+                    return "0";
+                case "float":
+                    return "0.0f";
+                case "double":
+                    return "0";
+                case "void":
+                    return "";
+                default:
+                    throw new IllegalArgumentException("Unknown primitive type");
             }
         }
-        return "null"; // Default for non-primitive types
+        return "null";
     }
 }

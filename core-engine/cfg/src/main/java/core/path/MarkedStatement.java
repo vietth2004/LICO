@@ -7,11 +7,14 @@ public class MarkedStatement {
     private boolean isTrueConditionalStatement;
     private boolean isFalseConditionalStatement;
     private CfgNode cfgNode;
+    private int lineNumber;
 
-    public MarkedStatement(String statement, boolean isTrueConditionalStatement, boolean isFalseConditionalStatement) {
+    public MarkedStatement(String statement, boolean isTrueConditionalStatement, boolean isFalseConditionalStatement,
+                           int lineNumber) {
         this.statement = statement;
         this.isTrueConditionalStatement = isTrueConditionalStatement;
         this.isFalseConditionalStatement = isFalseConditionalStatement;
+        this.lineNumber = lineNumber;
     }
 
     public void setStatement(String statement) {
@@ -44,5 +47,21 @@ public class MarkedStatement {
 
     public void setCfgNode(CfgNode cfgNode) {
         this.cfgNode = cfgNode;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        MarkedStatement that = (MarkedStatement) obj;
+        boolean isBothTrueConditionalStatement = this.isTrueConditionalStatement == that.isTrueConditionalStatement;
+        boolean isBothFalseConditionalStatement = this.isFalseConditionalStatement == that.isFalseConditionalStatement;
+        boolean isSameId = this.lineNumber == that.lineNumber;
+        boolean isSameStatement = this.statement.equals(that.statement);
+        return isSameId && isBothTrueConditionalStatement && isBothFalseConditionalStatement && isSameStatement;
     }
 }

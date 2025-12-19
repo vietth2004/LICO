@@ -5,6 +5,7 @@ import core.cfg.utils.ASTHelper;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -339,7 +340,7 @@ public final class TestDriverGenerator {
                 case "boolean":
                     return "false";
                 case "char":
-                    return "'\\0'";
+                    return "'" + File.separator + "0'";
                 case "byte":
                     return "0";
                 case "short":

@@ -23,7 +23,7 @@ public abstract class NTDTestGeneration extends TestGeneration {
             String statement = markedStatementData[0];
             boolean isTrueConditionalStatement = Boolean.parseBoolean(markedStatementData[1]);
             boolean isFalseConditionalStatement = Boolean.parseBoolean(markedStatementData[2]);
-            result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement));
+            result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement, 0));
         }
         return result;
     }
