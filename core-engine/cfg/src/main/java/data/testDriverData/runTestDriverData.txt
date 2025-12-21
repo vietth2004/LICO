@@ -1,3 +1,10 @@
-int rev=0;
-===false===false===1---end---x != 0===false===true===3---end---return rev;
-===false===false===13---end---6.1911===0
+long i=0;
+===false===false===1---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===false===true===2---end---return (int)(i - 1);
+===false===false===3---end---13.683===6

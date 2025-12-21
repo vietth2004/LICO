@@ -22,8 +22,6 @@ import core.variable.PrimitiveTypeVariable;
 import core.variable.Variable;
 import org.eclipse.jdt.core.dom.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -38,6 +36,7 @@ public class SymbolicExecutionRewrite {
     private List<ASTNode> parameters;
     private static CfgNode currentCfgNode;
     public static Map<String, PrimitiveType.Code> variableTypeMap = new HashMap<>();
+    public String globalZ3Result = "";
 
     public SymbolicExecutionRewrite(Path testPath, List<ASTNode> parameters) {
         this.testPath = testPath;
@@ -365,6 +364,7 @@ public class SymbolicExecutionRewrite {
                     result.append("\n");
                 }
             }
+            this.globalZ3Result = result.toString();
 
             writeDataToFile(result.toString());
         }
@@ -374,8 +374,8 @@ public class SymbolicExecutionRewrite {
         List<Object> result = new ArrayList<>();
         Scanner scanner;
         try {
-            scanner = new Scanner(new File(FilePath.generatedTestDataPath));
-        } catch (FileNotFoundException e) {
+            scanner = new Scanner(this.globalZ3Result);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

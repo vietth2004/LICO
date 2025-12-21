@@ -1,13 +1,15 @@
 package core.path;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import core.cfg.CfgNode;
 
 public class MarkedStatement {
     private String statement;
     private boolean isTrueConditionalStatement;
     private boolean isFalseConditionalStatement;
-    private CfgNode cfgNode;
     private int lineNumber;
+    @JsonIgnore
+    private CfgNode cfgNode;
 
     public MarkedStatement(String statement, boolean isTrueConditionalStatement, boolean isFalseConditionalStatement,
                            int lineNumber) {
@@ -41,6 +43,7 @@ public class MarkedStatement {
         return isFalseConditionalStatement;
     }
 
+    @JsonIgnore
     public CfgNode getCfgNode() {
         return cfgNode;
     }
