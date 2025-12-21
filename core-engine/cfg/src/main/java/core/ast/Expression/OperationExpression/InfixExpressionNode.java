@@ -3,12 +3,15 @@ package core.ast.Expression.OperationExpression;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import core.Z3Vars.Z3VariableWrapper;
-import core.ast.*;
+import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
 import core.ast.Expression.Literal.LiteralNode;
 import core.ast.Expression.Name.NameNode;
 import core.symbolicExecution.MemoryModel;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +32,8 @@ public class InfixExpressionNode extends OperationExpressionNode {
         else if (rightOperand == originMethodInvocation) {
             originInfixExpression.setRightOperand((Expression) replacement);
         } else {
-            for (int i = 0; i < extendedOperands.size(); i++){
-                if (extendedOperands.get(i) == originMethodInvocation){
+            for (int i = 0; i < extendedOperands.size(); i++) {
+                if (extendedOperands.get(i) == originMethodInvocation) {
                     extendedOperands.set(i, replacement);
                 }
             }
@@ -150,8 +153,7 @@ public class InfixExpressionNode extends OperationExpressionNode {
                 if (extendedOperands.isEmpty()) {
                     return literalResult;
                 }
-            }
-            else {
+            } else {
                 infixExpressionNode.leftOperand = literalResult;
                 infixExpressionNode.rightOperand = (ExpressionNode) extendedOperands.remove(0);
                 return executeInfixExpressionNode(infixExpressionNode, memoryModel);
@@ -160,7 +162,7 @@ public class InfixExpressionNode extends OperationExpressionNode {
             ExpressionNode oldLeftOperand = infixExpressionNode.leftOperand;
             ExpressionNode oldRightOperand = infixExpressionNode.rightOperand;
 
-            if (!leftOperand.isLiteralNode() ) {
+            if (!leftOperand.isLiteralNode()) {
                 ExpressionNode tmp = OperationExpressionNode.executeOperandNode(leftOperand, memoryModel);
                 if (tmp != infixExpressionNode) {
                     infixExpressionNode.leftOperand = tmp;
@@ -181,6 +183,100 @@ public class InfixExpressionNode extends OperationExpressionNode {
         return infixExpressionNode;
     }
 
+//    public static ExpressionNode executeInfixExpressionNode(InfixExpressionNode infixExpressionNode,
+//                                                            MemoryModel memoryModel) {
+//        ExpressionNode leftOperand = infixExpressionNode.leftOperand;
+//        ExpressionNode rightOperand = infixExpressionNode.rightOperand;
+//        InfixExpression.Operator operator = infixExpressionNode.operator;
+//        List<AstNode> extendedOperands = infixExpressionNode.extendedOperands;
+//
+//        if (leftOperand.isLiteralNode() && rightOperand.isLiteralNode()) {
+//            LiteralNode literalResult = LiteralNode.analyzeTwoInfixLiteral((LiteralNode) leftOperand, operator, (LiteralNode) rightOperand);
+//
+//            if (extendedOperands != null && !extendedOperands.isEmpty()) {
+//                List<AstNode> newExtended = new ArrayList<>();
+//
+//                InfixExpressionNode nextStepNode = new InfixExpressionNode();
+//                nextStepNode.leftOperand = literalResult;
+//                nextStepNode.rightOperand = (ExpressionNode) newExtended.remove(0);
+//                nextStepNode.operator = operator;
+//                nextStepNode.extendedOperands = newExtended;
+//
+//                return executeInfixExpressionNode(nextStepNode, memoryModel);
+//            } else {
+//                return literalResult;
+//            }
+//        } else {
+//            InfixExpressionNode newNode = new InfixExpressionNode();
+//            newNode.setOperator(operator);
+//
+//            if (!leftOperand.isLiteralNode()) {
+//                ExpressionNode tmp = OperationExpressionNode.executeOperandNode(leftOperand, memoryModel);
+//                newNode.setLeftOperand(tmp != null ? tmp : leftOperand);
+//            } else {
+//                newNode.setLeftOperand(leftOperand);
+//            }
+//
+//            if (!rightOperand.isLiteralNode()) {
+//                ExpressionNode tmp = OperationExpressionNode.executeOperandNode(rightOperand, memoryModel);
+//                newNode.setRightOperand(tmp != null ? tmp : rightOperand);
+//            } else {
+//                newNode.setRightOperand(rightOperand);
+//            }
+//
+//            if (extendedOperands != null) {
+//                List<AstNode> newExtendedList = new ArrayList<>();
+//                for (AstNode op : extendedOperands) {
+//                    if (op instanceof ExpressionNode) {
+//                        ExpressionNode exprOp = (ExpressionNode) op;
+//                        ExpressionNode executedOp = OperationExpressionNode.executeOperandNode(exprOp, memoryModel);
+//                        newExtendedList.add(executedOp);
+//                    } else {
+//                        newExtendedList.add(op);
+//                    }
+//                }
+//                newNode.extendedOperands = newExtendedList;
+//            }
+//
+//            return newNode;
+//        }
+
+    /// /        if (leftOperand.isLiteralNode() && rightOperand.isLiteralNode()) {
+    /// /            LiteralNode literalResult = LiteralNode.analyzeTwoInfixLiteral((LiteralNode) leftOperand, operator, (LiteralNode) rightOperand);
+    /// /
+    /// /            if (extendedOperands != null) {
+    /// /                if (extendedOperands.isEmpty()) {
+    /// /                    return literalResult;
+    /// /                }
+    /// /            } else {
+    /// /                infixExpressionNode.leftOperand = literalResult;
+    /// /                infixExpressionNode.rightOperand = (ExpressionNode) extendedOperands.remove(0);
+    /// /                return executeInfixExpressionNode(infixExpressionNode, memoryModel);
+    /// /            }
+    /// /        } else {
+    /// /            ExpressionNode oldLeftOperand = infixExpressionNode.leftOperand;
+    /// /            ExpressionNode oldRightOperand = infixExpressionNode.rightOperand;
+    /// /
+    /// /            if (!leftOperand.isLiteralNode()) {
+    /// /                ExpressionNode tmp = OperationExpressionNode.executeOperandNode(leftOperand, memoryModel);
+    /// /                if (tmp != infixExpressionNode) {
+    /// /                    infixExpressionNode.leftOperand = tmp;
+    /// /                } else if (infixExpressionNode.leftOperand instanceof NameNode) {
+    /// /                    infixExpressionNode.leftOperand.markFake();
+    /// /                }
+    /// /            }
+    /// /            if (!rightOperand.isLiteralNode()) {
+    /// /                infixExpressionNode.rightOperand = OperationExpressionNode.executeOperandNode(rightOperand, memoryModel);
+    /// /            }
+    /// /
+    /// /            if (oldLeftOperand != infixExpressionNode.leftOperand || oldRightOperand != infixExpressionNode.rightOperand) {
+    /// /                return executeInfixExpressionNode(infixExpressionNode, memoryModel);
+    /// /            } else {
+    /// /                return infixExpressionNode;
+    /// /            }
+    /// /        }
+    /// /        return infixExpressionNode;
+//    }
     public static boolean isBitwiseOperator(InfixExpression.Operator operator) {
         return (operator.equals(InfixExpression.Operator.OR) ||
                 operator.equals(InfixExpression.Operator.XOR) ||

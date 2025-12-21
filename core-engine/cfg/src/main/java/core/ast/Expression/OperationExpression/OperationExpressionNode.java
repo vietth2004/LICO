@@ -48,7 +48,7 @@ public abstract class OperationExpressionNode extends ExpressionNode {
             String name = NameNode.getStringNameNode(n);
 
             if (operand.isFake()) {
-                return ctx.mkIntConst(name);   // bypass memory + không gọi toString()
+                return ctx.mkIntConst(name);
             }
             return createZ3Variable(n, ctx, vars, memoryModel);
         } else if (operand instanceof LiteralNode) {

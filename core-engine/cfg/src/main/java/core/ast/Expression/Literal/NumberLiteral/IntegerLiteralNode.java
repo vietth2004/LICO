@@ -19,7 +19,7 @@ public class IntegerLiteralNode extends NumberLiteralNode {
 
     public static IntegerLiteralNode[] createIntegerLiteralInitializationArray(int capacity) {
         IntegerLiteralNode[] array = new IntegerLiteralNode[capacity];
-        for(int i = 0; i < capacity; i++) {
+        for (int i = 0; i < capacity; i++) {
             array[i] = new IntegerLiteralNode();
         }
         return array;
@@ -27,11 +27,15 @@ public class IntegerLiteralNode extends NumberLiteralNode {
 
     public int getIntegerValue() {
         String token = super.getTokenValue();
-        if(isIntegerValue(token)) {
+        if (isIntegerValue(token)) {
             return Integer.parseInt(token);
         } else {
             return 0;
         }
+    }
+
+    public void setValue(String value) {
+        super.setTokenValue(value);
     }
 
     public void setTokenValue(double doubleValue) {

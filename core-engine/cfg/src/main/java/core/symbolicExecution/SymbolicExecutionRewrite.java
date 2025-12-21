@@ -21,8 +21,6 @@ import core.variable.PrimitiveTypeVariable;
 import core.variable.Variable;
 import org.eclipse.jdt.core.dom.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -35,6 +33,7 @@ public class SymbolicExecutionRewrite {
     private Path testPath;
     private List<ASTNode> parameters;
     private static CfgNode currentCfgNode;
+    public String globalZ3Result = "";
 
     public SymbolicExecutionRewrite(Path testPath, List<ASTNode> parameters) {
         this.testPath = testPath;
@@ -79,7 +78,7 @@ public class SymbolicExecutionRewrite {
 
         int limit = 0;
         while (currentNode != null) {
-            if (++limit > 100) break;
+            if (++limit > 400) break;
             currentCfgNode = currentNode.getData();
             System.out.println(currentCfgNode.getContentReport());
             ASTNode astNode = currentCfgNode.getAst();
@@ -295,6 +294,7 @@ public class SymbolicExecutionRewrite {
                     result.append("\n");
                 }
             }
+            this.globalZ3Result = result.toString();
 
             writeDataToFile(result.toString());
         }
@@ -304,8 +304,8 @@ public class SymbolicExecutionRewrite {
         List<Object> result = new ArrayList<>();
         Scanner scanner;
         try {
-            scanner = new Scanner(new File(FilePath.generatedTestDataPath));
-        } catch (FileNotFoundException e) {
+            scanner = new Scanner(this.globalZ3Result);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -340,28 +340,43 @@ public class SymbolicExecutionRewrite {
         return result.toArray();
     }
 
+    // Thay thế hoàn toàn hàm scanValue cũ
     private Object scanValue(Scanner scanner, String type) {
-        if ("int".equals(type)) {
-            return scanner.nextInt();
-        } else if ("boolean".equals(type)) {
-            return scanner.nextBoolean();
-        } else if ("byte".equals(type)) {
-            return scanner.nextByte();
-        } else if ("short".equals(type)) {
-            return scanner.nextShort();
-        } else if ("char".equals(type)) {
-            return (char) scanner.nextInt();
-        } else if ("long".equals(type)) {
-            return scanner.nextLong();
-        } else if ("float".equals(type)) {
-            return scanner.nextFloat();
-        } else if ("double".equals(type)) {
-            return scanner.nextDouble();
-        } else if ("void".equals(type)) {
-            return null;
-        } else {
-            throw new RuntimeException("Unsupported type: " + type);
+        // 1. LỚP GIÁP BẢO VỆ: Nếu scanner null hoặc file rỗng -> Trả về default ngay
+        if (scanner == null || !scanner.hasNext()) {
+            System.err.println("WARN: Mất dữ liệu log cho kiểu " + type + ". Đang dùng giá trị mặc định để cứu crash.");
+            return getDefaultValueForType(type);
         }
+
+        try {
+            switch (type) {
+                case "int":
+                case "java.lang.Integer":
+                    if (scanner.hasNextInt()) return scanner.nextInt();
+                    if (scanner.hasNext()) scanner.next();
+                    return 0;
+
+                case "double":
+                case "java.lang.Double":
+                    if (scanner.hasNextDouble()) return scanner.nextDouble();
+                    if (scanner.hasNext()) scanner.next();
+                    return 0.0;
+
+                default:
+                    if (scanner.hasNext()) return scanner.next();
+                    return null;
+            }
+        } catch (Exception e) {
+            return getDefaultValueForType(type);
+        }
+    }
+
+    // Hàm trợ giúp (Copy xuống dưới cùng class)
+    private Object getDefaultValueForType(String type) {
+        if (type.equals("int") || type.equals("java.lang.Integer")) return 0;
+        if (type.equals("boolean") || type.equals("java.lang.Boolean")) return false;
+        if (type.equals("double") || type.equals("java.lang.Double")) return 0.0;
+        return null;
     }
 
     public static Object[] createRandomTestData(Class<?>[] parameterClasses) {

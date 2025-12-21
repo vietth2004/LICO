@@ -9,7 +9,20 @@ public class QualifiedNameNode extends NameNode {
     private NameNode qualifier = null;
     private SimpleNameNode name = null;
 
-    public static QualifiedNameNode executeQualifiedName(QualifiedName qualifiedName, MemoryModel memoryModel) {
+    public static ExpressionNode executeQualifiedName(QualifiedName qualifiedName, MemoryModel memoryModel) {
+
+//        String fullName = qualifiedName.getFullyQualifiedName();
+//        if ("Integer.MAX_VALUE".equals(fullName)) {
+//            IntegerLiteralNode maxNode = new IntegerLiteralNode();
+//            maxNode.setValue("2147483647");
+//            return maxNode;
+//        }
+//
+//        if ("Integer.MIN_VALUE".equals(fullName)) {
+//            IntegerLiteralNode minNode = new IntegerLiteralNode();
+//            minNode.setValue("-2147483648");
+//            return minNode;
+//        }
         QualifiedNameNode qualifiedNameNode = new QualifiedNameNode();
         qualifiedNameNode.qualifier = (NameNode) NameNode.executeName(qualifiedName.getQualifier(), memoryModel);
         qualifiedNameNode.name = (SimpleNameNode) SimpleNameNode.executeSimpleName(qualifiedName.getName(), memoryModel);

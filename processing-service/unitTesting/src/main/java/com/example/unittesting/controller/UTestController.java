@@ -1,18 +1,17 @@
 package com.example.unittesting.controller;
 
 import com.example.unittesting.Sevice.UTestService;
-
 import com.example.unittesting.UnitTestingApplication;
 import core.testGeneration.TestGeneration;
 import io.swagger.v3.oas.annotations.Operation;
-
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,13 +109,14 @@ public class UTestController {
                 throw new RuntimeException("Invalid coverage type");
         }
         List<Object> results = new ArrayList<>();
-        for (int targetId : targetIds){
+        for (int targetId : targetIds) {
             Object result = utestService.runAutomationTest(targetId, nameProject, coverage);
             results.add(result);
         }
         return ResponseEntity.ok(results);
     }
-    @GetMapping(value="/unit-test-file")
+
+    @GetMapping(value = "/unit-test-file")
     public ResponseEntity<Object> getUnitTestFile(@RequestParam List<Integer> targetIds, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
         TestGeneration.Coverage coverage;
         switch (coverageType) {
@@ -136,13 +136,14 @@ public class UTestController {
                 throw new RuntimeException("Invalid coverage type");
         }
         List<Object> results = new ArrayList<>();
-        for (int targetId : targetIds){
+        for (int targetId : targetIds) {
             Object result = utestService.runAutomationTestFile(targetId, nameProject, coverage);
             results.add(result);
         }
         return ResponseEntity.ok(results);
     }
-    @GetMapping(value="/unit-test-project")
+
+    @GetMapping(value = "/unit-test-project")
     public ResponseEntity<Object> getUnitTestProject(@RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
         TestGeneration.Coverage coverage;
         switch (coverageType) {
@@ -163,7 +164,8 @@ public class UTestController {
         }
         return ResponseEntity.ok(utestService.runAutomationTestProject(nameProject, coverage));
     }
-    @GetMapping(value="/unit-test-all")
+
+    @GetMapping(value = "/unit-test-all")
     public ResponseEntity<Object> getUnitTestAll(@RequestParam List<Integer> targetIds, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
         TestGeneration.Coverage coverage;
         switch (coverageType) {
