@@ -391,7 +391,13 @@ public class SymbolicExecutionRewrite {
 
                 String type = parameterClasses[i].getName();
 
-                result.add(scanValue(scanner, type));
+
+                if ("int".equals(type)) {
+                    if (scanner.hasNextInt()) {
+                        result.add(scanValue(scanner, type));
+                    }
+                }
+                else result.add(scanValue(scanner, type));
 
             } else if (parameterClass.isArray()) {
                 String constraint = scanner.nextLine();
