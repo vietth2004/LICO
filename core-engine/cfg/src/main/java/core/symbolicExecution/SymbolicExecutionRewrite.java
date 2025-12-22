@@ -22,14 +22,10 @@ import core.variable.PrimitiveTypeVariable;
 import core.variable.Variable;
 import org.eclipse.jdt.core.dom.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class SymbolicExecutionRewrite {
@@ -40,6 +36,7 @@ public class SymbolicExecutionRewrite {
     private List<ASTNode> parameters;
     private static CfgNode currentCfgNode;
     public static Map<String, PrimitiveType.Code> variableTypeMap = new HashMap<>();
+    public String globalZ3Result = "";
 
     public SymbolicExecutionRewrite(Path testPath, List<ASTNode> parameters) {
         this.testPath = testPath;
@@ -367,6 +364,7 @@ public class SymbolicExecutionRewrite {
                     result.append("\n");
                 }
             }
+            this.globalZ3Result = result.toString();
 
             writeDataToFile(result.toString());
         }
@@ -374,95 +372,72 @@ public class SymbolicExecutionRewrite {
 
     public Object[] getEvaluatedTestData(Class<?>[] parameterClasses) {
         List<Object> result = new ArrayList<>();
+        Scanner scanner;
         try {
-            String raw = new String(
-                    Files.readAllBytes(Paths.get(FilePath.generatedTestDataPath))
-            );
-            //System.err.println("RAW DATA = [" + raw + "]");
-
-            Scanner scanner = new Scanner(raw);
-            //Scanner scanner = new Scanner(f);
-
-            for (int i = 0; i < parameterClasses.length; i++) {
-
-                Class<?> parameterClass = parameterClasses[i];
-
-                if (parameterClass.isPrimitive()) {
-
-                    String type = parameterClasses[i].getName();
-
-                    result.add(scanValue(scanner, type));
-
-                } else if (parameterClass.isArray()) {
-                    String constraint = scanner.nextLine();
-                    String[] constraints = constraint.split(" ");
-                    int numberOfDimensions = Integer.parseInt(constraints[0]);
-                    int[] dimensions = new int[numberOfDimensions];
-                    for (int j = 0; j < numberOfDimensions; j++) {
-                        dimensions[j] = Integer.parseInt(constraints[j + 1]);
-                    }
-                    result.add(Array.newInstance(parameterClass.getComponentType(), dimensions));
-                }
-            }
-            return result.toArray();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+            scanner = new Scanner(this.globalZ3Result);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        for (int i = 0; i < parameterClasses.length; i++) {
+//            if (!scanner.hasNext()) {
+//                result.add(createRandomVariableData(parameterClasses[i]));
+//                continue;
+//            }
+
+            Class<?> parameterClass = parameterClasses[i];
+
+            if (parameterClass.isPrimitive()) {
+
+                String type = parameterClasses[i].getName();
+
+
+                if ("int".equals(type)) {
+                    if (scanner.hasNextInt()) {
+                        result.add(scanValue(scanner, type));
+                    }
+                }
+                else result.add(scanValue(scanner, type));
+
+            } else if (parameterClass.isArray()) {
+                String constraint = scanner.nextLine();
+                String[] constraints = constraint.split(" ");
+                int numberOfDimensions = Integer.parseInt(constraints[0]);
+                int[] dimensions = new int[numberOfDimensions];
+                for (int j = 0; j < numberOfDimensions; j++) {
+                    dimensions[j] = Integer.parseInt(constraints[j + 1]);
+                }
+                result.add(Array.newInstance(parameterClass.getComponentType(), dimensions));
+
+                // Specific element constraints!!!
+            }
+        }
+
+        return result.toArray();
     }
 
     private Object scanValue(Scanner scanner, String type) {
-        assert scanner != null : "Scanner == null";
-        assert type != null : "Type == null";
-
         if ("int".equals(type)) {
-            assert scanner.hasNextInt() : "Expected int but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextInt();
-
         } else if ("boolean".equals(type)) {
-            assert scanner.hasNextBoolean() : "Expected boolean but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextBoolean();
-
         } else if ("byte".equals(type)) {
-            assert scanner.hasNextByte() : "Expected byte but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextByte();
-
         } else if ("short".equals(type)) {
-            assert scanner.hasNextShort() : "Expected short but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextShort();
-
         } else if ("char".equals(type)) {
-            assert scanner.hasNextInt() : "Expected char(int) but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return (char) scanner.nextInt();
-
         } else if ("long".equals(type)) {
-            assert scanner.hasNextLong() : "Expected long but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextLong();
-
         } else if ("float".equals(type)) {
-            assert scanner.hasNextFloat() : "Expected float but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextFloat();
-
         } else if ("double".equals(type)) {
-            assert scanner.hasNextDouble() : "Expected double but found: "
-                    + (scanner.hasNext() ? scanner.next() : "<EOF>");
             return scanner.nextDouble();
-
         } else if ("void".equals(type)) {
             return null;
-
         } else {
             throw new RuntimeException("Unsupported type: " + type);
         }
-
     }
 
     public static Object[] createRandomTestData(Class<?>[] parameterClasses) {
