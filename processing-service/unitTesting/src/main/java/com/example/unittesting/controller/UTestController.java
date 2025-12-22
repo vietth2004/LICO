@@ -41,26 +41,40 @@ public class UTestController {
                     @io.swagger.v3.oas.annotations.Parameter(name = "coverageType", description = "Loại độ phủ cần kiểm thử")}
     )
     public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
-        TestGeneration.Coverage coverage;
+        long t0 = System.currentTimeMillis();
+        String thread = Thread.currentThread().getName();
 
-        switch (coverageType) {
-            case "statement":
-                coverage = TestGeneration.Coverage.STATEMENT;
-                break;
-            case "branch":
-                coverage = TestGeneration.Coverage.BRANCH;
-                break;
-            case "path":
-                coverage = TestGeneration.Coverage.PATH;
-                break;
-            case "mcdc":
-                coverage = TestGeneration.Coverage.MCDC;
-                break;
-            default:
-                throw new RuntimeException("Invalid coverage type");
+        System.err.println("[REQ-START] thread=" + thread);
+
+        try {
+            TestGeneration.Coverage coverage;
+
+            switch (coverageType) {
+                case "statement":
+                    coverage = TestGeneration.Coverage.STATEMENT;
+                    break;
+                case "branch":
+                    coverage = TestGeneration.Coverage.BRANCH;
+                    break;
+                case "path":
+                    coverage = TestGeneration.Coverage.PATH;
+                    break;
+                case "mcdc":
+                    coverage = TestGeneration.Coverage.MCDC;
+                    break;
+                default:
+                    throw new RuntimeException("Invalid coverage type");
+            }
+
+            ResponseEntity<Object> tmp = ResponseEntity.ok(utestService.runAutomationTest(targetId, nameProject, coverage));
+            int ok = 1;
+            return tmp;
+        } catch (Exception e) {
+            throw new  RuntimeException(e);
+        } finally {
+            long dt = System.currentTimeMillis() - t0;
+            System.err.println("[REQ-END] thread=" + thread + " timeMs=" + dt);
         }
-
-        return ResponseEntity.ok(utestService.runAutomationTest(targetId, nameProject, coverage));
     }
 
     @GetMapping(value = "/regressionTest")

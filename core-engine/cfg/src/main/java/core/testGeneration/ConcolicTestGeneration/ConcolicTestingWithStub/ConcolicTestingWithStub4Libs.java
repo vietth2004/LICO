@@ -115,6 +115,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
         }
 
+
         if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
         else System.out.println("Test fail due to UNSATISFIABLE constraint");
 

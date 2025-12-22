@@ -14,14 +14,5 @@ n <= 2===false===true===1---end---int a=1, b=2;
 ===false===false===9---end---i++===false===false===6---end---i <= n===true===false===6---end---int c=a + b;
 ===false===false===7---end---a=b;
 ===false===false===8---end---b=c;
-===false===false===9---end---i++===false===false===6---end---i <= n===true===false===6---end---int c=a + b;
-===false===false===7---end---a=b;
-===false===false===8---end---b=c;
-===false===false===9---end---i++===false===false===6---end---i <= n===true===false===6---end---int c=a + b;
-===false===false===7---end---a=b;
-===false===false===8---end---b=c;
-===false===false===9---end---i++===false===false===6---end---i <= n===true===false===6---end---int c=a + b;
-===false===false===7---end---a=b;
-===false===false===8---end---b=c;
 ===false===false===9---end---i++===false===false===6---end---i <= n===false===true===6---end---return b;
-===false===false===12---end---3.134542===89
+===false===false===12---end---1.804083===21
