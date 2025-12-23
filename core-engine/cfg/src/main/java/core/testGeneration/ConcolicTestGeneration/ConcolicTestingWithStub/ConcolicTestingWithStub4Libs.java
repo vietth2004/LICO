@@ -31,7 +31,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
     private static String simpleClassName;
@@ -56,117 +58,179 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
     }
 
     private static TestResult startGenerating(int id, TestGeneration.Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException, NoSuchMethodException {
+        DecimalFormat df = new DecimalFormat("#.##");
+        List<Double> memorySamples = Collections.synchronizedList(new ArrayList<>());
+        AtomicBoolean isRunning = new AtomicBoolean(true);
+
+        Thread monitorThread = new Thread(() -> {
+            Runtime runtime = Runtime.getRuntime();
+            while (isRunning.get()) {
+                // Đo RAM hiện tại (MB)
+                long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+                double usedMB = usedMemory / (1024.0 * 1024.0);
+
+                memorySamples.add(usedMB);
+
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+
+        monitorThread.start();
+        long startTime = System.currentTimeMillis();
+
+        System.out.println(" bắt đầu đo đạc");
         TestResult testResult = new TestResult();
-        testResult.setId(id);
 
-        Object[] evaluatedValues = SymbolicExecutionRewrite.createRandomTestData(TestGeneration.parameterClasses);
+        try {
+            testResult.setId(id);
 
-        TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
+            Object[] evaluatedValues = SymbolicExecutionRewrite.createRandomTestData(TestGeneration.parameterClasses);
 
-        String testDriver = TestDriverGenerator.generateTestDriverNew((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage), originalFileLocation, simpleClassName);
-        List<MarkedStatement> markedStatements = TestDriverRunner.newRunTestDriver(testDriver, originalFileLocation);
+            TestGeneration.writeDataToFile("", FilePath.concreteExecuteResultPath, false);
 
-        MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
+            String testDriver = TestDriverGenerator.generateTestDriverNew((MethodDeclaration) TestGeneration.testFunc, evaluatedValues, TestGeneration.getCoverageType(coverage), originalFileLocation, simpleClassName);
+            List<MarkedStatement> markedStatements = TestDriverRunner.newRunTestDriver(testDriver, originalFileLocation);
 
-        List<CoveredStatement> coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
+            MarkedPath.markPathToCFGV2(TestGeneration.cfgBeginNode, markedStatements);
 
-        testResult.addToFullTestData(new TestData(TestGeneration.parameterNames, TestGeneration.parameterClasses, evaluatedValues, coveredStatements,
-                TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
+            List<CoveredStatement> coveredStatements = CoveredStatement.switchToCoveredStatementList(markedStatements);
 
-        // test Lico
-        List<Path> licoPaths = LoopPathGenerator.generateLicoPaths(TestGeneration.cfgBeginNode, TestGeneration.cfgEndNode);
+            testResult.addToFullTestData(new TestData(TestGeneration.parameterNames, TestGeneration.parameterClasses, evaluatedValues, coveredStatements,
+                    TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
-        int cnt = 1;
-        for (Path path : licoPaths) {
-            System.out.println("LICO đang chạy path: " + cnt);
-            cnt++;
-            solveAndRunTest(path, testResult, coverage);
-        }
-        //----- End test Lico
+            // test Lico
+            List<Path> licoPaths = LoopPathGenerator.generateLicoPaths(TestGeneration.cfgBeginNode, TestGeneration.cfgEndNode);
 
-        boolean isTestedSuccessfully = true;
+            int cnt = 1;
+            for (Path path : licoPaths) {
+                System.out.println("LICO đang chạy path: " + cnt);
+                cnt++;
+                solveAndRunTest(path, testResult, coverage);
+            }
+            //----- End test Lico
 
-        for (CfgNode uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage); uncoveredNode != null; uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage)) {
-            System.out.println("Uncovered Node: " + uncoveredNode);
+            boolean isTestedSuccessfully = true;
 
-            Path newPath = (new FindPath(TestGeneration.cfgBeginNode, uncoveredNode, TestGeneration.cfgEndNode)).getPath();
+            for (CfgNode uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage); uncoveredNode != null; uncoveredNode = TestGeneration.findUncoverNode(TestGeneration.cfgBeginNode, coverage)) {
+                System.out.println("Uncovered Node: " + uncoveredNode);
 
-            boolean success = solveAndRunTest(newPath, testResult, coverage);
+                Path newPath = (new FindPath(TestGeneration.cfgBeginNode, uncoveredNode, TestGeneration.cfgEndNode)).getPath();
 
-            if (!success) {
-                uncoveredNode.setFakeMarked(true);
+                boolean success = solveAndRunTest(newPath, testResult, coverage);
 
-                if (coverage == Coverage.MCDC || coverage == Coverage.BRANCH) {
-                    CfgNode parent = uncoveredNode.getParent();
-                    if (parent instanceof CfgBoolExprNode) {
-                        CfgBoolExprNode cfgBoolExprNode = (CfgBoolExprNode) parent;
-                        if (cfgBoolExprNode.getTrueNode() == uncoveredNode) {
-                            cfgBoolExprNode.setFakeTrueMarked(true);
-                        } else if (cfgBoolExprNode.getFalseNode() == uncoveredNode) {
-                            cfgBoolExprNode.setFakeFalseMarked(true);
+                if (!success) {
+                    uncoveredNode.setFakeMarked(true);
+
+                    if (coverage == Coverage.MCDC || coverage == Coverage.BRANCH) {
+                        CfgNode parent = uncoveredNode.getParent();
+                        if (parent instanceof CfgBoolExprNode) {
+                            CfgBoolExprNode cfgBoolExprNode = (CfgBoolExprNode) parent;
+                            if (cfgBoolExprNode.getTrueNode() == uncoveredNode) {
+                                cfgBoolExprNode.setFakeTrueMarked(true);
+                            } else if (cfgBoolExprNode.getFalseNode() == uncoveredNode) {
+                                cfgBoolExprNode.setFakeFalseMarked(true);
+                            }
                         }
                     }
                 }
-            }
 
 //            List<String> testDataNames = new ArrayList<>();
 //            testDataNames.addAll(TestGeneration.parameterNames);
 //            testDataNames.addAll(SymbolicExecution.getStubVariableNames());
 
-        }
-
-
-        if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
-        else System.out.println("Test fail due to UNSATISFIABLE constraint");
-
-        testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
-
-        // 1. Xây dựng Map tìm kiếm nhanh từ Content -> CfgNode
-        Map<String, CfgNode> contentToCfgNodeMap = buildContentToNodeMap(TestGeneration.cfgBeginNode);
-
-        // 2. Duyệt qua từng TestData (mỗi test case sinh ra)
-        for (TestData data : testResult.getFullTestData()) {
-            List<CoveredStatement> originalList = data.getCoveredStatements();
-            List<CoveredStatement> translatedList = new ArrayList<>();
-
-            // Dùng Set để tránh trùng lặp (vì if/else con có thể trỏ về cùng 1 cha)
-            Set<String> addedStatements = new HashSet<>();
-
-            for (CoveredStatement stmt : originalList) {
-                String oldContent = stmt.getStatementContent();
-
-                // Tìm node trong CFG
-                CfgNode node = contentToCfgNodeMap.get(oldContent.trim());
-
-                ASTNode originalAst = null;
-                if (node != null) {
-                    // Tra từ điển ánh xạ ngược (ASTHelper)
-                    originalAst = ASTHelper.syntheticToOriginalMap.get(node.getAst());
-                }
-
-                if (originalAst != null) {
-                    String newContent = originalAst.toString();
-
-                    // Chỉ thêm nếu chưa có trong danh sách hiển thị
-                    if (!addedStatements.contains(newContent)) {
-                        // Tạo statement mới với nội dung gốc
-                        // Giữ nguyên lineNumber vì logic setSourceRange đã làm nó đúng
-                        translatedList.add(new CoveredStatement(newContent, stmt.getLineNumber(), stmt.getConditionStatus()));
-                        addedStatements.add(newContent);
-                    }
-                } else {
-                    // Không tìm thấy cha, đây là node bình thường -> Giữ nguyên
-                    if (!addedStatements.contains(oldContent)) {
-                        translatedList.add(stmt);
-                        addedStatements.add(oldContent);
-                    }
-                }
             }
 
-            // Cập nhật lại danh sách hiển thị cho TestData này
-            data.setCoveredStatements(translatedList);
-        }
 
+            if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
+            else System.out.println("Test fail due to UNSATISFIABLE constraint");
+
+            testResult.setFullCoverage(calculateFullTestSuiteCoverage(coverage));
+
+            // 1. Xây dựng Map tìm kiếm nhanh từ Content -> CfgNode
+            Map<String, CfgNode> contentToCfgNodeMap = buildContentToNodeMap(TestGeneration.cfgBeginNode);
+
+            // 2. Duyệt qua từng TestData (mỗi test case sinh ra)
+            for (TestData data : testResult.getFullTestData()) {
+                List<CoveredStatement> originalList = data.getCoveredStatements();
+                List<CoveredStatement> translatedList = new ArrayList<>();
+
+                // Dùng Set để tránh trùng lặp (vì if/else con có thể trỏ về cùng 1 cha)
+                Set<String> addedStatements = new HashSet<>();
+
+                for (CoveredStatement stmt : originalList) {
+                    String oldContent = stmt.getStatementContent();
+
+                    // Tìm node trong CFG
+                    CfgNode node = contentToCfgNodeMap.get(oldContent.trim());
+
+                    ASTNode originalAst = null;
+                    if (node != null) {
+                        // Tra từ điển ánh xạ ngược (ASTHelper)
+                        originalAst = ASTHelper.syntheticToOriginalMap.get(node.getAst());
+                    }
+
+                    if (originalAst != null) {
+                        String newContent = originalAst.toString();
+
+                        // Chỉ thêm nếu chưa có trong danh sách hiển thị
+                        if (!addedStatements.contains(newContent)) {
+                            // Tạo statement mới với nội dung gốc
+                            // Giữ nguyên lineNumber vì logic setSourceRange đã làm nó đúng
+                            translatedList.add(new CoveredStatement(newContent, stmt.getLineNumber(), stmt.getConditionStatus()));
+                            addedStatements.add(newContent);
+                        }
+                    } else {
+                        // Không tìm thấy cha, đây là node bình thường -> Giữ nguyên
+                        if (!addedStatements.contains(oldContent)) {
+                            translatedList.add(stmt);
+                            addedStatements.add(oldContent);
+                        }
+                    }
+                }
+
+                // Cập nhật lại danh sách hiển thị cho TestData này
+                data.setCoveredStatements(translatedList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            isRunning.set(false);
+            monitorThread.interrupt();
+            long endTime = System.currentTimeMillis();
+
+            double sum = 0;
+            for (Double sample : memorySamples) {
+                sum += sample;
+            }
+
+            double averageMemory = 0;
+            if (memorySamples.isEmpty()) {
+                long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                averageMemory = used / (1024.0 * 1024.0);
+                System.out.println("Chạy quá nhanh, lấy ram tức thời.");
+            } else {
+                averageMemory = sum / memorySamples.size();
+            }
+
+            System.out.println("\n==========================================");
+            System.out.println("BÁO CÁO HIỆU NĂNG");
+            System.out.println("==========================================");
+            System.out.println("Số mẫu đã đo    : " + memorySamples.size() + " lần");
+            System.out.println("RAM Trung bình  : " + df.format(averageMemory) + " MB");
+
+            if (!memorySamples.isEmpty()) {
+                double maxMem = Collections.max(memorySamples);
+                System.out.println("RAM Đỉnh: " + df.format(maxMem) + " MB");
+            }
+
+            System.out.println("Tổng thời gian: " + df.format((endTime - startTime) / 1000.0) + " s");
+            System.out.println("==========================================\n");
+        }
         return testResult;
     }
 

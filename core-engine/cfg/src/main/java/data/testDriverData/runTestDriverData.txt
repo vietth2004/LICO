@@ -1,8 +1,10 @@
-num >= 10===true===false===1---end---int sum=0;
-===false===false===2---end---num > 0===true===false===3---end---sum+=num % 10;
-===false===false===4---end---num/=10;
-===false===false===5---end---num > 0===true===false===3---end---sum+=num % 10;
-===false===false===4---end---num/=10;
-===false===false===5---end---num > 0===false===true===3---end---num=sum;
-===false===false===7---end---num >= 10===false===true===1---end---return num;
-===false===false===9---end---7.8805===3
+long i=0;
+===false===false===1---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===true===false===2---end---i++;
+===false===false===2---end---i * i <= x===false===true===2---end---return (int)(i - 1);
+===false===false===3---end---9.5578===6
