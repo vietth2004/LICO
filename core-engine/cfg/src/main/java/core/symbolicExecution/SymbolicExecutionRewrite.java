@@ -81,7 +81,7 @@ public class SymbolicExecutionRewrite {
 
         int limit = 0;
         while (currentNode != null) {
-            if (++limit > 100) break;
+            if (++limit > 400) break;
             currentCfgNode = currentNode.getData();
             System.out.println(currentCfgNode.getContentReport());
             ASTNode astNode = currentCfgNode.getAst();
@@ -396,8 +396,7 @@ public class SymbolicExecutionRewrite {
                     if (scanner.hasNextInt()) {
                         result.add(scanValue(scanner, type));
                     }
-                }
-                else result.add(scanValue(scanner, type));
+                } else result.add(scanValue(scanner, type));
 
             } else if (parameterClass.isArray()) {
                 String constraint = scanner.nextLine();

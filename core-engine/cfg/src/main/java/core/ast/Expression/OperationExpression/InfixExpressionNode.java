@@ -204,7 +204,7 @@ public class InfixExpressionNode extends OperationExpressionNode {
             LiteralNode literalResult = LiteralNode.analyzeTwoInfixLiteral((LiteralNode) leftOperand, operator, (LiteralNode) rightOperand);
 
             if (extendedOperands != null && !extendedOperands.isEmpty()) {
-                List<AstNode> newExtended = new ArrayList<>();
+                List<AstNode> newExtended = new ArrayList<>(extendedOperands);
 
                 InfixExpressionNode nextStepNode = new InfixExpressionNode();
                 nextStepNode.leftOperand = literalResult;

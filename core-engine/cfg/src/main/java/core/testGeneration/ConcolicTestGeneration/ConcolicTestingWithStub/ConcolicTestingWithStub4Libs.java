@@ -333,7 +333,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
         try {
             solution.execute();
         } catch (RuntimeException e) {
-            System.out.println("error");
+            System.out.println("UNSATISFIABLE");
             return false;
         }
 
