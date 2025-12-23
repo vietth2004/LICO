@@ -143,6 +143,17 @@ public final class TestDriverGenerator {
                     valueAsString = "'" + valueAsString + "'";
                 } else if (value instanceof Float) {
                     valueAsString = valueAsString + "f";
+                } else if (value instanceof Double) {
+                    Double dVal = (Double) value;
+                    if (Double.isNaN(dVal)) {
+                        valueAsString = "Double.NaN";
+                    } else if (Double.isInfinite(dVal)) {
+                        if (dVal > 0) {
+                            valueAsString = "Double.POSITIVE_INFINITY";
+                        } else {
+                            valueAsString = "Double.NEGATIVE_INFINITY";
+                        }
+                    }
                 }
             }
 
