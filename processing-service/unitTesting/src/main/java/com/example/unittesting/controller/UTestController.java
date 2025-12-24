@@ -3,6 +3,7 @@ package com.example.unittesting.controller;
 import com.example.unittesting.Sevice.UTestService;
 import com.example.unittesting.UnitTestingApplication;
 import core.testGeneration.TestGeneration;
+import core.testResult.result.autoTestResult.TestResult;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.io.*;
+import java.text.DecimalFormat;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SpringBootApplication
 @RestController
@@ -40,10 +46,34 @@ public class UTestController {
                     @io.swagger.v3.oas.annotations.Parameter(name = "coverageType", description = "Loại độ phủ cần kiểm thử")}
     )
     public ResponseEntity<Object> getUnitTest(@RequestParam int targetId, @RequestParam String nameProject, @RequestParam String coverageType) throws IOException {
-        long t0 = System.currentTimeMillis();
-        String thread = Thread.currentThread().getName();
 
-        System.err.println("[REQ-START] thread=" + thread);
+        DecimalFormat df = new DecimalFormat("#.##");
+        List<Double> memorySamples = Collections.synchronizedList(new ArrayList<>());
+        AtomicBoolean isRunning = new AtomicBoolean(true);
+
+        Thread monitorThread = new Thread(() -> {
+            Runtime runtime = Runtime.getRuntime();
+            while (isRunning.get()) {
+                // Đo RAM hiện tại (MB)
+                long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+                double usedMB = usedMemory / (1024.0 * 1024.0);
+
+                memorySamples.add(usedMB);
+
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+
+        monitorThread.start();
+
+        long startTime = System.currentTimeMillis();
+
+        System.out.println(" bắt đầu đo đạc");
 
         try {
             TestGeneration.Coverage coverage;
@@ -71,8 +101,37 @@ public class UTestController {
         } catch (Exception e) {
             throw new  RuntimeException(e);
         } finally {
-            long dt = System.currentTimeMillis() - t0;
-            System.err.println("[REQ-END] thread=" + thread + " timeMs=" + dt);
+            isRunning.set(false);
+            monitorThread.interrupt();
+            long endTime = System.currentTimeMillis();
+
+            double sum = 0;
+            for (Double sample : memorySamples) {
+                sum += sample;
+            }
+
+            double averageMemory = 0;
+            if (memorySamples.isEmpty()) {
+                long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                averageMemory = used / (1024.0 * 1024.0);
+                System.out.println("Chạy quá nhanh, lấy ram tức thời.");
+            } else {
+                averageMemory = sum / memorySamples.size();
+            }
+
+            System.out.println("\n==========================================");
+            System.out.println("BÁO CÁO HIỆU NĂNG");
+            System.out.println("==========================================");
+            System.out.println("Số mẫu đã đo    : " + memorySamples.size() + " lần");
+            System.out.println("RAM Trung bình  : " + df.format(averageMemory) + " MB");
+
+            if (!memorySamples.isEmpty()) {
+                double maxMem = Collections.max(memorySamples);
+                System.out.println("RAM Đỉnh: " + df.format(maxMem) + " MB");
+            }
+
+            System.out.println("Tổng thời gian: " + df.format((endTime - startTime) / 1000.0) + " s");
+            System.out.println("==========================================\n");
         }
     }
 

@@ -58,32 +58,6 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
     }
 
     private static TestResult startGenerating(int id, TestGeneration.Coverage coverage) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchFieldException, IOException, InterruptedException, NoSuchMethodException {
-        DecimalFormat df = new DecimalFormat("#.##");
-        List<Double> memorySamples = Collections.synchronizedList(new ArrayList<>());
-        AtomicBoolean isRunning = new AtomicBoolean(true);
-
-        Thread monitorThread = new Thread(() -> {
-            Runtime runtime = Runtime.getRuntime();
-            while (isRunning.get()) {
-                // Đo RAM hiện tại (MB)
-                long usedMemory = runtime.totalMemory() - runtime.freeMemory();
-                double usedMB = usedMemory / (1024.0 * 1024.0);
-
-                memorySamples.add(usedMB);
-
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-
-        monitorThread.start();
-        long startTime = System.currentTimeMillis();
-
-        System.out.println(" bắt đầu đo đạc");
         TestResult testResult = new TestResult();
 
         try {
@@ -198,38 +172,6 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            isRunning.set(false);
-            monitorThread.interrupt();
-            long endTime = System.currentTimeMillis();
-
-            double sum = 0;
-            for (Double sample : memorySamples) {
-                sum += sample;
-            }
-
-            double averageMemory = 0;
-            if (memorySamples.isEmpty()) {
-                long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-                averageMemory = used / (1024.0 * 1024.0);
-                System.out.println("Chạy quá nhanh, lấy ram tức thời.");
-            } else {
-                averageMemory = sum / memorySamples.size();
-            }
-
-            System.out.println("\n==========================================");
-            System.out.println("BÁO CÁO HIỆU NĂNG");
-            System.out.println("==========================================");
-            System.out.println("Số mẫu đã đo    : " + memorySamples.size() + " lần");
-            System.out.println("RAM Trung bình  : " + df.format(averageMemory) + " MB");
-
-            if (!memorySamples.isEmpty()) {
-                double maxMem = Collections.max(memorySamples);
-                System.out.println("RAM Đỉnh: " + df.format(maxMem) + " MB");
-            }
-
-            System.out.println("Tổng thời gian: " + df.format((endTime - startTime) / 1000.0) + " s");
-            System.out.println("==========================================\n");
         }
         return testResult;
     }

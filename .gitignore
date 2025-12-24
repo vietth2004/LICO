@@ -58,3 +58,4 @@ backend-service/project-service/src/main/resources/application.properties
 /management-service/api-gateway/src/test/
 /service-log/
 /core-engine/cfg/src/main/java/data/clonedProject
+.DS_Store
