@@ -1,10 +1,24 @@
-long i=0;
-===false===false===1---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===true===false===2---end---i++;
-===false===false===2---end---i * i <= x===false===true===2---end---return (int)(i - 1);
-===false===false===3---end---9.5578===6
+n <= 2===false===true===1---end---int a=1, b=2;
+===false===false===2---end---int i=3===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===true===false===3---end---int c=a + b;
+===false===false===4---end---a=b;
+===false===false===5---end---b=c;
+===false===false===6---end---i++===false===false===3---end---i <= n===false===true===3---end---return b;
+===false===false===8---end---12.4084===55
