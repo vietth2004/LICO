@@ -87,6 +87,9 @@ public class UploadController {
                             @RequestBody MultipartFile file,
                             @RequestParam(name = "user", required = false, defaultValue = "anonymous") String user,
                             @RequestParam(name = "project", required = false, defaultValue = "tmp-prj") String project) throws IOException, InterruptedException {
+        System.out.println("file null? " + (file == null));
+        System.out.println("file empty? " + (file != null && file.isEmpty()));
+        System.out.println("parserList = " + parserList);
         if (file != null) {
             String path = uploadService.buildProject(parserList, file, user, project);
             uploadService.build(path);
