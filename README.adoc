@@ -1,60 +1,122 @@
-= JCIA-Microservices image:https://ci.spring.io/api/v1/teams/spring-boot/pipelines/spring-boot-2.6.x/jobs/build/badge["Build Status", link="https://ci.spring.io/teams/spring-boot/pipelines/spring-boot-2.6.x?groups=Build"] image:https://badges.gitter.im/Join Chat.svg["Chat",link="https://gitter.im/spring-projects/spring-boot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"] image:https://img.shields.io/badge/Revved%20up%20by-Gradle%20Enterprise-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Gradle Enterprise", link="https://ge.spring.io/scans?&search.rootProjectNames=Spring%20Boot%20Build&search.rootProjectNames=spring-boot-build"]
-:docs: https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference
-:github: https://github.com/jcia-sqa/JCIA-Microservices
 
-JCIA is Java Change Impact Analysis software help you to easily determine all dependency in your Java Project. JCIA also helps to compare project version, calculate dependency impact, visualize your Project into clear diagrams.
+# LICO Tool Installation Guide
 
-## IMPORTANT:
-#### Default port is 8005 due to API-Gateway
-
-## 1. Service
-
-#### 1.1. All Service Ports
-- port 8761: Discovery-Service
-- port 8005: API-Gateway
-
-#### 1.2. Administration
-- port 8001: Utility-Service
-- port 8002: User-Service
-- port 8003: Project-Service
-- port 8004: Github-Service
-
-#### 1.3. Parse Service
-- port 7001: Parser-Service
-- port 7002: Java-Service
-- port 7003: Spring-Service
-- port 7004: Xml-Service
-
-#### 1.4. Algo Service
-- port 6001: Cia-Service
-- port 6002: VerControl-Service
-
-#### 1.5. Support Service
-- port 5001: File-Service
+An improved concolic-testing tool for Java projects, with enhanced loop-related error detection.
 
 
-## 2. Run
+## Introduction
 
-#### 2.1. Prerequisites
-- MySql (version 8.x.x)
-- JDK 11
-- Apache Maven (version 3.x.x)
+This README provides instructions for installing and running the LICO tool.
 
-#### 2.2. Pre-Install
-Open mysql and create 2 databases: 
 
-- micro_jcia_user: ```create database micro_jcia_user```
-- micro_jcia_project: ```create database micro_jcia_project```
+## System Requirements
 
-#### 2.3. Install
+Before running the tool, ensure that the following software components are installed and properly configured:
 
-##### 2.3.1. Naive
-Download project and using services tool in Intellij to run 
+- **Java Development Kit (JDK)** (version 11 or higher)
+- **Apache Maven**
+- **Z3 SMT Solver with Java bindings**
+- **Postman** (for invoking and testing RESTful APIs)
 
-##### 2.3.2. Docker (Install Docker and docker-compose first)
-First step:
+⚠️ All required tools must be correctly configured in the system environment
+(e.g., JAVA_HOME, MAVEN_HOME, and native library paths for Z3).
 
-- if linux, then run: ```.\build.sh```
-- else windows, then run: ```.\build.bat```
 
-Second: ```docker-compose up```
+## Step 1: Clone the Repository
+
+Clone the repository containing the tool source code:
+
+    git clone <repository-url>
+
+Navigate to the project root directory:
+
+    cd <project-directory>
+
+
+## Step 2: Install and Configure Required Dependencies
+
+### CIA Tool
+Replace the `mrmathami` folder in `Users/admin/.m2/repository` with the version
+downloaded from https://drive.google.com/drive/u/0/folders/1c_FdlggwXR_xfr1hdL4L-zvnwr5ND5hA[link].
+
+### Java Development Kit (JDK)
+
+Install a supported JDK version and verify the installation:
+
+    java -version
+
+### Apache Maven
+
+Install Apache Maven and verify the installation:
+
+    mvn -version
+
+
+### Z3 SMT Solver (Java Bindings)
+
+1. Install the Z3 SMT Solver with Java bindings.
+2. Ensure that the Z3 native library is accessible at runtime
+3. Verify the installation:
+
+    z3 --version
+
+
+### Postman
+
+Install Postman to send HTTP requests and interact with the tool’s RESTful APIs.
+
+
+## Step 3: Build the Project with Maven
+
+This step builds all service modules by cleaning existing artifacts and installing
+their dependencies using Maven.
+
+Navigate to each service directory that contains a `pom.xml` file and execute:
+
+    mvn clean install
+
+
+## Step 4: Run Spring Boot Services
+
+Navigate to each of the following service modules:
+
+    - `api-gateway`
+    - `discovery-server`
+    - `unitTesting`
+    - `upload-project-service`
+
+For each module, start the Spring Boot application using one of the supported methods.
+
+### Using Maven:
+    mvn spring-boot:run
+
+### Using an IDE:
+Alternatively, launch the application by running the main class annotated with `@SpringBootApplication` from an IDE (e.g., IntelliJ IDEA).
+
+⚠️ Ensure that all listed services are started successfully and are properly registered and connected before proceeding to the next step.
+
+
+## Step 5: Invoke the Tool via RESTful APIs
+
+The tool is designed to be accessed programmatically through RESTful APIs.
+
+### API Testing Using Postman
+
+1. Launch Postman.
+2. Select the appropriate API endpoint.
+3. Upload the ZIP file containing the Java project to be tested.
+4. Choose the method and coverage level you want to run:
+    - Tag ID
+    - Desired coverage level: `statement`, `branch`, `mcmd`
+5. Send the request to initiate the testing process.
+
+## Service Port Configuration
+
+The system is composed of multiple Spring Boot–based microservices, each running on a dedicated network port to support service isolation and inter-service communication.
+
+The default port configuration is defined as follows:
+
+- `api-gateway`: 8005
+- `discovery-server`: 8761
+- `unitTesting`: 8006
+- `upload-project-service`: 8020
