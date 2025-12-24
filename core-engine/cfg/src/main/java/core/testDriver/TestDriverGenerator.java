@@ -5,6 +5,7 @@ import core.cfg.utils.ASTHelper;
 import core.testGeneration.TestGeneration;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -142,6 +143,17 @@ public final class TestDriverGenerator {
                     valueAsString = "'" + valueAsString + "'";
                 } else if (value instanceof Float) {
                     valueAsString = valueAsString + "f";
+                } else if (value instanceof Double) {
+                    Double dVal = (Double) value;
+                    if (Double.isNaN(dVal)) {
+                        valueAsString = "Double.NaN";
+                    } else if (Double.isInfinite(dVal)) {
+                        if (dVal > 0) {
+                            valueAsString = "Double.POSITIVE_INFINITY";
+                        } else {
+                            valueAsString = "Double.NEGATIVE_INFINITY";
+                        }
+                    }
                 }
             }
 
@@ -339,7 +351,7 @@ public final class TestDriverGenerator {
                 case "boolean":
                     return "false";
                 case "char":
-                    return "'\\0'";
+                    return "'" + File.separator + "0'";
                 case "byte":
                     return "0";
                 case "short":

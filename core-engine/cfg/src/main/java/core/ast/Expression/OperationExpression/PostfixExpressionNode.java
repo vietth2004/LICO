@@ -1,7 +1,6 @@
 package core.ast.Expression.OperationExpression;
 
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
+import com.microsoft.z3.*;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
@@ -22,6 +21,7 @@ import java.util.List;
 public class PostfixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PostfixExpression.Operator operator;
+    private Expression originalOperand;
 
     public static void replaceMethodInvocationWithStub(PostfixExpression originPostfixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
         Expression operand = originPostfixExpression.getOperand();
@@ -33,19 +33,40 @@ public class PostfixExpressionNode extends OperationExpressionNode {
         ExpressionNode operand = postfixExpressionNode.operand;
         PostfixExpression.Operator operator = postfixExpressionNode.operator;
 
-        Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
-        return Z3Operand;
+        Expr oldValue = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
+        Expr newValue = null;
+        if (oldValue instanceof BitVecExpr) {
+            BitVecExpr bvOld = (BitVecExpr) oldValue;
+            int size = bvOld.getSortSize();
+            BitVecExpr one = ctx.mkBV(1, size);
+
+            if (operator == PostfixExpression.Operator.INCREMENT) {
+                newValue = ctx.mkBVAdd(bvOld, one);
+            } else if (operator == PostfixExpression.Operator.DECREMENT) {
+                newValue = ctx.mkBVSub(bvOld, one);
+            }
+        }
+        else if (oldValue instanceof FPExpr) {
+            FPExpr fpOld = (FPExpr) oldValue;
+            FPSort sort = (FPSort) fpOld.getSort();
+            // Tạo số 1.0 đúng định dạng FP (Float hoặc Double)
+            FPExpr one = ctx.mkFP(1.0, sort);
+            FPRMExpr rm = ctx.mkFPRoundNearestTiesToEven();
+
+            if (operator == PostfixExpression.Operator.INCREMENT) {
+                newValue = ctx.mkFPAdd(rm, fpOld, one);
+            } else if (operator == PostfixExpression.Operator.DECREMENT) {
+                newValue = ctx.mkFPSub(rm, fpOld, one);
+            }
+        }
+        //Cần bổ sung bước cập nhật giá trị mới vào MemoryModel
+        return newValue;
     }
 
     public static ExpressionNode executePostfixExpression(PostfixExpression postfixExpression, MemoryModel memoryModel) {
         PostfixExpressionNode postfixExpressionNode = new PostfixExpressionNode();
-        Expression operand = postfixExpression.getOperand();
-        if (operand instanceof SimpleName) {
-            postfixExpressionNode.operand = SimpleNameNode.executeSimpleName((SimpleName) operand);
-        } else {
-            //Xem lai
-            postfixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(postfixExpression.getOperand(), memoryModel);
-        }
+        postfixExpressionNode.originalOperand = postfixExpression.getOperand();
+        postfixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(postfixExpression.getOperand(), memoryModel);
         postfixExpressionNode.operator = postfixExpression.getOperator();
 
         ExpressionNode expressionNode = executePostfixExpressionNode(postfixExpressionNode, memoryModel);
@@ -56,18 +77,10 @@ public class PostfixExpressionNode extends OperationExpressionNode {
         ExpressionNode operand = postfixExpressionNode.operand;
         PostfixExpression.Operator operator = postfixExpressionNode.operator;
 
-        ExpressionNode oldOperand = postfixExpressionNode.operand;
-
-        if(!operand.isLiteralNode()) {
-            postfixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
-        } else {
-            return operand;
-        }
         // PAUSE executing
 
         // RE-ASSIGN
-        if(operand instanceof NameNode) {
-            String key = NameNode.getStringNameNode((NameNode) operand);
+            String key = postfixExpressionNode.originalOperand.toString();
             AstNode value = memoryModel.getValue(key);
 
             if (value instanceof NameNode) {
@@ -126,7 +139,6 @@ public class PostfixExpressionNode extends OperationExpressionNode {
                 newValue.operand = (OperationExpressionNode) value;
                 memoryModel.assignVariable(key, newValue);
             }
-        }
 
         // CONTINUE executing
 //        if(oldOperand != postfixExpressionNode.operand) {

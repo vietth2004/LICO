@@ -11,7 +11,7 @@ public class LoopPathGenerator {
 
     private static final int MAX_DEPTH = 400;
     private static final int MAX_PATHS_PER_SCENARIO = 450;
-    private static final int M = 7;
+    private static final int M = 6;
 
     /**
      * Sinh các đường đi kiểm thử theo chiến lược LICO.
@@ -31,8 +31,8 @@ public class LoopPathGenerator {
         }
 
         // Các kịch bản số lần lặp cần test
-        //int[] scenarios = {0, 1, 2, 4, M, M + 1};
-        int[] scenarios = {0, 1, 2, 4, M, M + 1};
+        //int[] scenarios = {0, 1, 3,M-1 ,M, M + 1};
+        int[] scenarios = {0, 1, 3, M - 1, M, M + 1};
         Set<String> globalUniquePaths = new HashSet<>();
 
         Map<CfgNode, CfgNode> conditionToHeaderMap = new HashMap<>();

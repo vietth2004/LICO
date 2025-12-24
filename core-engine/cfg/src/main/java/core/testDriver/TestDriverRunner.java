@@ -52,7 +52,11 @@ public final class TestDriverRunner {
                 String statement = markedStatementData[0];
                 boolean isTrueConditionalStatement = Boolean.parseBoolean(markedStatementData[1]);
                 boolean isFalseConditionalStatement = Boolean.parseBoolean(markedStatementData[2]);
-                result.add(new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement));
+                int id = Integer.parseInt(markedStatementData[3]);
+                MarkedStatement uncheckedMarkedStatement = new MarkedStatement(statement, isTrueConditionalStatement, isFalseConditionalStatement, id);
+                if (!result.contains(uncheckedMarkedStatement)) {
+                    result.add(uncheckedMarkedStatement);
+                }
             }
         }
         return result;

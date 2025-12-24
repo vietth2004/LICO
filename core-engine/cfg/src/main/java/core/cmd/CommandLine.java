@@ -31,17 +31,33 @@ public class CommandLine {
             // Linux/Mac dùng sh
             builder = new ProcessBuilder("sh", "-c", String.join(" ", parts));
         }
-        builder.redirectErrorStream(true); // gộp stderr vào stdout
+
+        builder.redirectErrorStream(true);
         Process process = builder.start();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line); // in ra console
+            while ((line = r.readLine()) != null) {
+                System.out.println(line);
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        process.waitFor(30, TimeUnit.SECONDS);
+        //process.waitFor(2, TimeUnit.SECONDS);
+
+        //process.destroyForcibly();
+        try {
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code = " + exitCode);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // khôi phục cờ interrupt
+            if (process.isAlive()) {
+                process.destroyForcibly();
+            }
+            throw e;
+        }
+
     }
     public static void executeCommand(String command, String cdFolder) throws IOException, InterruptedException {
         Process p = Runtime.getRuntime().exec(command, null , new File(cdFolder));

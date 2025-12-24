@@ -1,7 +1,6 @@
 package core.ast.Expression.OperationExpression;
 
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
+import com.microsoft.z3.*;
 import core.Z3Vars.Z3VariableWrapper;
 import core.ast.AstNode;
 import core.ast.Expression.ExpressionNode;
@@ -15,6 +14,7 @@ import java.util.List;
 public class PrefixExpressionNode extends OperationExpressionNode {
     private ExpressionNode operand;
     private PrefixExpression.Operator operator;
+    private Expression originalOperand;
 
     public static void replaceMethodInvocationWithStub(PrefixExpression originPrefixExpression, MethodInvocation originMethodInvocation, ASTNode replacement) {
         Expression operand = originPrefixExpression.getOperand();
@@ -28,25 +28,48 @@ public class PrefixExpressionNode extends OperationExpressionNode {
 
         Expr Z3Operand = OperationExpressionNode.createZ3Expression(operand, ctx, vars, memoryModel);
 
-        if(operator.equals(PrefixExpression.Operator.INCREMENT)) {
-            return ctx.mkAdd(Z3Operand, ctx.mkInt(1));
-        } else if (operator.equals(PrefixExpression.Operator.DECREMENT)) {
-            return ctx.mkSub(Z3Operand, ctx.mkInt(1));
+        boolean isFP = Z3Operand instanceof FPExpr;
+        Expr result = null;
+        if(operator.equals(PrefixExpression.Operator.INCREMENT) || operator.equals(PrefixExpression.Operator.DECREMENT)) {
+            if(isFP) {
+                FPExpr one = ctx.mkFP(1.0, (FPSort) Z3Operand.getSort());
+                FPRMExpr rm = ctx.mkFPRoundNearestTiesToEven();
+                if (operator.equals(PrefixExpression.Operator.INCREMENT)) {
+                    return ctx.mkFPAdd(rm, (FPExpr) Z3Operand, one);
+                } else {
+                    return ctx.mkFPSub(rm, (FPExpr) Z3Operand, one);
+                }
+            } else {
+                BitVecExpr bvVal = (BitVecExpr) Z3Operand;
+                BitVecExpr one = ctx.mkBV(1, bvVal.getSortSize());
+                if (operator.equals(PrefixExpression.Operator.INCREMENT)) {
+                    return ctx.mkBVAdd(bvVal, one);
+                } else {
+                    return ctx.mkBVSub(bvVal, one);
+                }
+            }
         } else if (operator.equals(PrefixExpression.Operator.PLUS)) {
-            return ctx.mkMul(Z3Operand, ctx.mkInt(1));
+            return Z3Operand;
         } else if (operator.equals(PrefixExpression.Operator.MINUS)) {
-            return ctx.mkMul(Z3Operand, ctx.mkInt(-1));
+            if(isFP) {
+                FPExpr bvVal = (FPExpr) Z3Operand;
+                return ctx.mkFPNeg(bvVal);
+            } else {
+                BitVecExpr bvVal = (BitVecExpr) Z3Operand;
+                return ctx.mkBVNeg(bvVal);
+            }
         } else if (operator.equals(PrefixExpression.Operator.NOT)) {
             return ctx.mkNot(Z3Operand);
         } else if (operator.equals(PrefixExpression.Operator.COMPLEMENT)) {
-            return ctx.mkMul(ctx.mkAdd(Z3Operand, ctx.mkInt(1)), ctx.mkInt(-1));
+            return ctx.mkBVNot(Z3Operand);
         } else {
-            throw new RuntimeException("Invalid operator");
+            throw new RuntimeException("Unknown Prefix Op: " + operator);
         }
     }
 
     public static ExpressionNode executePrefixExpression(PrefixExpression prefixExpression, MemoryModel memoryModel) {
         PrefixExpressionNode prefixExpressionNode = new PrefixExpressionNode();
+        prefixExpressionNode.originalOperand = prefixExpression.getOperand();
         prefixExpressionNode.operand = (ExpressionNode) ExpressionNode.executeExpression(prefixExpression.getOperand(), memoryModel);
         prefixExpressionNode.operator = prefixExpression.getOperator();
 
@@ -54,22 +77,24 @@ public class PrefixExpressionNode extends OperationExpressionNode {
         return expressionNode;
     }
 
-    public static ExpressionNode executePrefixExpressionNode(PrefixExpressionNode prefixExpressionNode, MemoryModel memoryModel) {
+    public static ExpressionNode executePrefixExpressionNode(PrefixExpressionNode prefixExpressionNode,
+                                                             MemoryModel memoryModel) {
         ExpressionNode operand = prefixExpressionNode.operand;
         PrefixExpression.Operator operator = prefixExpressionNode.operator;
         if(operand.isLiteralNode()) {
             LiteralNode literalResult = LiteralNode.analyzeOnePrefixLiteral(operator, (LiteralNode) operand);
             return literalResult;
         } else {
-            ExpressionNode oldOperand = prefixExpressionNode.operand;
-
-            prefixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
-            // PAUSE executing
-
-            // RE_ASSIGN
-            if(operand instanceof NameNode && (operator.equals(PrefixExpression.Operator.INCREMENT)
+//            ExpressionNode oldOperand = prefixExpressionNode.operand;
+//
+//            prefixExpressionNode.operand = OperationExpressionNode.executeOperandNode(operand, memoryModel);
+//            // PAUSE executing
+//
+//            // RE_ASSIGN
+            if((operator.equals(PrefixExpression.Operator.INCREMENT)
                     || operator.equals(PrefixExpression.Operator.DECREMENT))) {
-                String key = NameNode.getStringNameNode((NameNode) operand);
+//                String key = NameNode.getStringNameNode((NameNode) operand);
+                String key = prefixExpressionNode.originalOperand.toString();
                 AstNode value = memoryModel.getValue(key);
 
                 if(value instanceof LiteralNode) {
@@ -81,15 +106,6 @@ public class PrefixExpressionNode extends OperationExpressionNode {
                     memoryModel.assignVariable(key, newValue);
                 }
             }
-            // em thấy mới có phần xử lý tăng giảm -> chưa có xử lý số âm (ví dụ: n = -n)
-            // END RE-ASSIGN
-
-            // CONTINUE executing
-//            if(oldOperand != prefixExpressionNode.operand) {
-//                return PrefixExpressionNode.executePrefixExpressionNode(prefixExpressionNode, memoryModel);
-//            } else {
-//                return prefixExpressionNode;
-//            }
             return prefixExpressionNode;
         }
     }

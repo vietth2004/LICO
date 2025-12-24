@@ -34,8 +34,8 @@ public class IntegerLiteralNode extends NumberLiteralNode {
         }
     }
 
-    public void setValue(String value) {
-        super.setTokenValue(value);
+    public void setValue(String name) {
+        this.setTokenValue(name);
     }
 
     public void setTokenValue(double doubleValue) {
