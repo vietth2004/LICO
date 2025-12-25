@@ -242,9 +242,9 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
                 generatedInputs.add(data.getTestDataSet().toArray());
             }
 
-            // ====== tên hàm ======
+            // Specify the name of the target method to be analyzed.
+            // This value must match the Java class and method name in the source project.
             String classBaseName = "binaryGap";
-            // ===========================
 
             String fullyClonedClassName = classBaseName + "." + classBaseName;
 
@@ -258,7 +258,9 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
                             .getName()
                             .getIdentifier();
 
-
+            // Define the absolute path to the Java source file of the target method.
+            // Users should ensure that the directory structure and file name
+            // correspond to the specified method name.
             String fullPath = Paths.get(
                     System.getProperty("user.home"),
                     "working", "uet", "LICO",

@@ -8,6 +8,15 @@ An improved concolic-testing tool for Java projects, with enhanced loop-related 
 
 This README provides instructions for installing and running the LICO tool.
 
+## Service Port Configuration
+
+The system is composed of multiple Spring Boot–based microservices, each running on a dedicated network port to support service isolation and inter-service communication.
+
+The default port configuration is defined as follows:
+
+- `unitTesting`: 8006
+- `upload-project-service`: 8020
+
 
 ## System Requirements
 
@@ -75,13 +84,49 @@ Navigate to each service directory that contains a `pom.xml` file and execute:
 
     mvn clean install
 
+## Step 4: Configure Target Method and Source File Path
 
-## Step 4: Run Spring Boot Services
+Before running the testing process, users must configure the target method name
+and the absolute path to the corresponding Java source file.
+
+### 1. Target Method Configuration
+
+The variable `classBaseName` specifies the name of the Java class and method to be
+tested. Users must update this value so that it exactly matches the target method
+implemented in the uploaded project.
+
+_Example:_
+
+    String classBaseName = "binaryGap";
+
+### 2. Source File Path Configuration
+
+The variable `fullPath` defines the absolute file system path to the Java source
+file that contains the target method. This path is constructed based on the local
+project directory structure.
+
+_Example:_
+
+    String fullPath = Paths.get(
+        System.getProperty("user.home"),
+        "working", "uet", "LICO",
+        "project", "anonymous", "tmp-prj",
+        "example.zip.project", "example",
+        "src", "main", "java",
+        classBaseName,
+        classBaseName + ".java"
+    ).toString();
+
+Note:
+The modification of these local variables is used solely for experimental
+error-counting purposes within our evaluation. This configuration does not
+affect the coverage results reported by the testing tool.
+
+
+## Step 5: Run Spring Boot Services
 
 Navigate to each of the following service modules:
 
-    - `api-gateway`
-    - `discovery-server`
     - `unitTesting`
     - `upload-project-service`
 
@@ -96,27 +141,23 @@ Alternatively, launch the application by running the main class annotated with `
 ⚠️ Ensure that all listed services are started successfully and are properly registered and connected before proceeding to the next step.
 
 
-## Step 5: Invoke the Tool via RESTful APIs
+## Step 6: Invoke the Tool via RESTful APIs
 
-The tool is designed to be accessed programmatically through RESTful APIs.
+The testing tool is accessed through RESTful APIs and can be invoked using
+an API client such as Postman.
 
-### API Testing Using Postman
+Using Postman, users are required to call the following two APIs in sequence:
 
-1. Launch Postman.
-2. Select the appropriate API endpoint.
-3. Upload the ZIP file containing the Java project to be tested.
-4. Choose the method and coverage level you want to run:
-    - Tag ID
-    - Desired coverage level: `statement`, `branch`, `mcdc`
-5. Send the request to initiate the testing process.
+### 1. Upload and process the target project:
 
-## Service Port Configuration
+    http://localhost:8020/api/upload-project-service/process?parser=&user=&project=
 
-The system is composed of multiple Spring Boot–based microservices, each running on a dedicated network port to support service isolation and inter-service communication.
+This API uploads and preprocesses the *ZIP file* containing the Java project
+to prepare it for testing.
 
-The default port configuration is defined as follows:
+### 2. Execute the unit testing process:
 
-- `api-gateway`: 8005
-- `discovery-server`: 8761
-- `unitTesting`: 8006
-- `upload-project-service`: 8020
+    http://localhost:8006/api/unit-testing-service/unit?nameProject=example.zip.project&coverageType=statement&targetId=1
+
+This API initiates the testing process by specifying the desired coverage
+criterion (`statement`, `branch`, or `mcdc`) and the target method identifier (`targetId`).

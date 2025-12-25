@@ -1,2 +1,31 @@
-n == 0===false===true===1---end---n == 1===true===false===2---end---return 1;
-===false===false===2---end---4.168667===1
+n == 0===false===true===1---end---n == 1 || n == 2===false===true===2---end---int a=0, b=1, c=1;
+===false===false===4---end---int i=3===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===true===false===5---end---int d=a + b + c;
+===false===false===6---end---a=b;
+===false===false===7---end---b=c;
+===false===false===8---end---c=d;
+===false===false===9---end---i++===false===false===5---end---i <= n===false===true===5---end---return c;
+===false===false===11---end---3.83825===81
