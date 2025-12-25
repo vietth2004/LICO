@@ -28,7 +28,8 @@ jobs:
 #      run: sh ./.github/scripts/mvn-verify.sh
     - name: build with maven
       if: ${{success()}}
-      run: sh ./.github/scripts/mvn-build.sh
+      run: bash ./.github/scripts/mvn-build.sh
+
 
   build-macos:
     runs-on: ${{ matrix.os }}
@@ -47,7 +48,7 @@ jobs:
       #      run: sh ./.github/scripts/mvn-verify.sh
       - name: build with maven
         if: ${{success()}}
-        run: sh ./.github/scripts/mvn-build.sh
+        run: bash ./.github/scripts/mvn-build.sh
 
   build-windows:
     runs-on: windows-latest
