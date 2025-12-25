@@ -26,10 +26,13 @@ import core.uploadProjectUtils.cloneProjectUtils.CloneProject;
 import core.utils.Utils;
 import org.eclipse.jdt.core.dom.*;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -103,16 +106,17 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
             testResult.addToFullTestData(new TestData(TestGeneration.parameterNames, TestGeneration.parameterClasses, evaluatedValues, coveredStatements,
                     TestDriverRunner.getOutput(), TestDriverRunner.getRuntime(), calculateRequiredCoverage(coverage), calculateFunctionCoverage(), calculateSourceCodeCoverage()));
 
-            // test Lico
-            List<Path> licoPaths = LoopPathGenerator.generateLicoPaths(TestGeneration.cfgBeginNode, TestGeneration.cfgEndNode);
 
+            // ====== LICO testing method ======
+            List<Path> licoPaths = LoopPathGenerator.generateLicoPaths(TestGeneration.cfgBeginNode, TestGeneration.cfgEndNode);
             int cnt = 1;
             for (Path path : licoPaths) {
                 System.out.println("LICO đang chạy path: " + cnt);
                 cnt++;
                 solveAndRunTest(path, testResult, coverage);
             }
-            //----- End test Lico
+            // ==================================
+
 
             boolean isTestedSuccessfully = true;
 
@@ -138,13 +142,7 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
                         }
                     }
                 }
-
-//            List<String> testDataNames = new ArrayList<>();
-//            testDataNames.addAll(TestGeneration.parameterNames);
-//            testDataNames.addAll(SymbolicExecution.getStubVariableNames());
-
             }
-
 
             if (isTestedSuccessfully) System.out.println("Tested successfully with 100% coverage");
             else System.out.println("Test fail due to UNSATISFIABLE constraint");
@@ -192,7 +190,6 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
                         }
                     }
                 }
-
                 // Cập nhật lại danh sách hiển thị cho TestData này
                 data.setCoveredStatements(translatedList);
             }
@@ -239,7 +236,71 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
         System.out.println("Tổng thời gian Execute Time: " + totalTime);
 
+        try {
+            List<Object[]> generatedInputs = new ArrayList<>();
+            for (TestData data : testResult.getFullTestData()) {
+                generatedInputs.add(data.getTestDataSet().toArray());
+            }
+
+            // ====== tên hàm ======
+            String classBaseName = "binaryGap";
+            // ===========================
+
+            String fullyClonedClassName = classBaseName + "." + classBaseName;
+
+            List<String> mutants = new ArrayList<>();
+            for (int i = 1; i <= 4; i++) {
+                mutants.add(classBaseName + "." + classBaseName + i);
+            }
+
+            String targetMethodName =
+                    ((MethodDeclaration) TestGeneration.testFunc)
+                            .getName()
+                            .getIdentifier();
+
+
+            String fullPath = Paths.get(
+                    System.getProperty("user.home"),
+                    "working", "uet", "LICO",
+                    "project", "anonymous", "tmp-prj",
+                    "example.zip.project", "example",
+                    "src", "main", "java",
+                    classBaseName,
+                    classBaseName + ".java"
+            ).toString();
+
+            String packageName = classBaseName;
+
+            String rootPath = getRootSourcePath(fullPath, packageName);
+
+            System.out.println("Path nạp vào ClassLoader: " + rootPath);
+
+            int killed = runMutationTest(fullyClonedClassName, mutants, generatedInputs, targetMethodName, TestGeneration.parameterClasses, rootPath);
+
+        } catch (Exception e) {
+            System.err.println("Lỗi khi chạy Test: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         return testResult;
+    }
+
+    public static String getRootSourcePath(String fullFilePath, String packageName) {
+
+        File file = new File(fullFilePath);
+        String parentDir = file.getParent();
+
+        int srcIndex = fullFilePath.indexOf("src" + File.separator + "main" + File.separator + "java");
+        if (srcIndex != -1) {
+            String rootPath = fullFilePath.substring(0, srcIndex + ("src" + File.separator + "main" + File.separator + "java").length());
+            return rootPath;
+        }
+        File currentDir = new File(parentDir);
+        String[] packageParts = packageName.split("\\.");
+        for (int i = 0; i < packageParts.length; i++) {
+            currentDir = currentDir.getParentFile();
+        }
+        return currentDir.getAbsolutePath();
     }
 
     private static void setup(String path, String className, String methodName, TestGeneration.Coverage coverage) throws IOException, InterruptedException {
@@ -494,4 +555,115 @@ public class ConcolicTestingWithStub4Libs extends ConcolicTestGeneration {
 
         return sb.toString();
     }
+
+    private static int runMutationTest(String originalClassName, List<String> errorClassNames,
+                                       List<Object[]> testDataList, String methodName,
+                                       Class<?>[] paramTypes, String rootFolderPath) {
+        int errorsDetected = 0;
+        System.out.println("\n>>> BẮT ĐẦU QUÁ TRÌNH KIỂM THỬ TỰ ĐỘNG (ERROR DETECTION)");
+
+        try {
+            //  BƯỚC 1: CHUẨN BỊ COMPILER (Giữ nguyên)
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            if (compiler == null) {
+                System.err.println("LỖI: Không tìm thấy Java Compiler (JDK)!");
+                return 0;
+            }
+
+            File root = new File(rootFolderPath);
+            if (!root.exists()) return 0;
+
+            // BƯỚC 2: COMPILE FILE GỐC (Giữ nguyên)
+            String originalFilePath = rootFolderPath + File.separator + originalClassName.replace(".", File.separator) + ".java";
+            File originalFile = new File(originalFilePath);
+
+            if (originalFile.exists()) {
+                compiler.run(null, null, null, originalFile.getAbsolutePath());
+            } else {
+                System.err.println("Không tìm thấy file source gốc: " + originalFilePath);
+                return 0;
+            }
+
+            //  BƯỚC 3: COMPILE CÁC FILE LỖI (ERRORS/BUGS)
+            for (String errorClassName : errorClassNames) {
+                String errorFilePath = rootFolderPath + File.separator + errorClassName.replace(".", File.separator) + ".java";
+                File errorFile = new File(errorFilePath);
+                if (errorFile.exists()) {
+                    compiler.run(null, null, null, errorFile.getAbsolutePath());
+                }
+            }
+
+            //  BƯỚC 4: LOAD CLASS VÀ CHẠY TEST
+            java.net.URL[] urls = {root.toURI().toURL()};
+            java.net.URLClassLoader classLoader = new java.net.URLClassLoader(urls);
+
+            Class<?> originalClass = classLoader.loadClass(originalClassName);
+
+            for (String errorClassName : errorClassNames) {
+                boolean isDetected = false;
+
+                try {
+                    Class<?> errorClass = classLoader.loadClass(errorClassName);
+                    System.out.print("Checking Bug Case: " + errorClass.getSimpleName() + "... ");
+
+                    for (Object[] args : testDataList) {
+                        try {
+                            Object originalObj = originalClass.getDeclaredConstructor().newInstance();
+                            Object errorObj = errorClass.getDeclaredConstructor().newInstance(); // errorObj thay vì mutantObj
+
+                            Method originalMethod = originalClass.getMethod(methodName, paramTypes);
+                            Method errorMethod = errorClass.getMethod(methodName, paramTypes);
+
+                            Object originalOutput = null;
+                            Exception originalException = null;
+                            try {
+                                originalOutput = originalMethod.invoke(originalObj, args);
+                            } catch (InvocationTargetException e) {
+                                originalException = (Exception) e.getTargetException();
+                            }
+
+                            Object errorOutput = null;
+                            Exception errorException = null;
+                            try {
+                                errorOutput = errorMethod.invoke(errorObj, args);
+                            } catch (InvocationTargetException e) {
+                                errorException = (Exception) e.getTargetException();
+                            }
+                            if ((originalException == null && errorException != null) ||
+                                    (originalException == null && errorException == null && !originalOutput.equals(errorOutput))) {
+                                isDetected = true;
+                                break;
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    if (isDetected) {
+                        errorsDetected++;
+                        System.out.println("DETECTED (Đã tìm ra)");
+                    } else {
+                        System.out.println("UNDETECTED (Không tìm thấy)");
+                    }
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Lỗi: Không tìm thấy class lỗi: " + errorClassName);
+                }
+            }
+
+            classLoader.close();
+
+            System.out.println("==========================================");
+            System.out.println("ERROR DETECTION REPORT (BÁO CÁO PHÁT HIỆN LỖI)");
+            System.out.println("Inserted Error Number (Tổng số lỗi cấy vào): " + errorClassNames.size());
+            System.out.println("Detected Error Number (Số lỗi tìm thấy):     " + errorsDetected);
+            double rate = errorClassNames.isEmpty() ? 0 : (double) errorsDetected / errorClassNames.size() * 100;
+            DecimalFormat df = new DecimalFormat("#.##");
+            System.out.println("Detection Rate (Tỷ lệ phát hiện):            " + df.format(rate) + "%");
+            System.out.println("==========================================");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return errorsDetected;
+    }
+
 }

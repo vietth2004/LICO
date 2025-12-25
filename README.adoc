@@ -107,7 +107,7 @@ The tool is designed to be accessed programmatically through RESTful APIs.
 3. Upload the ZIP file containing the Java project to be tested.
 4. Choose the method and coverage level you want to run:
     - Tag ID
-    - Desired coverage level: `statement`, `branch`, `mcmd`
+    - Desired coverage level: `statement`, `branch`, `mcdc`
 5. Send the request to initiate the testing process.
 
 ## Service Port Configuration

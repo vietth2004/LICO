@@ -1,8 +1,2 @@
-num >= 10===true===false===1---end---int sum=0;
-===false===false===2---end---num > 0===true===false===3---end---sum+=num % 10;
-===false===false===4---end---num/=10;
-===false===false===5---end---num > 0===true===false===3---end---sum+=num % 10;
-===false===false===4---end---num/=10;
-===false===false===5---end---num > 0===false===true===3---end---num=sum;
-===false===false===7---end---num >= 10===false===true===1---end---return num;
-===false===false===9---end---6.777499===3
+n == 0===false===true===1---end---n == 1===true===false===2---end---return 1;
+===false===false===2---end---4.168667===1
