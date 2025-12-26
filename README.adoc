@@ -161,3 +161,6 @@ to prepare it for testing.
 
 This API initiates the testing process by specifying the desired coverage
 criterion (`statement`, `branch`, or `mcdc`) and the target method identifier (`targetId`).
+
+Note:
+If you want to count errors, set `targetId` to the identifier of the **original method** (the method whose name does not contain a numeric suffix)
