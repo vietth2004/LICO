@@ -86,8 +86,8 @@ Navigate to each service directory that contains a `pom.xml` file and execute:
 
 ## Step 4: Configure Target Method and Source File Path
 
-Before running the testing process, users must configure the target method name
-and the absolute path to the corresponding Java source file.
+Before running the testing process, users must configure the target method name and the absolute path to the corresponding Java source file by updating the relevant variables in 
+`core-engine/cfg/src/main/java/core/testGeneration/ConcolicTestGeneration/ConcolicTestingWithStub/ConcolicTestingWithStub4Libs.java` .
 
 ### 1. Target Method Configuration
 
